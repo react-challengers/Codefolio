@@ -1,9 +1,7 @@
-import { NextPage } from 'next';
+import { NextPage } from "next";
 
-interface Props {}
-
-const DetailPage: NextPage<Props> = ({}) => {
-  return <div></div>;
+const DetailPage: NextPage = () => {
+  return <div>.</div>;
 };
 
 export default DetailPage;

@@ -1,12 +1,10 @@
-import { NextPage, GetServerSideProps } from 'next';
+import { NextPage, GetServerSideProps } from "next";
 
-interface Props {}
-
-const CreatePostPage: NextPage<Props> = ({}) => {
-  return <div></div>;
+const CreatePostPage: NextPage = () => {
+  return <div>1</div>;
 };
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: {},
   };

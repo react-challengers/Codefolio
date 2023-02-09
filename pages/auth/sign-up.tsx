@@ -1,12 +1,10 @@
-import { NextPage, GetStaticProps } from 'next';
+import { NextPage, GetStaticProps } from "next";
 
-interface Props {}
-
-const SignUp: NextPage<Props> = ({}) => {
-  return <div></div>;
+const SignUp: NextPage = () => {
+  return <div>.</div>;
 };
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
+export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {},
   };
