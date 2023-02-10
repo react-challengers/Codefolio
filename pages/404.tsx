@@ -1,4 +1,5 @@
 import LoginButton from "@/Components/Common/AuthLoginButton";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 
@@ -6,7 +7,7 @@ import styled from "styled-components";
  * LoginButton의 모양만 재사용합니다. 로그인 로직과 무관합니다.
  */
 
-const PageNotFound = () => {
+const NotFoundPage: NextPage = () => {
   const router = useRouter();
   const handleBackToHome = () => {
     router.push("/");
@@ -60,4 +61,4 @@ const Paragraph = styled.p`
   white-space: pre-line;
 `;
 
-export default PageNotFound;
+export default NotFoundPage;
