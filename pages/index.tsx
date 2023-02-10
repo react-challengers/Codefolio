@@ -1,4 +1,3 @@
-import Tabs from "@/Components/MyPage/Tabs";
 import Head from "next/head";
 
 const Home = () => {
@@ -11,7 +10,6 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>start</div>
-      <Tabs />
     </>
   );
 };
