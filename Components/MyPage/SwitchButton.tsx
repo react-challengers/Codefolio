@@ -1,33 +1,23 @@
 import styled from "styled-components";
 
-type CurrentItemType = "남성" | "여성" | "선택 안함";
-
 interface SwitchButtonProps {
   currentItem: string;
-  setCurrentItem: (currentItem: CurrentItemType) => void;
+  setCurrentItem: (currentItem: string) => void;
 }
 
 const SwitchButton = ({ currentItem, setCurrentItem }: SwitchButtonProps) => {
+  const items = ["남성", "여성", "선택 안함"];
   return (
     <SwitchButtonContainer>
-      <HeadButton
-        active={currentItem === "남성"}
-        onClick={() => setCurrentItem("남성")}
-      >
-        남성
-      </HeadButton>
-      <DefaultButton
-        active={currentItem === "여성"}
-        onClick={() => setCurrentItem("여성")}
-      >
-        여성
-      </DefaultButton>
-      <TailButton
-        active={currentItem === "선택 안함"}
-        onClick={() => setCurrentItem("선택 안함")}
-      >
-        선택 안함
-      </TailButton>
+      {items.map((item) => (
+        <DefaultButton
+          key={item}
+          active={currentItem === item}
+          onClick={() => setCurrentItem(item)}
+        >
+          {item}
+        </DefaultButton>
+      ))}
     </SwitchButtonContainer>
   );
 };
@@ -36,8 +26,8 @@ const SwitchButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
 
-  filter: drop-shadow(2px 4px 12px rgba(0, 0, 0, 0.1))
-    drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0.125rem 0.25rem 0.75rem rgba(0, 0, 0, 0.1))
+    drop-shadow(0rem 0rem 0.25rem rgba(0, 0, 0, 0.1));
 `;
 
 interface DefaultButtonProps {
@@ -47,21 +37,19 @@ interface DefaultButtonProps {
 const DefaultButton = styled.button<DefaultButtonProps>`
   border: none;
   cursor: pointer;
-  width: 100px;
-  height: 44px;
-  font-size: 16px;
+  width: 6.25rem;
+  height: 2.75rem;
+  font-size: 1rem;
   color: ${({ active }) => (active ? "white" : "black")};
   background-color: ${({ active }) => (active ? "black" : "white")};
-`;
-
-const HeadButton = styled(DefaultButton)`
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
-`;
-
-const TailButton = styled(DefaultButton)`
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
+  :first-child {
+    border-top-left-radius: 0.75rem;
+    border-bottom-left-radius: 0.75rem;
+  }
+  :last-child {
+    border-top-right-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+  }
 `;
 
 export default SwitchButton;
