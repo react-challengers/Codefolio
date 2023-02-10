@@ -1,5 +1,6 @@
 //todo! line57 : as any를 지우고 overload 문제 해결해야 합니다.
 
+import { MouseEventHandler } from "react";
 import styled from "styled-components";
 
 type DefaultButtonType = "full" | "outline";
@@ -9,6 +10,7 @@ interface DefaultButtonProps {
   text: string;
   type: DefaultButtonType;
   size: DefaultButtonSize;
+  onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
 const getDefaultButtonType = (type: DefaultButtonType) => {
@@ -32,9 +34,9 @@ const getDefaultButtonSize = (size: DefaultButtonSize) => {
           height: 2.5rem;`;
 };
 
-const DefaultButton = ({ text, type, size }: DefaultButtonProps) => {
+const DefaultButton = ({ text, type, size, onClick }: DefaultButtonProps) => {
   return (
-    <DefaultButtonContainer type={type} size={size}>
+    <DefaultButtonContainer type={type} size={size} onClick={onClick}>
       {text}
     </DefaultButtonContainer>
   );
