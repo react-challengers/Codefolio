@@ -21,10 +21,10 @@ const ProjectInfo = () => {
 };
 
 const DropdownContainer = styled.div`
-  width: 1580px;
-  height: 58.51px;
+  width: 98.75rem;
+  height: 3.6569rem;
 
-  border: 1px solid #cccccc;
+  border: 0.0625rem solid #cccccc;
 
   display: flex;
   justify-content: space-between;
@@ -32,18 +32,18 @@ const DropdownContainer = styled.div`
 `;
 
 const ProjectInfoTitle = styled.div`
-  margin: 17.75px auto 17.75px 50px;
+  margin: 1.1094rem auto 1.1094rem 3.125rem;
 
-  font-size: 16px;
+  font-size: 1rem;
 `;
 
 const DropdownButton = styled.button`
-  border: 0px;
+  border: 0rem;
 
-  margin-right: 40px;
+  margin-right: 2.5rem;
   background-color: white;
 
-  /* margin-right: 41.12px; */
+  /* margin-right: 2.57rem; */
 `;
 
 const DropdownImage = styled(Image)`
