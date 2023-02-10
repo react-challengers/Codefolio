@@ -1,4 +1,5 @@
 import Head from "next/head";
+import LoginButton from "@/Components/Common/AuthLoginButton";
 
 const Home = () => {
   return (
@@ -10,6 +11,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>start</div>
+      <LoginButton>카카오로 로그인</LoginButton>
     </>
   );
 };
