@@ -78,7 +78,7 @@ const CardItem = ({
     <CardContainer>
       <Link href={linkURL}>
         <ImageContainer>
-          <Tags tagItems={[field]} />
+          <Tags tagItems={[field]} size="sm" />
           <Image src={`/images/${imageSrc}`} alt={imageAlt} layout="fill" />
           <ProfileImage alt={title} page="myPage" />
         </ImageContainer>
@@ -95,7 +95,7 @@ const CardItem = ({
           <Title>{title}</Title>
           <SubTitle>{subTitle}</SubTitle>
         </TitleWrapper>
-        <Tags tagItems={tagItems} />
+        <Tags tagItems={tagItems} size="sm" />
       </CardBottomWrapper>
     </CardContainer>
   );
