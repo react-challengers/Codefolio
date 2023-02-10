@@ -9,16 +9,36 @@ const GNB = () => {
       <ButtonWrapper onClick={() => router.push("/")}>Codefolio</ButtonWrapper>
       <ButtonsContainer>
         <ButtonWrapper onClick={() => null}>
-          <Image src="/icons/search.svg" alt="" width="24" height="24" />
+          <Image
+            src="/icons/search.svg"
+            alt="검색 아이콘"
+            width="24"
+            height="24"
+          />
         </ButtonWrapper>
         <ButtonWrapper onClick={() => null}>
-          <Image src="/icons/notification.svg" alt="" width="24" height="24" />
+          <Image
+            src="/icons/notification.svg"
+            alt="알림 아이콘"
+            width="24"
+            height="24"
+          />
         </ButtonWrapper>
         <ButtonWrapper onClick={() => router.push("/create-post")}>
-          <Image src="/icons/post.svg" alt="" width="24" height="24" />
+          <Image
+            src="/icons/post.svg"
+            alt="게시글 등록 아이콘"
+            width="24"
+            height="24"
+          />
         </ButtonWrapper>
         <ButtonWrapper onClick={() => router.push("/profile")}>
-          <Image src="/icons/person.svg" alt="" width="24" height="24" />
+          <Image
+            src="/icons/person.svg"
+            alt="내 프로필 아이콘"
+            width="24"
+            height="24"
+          />
         </ButtonWrapper>
       </ButtonsContainer>
     </GNBContainer>
