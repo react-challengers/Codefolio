@@ -1,16 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
 
+const tabList = ["프로젝트", "팔로잉", "북마크", "좋아요", "보관함", "프로필"];
+
 const Tabs = () => {
-  const tabList = [
-    "프로젝트",
-    "팔로잉",
-    "북마크",
-    "좋아요",
-    "보관함",
-    "프로필",
-  ];
-  const [currentTab, setCurrentTab] = useState(1);
+  const [currentTab, setCurrentTab] = useState(0);
   return (
     <TabsContainer>
       {tabList.map((tab, idx) => (
@@ -36,10 +30,10 @@ interface TabWrapperProps {
 }
 
 const TabWrapper = styled.div<TabWrapperProps>`
-  width: 68px;
+  width: 4.25rem;
   text-align: center;
-  padding: 16px;
-  border-bottom: 2px solid ${({ active }) => (active ? "black" : "grey")};
+  padding: 1rem;
+  border-bottom: 0.125rem solid ${({ active }) => (active ? "black" : "grey")};
   cursor: pointer;
 `;
 
