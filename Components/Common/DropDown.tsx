@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-interface Options {
-  options: number[] | string[];
-  defaultValue: number | string;
+interface DropdownProps<T> {
+  options: T[];
+  defaultValue: T;
 }
 
 /**
@@ -12,7 +12,10 @@ interface Options {
  * <DropDown options={data} defaultValue={2023}>
  * const data = [...{value: number | string}]
  */
-const DropDown = ({ defaultValue, options }: Options) => {
+const DropDown = ({
+  defaultValue,
+  options,
+}: DropdownProps<string | number>) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
   };
@@ -32,9 +35,9 @@ export default DropDown;
 
 const Select = styled.select`
   display: flex;
-  padding: 8px 8px;
+  padding: 0.5rem 0.5rem;
   border: 1px solid;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   color: inherit;
   &:focus {
     border-color: red;
