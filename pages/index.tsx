@@ -1,10 +1,7 @@
-import Tags from "@/Components/Common/Tags";
+import MainSection from "@/Components/Main/MainSection";
 import SideBar from "@/Components/Main/SideBar";
 import Head from "next/head";
 import styled from "styled-components";
-import bottom_arrow from "@/public/icons/bottom_arrow.svg";
-import Image from "next/image";
-import { useState } from "react";
 
 const HomeContainer = styled.div`
   display: flex;
@@ -12,74 +9,7 @@ const HomeContainer = styled.div`
   margin: 0 auto;
 `;
 
-const HomeMainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  margin-left: 1.5rem;
-  margin-top: 3rem;
-`;
-
-const HomeCardGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 1rem;
-  width: 100%;
-  margin-top: 1rem;
-`;
-
-const HomeDropDownContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-`;
-
-const HomeDropDownButton = styled.div`
-  display: flex;
-  align-items: center;
-  width: 5rem;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const HomeDropDownList = styled.ul`
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 11rem;
-  width: 7rem;
-  background-color: white;
-  border: 1px solid #e1e4e8;
-  border-radius: 0.25rem;
-  font-size: 1rem;
-  gap: 0.5rem;
-  z-index: 1;
-`;
-
-const HomeDropDownItemContainer = styled.div`
-  &:hover {
-    cursor: pointer;
-    background-color: #f6f8fa;
-  }
-`;
-
-const HomeDropDownItem = styled.li`
-  margin: 0.5rem;
-`;
-
 const Home = () => {
-  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  const homeDropDownItems = ["최신순", "조회순", "추천순"];
-  const [selectedDropDownItem, setSelectedDropDownItem] = useState(
-    homeDropDownItems[0]
-  );
-
-  const onClickDropDown = () => {
-    setIsDropDownOpen((prev) => !prev);
-  };
   return (
     <>
       <Head>
@@ -90,53 +20,7 @@ const Home = () => {
       </Head>
       <HomeContainer>
         <SideBar />
-        <HomeMainContainer>
-          <Tags tagItems={["App | Android, iOS, flutter"]} size="lg" />
-          <HomeDropDownContainer>
-            <HomeDropDownButton
-              onClick={() => {
-                onClickDropDown();
-              }}
-            >
-              {selectedDropDownItem}
-              <Image
-                src={bottom_arrow}
-                alt="bottom_arrow"
-                width={32}
-                height={32}
-              />
-            </HomeDropDownButton>
-            {isDropDownOpen && (
-              <HomeDropDownList>
-                {homeDropDownItems.map((item) => (
-                  <HomeDropDownItemContainer
-                    key={item}
-                    onClick={() => {
-                      setSelectedDropDownItem(item);
-                      setIsDropDownOpen(false);
-                    }}
-                  >
-                    <HomeDropDownItem>{item}</HomeDropDownItem>
-                  </HomeDropDownItemContainer>
-                ))}
-              </HomeDropDownList>
-            )}
-          </HomeDropDownContainer>
-          <HomeCardGrid>
-            <div>1</div>
-            <div>2</div>
-            <div>3</div>
-            <div>4</div>
-            <div>1</div>
-            <div>2</div>
-            <div>3</div>
-            <div>4</div>
-            <div>1</div>
-            <div>2</div>
-            <div>3</div>
-            <div>4</div>
-          </HomeCardGrid>
-        </HomeMainContainer>
+        <MainSection />
       </HomeContainer>
     </>
   );
