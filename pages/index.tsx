@@ -1,3 +1,4 @@
+import GNB from "@/Components/Layouts/GNB";
 import Head from "next/head";
 
 const Home = () => {
@@ -9,6 +10,7 @@ const Home = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <GNB />
       <div>start</div>
     </>
   );
