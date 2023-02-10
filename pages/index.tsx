@@ -1,4 +1,3 @@
-import GNB from "@/Components/Layouts/GNB";
 import Head from "next/head";
 
 const Home = () => {
