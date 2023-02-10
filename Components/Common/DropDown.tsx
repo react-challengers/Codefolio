@@ -1,29 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
-interface DropDownProps<T> {
-  defaultValue: T;
-  options: T[];
+type ComponenetData = "birth_year" | "careerer";
+interface DropDownProps {
+  data: ComponenetData;
 }
-
 /**
- * @returns {options} - 드롭다운 option[]
  * @example
- * <DropDown options={data} defaultValue={2023}>
- * const data = [...{value: number | string}]
+ * <DropDown data="birth_year" />
+ * <DropDown data="careerer" />
+ * @TODO 컴포넌트별 스타일 분리
  */
-const DropDown = ({
-  defaultValue,
-  options,
-}: DropDownProps<string | number>) => {
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    e.preventDefault();
-  };
+const DropDown = ({ data }: DropDownProps) => {
+  const [selectValue, setSelectValue] = useState("");
 
+  const options: string[] = [];
+  // const thisYears = new Date();
+  const years = Array.from(
+    { length: new Date().getFullYear() - 1950 + 1 },
+    (_, i) => {
+      return new Date().getFullYear() - i;
+    }
+  );
+  if (data === "birth_year") {
+    years.forEach((year) => options.push(String(year)));
+  }
+  if (data === "careerer") {
+    for (let i = 1; i < 20; i += 1) {
+      options.push(`${i}년차`);
+    }
+    options.unshift("신입");
+    options.push("20년차 이상");
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectValue(e.target.value);
+  };
   return (
     <Select onChange={handleChange}>
       {options.map((option) => (
-        <option key={option} value={option} defaultValue={defaultValue}>
+        <option key={option} value={option} defaultValue={option}>
           {option}
         </option>
       ))}
@@ -34,10 +50,10 @@ const DropDown = ({
 export default DropDown;
 
 const Select = styled.select`
-  display: flex;
-  padding: 0.5rem 0.5rem;
-  border: 1px solid;
-  border-radius: 0.25rem;
+  height: 3.5rem;
+  width: 19.0625rem;
+  padding: 0.75rem;
+
   color: inherit;
   &:focus {
     border-color: red;
