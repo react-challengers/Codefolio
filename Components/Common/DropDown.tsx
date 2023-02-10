@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 interface Options {
   options: Option[];
@@ -7,6 +8,7 @@ interface Options {
 interface Option {
   value: number | string;
 }
+
 /**
  * @returns {value} - 드롭다운 option
  * @example
@@ -19,7 +21,7 @@ const DropDown = ({ defaultValue, options }: Options) => {
   };
 
   return (
-    <select onChange={handleChange}>
+    <Select onChange={handleChange}>
       {options.map((option) => (
         <option
           key={option.value}
@@ -29,8 +31,19 @@ const DropDown = ({ defaultValue, options }: Options) => {
           {option.value}
         </option>
       ))}
-    </select>
+    </Select>
   );
 };
 
 export default DropDown;
+
+const Select = styled.select`
+  display: flex;
+  padding: 8px 8px;
+  border: 1px solid;
+  border-radius: 4px;
+  color: inherit;
+  &:focus {
+    border-color: red;
+  }
+`;
