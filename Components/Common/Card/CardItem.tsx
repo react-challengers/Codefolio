@@ -62,7 +62,7 @@ interface CardProps {
  * />
  */
 
-const Card = ({
+const CardItem = ({
   tagItems,
   imageSrc,
   linkURL,
@@ -173,4 +173,4 @@ const IconCountContainer = styled.div`
   display: flex;
 `;
 
-export default Card;
+export default CardItem;

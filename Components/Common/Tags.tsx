@@ -13,6 +13,7 @@ import styled from "styled-components";
  * 현재는 아래와 같은 문제가 있습니다.
  * Components API  TDD  애자일 익스트림 프로그래밍
  * Compo...   A... T... 애... 익스트림 프...
+ * 가로 스크롤로 처리하는 방안도 있습니다.
  */
 
 interface TagsProps {
