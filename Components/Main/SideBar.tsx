@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import check from "@/public/icons/check.svg";
 import Image from "next/image";
-import { useState } from "react";
 import LargeCategory from "./LargeCategory";
+import { useRecoilState } from "recoil";
+import { largeCategoryState, subCategoryState } from "@/lib/recoil";
+import { useEffect } from "react";
 
 const SideBarContainer = styled.aside`
   display: flex;
@@ -70,8 +72,12 @@ interface SubCategoryItemsType {
 }
 
 const SideBar = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] =
+    useRecoilState(largeCategoryState);
+  const [selectedSubCategory, setSelectedSubCategory] =
+    useRecoilState(subCategoryState);
+
+  useEffect(() => {}, [selectedCategory, selectedSubCategory]);
 
   const largeCategoryItems = [
     "Web",
