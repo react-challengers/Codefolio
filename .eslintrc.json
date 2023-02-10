@@ -23,6 +23,7 @@
   },
   "plugins": ["react", "@typescript-eslint", "prettier"],
   "rules": {
+    "@typescript-eslint/no-use-before-define": 0,
     "react/jsx-props-no-spreading": 0,
     "react/function-component-definition": [
       2,
