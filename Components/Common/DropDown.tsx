@@ -2,15 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 interface Options {
-  options: Option[];
+  options: number[] | string[];
   defaultValue: number | string;
-}
-interface Option {
-  value: number | string;
 }
 
 /**
- * @returns {value} - 드롭다운 option
+ * @returns {options} - 드롭다운 option[]
  * @example
  * <DropDown options={data} defaultValue={2023}>
  * const data = [...{value: number | string}]
@@ -23,12 +20,8 @@ const DropDown = ({ defaultValue, options }: Options) => {
   return (
     <Select onChange={handleChange}>
       {options.map((option) => (
-        <option
-          key={option.value}
-          value={option.value}
-          defaultValue={defaultValue}
-        >
-          {option.value}
+        <option key={option} value={option} defaultValue={defaultValue}>
+          {option}
         </option>
       ))}
     </Select>
