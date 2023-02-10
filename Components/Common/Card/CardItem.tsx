@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
+import ProfileImage from "../ProfileImage";
 import Tags from "../Tags";
-import IconCount from "./IconCount";
+import IconWithCount from "./IconWithCount";
 
 /**
  * 여기는 CardItem에 해당하는 컴포넌트입니다.
@@ -79,14 +80,15 @@ const Card = ({
         <ImageContainer>
           <Tags tagItems={[field]} />
           <Image src={`/images/${imageSrc}`} alt={imageAlt} layout="fill" />
+          <ProfileImage alt={title} page="myPage" />
         </ImageContainer>
       </Link>
       <CardBottomWrapper>
         <DateCountContainer>
           <Date>{date}</Date>
           <IconCountContainer>
-            <IconCount icon="ico-heart" count={likes} />
-            <IconCount icon="ico-heart" count={comments} />
+            <IconWithCount icon="ico-heart" count={likes} />
+            <IconWithCount icon="ico-heart" count={comments} />
           </IconCountContainer>
         </DateCountContainer>
         <TitleWrapper>

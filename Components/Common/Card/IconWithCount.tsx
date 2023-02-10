@@ -6,7 +6,7 @@ interface IconCountProps {
   count: number;
 }
 
-const IconCount = ({ icon, count }: IconCountProps) => {
+const IconWithCount = ({ icon, count }: IconCountProps) => {
   return (
     <IconCountContainer>
       <Image src={`/icons/${icon}.svg`} alt={icon} height={24} width={24} />
@@ -23,4 +23,4 @@ const IconCountContainer = styled.div`
   gap: 0;
 `;
 
-export default IconCount;
+export default IconWithCount;

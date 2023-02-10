@@ -9,7 +9,10 @@ import styled from "styled-components";
  * 동작하는 로직을 추가할 때는 여기로 추가합니다.
  * 아이콘 클릭에 삭제, 태그 클릭에 추가...
  *
- * @TODO 태그 길이 초과하면 줄바꿈 처리 안 하고 (...) 표시하기
+ * @TODO 태그 길이 초과하면 줄바꿈 처리 안 하고 보이는 마지막 태그만(...) 표시하기
+ * 현재는 아래와 같은 문제가 있습니다.
+ * Components API  TDD  애자일 익스트림 프로그래밍
+ * Compo...   A... T... 애... 익스트림 프...
  */
 
 interface TagsProps {
@@ -33,8 +36,6 @@ const Tags = ({ tagItems }: TagsProps) => {
 const TagsContainer = styled.ul`
   display: flex;
   gap: 0.25rem;
-  /* 태그를 많이 넣었을 때 줄바꿈 처리합니다. */
-  flex-wrap: wrap;
 `;
 
 type TagsItemType = {
@@ -47,6 +48,9 @@ const TagsItem = styled.li<TagsItemType>`
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;
   border-radius: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export default Tags;
