@@ -1,16 +1,13 @@
 import Image, { StaticImageData } from "next/image";
 import styled from "styled-components";
+import anonProfile from "@/public/images/anonProfile.jpeg";
 
 type ProfileImagePageType = "myPage" | "detailPage";
 interface ProfileImageProps {
-  src: string | StaticImageData;
+  src?: string | StaticImageData;
   alt: string;
   page: ProfileImagePageType;
 }
-
-const ProfileImageItem = styled(Image)`
-  border-radius: 50%;
-`;
 
 /**
  * @param {string} src - 이미지 경로
@@ -22,7 +19,7 @@ const ProfileImageItem = styled(Image)`
  * <ProfileImage src={src} alt={alt} page={page} />
  */
 
-const ProfileImage = ({ src, alt, page }: ProfileImageProps) => {
+const ProfileImage = ({ src = anonProfile, alt, page }: ProfileImageProps) => {
   return (
     <ProfileImageItem
       src={src}
@@ -32,5 +29,9 @@ const ProfileImage = ({ src, alt, page }: ProfileImageProps) => {
     />
   );
 };
+
+const ProfileImageItem = styled(Image)`
+  border-radius: 50%;
+`;
 
 export default ProfileImage;
