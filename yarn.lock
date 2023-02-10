@@ -430,6 +430,11 @@
   dependencies:
     "@toast-ui/editor" "^3.2.1"
 
+"@toast-ui/select-box@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@toast-ui/select-box/-/select-box-1.1.0.tgz#eee7859054b192cbdce3c661de33e2b0be3bd343"
+  integrity sha512-arLYZ0xN2cmrvyB84SIS2NDkNs0vFAMZCROocl6MarwwY8XGUD/dh6hYaKY08Y+CsEP0SnI2UTQKJt0RqqWcBA==
+
 "@types/hoist-non-react-statics@*":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
