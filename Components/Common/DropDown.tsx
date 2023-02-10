@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-interface DropdownProps<T> {
-  options: T[];
+interface DropDownProps<T> {
   defaultValue: T;
+  options: T[];
 }
 
 /**
@@ -15,7 +15,7 @@ interface DropdownProps<T> {
 const DropDown = ({
   defaultValue,
   options,
-}: DropdownProps<string | number>) => {
+}: DropDownProps<string | number>) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
   };
