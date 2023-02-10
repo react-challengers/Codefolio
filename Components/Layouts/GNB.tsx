@@ -59,12 +59,12 @@ const GNBContainer = styled.div`
 const ButtonsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 16px;
+  gap: 1rem;
 `;
 
 const ButtonWrapper = styled.div`
   cursor: pointer;
-  padding: 8px;
+  padding: 0.5rem;
 `;
 
 export default GNB;
