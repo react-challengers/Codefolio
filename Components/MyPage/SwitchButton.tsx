@@ -6,7 +6,7 @@ interface SwitchButtonProps {
 }
 
 const SwitchButton = ({ currentItem, setCurrentItem }: SwitchButtonProps) => {
-  const items = ["남성", "여성", "선택 안함"];
+  const items = ["남자", "여자", "선택안함"];
   return (
     <SwitchButtonContainer>
       {items.map((item) => (
