@@ -16,6 +16,12 @@ const Login: NextPage = () => {
     });
   }
 
+  async function signInWithGoogle() {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+  }
+
   return (
     <LoginPageContainer>
       <EmptyContainer></EmptyContainer>
@@ -23,7 +29,9 @@ const Login: NextPage = () => {
         <LoginContainer>
           <LoginButton>카카오로 로그인하기</LoginButton>
           <LoginButton>네이버로 로그인하기</LoginButton>
-          <LoginButton>구글로 로그인하기</LoginButton>
+          <LoginButton onClick={signInWithGoogle}>
+            구글로 로그인하기
+          </LoginButton>
           <LoginButton>Github로 로그인하기</LoginButton>
           <PerforatedLine data-content="또는" />
           <LoginForm>
