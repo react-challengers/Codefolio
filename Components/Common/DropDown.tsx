@@ -15,7 +15,6 @@ const DropDown = ({ data }: DropDownProps) => {
   const [selectValue, setSelectValue] = useState("");
 
   const options: string[] = [];
-  // const thisYears = new Date();
   const years = Array.from(
     { length: new Date().getFullYear() - 1950 + 1 },
     (_, i) => {
