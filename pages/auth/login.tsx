@@ -22,6 +22,12 @@ const Login: NextPage = () => {
     });
   }
 
+  async function signInWithGitHub() {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+    });
+  }
+
   return (
     <LoginPageContainer>
       <EmptyContainer></EmptyContainer>
@@ -32,7 +38,9 @@ const Login: NextPage = () => {
           <LoginButton onClick={signInWithGoogle}>
             구글로 로그인하기
           </LoginButton>
-          <LoginButton>Github로 로그인하기</LoginButton>
+          <LoginButton onClick={signInWithGitHub}>
+            Github로 로그인하기
+          </LoginButton>
           <PerforatedLine data-content="또는" />
           <LoginForm>
             <LoginInput
