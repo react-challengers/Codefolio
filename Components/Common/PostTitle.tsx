@@ -3,6 +3,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+/**
+ * width: 100% 반영 피드백 반영 완료
+ * @TODO  input을 커스텀 훅으로 만들기
+ */
 const PostTitle = () => {
   const [title, setTitle] = useState("");
   const [subTitle, setSubTitle] = useState("");
@@ -27,21 +31,20 @@ export default PostTitle;
 const TitleWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
   padding: 3rem;
   gap: 1.375rem;
   border: 1px solid;
 `;
 const TitleInput = styled.input`
   display: inline-block;
-  width: 28.125rem;
+  width: 100%;
   height: 3.625rem;
   font-size: 2.5rem;
   font-weight: 700;
   border: none;
 `;
 const SubTitleInput = styled.input`
-  width: 11.75rem;
+  width: 100%;
   height: 2rem;
   font-size: 1.375rem;
   font-weight: 400;
