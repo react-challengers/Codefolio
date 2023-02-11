@@ -91,7 +91,9 @@ const CardItem = ({
           {isOverlay && (
             <ImageOverlayContainer>
               <ImageOverlayProfileContainer>
+                {/* todo: add src current user profile image */}
                 <ProfileImage alt={title} page="detailPage" />
+                {/* todo: add nickname current user */}
                 <ImageOverlayProfileName>이정익</ImageOverlayProfileName>
               </ImageOverlayProfileContainer>
             </ImageOverlayContainer>
