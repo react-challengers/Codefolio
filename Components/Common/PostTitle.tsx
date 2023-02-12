@@ -1,34 +1,28 @@
-/* eslint-disable react/button-has-type */
-// todo! input 박스 텍스트 길이에 따라 늘어나도록
-
-import React, { useCallback, useRef, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import Image, { StaticImageData } from "next/image";
+import image_upload from "@/public/icons/image_upload.svg";
 
 /**
- * width: 100% 반영 피드백 반영 완료
+ * @TODO  StrictNull 로 오류 발생
+ * @TODO  next Image width와 height 미지정으로 오류
  * @TODO  input을 커스텀 훅으로 만들기
  */
 const PostTitle = () => {
   const [title, setTitle] = useState("");
   const [subTitle, setSubTitle] = useState("");
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [imgFile, setImgFile] = useState<string | null>(null);
 
-  const onUploadImage = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target.files) {
-        return;
-      }
-      console.log(e.target.files[0].name);
-    },
-    []
-  );
+  const onChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const onUploadImageButtonClick = useCallback(() => {
-    if (!inputRef.current) {
-      return;
-    }
-    inputRef.current.click();
-  }, []);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImgFile(reader.result as string);
+    };
+  };
 
   return (
     <TitleContainer>
@@ -43,14 +37,31 @@ const PostTitle = () => {
           onChange={(e) => setSubTitle(e.target.value)}
           placeholder="소제목을 입력하세요"
         />
-        <FileInput
+        <ImgLabel htmlFor="img-upload">
+          <ImgIcon
+            src={image_upload}
+            alt="이미지 업로드 아이콘"
+            width={36}
+            height={36}
+          />
+        </ImgLabel>
+        <ImgInput
+          id="img-upload"
           type="file"
           accept="images/*"
-          ref={inputRef}
-          onChange={onUploadImage}
+          onChange={onChangeImg}
+          // ref={imgRef}
         />
-        <button label="이미지 업로드" onClick={onUploadImageButtonClick} />
       </SubTitleWrapper>
+      {imgFile && (
+        <BackgroundImgFile
+          src={imgFile}
+          alt="배경 미리보기"
+          layout="fill"
+          objectFit="cover"
+          objectPosition="center"
+        />
+      )}
     </TitleContainer>
   );
 };
@@ -62,7 +73,8 @@ const TitleContainer = styled.div`
   flex-direction: column;
   padding: 3rem;
   gap: 1.375rem;
-  border: 1px solid;
+  border: 1px solid black;
+  position: relative;
 `;
 const TitleInput = styled.input`
   display: inline-block;
@@ -71,11 +83,13 @@ const TitleInput = styled.input`
   font-size: 2.5rem;
   font-weight: 700;
   border: none;
+  background-color: transparent;
 `;
 const SubTitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
+  background-color: transparent;
 `;
 const SubTitleInput = styled.input`
   width: 90%;
@@ -84,10 +98,15 @@ const SubTitleInput = styled.input`
   font-weight: 400;
   border: none;
 `;
-const FileInput = styled.input`
-  width: 0;
-  height: 0;
-  padding: 0;
-  border: 0;
-  overflow: hidden;
+const ImgLabel = styled.label``;
+const ImgIcon = styled(Image)<StaticImageData>`
+  cursor: pointer;
+`;
+const ImgInput = styled.input`
+  display: none;
+`;
+
+const BackgroundImgFile = styled(Image)<StaticImageData>`
+  position: absolute;
+  z-index: -1;
 `;
