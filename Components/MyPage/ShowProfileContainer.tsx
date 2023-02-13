@@ -1,9 +1,8 @@
-import { useRouter } from "next/router";
 import { Dispatch } from "react";
 import styled from "styled-components";
 import DefaultButton from "../Common/DefaultButton";
 import Tags from "../Common/Tags";
-import ProfileContainer, { ContentWrapper } from "./ProfileContainer";
+import ProfileContainer from "./ProfileContainer";
 
 interface ShowProfileContainerProps {
   userInfo: UserProfileType;
@@ -14,7 +13,6 @@ const ShowProfileContainer = ({
   userInfo,
   setIsEditing,
 }: ShowProfileContainerProps) => {
-  const router = useRouter();
   const { gender, birth_year, phone, field, skills, careerer } = userInfo;
   return (
     <>
@@ -26,21 +24,23 @@ const ShowProfileContainer = ({
             <p>{phone}</p>
           </>
         </ProfileContainer>
+
         <ProfileContainer title="경력">
           <ContentContainer>
             <ContentWrapper>
-              <p>포지션</p>
-              <p>경력</p>
-              <p>스킬</p>
+              <p>포지션</p> <Tags tagItems={field} />
             </ContentWrapper>
             <ContentWrapper>
-              <Tags tagItems={field} />
+              <p>경력</p>
               <p>{careerer}</p>
-              <Tags tagItems={skills} />
+            </ContentWrapper>
+            <ContentWrapper>
+              <p>스킬</p> <Tags tagItems={skills} />
             </ContentWrapper>
           </ContentContainer>
         </ProfileContainer>
       </TabProfileContainer>
+
       <ButtonWrapper>
         <DefaultButton
           text="수정하기"
@@ -65,7 +65,13 @@ const TabProfileContainer = styled.div`
   }
 `;
 
-const ContentContainer = styled.div`
+export const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+export const ContentWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 3fr;
 `;

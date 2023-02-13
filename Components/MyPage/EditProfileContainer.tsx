@@ -1,10 +1,13 @@
-import { useRouter } from "next/router";
+import getBirthYearsArray from "@/utils/commons/getBirthYearsArray";
 import { ChangeEvent, Dispatch, useState } from "react";
 import styled from "styled-components";
 import DefaultButton from "../Common/DefaultButton";
-import Tags from "../Common/Tags";
+import DropDown from "../Common/DropDown";
+import Toggle from "../Common/Toggle";
 import PositionTag from "./PositionTag";
 import ProfileContainer from "./ProfileContainer";
+import { ContentContainer, ContentWrapper } from "./ShowProfileContainer";
+import SkillList from "./SkillList";
 import SwitchButton from "./SwitchButton";
 
 const fieldList = [
@@ -27,11 +30,21 @@ const EditProfileContainer = ({
   userInfo,
   setIsEditing,
 }: EditProfileContainerProps) => {
-  const router = useRouter();
-  const { gender, birth_year, phone, field, skills, careerer } = userInfo;
-  const [activeField, setActiveField] = useState([...field]);
+  const birthYearsArray = getBirthYearsArray();
+  const {
+    gender,
+    birth_year,
+    phone,
+    field: oldField,
+    skills,
+    careerer,
+    is_public,
+  } = userInfo;
+  const [activeField, setActiveField] = useState([...oldField]);
   const [editPhone, setEditPhone] = useState(phone);
   const [currentItem, setCurrentItem] = useState(gender);
+  const [isPublic, setIsPublic] = useState(is_public);
+  const [editSkills, setEditSkills] = useState(skills);
 
   type ChangeEditPhoneType = (e: ChangeEvent<HTMLInputElement>) => void;
 
@@ -52,38 +65,65 @@ const EditProfileContainer = ({
     <>
       <TabProfileContainer>
         <ProfileContainer title="기본 정보">
-          <TextWrapper>
-            <SwitchButton
-              currentItem={currentItem}
-              setCurrentItem={setCurrentItem}
-            />
-            <PhoneInput value={editPhone} onChange={changeEditPhone} />
-          </TextWrapper>
+          <>
+            <InfoWrapper>
+              <p>성별</p>
+              <SwitchButton
+                currentItem={currentItem}
+                setCurrentItem={setCurrentItem}
+              />
+            </InfoWrapper>
+            <InfoWrapper>
+              <p>출생년도</p>
+              <DropDown defaultValue={birth_year} options={birthYearsArray} />
+            </InfoWrapper>
+            <InfoWrapper>
+              <p>휴대전화</p>
+              <PhoneInput value={editPhone} onChange={changeEditPhone} />
+            </InfoWrapper>
+          </>
         </ProfileContainer>
-        <ProfileContainer title="경력">
-          <ContentContainer>
-            <TextWrapper>
-              <p>포지션</p>
-              <p>경력</p>
-              <p>스킬</p>
-            </TextWrapper>
-            <TextWrapper>
-              <FieldWrapper>
-                {fieldList.map((field) => (
-                  <PositionTag
-                    onClick={() => clickField(field)}
-                    key={field}
-                    active={activeField.includes(field)}
-                  >
-                    {field}
-                  </PositionTag>
-                ))}
-              </FieldWrapper>
-              <p>3년</p>
-              <Tags tagItems={skills} />
-            </TextWrapper>
-          </ContentContainer>
-        </ProfileContainer>
+        <RightContainer>
+          <ProfileContainer title="경력">
+            <ContentContainer>
+              <ContentWrapper>
+                <p>포지션</p>
+                <FieldWrapper>
+                  {fieldList.map((field) => (
+                    <PositionTag
+                      onClick={() => clickField(field)}
+                      key={field}
+                      active={activeField.includes(field)}
+                    >
+                      {field}
+                    </PositionTag>
+                  ))}
+                </FieldWrapper>
+              </ContentWrapper>
+              <ContentWrapper>
+                <p>경력</p>
+                <p>3년</p>
+              </ContentWrapper>
+              <ContentWrapper>
+                <p>스킬</p>
+                <SkillList
+                  editSkills={editSkills}
+                  setEditSkills={setEditSkills}
+                />
+              </ContentWrapper>
+            </ContentContainer>
+          </ProfileContainer>
+
+          <ProfileContainer>
+            <ContentWrapper>
+              <p>프로필 공개여부</p>
+              <ToggleWrapper>
+                <Toggle flicker={isPublic} setFlicker={setIsPublic} />
+                <p>{isPublic ? "공개" : "비공개"}</p>
+              </ToggleWrapper>
+            </ContentWrapper>
+          </ProfileContainer>
+        </RightContainer>
       </TabProfileContainer>
       <ButtonWrapper>
         <DefaultButton
@@ -104,39 +144,48 @@ const EditProfileContainer = ({
 };
 
 const TabProfileContainer = styled.div`
-  width: 64rem;
+  width: 1024px;
   display: grid;
   grid-template-columns: 1fr 3fr;
-  grid-column-gap: 0.75rem;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+  grid-column-gap: 12px;
+  margin-top: 24px;
+  margin-bottom: 24px;
 
   p {
     color: grey;
   }
 `;
 
+const RightContainer = styled.div`
+  display: grid;
+  grid-row-gap: 12px;
+`;
+
 const FieldWrapper = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  gap: 0.5rem;
 `;
 
-const TextWrapper = styled.div`
+const InfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-`;
-
-const ContentContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 3fr;
+  gap: 0.75rem;
+  margin: 1rem 0;
 `;
 
 const ButtonWrapper = styled.div`
   display: flex;
   gap: 0.5rem;
   justify-content: right;
+`;
+
+const ToggleWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
 `;
 
 const PhoneInput = styled.input`

@@ -1,15 +1,16 @@
+import { Dispatch } from "react";
 import styled from "styled-components";
 
 interface SwitchButtonProps {
   currentItem: string;
-  setCurrentItem: (currentItem: string) => void;
+  setCurrentItem: Dispatch<React.SetStateAction<Gender>>;
 }
 
 const SwitchButton = ({ currentItem, setCurrentItem }: SwitchButtonProps) => {
-  const items = ["남자", "여자", "선택안함"];
+  const items: Gender[] = ["남자", "여자", "선택안함"];
   return (
     <SwitchButtonContainer>
-      {items.map((item) => (
+      {items.map((item: Gender) => (
         <DefaultButton
           key={item}
           active={currentItem === item}

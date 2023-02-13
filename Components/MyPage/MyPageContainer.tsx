@@ -6,7 +6,7 @@ const MyPageContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 3.75rem;
+  margin-bottom: 7.5rem;
 `;
 
 export default MyPageContainer;

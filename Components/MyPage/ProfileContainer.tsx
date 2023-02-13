@@ -2,14 +2,14 @@ import { ReactElement } from "react";
 import styled from "styled-components";
 
 interface ProfileContainerProps {
-  title: string;
+  title?: string;
   children: ReactElement;
 }
 
 const ProfileContainer = ({ title, children }: ProfileContainerProps) => {
   return (
     <ProfileContainerWrapper>
-      <Title>{title}</Title>
+      {title && <Title>{title}</Title>}
       <ContentWrapper>{children}</ContentWrapper>
     </ProfileContainerWrapper>
   );
@@ -27,7 +27,7 @@ const Title = styled.div`
   margin-bottom: 3rem;
 `;
 
-export const ContentWrapper = styled.div`
+const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;

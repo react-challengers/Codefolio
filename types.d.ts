@@ -1,9 +1,4 @@
-enum Gender {
-  MALE = "남자",
-  FEMALE = "여자",
-  UNKNOWN = "기타",
-  UNSELECTED = "선택안함",
-}
+type Gender = "남자" | "여자" | "선택안함";
 
 enum Field {
   WEB = "웹",

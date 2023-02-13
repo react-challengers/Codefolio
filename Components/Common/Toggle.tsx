@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch } from "react";
 import styled from "styled-components";
 
 /**
@@ -11,16 +11,17 @@ import styled from "styled-components";
 
 interface ToggleProps {
   flicker?: boolean;
+  setFlicker: Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Toggle = ({ flicker = false }: ToggleProps) => {
-  const [toggle, setToggle] = useState(flicker);
+const Toggle = ({ flicker = false, setFlicker }: ToggleProps) => {
   const handleToggle = () => {
-    setToggle((prev) => !prev);
+    setFlicker(!flicker);
   };
+
   return (
-    <ToggleContainer onClick={handleToggle} toggle={toggle}>
-      <ToggleController toggle={toggle} />
+    <ToggleContainer onClick={handleToggle} toggle={flicker}>
+      <ToggleController toggle={flicker} />
     </ToggleContainer>
   );
 };
