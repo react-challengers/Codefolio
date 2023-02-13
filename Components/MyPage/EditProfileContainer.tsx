@@ -1,4 +1,7 @@
-import getBirthYearsArray from "@/utils/commons/getBirthYearsArray";
+import {
+  getBirthYearsArray,
+  getCareerYearsArray,
+} from "@/utils/commons/getYearsArray";
 import { ChangeEvent, Dispatch, useState } from "react";
 import styled from "styled-components";
 import DefaultButton from "../Common/DefaultButton";
@@ -31,6 +34,7 @@ const EditProfileContainer = ({
   setIsEditing,
 }: EditProfileContainerProps) => {
   const birthYearsArray = getBirthYearsArray();
+  const careerYearsArray = getCareerYearsArray();
   const {
     gender,
     birth_year,
@@ -102,7 +106,7 @@ const EditProfileContainer = ({
               </ContentWrapper>
               <ContentWrapper>
                 <p>경력</p>
-                <p>3년</p>
+                <DropDown defaultValue={careerer} options={careerYearsArray} />
               </ContentWrapper>
               <ContentWrapper>
                 <p>스킬</p>
