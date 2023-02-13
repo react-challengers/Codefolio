@@ -148,12 +148,12 @@ const EditProfileContainer = ({
 };
 
 const TabProfileContainer = styled.div`
-  width: 1024px;
+  width: 64rem;
   display: grid;
   grid-template-columns: 1fr 3fr;
-  grid-column-gap: 12px;
-  margin-top: 24px;
-  margin-bottom: 24px;
+  grid-column-gap: 0.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 
   p {
     color: grey;
@@ -162,7 +162,7 @@ const TabProfileContainer = styled.div`
 
 const RightContainer = styled.div`
   display: grid;
-  grid-row-gap: 12px;
+  grid-row-gap: 0.75rem;
 `;
 
 const FieldWrapper = styled.div`

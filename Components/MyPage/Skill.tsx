@@ -35,7 +35,7 @@ const Skill = ({ skill, idx, onDelete, setEditSkills }: SkillProps) => {
 export const commonStyle = {
   "background-color": "grey",
   color: "white",
-  "border-radius": "50px",
+  "border-radius": "3.125rem",
   height: "2.125rem",
   border: "none",
   padding: "0 0.75rem",
@@ -48,12 +48,12 @@ const SkillContainer = styled.label`
 
 const SkillInput = styled.input`
   ${commonStyle}
-  width:80px;
+  width:5rem;
 `;
 
 const CancelButton = styled(Image)`
   cursor: pointer;
-  padding: 2px;
+  padding: 0.125rem;
 `;
 
 export default Skill;
