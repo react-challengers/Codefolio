@@ -3,6 +3,11 @@ import styled from "styled-components";
 
 /**
  * reducer함수의 state인자는 다음 action인자를 작성하기 위해 존재합니다.
+ * @TODO 하위 분야는 cursor pointer css를 조건부로 추가합니다.
+ * @TODO visibility는 호출한 컴포넌트에서 제어합니다.
+ * @TODO 하위 분야 state 제어는 recoil로 처리합니다.
+ * @example
+ * <FieldDropDown />
  */
 
 type LargeCategoryType =
