@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import styled from "styled-components";
 
 /**
@@ -26,75 +26,19 @@ const field: LargeCategoryType[] = [
   "보안",
 ];
 
-enum Field {
-  WEB = "웹",
-  APP = "앱",
-  SOFTWARE = "소프트웨어",
-  DATA = "데이터",
-  WEB3 = "블록체인",
-  DEVOPS = "데브옵스",
-  IOT_AND_EMBEDDED = "IOT,임베디드",
-  SECURITY = "보안",
-}
+// const initialState: { largeCategory: LargeCategoryType } = {
+//   largeCategory: "웹",
+// };
 
-const FiledItemContainer = styled.li<{
-  key?: string;
-  onMouseOver?: () => void;
-}>`
-  padding: 0.75rem;
-  width: 8rem;
-  :hover {
-    background: #e6e6e6;
-  }
-`;
+// const reducer = (state, action) => {
+//   switch (action) {
+//     case value:
+//       break;
 
-const lookup: { [key: string]: JSX.Element } = {
-  WEB: (
-    <ul>
-      <FiledItemContainer>웹</FiledItemContainer>
-    </ul>
-  ),
-  APP: (
-    <ul>
-      <FiledItemContainer>앱</FiledItemContainer>
-    </ul>
-  ),
-  SOFTWARE: (
-    <ul>
-      <FiledItemContainer>사무자동화</FiledItemContainer>
-      <FiledItemContainer>공장자동화</FiledItemContainer>
-      <FiledItemContainer>ERP</FiledItemContainer>
-      <FiledItemContainer>유니티</FiledItemContainer>
-      <FiledItemContainer>언리얼</FiledItemContainer>
-      <FiledItemContainer>기타</FiledItemContainer>
-    </ul>
-  ),
-  DATA: (
-    <ul>
-      <FiledItemContainer>데이터</FiledItemContainer>
-    </ul>
-  ),
-  WEB3: (
-    <ul>
-      <FiledItemContainer>블록체인</FiledItemContainer>
-    </ul>
-  ),
-  DEVOPS: (
-    <ul>
-      <FiledItemContainer>데브옵스</FiledItemContainer>
-    </ul>
-  ),
-  IOT_AND_EMBEDDED: (
-    <ul>
-      <FiledItemContainer>IOT,임베디드</FiledItemContainer>
-    </ul>
-  ),
-  SECURITY: (
-    <ul>
-      <FiledItemContainer>보안</FiledItemContainer>
-    </ul>
-  ),
-};
+//     default:
+//       break;
+//   }
+// };
 
 const FieldDropDown = () => {
   const [largeCategory, setLargeCategory] = useState<string>("웹");
@@ -102,9 +46,10 @@ const FieldDropDown = () => {
     setLargeCategory(item);
   };
 
+  // const [] = useReducer();
+
   return (
     <FieldDropDownContainer>
-      <h1>{Field.APP}</h1>
       <ul>
         {field.map((item) => (
           <FiledItemContainer
@@ -116,13 +61,95 @@ const FieldDropDown = () => {
         ))}
       </ul>
       <Divider />
-      {lookup.WEB}
+      {LookUp(largeCategory as LargeCategoryType)}
     </FieldDropDownContainer>
   );
 };
 
+const LookUp = (LargeFiled: LargeCategoryType) => {
+  switch (LargeFiled) {
+    case "웹":
+      return (
+        <ul>
+          <FiledItemContainer>프론트엔드</FiledItemContainer>
+          <FiledItemContainer>백엔드</FiledItemContainer>
+          <FiledItemContainer>풀스택</FiledItemContainer>
+        </ul>
+      );
+    case "앱":
+      return (
+        <ul>
+          <FiledItemContainer>안드로이드</FiledItemContainer>
+          <FiledItemContainer>iOS</FiledItemContainer>
+          <FiledItemContainer>리액트 네이티브</FiledItemContainer>
+          <FiledItemContainer>플러터</FiledItemContainer>
+        </ul>
+      );
+    case "소프트웨어":
+      return (
+        <ul>
+          <FiledItemContainer>사무자동화</FiledItemContainer>
+          <FiledItemContainer>공장자동화</FiledItemContainer>
+          <FiledItemContainer>ERP</FiledItemContainer>
+          <FiledItemContainer>유니티</FiledItemContainer>
+          <FiledItemContainer>언리얼</FiledItemContainer>
+          <FiledItemContainer>기타</FiledItemContainer>
+        </ul>
+      );
+    case "데이터":
+      return (
+        <ul>
+          <FiledItemContainer>데이터 엔지니어링</FiledItemContainer>
+          <FiledItemContainer>머신러닝 엔지니어링</FiledItemContainer>
+          <FiledItemContainer>데이터 사이언스</FiledItemContainer>
+        </ul>
+      );
+    case "블록체인":
+      return (
+        <ul>
+          <FiledItemContainer>블록체인</FiledItemContainer>
+        </ul>
+      );
+    case "데브옵스":
+      return (
+        <ul>
+          <FiledItemContainer>데브옵스</FiledItemContainer>
+        </ul>
+      );
+    case "IoT/임베디드":
+      return (
+        <ul>
+          <FiledItemContainer>IOT,임베디드</FiledItemContainer>
+        </ul>
+      );
+    case "보안":
+      return (
+        <ul>
+          <FiledItemContainer>보안</FiledItemContainer>
+        </ul>
+      );
+    default:
+      return (
+        <ul>
+          <FiledItemContainer>기타</FiledItemContainer>
+        </ul>
+      );
+  }
+};
+
+const FiledItemContainer = styled.li<{
+  key?: string;
+  onMouseOver?: () => void;
+}>`
+  padding: 0.75rem;
+  width: 8.75rem;
+  :hover {
+    background: #e6e6e6;
+  }
+`;
+
 const FieldDropDownContainer = styled.div`
-  width: 20.5rem;
+  width: 21.5rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border: 1px solid #cccccc;
   display: flex;
