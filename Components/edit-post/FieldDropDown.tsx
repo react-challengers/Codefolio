@@ -1,8 +1,8 @@
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import styled from "styled-components";
 
 /**
- * @TODO Tabs 로직 참조하기
+ * reducer함수의 state인자는 다음 action인자를 작성하기 위해 존재합니다.
  */
 
 type LargeCategoryType =
@@ -26,27 +26,39 @@ const field: LargeCategoryType[] = [
   "보안",
 ];
 
-// const initialState: { largeCategory: LargeCategoryType } = {
-//   largeCategory: "웹",
-// };
+const initialState: string[] = ["프론트엔드", "백엔드", "풀스택"];
 
-// const reducer = (state, action) => {
-//   switch (action) {
-//     case value:
-//       break;
-
-//     default:
-//       break;
-//   }
-// };
+const reducer = (
+  _state: string[],
+  action: { type: LargeCategoryType }
+): string[] => {
+  switch (action.type) {
+    case "웹":
+      return ["프론트엔드", "백엔드", "풀스택"];
+    case "앱":
+      return ["안드로이드", "iOS", "리액트 네이티브", "플러터"];
+    case "소프트웨어":
+      return ["사무자동화", "공장자동화", "ERP", "유니티", "언리얼", "기타"];
+    case "데이터":
+      return ["데이터 엔지니어링", "머신러닝 엔지니어링", "데이터 사이언스"];
+    case "블록체인":
+      return ["블록체인"];
+    case "데브옵스":
+      return ["데브옵스"];
+    case "IoT/임베디드":
+      return ["IOT,임베디드"];
+    case "보안":
+      return ["보안"];
+    default:
+      return ["기타"];
+  }
+};
 
 const FieldDropDown = () => {
-  const [largeCategory, setLargeCategory] = useState<string>("웹");
+  const [state, dispatch] = useReducer(reducer, initialState);
   const handleLargeCategory = (item: LargeCategoryType) => {
-    setLargeCategory(item);
+    dispatch({ type: item });
   };
-
-  // const [] = useReducer();
 
   return (
     <FieldDropDownContainer>
@@ -54,87 +66,20 @@ const FieldDropDown = () => {
         {field.map((item) => (
           <FiledItemContainer
             onMouseOver={() => handleLargeCategory(item)}
-            key={item}
+            key={item.toString()}
           >
             {item}
           </FiledItemContainer>
         ))}
       </ul>
       <Divider />
-      {LookUp(largeCategory as LargeCategoryType)}
+      <ul>
+        {state.map((item) => (
+          <FiledItemContainer key={item.toString()}>{item}</FiledItemContainer>
+        ))}
+      </ul>
     </FieldDropDownContainer>
   );
-};
-
-const LookUp = (LargeFiled: LargeCategoryType) => {
-  switch (LargeFiled) {
-    case "웹":
-      return (
-        <ul>
-          <FiledItemContainer>프론트엔드</FiledItemContainer>
-          <FiledItemContainer>백엔드</FiledItemContainer>
-          <FiledItemContainer>풀스택</FiledItemContainer>
-        </ul>
-      );
-    case "앱":
-      return (
-        <ul>
-          <FiledItemContainer>안드로이드</FiledItemContainer>
-          <FiledItemContainer>iOS</FiledItemContainer>
-          <FiledItemContainer>리액트 네이티브</FiledItemContainer>
-          <FiledItemContainer>플러터</FiledItemContainer>
-        </ul>
-      );
-    case "소프트웨어":
-      return (
-        <ul>
-          <FiledItemContainer>사무자동화</FiledItemContainer>
-          <FiledItemContainer>공장자동화</FiledItemContainer>
-          <FiledItemContainer>ERP</FiledItemContainer>
-          <FiledItemContainer>유니티</FiledItemContainer>
-          <FiledItemContainer>언리얼</FiledItemContainer>
-          <FiledItemContainer>기타</FiledItemContainer>
-        </ul>
-      );
-    case "데이터":
-      return (
-        <ul>
-          <FiledItemContainer>데이터 엔지니어링</FiledItemContainer>
-          <FiledItemContainer>머신러닝 엔지니어링</FiledItemContainer>
-          <FiledItemContainer>데이터 사이언스</FiledItemContainer>
-        </ul>
-      );
-    case "블록체인":
-      return (
-        <ul>
-          <FiledItemContainer>블록체인</FiledItemContainer>
-        </ul>
-      );
-    case "데브옵스":
-      return (
-        <ul>
-          <FiledItemContainer>데브옵스</FiledItemContainer>
-        </ul>
-      );
-    case "IoT/임베디드":
-      return (
-        <ul>
-          <FiledItemContainer>IOT,임베디드</FiledItemContainer>
-        </ul>
-      );
-    case "보안":
-      return (
-        <ul>
-          <FiledItemContainer>보안</FiledItemContainer>
-        </ul>
-      );
-    default:
-      return (
-        <ul>
-          <FiledItemContainer>기타</FiledItemContainer>
-        </ul>
-      );
-  }
 };
 
 const FiledItemContainer = styled.li<{
