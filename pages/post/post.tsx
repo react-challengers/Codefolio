@@ -4,6 +4,12 @@ import DefaultButton from "@/Components/Common/DefaultButton";
 import PostTitle from "@/Components/Post/PostTitle";
 import ProjectInfo from "@/Components/Post/ProjectInfo";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+
+/**
+ * @TODO 마크다운
+ * @TODO 코드블럭
+ */
 
 const Post: NextPage = () => {
   const [title, setTitle] = useState("");
@@ -13,6 +19,10 @@ const Post: NextPage = () => {
   const onClickTest = () => {
     console.log("hi");
   };
+
+  const PostEditor = dynamic(() => import("../../Components/Post/PostEditor"), {
+    ssr: false,
+  });
 
   return (
     <MainWrapper>
@@ -26,7 +36,6 @@ const Post: NextPage = () => {
         />
         <DefaultButton text="게시" type="full" size="s" onClick={onClickTest} />
       </PostHeader>
-
       <section>
         <PostTitle
           title={title}
@@ -39,7 +48,7 @@ const Post: NextPage = () => {
         <ProjectInfo />
       </section>
       <section>
-        <span>Toast UI 영역</span>
+        <PostEditor />
       </section>
     </MainWrapper>
   );
@@ -49,6 +58,7 @@ const MainWrapper = styled.main`
   max-width: 98.75rem;
   margin: 0 auto;
 `;
+
 const PostHeader = styled.section`
   display: flex;
   align-items: center;
