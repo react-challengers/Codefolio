@@ -4,7 +4,7 @@ import styled from "styled-components";
 import ShowMoreModal from "./ShowMoreModal";
 
 const DetailHeader = () => {
-  const [showMore, setShowMore] = useState(true);
+  const [showMore, setShowMore] = useState(false);
 
   const showMoreModal = () => setShowMore((prev) => !prev);
 
