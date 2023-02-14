@@ -1,11 +1,13 @@
 import { largeCategoryState, subCategoryState } from "@/lib/recoil";
 import Image from "next/image";
-import { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import bottom_arrow from "@/public/icons/bottom_arrow.svg";
 import Tags from "../Common/Tags";
 import CardItem from "../Common/Card/CardItem";
+
+// TODO: Tag 데이터 구조화 고민하기
 
 const MainSection = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -13,31 +15,33 @@ const MainSection = () => {
   const [selectedDropDownItem, setSelectedDropDownItem] = useState(
     homeDropDownItems[0]
   );
-  const selectedLargeCategory = useRecoilValue(largeCategoryState);
-  const selectedSubCategory = useRecoilValue(subCategoryState);
+  const [selectedLargeCategory, setSelectedLargeCategory] =
+    useRecoilState(largeCategoryState);
+  const [selectedSubCategory, setSelectedSubCategory] =
+    useRecoilState(subCategoryState);
 
   const onClickDropDown = () => {
     setIsDropDownOpen((prev) => !prev);
   };
 
+  // 다른 페이지에 갔다가 다시 돌아왔을 시, 카테고리가 초기화 되도록 설정
+  useEffect(() => {
+    setSelectedLargeCategory([]);
+    setSelectedSubCategory([]);
+  }, [setSelectedLargeCategory, setSelectedSubCategory]);
+
   return (
     <HomeMainContainer>
-      {selectedLargeCategory.length !== 0 &&
-        selectedSubCategory.length !== 0 && (
-          <Tags
-            tagItems={[
-              `${selectedLargeCategory} | ${selectedSubCategory.map(
-                (item) => item
-              )}`,
-            ]}
-            size="lg"
-          />
-        )}
-      {selectedLargeCategory.length !== 0 &&
-        selectedSubCategory.length === 0 &&
-        selectedLargeCategory.map((item) => (
-          <Tags key={item} tagItems={[`${item}`]} size="lg" />
-        ))}
+      <TagContainer>
+        {selectedLargeCategory.length !== 0 &&
+          selectedSubCategory.length !== 0 && (
+            <Tags tagItems={selectedSubCategory} size="md" />
+          )}
+        {selectedLargeCategory.length !== 0 &&
+          selectedSubCategory.length === 0 && (
+            <Tags tagItems={selectedLargeCategory} size="lg" />
+          )}
+      </TagContainer>
       <HomeDropDownContainer>
         <HomeDropDownButton
           onClick={() => {
@@ -88,6 +92,13 @@ const HomeMainContainer = styled.main`
   max-width: 75rem;
   margin-left: 1.5rem;
   margin-top: 3rem;
+`;
+
+const TagContainer = styled.div`
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
+  height: 2.375rem;
 `;
 
 const HomeCardGrid = styled.div`
