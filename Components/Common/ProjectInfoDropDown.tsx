@@ -81,8 +81,8 @@ const DatePickerContainer = styled.div`
 const StyledDatePicker = styled(DatePicker)`
   width: 7.8125rem;
 
-  border: 0rem;
-  border-bottom: 0.0625rem solid;
+  border: none;
+  border-bottom: 1px solid;
 
   display: flex;
   justify-content: center;
