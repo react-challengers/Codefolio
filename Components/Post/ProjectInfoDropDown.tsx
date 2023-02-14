@@ -13,10 +13,12 @@ const ProjectInfoDropDown = () => {
     <ProjectInfoDropDownContainer>
       <CategoryContainer>
         <TEXTBOX>카테고리</TEXTBOX>
+        {/* input으로 받아줄 state 생성 */}
         <CategoryPicker>카테고리를 선택해주세요.</CategoryPicker>
       </CategoryContainer>
       <DevelopStackContainer>
         <TEXTBOX>개발 스택</TEXTBOX>
+        {/* input으로 받아 Tags로 전달 */}
         <Tags tagItems={["Toast UI", "Toast eat"]} />
       </DevelopStackContainer>
       <Container>

@@ -3,8 +3,13 @@ import styled from "styled-components";
 import DefaultButton from "@/Components/Common/DefaultButton";
 import PostTitle from "@/Components/Post/PostTitle";
 import ProjectInfo from "@/Components/Post/ProjectInfo";
+import { useState } from "react";
 
 const Post: NextPage = () => {
+  const [title, setTitle] = useState("");
+  const [subTitle, setSubTitle] = useState("");
+  const [imgFile, setImgFile] = useState("");
+
   const onClickTest = () => {
     console.log("hi");
   };
@@ -21,8 +26,16 @@ const Post: NextPage = () => {
         />
         <DefaultButton text="게시" type="full" size="s" onClick={onClickTest} />
       </PostHeader>
+
       <section>
-        <PostTitle />
+        <PostTitle
+          title={title}
+          setTitle={setTitle}
+          subTitle={subTitle}
+          setSubTitle={setSubTitle}
+          imgFile={imgFile}
+          setImgFile={setImgFile}
+        />
         <ProjectInfo />
       </section>
       <section>
