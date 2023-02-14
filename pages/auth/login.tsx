@@ -4,55 +4,77 @@ import LoginButton from "@/Components/Common/AuthLoginButton";
 import Link from "next/link";
 import { useState } from "react";
 import supabase from "@/lib/supabase";
-import Router from "next/router";
-import { kakaoInit } from "@/utils/APIs/socialLogin";
+import { useRouter } from "next/router";
+// import { kakaoInit } from "@/utils/APIs/socialLogin";
+
+/**
+ * 일단 kakao 로그인의 경우 주석처리 해놨습니다.
+ * @TODO 소셜 로그인 추가 구현 필요 (카카오, 네이버), supabase 서버와의 연결이 필요
+ * @TODO 로그인 실패시, 처리 구현
+ */
 
 const Login: NextPage = () => {
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const kakaoLogin = async () => {
-    // 카카오 초기화
-    const kakao = kakaoInit();
+  // const kakaoLogin = async () => {
+  //   // 카카오 초기화
+  //   const kakao = kakaoInit();
 
-    // 카카오 로그인 구현
-    kakao.Auth.login({
-      success: () => {
-        kakao.API.request({
-          url: "/v2/user/me", // 사용자 정보 가져오기
-          success: (res: any) => {
-            // 로그인 성공할 경우 정보 확인 후 /kakao 페이지로 push
-            console.log(res);
-            Router.push("/kakao");
-          },
-          fail: (error: any) => {
-            console.log(error);
-          },
-        });
-      },
-      fail: (error: any) => {
-        console.log(error);
-      },
-    });
-  };
+  //   // 카카오 로그인 구현
+  //   kakao.Auth.login({
+  //     success: () => {
+  //       kakao.API.request({
+  //         url: "/v2/user/me", // 사용자 정보 가져오기
+  //         success: (res: any) => {
+  //           // 로그인 성공할 경우 정보 확인 후 /kakao 페이지로 push
+  //           console.log(res);
+  //           router.push("/on-boarding");
+  //         },
+  //         fail: (error: any) => {
+  //           console.log(error);
+  //         },
+  //       });
+  //     },
+  //     fail: (error: any) => {
+  //       console.log(error);
+  //     },
+  //   });
+  // };
 
   const signInWithEmail = async () => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    if (!error) {
+      setEmail("");
+      setPassword("");
+      alert("이메일 로그인 완료");
+      router.push("/on-boarding");
+    }
   };
 
   const signInWithGoogle = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
+    if (!error) {
+      alert("구글 로그인 완료");
+      router.push("/on-boarding");
+    }
   };
 
   const signInWithGitHub = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "github",
     });
+    if (!error) {
+      alert("깃헙 로그인 완료");
+      router.push("/on-boarding");
+    }
   };
 
   return (
@@ -60,7 +82,7 @@ const Login: NextPage = () => {
       <EmptyContainer></EmptyContainer>
       <LoginSpace>
         <LoginContainer>
-          <LoginButton onClick={kakaoLogin}>카카오로 로그인하기</LoginButton>
+          <LoginButton>카카오로 로그인하기</LoginButton>
           <LoginButton>네이버로 로그인하기</LoginButton>
           <LoginButton onClick={signInWithGoogle}>
             구글로 로그인하기
@@ -135,21 +157,20 @@ const PerforatedLine = styled.hr`
   opacity: 0.5;
   &:before {
     content: "";
-    background: linear-gradient(black, transparent);
+    background: linear-gradient;
     position: absolute;
     left: 0;
     top: 50%;
     width: 100%;
-    height: .625rem;
+    height: 0.625rem;
   }
   &:after {
     content: attr(data-content);
     position: relative;
     display: inline-block;
 
-    padding: 0 .5rem;
+    padding: 0 0.5rem;
     line-height: 1.5rem;
-    // this is really the only tricky part, you need to specify the background color of the container element...
     color: black;
     background-color: white;
   }
@@ -189,12 +210,12 @@ const FooterMassage = styled.div`
   width: 26.5rem;
   height: 3.125rem;
 
-  margin-top: .625rem;
+  margin-top: 0.625rem;
 
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: .8125rem;
+  font-size: 0.8125rem;
 `;
 
 export default Login;

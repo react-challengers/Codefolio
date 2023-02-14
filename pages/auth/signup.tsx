@@ -4,14 +4,30 @@ import LoginButton from "@/Components/Common/AuthLoginButton";
 import Link from "next/link";
 import { useState } from "react";
 import supabase from "@/lib/supabase";
+import { useRouter } from "next/router";
+
+/**
+ * 현재 가장 기본적 유효성검사, "빈 인풋 체크"와 비밀번호 확인 부분만 추가되어 있습니다.
+ * @TODO custom hooks (made by nne3enn) 을 사용해서 리팩토링
+ * @TODO 유효성 검사 부분은 디자인이 나왔을 때, 해당 부분과 같이 작업 필요
+ */
 
 const signup: NextPage = () => {
+  const router = useRouter();
+
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
   const signupWithEmail = async () => {
+    if (!userName || !email || !password || !passwordCheck) {
+      return alert("모든 데이터를 입력해주세요.");
+    }
+    if (password !== passwordCheck) {
+      return alert("패스워드를 확인해주세요.");
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -21,6 +37,21 @@ const signup: NextPage = () => {
         },
       },
     });
+
+    if (!error) {
+      resetInputs();
+
+      alert("회원가입 완료");
+      router.push("/on-boarding");
+    }
+  };
+
+  // 인풋창 초기화
+  const resetInputs = () => {
+    setUserName("");
+    setEmail("");
+    setPassword("");
+    setPasswordCheck("");
   };
 
   return (
@@ -84,7 +115,7 @@ const SignupSpace = styled.div`
 
 const SignupContainer = styled.div`
   max-width: 28.125rem;
-  height: 450px;
+  height: 28.125rem;
 
   flex-grow: 1;
 `;
