@@ -12,7 +12,7 @@ const ShowMoreModal = () => {
 const ShowMoreModalContainer = styled.div`
   width: 11.25rem;
   position: absolute;
-  top: 60px;
+  top: 3.75rem;
   right: 2.5rem;
   border: 0.0625rem solid #dfdfdf;
   box-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25);

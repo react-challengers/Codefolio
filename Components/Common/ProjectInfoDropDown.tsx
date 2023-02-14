@@ -53,7 +53,7 @@ const ProjectInfoDropDownContainer = styled.div`
   width: 98.75rem;
   height: 12.5rem;
 
-  margin-top: 2px;
+  margin-top: 0.125rem;
   border: 1px solid #cccccc;
 
   display: flex;
