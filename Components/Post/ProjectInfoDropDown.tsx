@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import Tags from "../Common/Tags";
@@ -14,21 +14,26 @@ interface ProjectInfoDropDownProps {
   setStartDate: Dispatch<SetStateAction<Date>>;
   endDate: Date;
   setEndDate: Dispatch<SetStateAction<Date>>;
-  techStackInput: string[];
-  setTechStackInput: Dispatch<SetStateAction<string[]>>;
+  techStack: string[];
+  setTechStack: Dispatch<SetStateAction<string[]>>;
 }
 const ProjectInfoDropDown = ({
   startDate,
   setStartDate,
   endDate,
   setEndDate,
-  techStackInput,
-  setTechStackInput,
+  techStack,
+  setTechStack,
 }: ProjectInfoDropDownProps) => {
-  const handleOnChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const [inputValue, setInputValue] = useState("");
+  const handleOnPush = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setTechStackInput((prev) => [...prev, e.currentTarget.value]);
+      setTechStack((prev) => [...prev, inputValue]);
+      setInputValue("");
     }
+  };
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
   };
 
   return (
@@ -41,12 +46,12 @@ const ProjectInfoDropDown = ({
       <DevelopStackContainer>
         <TEXTBOX>개발 스택</TEXTBOX>
         {/* input으로 받아 Tags로 전달 */}
-        <Tags tagItems={techStackInput} />
+        <Tags tagItems={techStack} />
         <input
           type="text"
-          value={""}
-          onKeyDown={handleOnChange}
-          // ={handleOnChange}
+          value={inputValue}
+          onChange={handleOnChange}
+          onKeyDown={handleOnPush}
         />
       </DevelopStackContainer>
       <Container>
