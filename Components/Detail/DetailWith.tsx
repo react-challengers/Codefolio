@@ -30,7 +30,7 @@ const DetailWith = ({ name, field, github }: DetailWithProps) => {
 
 const DetailWithContainer = styled.div`
   color: #666;
-  font-size: 13px;
+  font-size: 0.8125rem;
   text-align: center;
 
   display: grid;

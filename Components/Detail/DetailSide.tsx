@@ -73,22 +73,22 @@ const DetailSide = () => {
 const SideContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 2.5rem;
 `;
 
 const DetailSideWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
 `;
 
 const Title = styled.span`
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: #666666;
 `;
 const Description = styled.span`
-  margin-left: 32px;
-  font-size: 13px;
+  margin-left: 2rem;
+  font-size: 0.8125rem;
   color: #b3b3b3;
 `;
 
@@ -96,16 +96,16 @@ const ProfileWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 20px;
+  gap: 1.25rem;
 `;
 const ButtonsWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 0.5rem;
 `;
 
 const Name = styled.p`
-  font-size: 18px;
+  font-size: 1.125rem;
 `;
 
 export default DetailSide;
