@@ -45,12 +45,12 @@ const DetailTitleText = styled.div`
   flex-direction: column;
   gap: 1.875rem;
   h1 {
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 700;
     color: #262626;
   }
   h3 {
-    font-size: 20px;
+    font-size: 1.25rem;
     color: #999999;
   }
 `;
