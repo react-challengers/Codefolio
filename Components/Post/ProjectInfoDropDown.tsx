@@ -1,11 +1,12 @@
 import styled from "styled-components";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import Tags from "../Common/Tags";
 
 /**
  * @see https://www.youtube.com/shorts/4hpjO2onpNs
+ * @TODO 월 선택 안됨. 준호님 질문
  */
 
 interface ProjectInfoDropDownProps {
@@ -13,17 +14,21 @@ interface ProjectInfoDropDownProps {
   setStartDate: Dispatch<SetStateAction<Date>>;
   endDate: Date;
   setEndDate: Dispatch<SetStateAction<Date>>;
+  techStackInput: string[];
+  setTechStackInput: Dispatch<SetStateAction<string[]>>;
 }
-
 const ProjectInfoDropDown = ({
   startDate,
   setStartDate,
   endDate,
   setEndDate,
+  techStackInput,
+  setTechStackInput,
 }: ProjectInfoDropDownProps) => {
-  const [techStack, setTechStack] = useState("");
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTechStack(e.target.value);
+  const handleOnChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setTechStackInput((prev) => [...prev, e.currentTarget.value]);
+    }
   };
 
   return (
@@ -36,8 +41,13 @@ const ProjectInfoDropDown = ({
       <DevelopStackContainer>
         <TEXTBOX>개발 스택</TEXTBOX>
         {/* input으로 받아 Tags로 전달 */}
-        <Tags tagItems={["Toast UI", "Toast eat"]} />
-        <input type="text" value={techStack} onChange={handleOnChange} />
+        <Tags tagItems={techStackInput} />
+        <input
+          type="text"
+          value={""}
+          onKeyDown={handleOnChange}
+          // ={handleOnChange}
+        />
       </DevelopStackContainer>
       <Container>
         <TEXTBOX>프로젝트 기간</TEXTBOX>

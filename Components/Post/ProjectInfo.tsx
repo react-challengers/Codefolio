@@ -9,6 +9,8 @@ interface ProjectInfoDropDownProps {
   setStartDate: Dispatch<SetStateAction<Date>>;
   endDate: Date;
   setEndDate: Dispatch<SetStateAction<Date>>;
+  techStackInput: string[];
+  setTechStackInput: Dispatch<SetStateAction<string[]>>;
 }
 
 const ProjectInfo = ({
@@ -16,6 +18,8 @@ const ProjectInfo = ({
   setStartDate,
   endDate,
   setEndDate,
+  techStackInput,
+  setTechStackInput,
 }: ProjectInfoDropDownProps) => {
   const [openDropdown, setOpenDropdown] = useState(false);
 
@@ -33,6 +37,8 @@ const ProjectInfo = ({
           setStartDate={setStartDate}
           endDate={endDate}
           setEndDate={setEndDate}
+          techStackInput={techStackInput}
+          setTechStackInput={setTechStackInput}
         />
       )}
     </div>

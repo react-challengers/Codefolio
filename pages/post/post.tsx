@@ -19,6 +19,8 @@ const Post: NextPage = () => {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
 
+  const [techStackInput, setTechStackInput] = useState([]);
+
   const onClickTest = () => {
     console.log("hi");
   };
@@ -53,6 +55,8 @@ const Post: NextPage = () => {
           setStartDate={setStartDate}
           endDate={endDate}
           setEndDate={setEndDate}
+          techStackInput={techStackInput}
+          setTechStackInput={setTechStackInput}
         />
       </section>
       <section>
