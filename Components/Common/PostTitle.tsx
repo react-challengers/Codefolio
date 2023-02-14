@@ -11,11 +11,11 @@ import image_upload from "@/public/icons/image_upload.svg";
 const PostTitle = () => {
   const [title, setTitle] = useState("");
   const [subTitle, setSubTitle] = useState("");
-  const [imgFile, setImgFile] = useState<string | null>(null);
+  const [imgFile, setImgFile] = useState("");
 
   const onChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
     const file = e.target.files[0];
-    if (!file) return;
 
     const reader = new FileReader();
     reader.readAsDataURL(file);
