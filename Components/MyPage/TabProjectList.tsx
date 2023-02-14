@@ -16,7 +16,7 @@ const TabProjectList = () => {
           likes={203}
           comments={57}
           field="WEB"
-          linkURL={`/detail/${1}`}
+          linkURL="/detail/1"
         />
       ))}
     </CardItemContainer>

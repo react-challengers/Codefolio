@@ -2,35 +2,37 @@ import styled from "styled-components";
 import CardItem from "../Common/Card/CardItem";
 
 const CardItemContainer = ({ itemList }: any) => {
-  const {
-    imageSrc,
-    imageAlt,
-    tagItems,
-    title,
-    subTitle,
-    date,
-    likes,
-    comments,
-    field,
-    linkURL,
-  } = itemList;
   return (
     <CardListContainer>
-      {itemList.map((item: any) => (
-        <CardItem
-          key={item}
-          imageSrc={imageSrc}
-          imageAlt={imageAlt}
-          tagItems={tagItems}
-          title={title}
-          subTitle={subTitle}
-          date={date}
-          likes={likes}
-          comments={comments}
-          field={field}
-          linkURL={linkURL}
-        />
-      ))}
+      {itemList.map((item: any) => {
+        const {
+          imageSrc,
+          imageAlt,
+          tagItems,
+          title,
+          subTitle,
+          date,
+          likes,
+          comments,
+          field,
+          linkURL,
+        } = item;
+        return (
+          <CardItem
+            key={item}
+            imageSrc={imageSrc}
+            imageAlt={imageAlt}
+            tagItems={tagItems}
+            title={title}
+            subTitle={subTitle}
+            date={date}
+            likes={likes}
+            comments={comments}
+            field={field}
+            linkURL={linkURL}
+          />
+        );
+      })}
     </CardListContainer>
   );
 };

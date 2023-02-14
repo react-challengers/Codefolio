@@ -16,7 +16,7 @@ interface ToggleProps {
 
 const Toggle = ({ flicker = false, setFlicker }: ToggleProps) => {
   const handleToggle = () => {
-    setFlicker(!flicker);
+    setFlicker((prev) => !prev);
   };
 
   return (
