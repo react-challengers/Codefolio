@@ -192,7 +192,7 @@ const ToggleWrapper = styled.div`
 const PhoneInput = styled.input`
   background-color: transparent;
   height: 3rem;
-  border: 0.0625rem solid lightgrey;
+  border: 1px solid lightgrey;
   padding: 0 0.75rem;
 `;
 
