@@ -1,13 +1,30 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-
 import DatePicker from "react-datepicker";
 import Tags from "../Common/Tags";
 
-const ProjectInfoDropDown = () => {
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(new Date());
+/**
+ * @see https://www.youtube.com/shorts/4hpjO2onpNs
+ */
+
+interface ProjectInfoDropDownProps {
+  startDate: Date;
+  setStartDate: Dispatch<SetStateAction<Date>>;
+  endDate: Date;
+  setEndDate: Dispatch<SetStateAction<Date>>;
+}
+
+const ProjectInfoDropDown = ({
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+}: ProjectInfoDropDownProps) => {
+  const [techStack, setTechStack] = useState("");
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTechStack(e.target.value);
+  };
 
   return (
     <ProjectInfoDropDownContainer>
@@ -20,6 +37,7 @@ const ProjectInfoDropDown = () => {
         <TEXTBOX>개발 스택</TEXTBOX>
         {/* input으로 받아 Tags로 전달 */}
         <Tags tagItems={["Toast UI", "Toast eat"]} />
+        <input type="text" value={techStack} onChange={handleOnChange} />
       </DevelopStackContainer>
       <Container>
         <TEXTBOX>프로젝트 기간</TEXTBOX>

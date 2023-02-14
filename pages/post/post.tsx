@@ -7,14 +7,17 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 
 /**
- * @TODO 마크다운
  * @TODO 코드블럭
+ * @TODO Date recoil을 활용한 custom hook으로 리팩토링하기
  */
 
 const Post: NextPage = () => {
   const [title, setTitle] = useState("");
   const [subTitle, setSubTitle] = useState("");
   const [imgFile, setImgFile] = useState("");
+
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
 
   const onClickTest = () => {
     console.log("hi");
@@ -45,7 +48,12 @@ const Post: NextPage = () => {
           imgFile={imgFile}
           setImgFile={setImgFile}
         />
-        <ProjectInfo />
+        <ProjectInfo
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+        />
       </section>
       <section>
         <PostEditor />

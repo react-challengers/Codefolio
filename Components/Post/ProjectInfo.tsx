@@ -1,10 +1,22 @@
 import Image from "next/image";
 import styled from "styled-components";
-import { useState } from "react";
-import ProjectInfoDropDown from "./ProjectInfoDropDown";
+import { Dispatch, SetStateAction, useState } from "react";
 import arrow_down from "@/public/images/arrow_down.jpg";
+import ProjectInfoDropDown from "./ProjectInfoDropDown";
 
-const ProjectInfo = () => {
+interface ProjectInfoDropDownProps {
+  startDate: Date;
+  setStartDate: Dispatch<SetStateAction<Date>>;
+  endDate: Date;
+  setEndDate: Dispatch<SetStateAction<Date>>;
+}
+
+const ProjectInfo = ({
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+}: ProjectInfoDropDownProps) => {
   const [openDropdown, setOpenDropdown] = useState(false);
 
   return (
@@ -15,7 +27,14 @@ const ProjectInfo = () => {
           <DropdownImage src={arrow_down} alt="dropdown image" />
         </DropdownButton>
       </DropdownContainer>
-      {openDropdown && <ProjectInfoDropDown />}
+      {openDropdown && (
+        <ProjectInfoDropDown
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+        />
+      )}
     </div>
   );
 };
