@@ -54,7 +54,7 @@ const ProjectInfoDropDownContainer = styled.div`
   height: 12.5rem;
 
   margin-top: 2px;
-  border: 0.0625rem solid #cccccc;
+  border: 1px solid #cccccc;
 
   display: flex;
   flex-direction: column;
@@ -81,8 +81,8 @@ const DatePickerContainer = styled.div`
 const StyledDatePicker = styled(DatePicker)`
   width: 7.8125rem;
 
-  border: 0rem;
-  border-bottom: 0.0625rem solid;
+  border: none;
+  border-bottom: 1px solid;
 
   display: flex;
   justify-content: center;
@@ -90,7 +90,7 @@ const StyledDatePicker = styled(DatePicker)`
 `;
 
 const SpaceBetweenDatePicker = styled.div`
-  margin: 0rem 0.9375rem 0rem 0.9375rem;
+  margin: 0 0.9375rem 0 0.9375rem;
 `;
 
 const TEXTBOX = styled.div`
