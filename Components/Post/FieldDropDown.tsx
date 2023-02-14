@@ -1,4 +1,10 @@
-import { useReducer } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import styled from "styled-components";
 
 /**
@@ -48,11 +54,18 @@ const reducer = (_state: string[], action: { type: Field }): string[] => {
       return ["기타"];
   }
 };
-
-const FieldDropDown = () => {
+interface FieldDropDownProps {
+  setSelectedItem: Dispatch<SetStateAction<string>>;
+}
+const FieldDropDown = ({ setSelectedItem }: FieldDropDownProps) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+
   const handleLargeCategory = (item: Field) => {
     dispatch({ type: item });
+  };
+
+  const handleOverlayItem = (item: string) => {
+    setSelectedItem(item);
   };
 
   return (
@@ -70,7 +83,11 @@ const FieldDropDown = () => {
       <Divider />
       <ul>
         {state.map((item) => (
-          <FiledItemContainer key={item.toString()} cursor>
+          <FiledItemContainer
+            key={item.toString()}
+            onMouseOver={() => handleOverlayItem(item)}
+            cursor
+          >
             {item}
           </FiledItemContainer>
         ))}
@@ -79,9 +96,22 @@ const FieldDropDown = () => {
   );
 };
 
+const FieldDropDownContainer = styled.div`
+  width: 21.5rem;
+  box-shadow: 0px 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
+  border: 1px solid #cccccc;
+  display: flex;
+  border-radius: 0.2rem;
+  gap: 0;
+  position: absolute;
+  background-color: #fff;
+  z-index: 21;
+`;
+
 const FiledItemContainer = styled.li<{
   key?: string;
   onMouseOver?: () => void;
+  onClick?: () => void;
   cursor?: boolean;
 }>`
   padding: 0.75rem;
@@ -90,15 +120,6 @@ const FiledItemContainer = styled.li<{
   :hover {
     background: #e6e6e6;
   }
-`;
-
-const FieldDropDownContainer = styled.div`
-  width: 21.5rem;
-  box-shadow: 0px 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
-  border: 1px solid #cccccc;
-  display: flex;
-  border-radius: 0.2rem;
-  gap: 0;
 `;
 
 const Divider = styled.hr`

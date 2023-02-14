@@ -46,7 +46,6 @@ const ProjectInfo = ({
 };
 
 const DropdownContainer = styled.div`
-  width: 98.75rem;
   height: 3.6569rem;
 
   border: 1px solid #cccccc;

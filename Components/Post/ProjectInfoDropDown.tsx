@@ -3,10 +3,11 @@ import { Dispatch, SetStateAction, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import Tags from "../Common/Tags";
+import FieldDropDown from "./FieldDropDown";
 
 /**
  * @see https://www.youtube.com/shorts/4hpjO2onpNs
- * @TODO 월 선택 안됨. 준호님 질문
+ * @TODO 월 선택 안됨 (z-index)
  */
 
 interface ProjectInfoDropDownProps {
@@ -26,6 +27,7 @@ const ProjectInfoDropDown = ({
   setTechStack,
 }: ProjectInfoDropDownProps) => {
   const [inputValue, setInputValue] = useState("");
+  const [selectedItem, setSelectedItem] = useState("");
   const handleOnPush = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setTechStack((prev) => [...prev, inputValue]);
@@ -38,20 +40,23 @@ const ProjectInfoDropDown = ({
 
   const [categoryVisible, setCategoryVisible] = useState(false);
 
-  const handleShowCategory = () => {};
+  const handleShowCategory = () => {
+    setCategoryVisible((prev) => !prev);
+  };
 
   return (
     <ProjectInfoDropDownContainer>
       <CategoryContainer>
         <TEXTBOX>카테고리</TEXTBOX>
-        {/* input으로 받아줄 state 생성 */}
         <CategoryPicker onClick={handleShowCategory}>
           카테고리를 선택해주세요.
+          {categoryVisible && (
+            <FieldDropDown setSelectedItem={setSelectedItem} />
+          )}
         </CategoryPicker>
       </CategoryContainer>
       <DevelopStackContainer>
         <TEXTBOX>개발 스택</TEXTBOX>
-        {/* input으로 받아 Tags로 전달 */}
         <Tags tagItems={techStack} />
         <input
           type="text"
@@ -90,7 +95,6 @@ const ProjectInfoDropDown = ({
 };
 
 const ProjectInfoDropDownContainer = styled.div`
-  width: 98.75rem;
   height: 12.5rem;
 
   margin-top: 2px;
@@ -105,7 +109,9 @@ const CategoryContainer = styled.div`
   display: flex;
 `;
 
-const CategoryPicker = styled.div``;
+const CategoryPicker = styled.div`
+  position: relative;
+`;
 
 const DevelopStackContainer = styled.div`
   display: flex;
@@ -127,6 +133,7 @@ const StyledDatePicker = styled(DatePicker)`
   display: flex;
   justify-content: center;
   text-align: center;
+  z-index: 10000;
 `;
 
 const SpaceBetweenDatePicker = styled.div`
