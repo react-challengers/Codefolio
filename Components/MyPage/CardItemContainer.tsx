@@ -1,22 +1,34 @@
 import styled from "styled-components";
 import CardItem from "../Common/Card/CardItem";
 
-const CardItemContainer = ({ itemList }) => {
+const CardItemContainer = ({ itemList }: any) => {
+  const {
+    imageSrc,
+    imageAlt,
+    tagItems,
+    title,
+    subTitle,
+    date,
+    likes,
+    comments,
+    field,
+    linkURL,
+  } = itemList;
   return (
     <CardListContainer>
       {itemList.map((item: any) => (
         <CardItem
           key={item}
-          imageSrc="OK-LGTM.png"
-          imageAlt="Test"
-          tagItems={["Components", "API"]}
-          title="React Profiler API로 컴포넌트 측정하기"
-          subTitle="조금씩 추상화하면서 설계하기"
-          date="2023.02.10"
-          likes={203}
-          comments={57}
-          field="WEB"
-          linkURL={`/detail/${1}`}
+          imageSrc={imageSrc}
+          imageAlt={imageAlt}
+          tagItems={tagItems}
+          title={title}
+          subTitle={subTitle}
+          date={date}
+          likes={likes}
+          comments={comments}
+          field={field}
+          linkURL={linkURL}
         />
       ))}
     </CardListContainer>
