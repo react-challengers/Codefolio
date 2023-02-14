@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 
-import Tag from "./Tag";
 import DatePicker from "react-datepicker";
+import Tags from "../Common/Tags";
 
 const ProjectInfoDropDown = () => {
   const [startDate, setStartDate] = useState<Date>(new Date());
@@ -13,12 +13,13 @@ const ProjectInfoDropDown = () => {
     <ProjectInfoDropDownContainer>
       <CategoryContainer>
         <TEXTBOX>카테고리</TEXTBOX>
+        {/* input으로 받아줄 state 생성 */}
         <CategoryPicker>카테고리를 선택해주세요.</CategoryPicker>
       </CategoryContainer>
       <DevelopStackContainer>
         <TEXTBOX>개발 스택</TEXTBOX>
-        <Tag>Toast UI</Tag>
-        <Tag>Toast UI</Tag>
+        {/* input으로 받아 Tags로 전달 */}
+        <Tags tagItems={["Toast UI", "Toast eat"]} />
       </DevelopStackContainer>
       <Container>
         <TEXTBOX>프로젝트 기간</TEXTBOX>
@@ -54,7 +55,7 @@ const ProjectInfoDropDownContainer = styled.div`
   height: 12.5rem;
 
   margin-top: 2px;
-  border: 0.0625rem solid #cccccc;
+  border: 1px solid #cccccc;
 
   display: flex;
   flex-direction: column;
@@ -81,8 +82,8 @@ const DatePickerContainer = styled.div`
 const StyledDatePicker = styled(DatePicker)`
   width: 7.8125rem;
 
-  border: 0rem;
-  border-bottom: 0.0625rem solid;
+  border: none;
+  border-bottom: 1px solid;
 
   display: flex;
   justify-content: center;
@@ -90,7 +91,7 @@ const StyledDatePicker = styled(DatePicker)`
 `;
 
 const SpaceBetweenDatePicker = styled.div`
-  margin: 0rem 0.9375rem 0rem 0.9375rem;
+  margin: 0 0.9375rem 0 0.9375rem;
 `;
 
 const TEXTBOX = styled.div`

@@ -11,11 +11,11 @@ const ProjectInfo = () => {
     <div>
       <DropdownContainer>
         <ProjectInfoTitle>프로젝트 정보</ProjectInfoTitle>
-        <DropdownButton onClick={() => setOpenDropdown(!openDropdown)}>
+        <DropdownButton onClick={() => setOpenDropdown((prev) => !prev)}>
           <DropdownImage src={arrow_down} alt="dropdown image" />
         </DropdownButton>
       </DropdownContainer>
-      {openDropdown ? <ProjectInfoDropDown></ProjectInfoDropDown> : null}
+      {openDropdown && <ProjectInfoDropDown />}
     </div>
   );
 };
@@ -24,7 +24,7 @@ const DropdownContainer = styled.div`
   width: 98.75rem;
   height: 3.6569rem;
 
-  border: 0.0625rem solid #cccccc;
+  border: 1px solid #cccccc;
 
   display: flex;
   justify-content: space-between;
@@ -38,12 +38,9 @@ const ProjectInfoTitle = styled.div`
 `;
 
 const DropdownButton = styled.button`
-  border: 0rem;
-
+  border: none;
   margin-right: 2.5rem;
   background-color: white;
-
-  /* margin-right: 2.57rem; */
 `;
 
 const DropdownImage = styled(Image)`

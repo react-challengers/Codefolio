@@ -1,21 +1,32 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 import Image, { StaticImageData } from "next/image";
 import image_upload from "@/public/icons/image_upload.svg";
 
+interface PostTitleProps {
+  title: string;
+  setTitle: Dispatch<SetStateAction<string>>;
+  subTitle: string;
+  setSubTitle: Dispatch<SetStateAction<string>>;
+  imgFile: string;
+  setImgFile: Dispatch<SetStateAction<string>>;
+}
 /**
  * @TODO  StrictNull 로 오류 발생
  * @TODO  next Image width와 height 미지정으로 오류
- * @TODO  input을 커스텀 훅으로 만들기
+ * @TODO  input을 커스텀 훅으로 만들기.
  */
-const PostTitle = () => {
-  const [title, setTitle] = useState("");
-  const [subTitle, setSubTitle] = useState("");
-  const [imgFile, setImgFile] = useState<string | null>(null);
-
+const PostTitle = ({
+  title,
+  setTitle,
+  subTitle,
+  setSubTitle,
+  imgFile,
+  setImgFile,
+}: PostTitleProps) => {
   const onChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
     const file = e.target.files[0];
-    if (!file) return;
 
     const reader = new FileReader();
     reader.readAsDataURL(file);
