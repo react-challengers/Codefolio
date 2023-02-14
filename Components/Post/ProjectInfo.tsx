@@ -15,7 +15,7 @@ const ProjectInfo = () => {
           <DropdownImage src={arrow_down} alt="dropdown image" />
         </DropdownButton>
       </DropdownContainer>
-      {openDropdown && <ProjectInfoDropDown></ProjectInfoDropDown>}
+      {openDropdown && <ProjectInfoDropDown />}
     </div>
   );
 };

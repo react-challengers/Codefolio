@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 
-import Tag from "./Tag";
 import DatePicker from "react-datepicker";
+import Tags from "../Common/Tags";
 
 const ProjectInfoDropDown = () => {
   const [startDate, setStartDate] = useState<Date>(new Date());
@@ -17,8 +17,7 @@ const ProjectInfoDropDown = () => {
       </CategoryContainer>
       <DevelopStackContainer>
         <TEXTBOX>개발 스택</TEXTBOX>
-        <Tag>Toast UI</Tag>
-        <Tag>Toast UI</Tag>
+        <Tags tagItems={["Toast UI", "Toast eat"]} />
       </DevelopStackContainer>
       <Container>
         <TEXTBOX>프로젝트 기간</TEXTBOX>

@@ -1,8 +1,8 @@
 import { NextPage } from "next";
 import styled from "styled-components";
 import DefaultButton from "@/Components/Common/DefaultButton";
-import PostTitle from "@/Components/Common/PostTitle";
-import ProjectInfo from "@/Components/Common/ProjectInfo";
+import PostTitle from "@/Components/Post/PostTitle";
+import ProjectInfo from "@/Components/Post/ProjectInfo";
 
 const Post: NextPage = () => {
   const onClickTest = () => {
