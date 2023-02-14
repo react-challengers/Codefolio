@@ -13,14 +13,21 @@ const ShowProfileContainer = ({
   userInfo,
   setIsEditing,
 }: ShowProfileContainerProps) => {
-  const { gender, birth_year, phone, field, skills, careerer } = userInfo;
+  const {
+    gender,
+    birth_year: birthYear,
+    phone,
+    field,
+    skills,
+    careerer,
+  } = userInfo;
   return (
     <>
       <TabProfileContainer>
         <ProfileContainer title="기본 정보">
           <>
             <p>{gender}</p>
-            <p>{birth_year}년생</p>
+            <p>{birthYear}년생</p>
             <p>{phone}</p>
           </>
         </ProfileContainer>

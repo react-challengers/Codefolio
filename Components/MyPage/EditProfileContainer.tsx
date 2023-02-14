@@ -37,17 +37,17 @@ const EditProfileContainer = ({
   const careerYearsArray = getCareerYearsArray();
   const {
     gender,
-    birth_year,
+    birth_year: birthYear,
     phone,
     field: oldField,
     skills,
     careerer,
-    is_public,
+    is_public: isPublic,
   } = userInfo;
   const [activeField, setActiveField] = useState([...oldField]);
   const [editPhone, setEditPhone] = useState(phone);
   const [currentItem, setCurrentItem] = useState(gender);
-  const [isPublic, setIsPublic] = useState(is_public);
+  const [editIsPublic, setEditIsPublic] = useState(isPublic);
   const [editSkills, setEditSkills] = useState(skills);
 
   type ChangeEditPhoneType = (e: ChangeEvent<HTMLInputElement>) => void;
@@ -79,7 +79,7 @@ const EditProfileContainer = ({
             </InfoWrapper>
             <InfoWrapper>
               <p>출생년도</p>
-              <DropDown defaultValue={birth_year} options={birthYearsArray} />
+              <DropDown defaultValue={birthYear} options={birthYearsArray} />
             </InfoWrapper>
             <InfoWrapper>
               <p>휴대전화</p>
@@ -122,7 +122,7 @@ const EditProfileContainer = ({
             <ContentWrapper>
               <p>프로필 공개여부</p>
               <ToggleWrapper>
-                <Toggle flicker={isPublic} setFlicker={setIsPublic} />
+                <Toggle flicker={editIsPublic} setFlicker={setEditIsPublic} />
                 <p>{isPublic ? "공개" : "비공개"}</p>
               </ToggleWrapper>
             </ContentWrapper>

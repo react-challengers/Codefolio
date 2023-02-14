@@ -20,17 +20,15 @@ const SkillList = ({ editSkills, setEditSkills }: SkillPickerProps) => {
 
   return (
     <SkillListContainer>
-      <>
-        {editSkills.map((skill, idx) => (
-          <Skill
-            key={idx}
-            skill={skill}
-            setEditSkills={setEditSkills}
-            idx={idx}
-            onDelete={() => onDelete(idx)}
-          />
-        ))}
-      </>
+      {editSkills.map((skill, idx) => (
+        <Skill
+          key={idx}
+          skill={skill}
+          setEditSkills={setEditSkills}
+          idx={idx}
+          onDelete={onDelete}
+        />
+      ))}
       <SkillButton onClick={addSkill}>+ 스킬 입력</SkillButton>
     </SkillListContainer>
   );
