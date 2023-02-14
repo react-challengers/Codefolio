@@ -1,8 +1,9 @@
+import useInput from "@/hooks/common/useInput";
 import {
   getBirthYearsArray,
   getCareerYearsArray,
 } from "@/utils/commons/getYearsArray";
-import { ChangeEvent, Dispatch, useState } from "react";
+import { Dispatch, useState } from "react";
 import styled from "styled-components";
 import DefaultButton from "../Common/DefaultButton";
 import DropDown from "../Common/DropDown";
@@ -45,16 +46,10 @@ const EditProfileContainer = ({
     is_public: isPublic,
   } = userInfo;
   const [activeField, setActiveField] = useState([...oldField]);
-  const [editPhone, setEditPhone] = useState(phone);
+  const [editPhone, changeEditPhone] = useInput(phone);
   const [currentItem, setCurrentItem] = useState(gender);
   const [editIsPublic, setEditIsPublic] = useState(isPublic);
   const [editSkills, setEditSkills] = useState(skills);
-
-  type ChangeEditPhoneType = (e: ChangeEvent<HTMLInputElement>) => void;
-
-  const changeEditPhone: ChangeEditPhoneType = (e) => {
-    setEditPhone(e.target.value);
-  };
 
   const clickField = (field: string) => {
     if (activeField.includes(field)) {
