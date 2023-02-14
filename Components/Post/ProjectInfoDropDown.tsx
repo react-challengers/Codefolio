@@ -36,12 +36,18 @@ const ProjectInfoDropDown = ({
     setInputValue(e.target.value);
   };
 
+  const [categoryVisible, setCategoryVisible] = useState(false);
+
+  const handleShowCategory = () => {};
+
   return (
     <ProjectInfoDropDownContainer>
       <CategoryContainer>
         <TEXTBOX>카테고리</TEXTBOX>
         {/* input으로 받아줄 state 생성 */}
-        <CategoryPicker>카테고리를 선택해주세요.</CategoryPicker>
+        <CategoryPicker onClick={handleShowCategory}>
+          카테고리를 선택해주세요.
+        </CategoryPicker>
       </CategoryContainer>
       <DevelopStackContainer>
         <TEXTBOX>개발 스택</TEXTBOX>
