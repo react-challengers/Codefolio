@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-type ComponenetData = "birth_year" | "careerer";
+type ComponenetType = "birth_year" | "careerer";
 interface DropDownProps {
-  data: ComponenetData;
+  data: ComponenetType;
 }
 /**
  * @example
@@ -13,14 +13,16 @@ interface DropDownProps {
  */
 const DropDown = ({ data }: DropDownProps) => {
   const [selectValue, setSelectValue] = useState("");
+  const BASEYEAR = 1950;
 
   const options: string[] = [];
   const years = Array.from(
-    { length: new Date().getFullYear() - 1950 + 1 },
+    { length: new Date().getFullYear() - BASEYEAR + 1 },
     (_, i) => {
       return new Date().getFullYear() - i;
     }
   );
+
   if (data === "birth_year") {
     years.forEach((year) => options.push(String(year)));
   }
@@ -31,14 +33,22 @@ const DropDown = ({ data }: DropDownProps) => {
     options.unshift("신입");
     options.push("20년차 이상");
   }
+  const optionRef = useRef<HTMLSelectElement | string | InnerHTML>(options[0]);
+  useEffect(() => {
+    setSelectValue(optionRef.current[0].innerText);
+  }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectValue(e.target.value);
   };
   return (
-    <Select onChange={handleChange}>
+    <Select
+      onChange={onChangeHandler}
+      defaultValue={options[0]}
+      ref={optionRef}
+    >
       {options.map((option) => (
-        <option key={option} value={option} defaultValue={option}>
+        <option key={option} value={option}>
           {option}
         </option>
       ))}
