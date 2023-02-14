@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import CardItem from "../Common/Card/CardItem";
 
-// const CardItemContainer = ({ itemList }: PostType[]) => {
-const CardItemContainer = ({ itemList }: any[]) => {
+const CardItemContainer = ({ itemList }) => {
   return (
     <CardListContainer>
       {itemList.map((item: any) => (

@@ -23,10 +23,23 @@ const userInfo = {
   birth_year: 1997,
 };
 
+const cardItem = {
+  imageSrc: "OK-LGTM.png",
+  imageAlt: "Test",
+  tagItems: ["Components", "API"],
+  title: "React Profiler API로 컴포넌트 측정하기",
+  subTitle: "조금씩 추상화하면서 설계하기",
+  date: "2023.02.10",
+  likes: 203,
+  comments: 57,
+  field: "WEB",
+  linkURL: `/detail/${1}`,
+};
+
 const ProfilePage: NextPage = () => {
   const [currentTab, setCurrentTab] = useState(0);
-  const itemList = new Array(10).fill(null);
-  const { user_name, contact_email } = userInfo;
+  const itemList = new Array(10).fill(cardItem);
+  const { user_name: userName, contact_email: contactEmail } = userInfo;
 
   const handleClick = (idx: number) => {
     setCurrentTab(idx);
@@ -35,8 +48,8 @@ const ProfilePage: NextPage = () => {
   return (
     <MyPageContainer>
       <UserInfoContainer
-        username={user_name}
-        email={contact_email}
+        username={userName}
+        email={contactEmail}
         selfProfile="안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요"
       />
       <MypageTab

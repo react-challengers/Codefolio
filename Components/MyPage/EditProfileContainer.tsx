@@ -53,7 +53,9 @@ const EditProfileContainer = ({
 
   const clickField = (field: string) => {
     if (activeField.includes(field)) {
-      const newActiveField = activeField.filter((af) => af !== field);
+      const newActiveField = activeField.filter(
+        (activeFieldItem) => activeFieldItem !== field
+      );
       setActiveField(newActiveField);
     } else {
       setActiveField([...activeField, field]);
