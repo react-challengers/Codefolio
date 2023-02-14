@@ -4,36 +4,63 @@ import LoginButton from "@/Components/Common/AuthLoginButton";
 import Link from "next/link";
 import { useState } from "react";
 import supabase from "@/lib/supabase";
+import Router from "next/router";
+import { kakaoInit } from "@/utils/APIs/socialLogin";
 
 const Login: NextPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function signInWithEmail() {
+  const kakaoLogin = async () => {
+    // 카카오 초기화
+    const kakao = kakaoInit();
+
+    // 카카오 로그인 구현
+    kakao.Auth.login({
+      success: () => {
+        kakao.API.request({
+          url: "/v2/user/me", // 사용자 정보 가져오기
+          success: (res: any) => {
+            // 로그인 성공할 경우 정보 확인 후 /kakao 페이지로 push
+            console.log(res);
+            Router.push("/kakao");
+          },
+          fail: (error: any) => {
+            console.log(error);
+          },
+        });
+      },
+      fail: (error: any) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const signInWithEmail = async () => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-  }
+  };
 
-  async function signInWithGoogle() {
+  const signInWithGoogle = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
-  }
+  };
 
-  async function signInWithGitHub() {
+  const signInWithGitHub = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "github",
     });
-  }
+  };
 
   return (
     <LoginPageContainer>
       <EmptyContainer></EmptyContainer>
       <LoginSpace>
         <LoginContainer>
-          <LoginButton>카카오로 로그인하기</LoginButton>
+          <LoginButton onClick={kakaoLogin}>카카오로 로그인하기</LoginButton>
           <LoginButton>네이버로 로그인하기</LoginButton>
           <LoginButton onClick={signInWithGoogle}>
             구글로 로그인하기
@@ -96,7 +123,7 @@ const LoginContainer = styled.div`
 `;
 
 const PerforatedLine = styled.hr`
-  margin-top: 30px;
+  margin-top: 1.875rem;
 
   width: 26.5rem;
   line-height: 1em;
@@ -113,15 +140,15 @@ const PerforatedLine = styled.hr`
     left: 0;
     top: 50%;
     width: 100%;
-    height: 0.0625rem;
+    height: .625rem;
   }
   &:after {
     content: attr(data-content);
     position: relative;
     display: inline-block;
 
-    padding: 0 8px;
-    line-height: 24px;
+    padding: 0 .5rem;
+    line-height: 1.5rem;
     // this is really the only tricky part, you need to specify the background color of the container element...
     color: black;
     background-color: white;
@@ -129,22 +156,22 @@ const PerforatedLine = styled.hr`
 `;
 
 const LoginForm = styled.div`
-  margin-top: 30px;
+  margin-top: 1.875rem;
 
-  width: 450px;
-  height: 140px;
+  width: 28.125rem;
+  height: 8.75rem;
   display: flex;
   flex-direction: column;
 
   justify-content: space-between;
   align-items: center;
 
-  margin-bottom: 56px;
+  margin-bottom: 3.5rem;
 `;
 
 const LoginInput = styled.input`
-  width: 424px;
-  height: 40px;
+  width: 26.5rem;
+  height: 2.5rem;
 
   outline: 0;
   border-width: 0 0 1px;
@@ -159,15 +186,15 @@ const LoginInput = styled.input`
 `;
 
 const FooterMassage = styled.div`
-  width: 424px;
-  height: 50px;
+  width: 26.5rem;
+  height: 3.125rem;
 
-  margin-top: 10px;
+  margin-top: .625rem;
 
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 13px;
+  font-size: .8125rem;
 `;
 
 export default Login;

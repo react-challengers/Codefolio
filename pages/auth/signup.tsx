@@ -90,23 +90,23 @@ const SignupContainer = styled.div`
 `;
 
 const SignupForm = styled.div`
-  margin-top: 30px;
+  margin-top: 2rem;
 
-  width: 450px;
-  height: 140px;
+  width: 28.125rem;
+  height: 8.75rem;
   display: flex;
   flex-direction: column;
 
   justify-content: space-between;
   align-items: center;
 
-  margin-bottom: 56px;
+  margin-bottom: 3.5rem;
 `;
 
 const SignupInput = styled.input`
-  margin-top: 23px;
-  width: 424px;
-  height: 55px;
+  margin-top: 1.5rem;
+  width: 26.5rem;
+  height: 3.5rem;
 
   outline: 0;
   border-width: 0 0 1px;
@@ -121,15 +121,15 @@ const SignupInput = styled.input`
 `;
 
 const FooterMassage = styled.div`
-  width: 450px;
-  height: 50px;
+  width: 28.125rem;
+  height: 3.125rem;
 
-  margin-top: 10px;
+  margin-top: 0.625rem;
 
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 13px;
+  font-size: 0.8125rem;
 `;
 
 const CustomLink = styled(Link)`
