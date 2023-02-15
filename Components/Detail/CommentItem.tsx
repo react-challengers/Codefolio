@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from "react-query";
 import styled from "styled-components";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
 import DefaultButton from "../Common/DefaultButton";
 import ProfileImage from "../Common/ProfileImage";
@@ -16,22 +16,14 @@ interface CommentItemProps {
 
 const CommentItem = ({ comment }: CommentItemProps) => {
   const queryClient = useQueryClient();
-  const { mutate: deleteComment, mutateAsync } = useMutation(
-    (): any => supabase.from("comment").delete().eq("id", comment.id)
-    // {
-    //   onSuccess: () => {
-    //     queryClient.invalidateQueries("getComment");
-    //   },
-    // }
-  );
-
-  const handleDelete = async () => {
-    await mutateAsync("", {
+  const { mutate: deleteComment, isError } = useMutation(
+    (): any => supabase.from("comment").delete().eq("id", comment.id),
+    {
       onSuccess: () => {
-        queryClient.invalidateQueries("getComment");
+        queryClient.invalidateQueries(["getComment"]);
       },
-    });
-  };
+    }
+  );
 
   return (
     <CommentContainer>
@@ -52,7 +44,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
               text="삭제"
               type="outline"
               size="s"
-              onClick={() => handleDelete()}
+              onClick={() => deleteComment()}
             />
           </CommentWrapper>
         </CommentTitle>

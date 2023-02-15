@@ -8,7 +8,9 @@ import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import GNB from "@/Components/Layouts/GNB";
 import { RecoilRoot } from "recoil";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const App = ({
   Component,
@@ -16,7 +18,6 @@ const App = ({
 }: AppProps<{
   initialSession: Session;
 }>) => {
-  const queryClient = new QueryClient();
   const [supabase] = useState(() => createBrowserSupabaseClient());
 
   return (

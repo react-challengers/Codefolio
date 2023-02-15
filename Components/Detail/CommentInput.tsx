@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
 import useInput from "@/hooks/common/useInput";
 import ProfileImage from "../Common/ProfileImage";
@@ -24,7 +24,8 @@ const CommentInput = () => {
       }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("getComment");
+        console.log(1);
+        queryClient.invalidateQueries(["getComment"]);
         resetCommentInput();
       },
     }
