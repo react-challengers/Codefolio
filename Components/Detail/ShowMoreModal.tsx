@@ -14,7 +14,7 @@ const ShowMoreModalContainer = styled.div`
   position: absolute;
   top: 3.75rem;
   right: 2.5rem;
-  border: 0.0625rem solid #dfdfdf;
+  border: 1px solid #dfdfdf;
   box-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
   border-radius: 0.25rem;
 `;
