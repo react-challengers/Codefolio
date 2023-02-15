@@ -75,9 +75,6 @@ const Post: NextPage = () => {
           setPeople={setPeople}
         />
       </section>
-      <section>
-        <PostEditor />
-      </section>
     </MainWrapper>
   );
 };
