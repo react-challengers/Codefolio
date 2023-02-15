@@ -20,7 +20,7 @@ type TagSizeType = "sm" | "md" | "lg";
 
 interface TagsProps {
   tagItems: string[];
-  size: TagSizeType;
+  size?: TagSizeType;
 }
 
 const tagSizeSwitch = (size: TagSizeType) => {
