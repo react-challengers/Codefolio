@@ -82,8 +82,8 @@ const Login: NextPage = () => {
       <EmptyContainer></EmptyContainer>
       <LoginSpace>
         <LoginContainer>
-          <LoginButton>카카오로 로그인하기</LoginButton>
-          <LoginButton>네이버로 로그인하기</LoginButton>
+          {/* <LoginButton>카카오로 로그인하기</LoginButton>
+          <LoginButton>네이버로 로그인하기</LoginButton> */}
           <LoginButton onClick={signInWithGoogle}>
             구글로 로그인하기
           </LoginButton>
