@@ -2,11 +2,7 @@ import { NextPage } from "next";
 import Comment from "@/Components/Detail/Comment";
 
 const DetailPage: NextPage = () => {
-  return (
-    <div>
-      <Comment />
-    </div>
-  );
+  return <Comment />;
 };
 
 export default DetailPage;
