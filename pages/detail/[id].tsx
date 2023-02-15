@@ -1,13 +1,9 @@
-import DetailHeader from "@/Components/Detail/DetailHeader";
+
 import { NextPage } from "next";
 import styled from "styled-components";
 
 const DetailPage: NextPage = () => {
-  return (
-    <DetailPageContainer>
-      <DetailHeader />
-    </DetailPageContainer>
-  );
+  return <div>,</div>;
 };
 
 const DetailPageContainer = styled.div``;
