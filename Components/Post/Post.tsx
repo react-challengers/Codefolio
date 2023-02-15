@@ -31,7 +31,7 @@ const Post: NextPage = () => {
     console.log("hi");
   };
 
-  const PostEditor = dynamic(() => import("../../Components/Post/PostEditor"), {
+  const PostEditor = dynamic(() => import("./PostEditor"), {
     ssr: false,
   });
 
