@@ -6,7 +6,7 @@ import "@toast-ui/editor/dist/i18n/ko-kr";
 
 import { Editor } from "@toast-ui/react-editor";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import { useEffect, useRef } from "react";
+import { LegacyRef, useEffect, useRef } from "react";
 import supabase from "@/lib/supabase";
 import imageCompression from "browser-image-compression";
 
@@ -82,28 +82,54 @@ const PostEditor = () => {
   //   return editorIns.getHTML();
   // };
 
+  const handleRegisterButton = () => {
+    // 입력창에 입력한 내용을 HTML 태그 형태로 취득
+    console.log(editorRef.current?.getInstance().getHTML());
+    // 입력창에 입력한 내용을 MarkDown 형태로 취득
+    console.log(editorRef.current?.getInstance().getMarkdown());
+  };
+
+  // 진행 해야 함
+  // const getMarkDown = () => {
+  //   //글 내용 마크다운 문자열로 불러오기
+  //   const editorIns = editorRef.current.getInstance();
+  //   return editorIns.getMarkdown();
+  // };
+
+  // const validation_check = () => {
+  //   const title = titleRef.current.value.trim();
+  //   const content = getMarkDown();
+  //   if (title !== "" || content !== "") {
+  //     // DB에 저장
+  //   } else {
+  //     // 에러 표시
+  //   }
+  // };
   return (
-    <Editor
-      ref={editorRef}
-      initialValue="challenge!"
-      previewStyle="vertical"
-      // previewHighlight={false}
-      height="600px"
-      initialEditType="markdown"
-      useCommandShortcut
-      toolbarItems={toolbarItems}
-      language="ko-KR"
-      plugins={[
-        colorSyntax,
-        // 기본 색상 preset 적용
-        // {
-        //   preset: ["#1F2E3D", "#4c5864", "#ED7675"],
-        // },
-      ]}
-      hooks={{
-        addImageBlobHook: addImage,
-      }}
-    />
+    <>
+      <Editor
+        ref={editorRef}
+        initialValue="challenge!"
+        previewStyle="vertical"
+        // previewHighlight={false}
+        height="600px"
+        initialEditType="markdown"
+        useCommandShortcut
+        toolbarItems={toolbarItems}
+        language="ko-KR"
+        plugins={[
+          colorSyntax,
+          // 기본 색상 preset 적용
+          // {
+          //   preset: ["#1F2E3D", "#4c5864", "#ED7675"],
+          // },
+        ]}
+        hooks={{
+          addImageBlobHook: addImage,
+        }}
+      />
+      <button onClick={handleRegisterButton}>ddddddd</button>
+    </>
   );
 };
 
