@@ -24,7 +24,6 @@ const CommentInput = () => {
       }),
     {
       onSuccess: () => {
-        console.log(1);
         queryClient.invalidateQueries(["getComment"]);
         resetCommentInput();
       },
