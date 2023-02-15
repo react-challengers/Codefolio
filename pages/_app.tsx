@@ -6,6 +6,8 @@ import theme from "@/styles/theme";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
+import GNB from "@/Components/Layouts/GNB";
+import { RecoilRoot } from "recoil";
 
 const App = ({
   Component,
@@ -21,7 +23,10 @@ const App = ({
       initialSession={pageProps.initialSession}
     >
       <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
+        <GNB />
+        <RecoilRoot>
+          <Component {...pageProps} />
+        </RecoilRoot>
       </ThemeProvider>
     </SessionContextProvider>
   );

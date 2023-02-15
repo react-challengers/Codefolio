@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import styled from "styled-components";
 import ProfileImage from "../ProfileImage";
 import Tags from "../Tags";
@@ -74,13 +75,31 @@ const CardItem = ({
   comments,
   field,
 }: CardProps) => {
+  const [isOverlay, setIsOverlay] = useState(false);
+
   return (
-    <CardContainer>
+    <CardContainer
+      onMouseEnter={() => {
+        setIsOverlay(true);
+      }}
+      onMouseLeave={() => {
+        setIsOverlay(false);
+      }}
+    >
       <Link href={linkURL}>
         <ImageContainer>
-          <Tags tagItems={[field]} />
-          <Image src={`/images/${imageSrc}`} alt={imageAlt} layout="fill" />
-          <ProfileImage alt={title} page="myPage" />
+          {isOverlay && (
+            <ImageOverlayContainer>
+              <ImageOverlayProfileContainer>
+                {/* todo: add src current user profile image */}
+                <ProfileImage alt={title} page="detailPage" />
+                {/* todo: add nickname current user */}
+                <ImageOverlayProfileName>이정익</ImageOverlayProfileName>
+              </ImageOverlayProfileContainer>
+            </ImageOverlayContainer>
+          )}
+          <Tags tagItems={[field]} size="sm" />
+          <CardImage src={`/images/${imageSrc}`} alt={imageAlt} layout="fill" />
         </ImageContainer>
       </Link>
       <CardBottomWrapper>
@@ -95,7 +114,7 @@ const CardItem = ({
           <Title>{title}</Title>
           <SubTitle>{subTitle}</SubTitle>
         </TitleWrapper>
-        <Tags tagItems={tagItems} />
+        <Tags tagItems={tagItems} size="sm" />
       </CardBottomWrapper>
     </CardContainer>
   );
@@ -118,11 +137,38 @@ const ImageContainer = styled.div`
     left: 0.5rem;
     z-index: 1;
   }
+`;
 
-  img {
-    object-fit: cover;
-    border-radius: 0.5rem;
-  }
+const CardImage = styled(Image)`
+  object-fit: cover;
+  border-radius: 0.5rem;
+`;
+
+const ImageOverlayContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  border-radius: 0.5rem;
+`;
+
+const ImageOverlayProfileContainer = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  color: #fff;
+`;
+
+const ImageOverlayProfileName = styled.span`
+  margin-left: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
 `;
 
 const CardBottomWrapper = styled.div`

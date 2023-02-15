@@ -1,4 +1,13 @@
+import MainSection from "@/Components/Main/MainSection";
+import SideBar from "@/Components/Main/SideBar";
 import Head from "next/head";
+import styled from "styled-components";
+
+const HomeContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+`;
 
 const Home = () => {
   return (
@@ -9,7 +18,10 @@ const Home = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>start</div>
+      <HomeContainer>
+        <SideBar />
+        <MainSection />
+      </HomeContainer>
     </>
   );
 };
