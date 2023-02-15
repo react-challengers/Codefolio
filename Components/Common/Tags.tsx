@@ -20,7 +20,7 @@ type TagSizeType = "sm" | "md" | "lg";
 
 interface TagsProps {
   tagItems: string[];
-  size: TagSizeType;
+  size?: TagSizeType;
 }
 
 const tagSizeSwitch = (size: TagSizeType) => {
@@ -58,7 +58,7 @@ const tagSizeSwitch = (size: TagSizeType) => {
  * @param size 태그의 크기를 설정합니다. sm, md, lg
  */
 
-const Tags = ({ tagItems, size }: TagsProps) => {
+const Tags = ({ tagItems, size = "md" }: TagsProps) => {
   return (
     <TagsContainer>
       {tagItems.map((item) => (

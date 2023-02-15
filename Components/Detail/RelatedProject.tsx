@@ -63,7 +63,6 @@ const RelatedProject = () => {
               <CardItem
                 imageSrc="anonImage.png"
                 imageAlt="ㅁ"
-                linkURL="google.com"
                 title="안드로이드 스튜디오에서 빌드가 안될때"
                 subTitle="안드로이드 스튜디오에서 빌드가 안될때"
                 tagItems={["App | Android, iOS, flutter"]}
@@ -77,7 +76,6 @@ const RelatedProject = () => {
               <CardItem
                 imageSrc="anonImage.png"
                 imageAlt="ㅁ"
-                linkURL="google.com"
                 title="안드로이드 스튜디오에서 빌드가 안될때"
                 subTitle="안드로이드 스튜디오에서 빌드가 안될때"
                 tagItems={["App | Android, iOS, flutter"]}
@@ -91,7 +89,6 @@ const RelatedProject = () => {
               <CardItem
                 imageSrc="anonImage.png"
                 imageAlt="ㅁ"
-                linkURL="google.com"
                 title="안드로이드 스튜디오에서 빌드가 안될때"
                 subTitle="안드로이드 스튜디오에서 빌드가 안될때"
                 tagItems={["App | Android, iOS, flutter"]}
@@ -162,6 +159,7 @@ const RelatedProjectContainer = styled.section`
   width: 87.5rem;
   height: 30rem;
   border-top: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
 `;
 
 const RelatedProjectTitle = styled.h2`
