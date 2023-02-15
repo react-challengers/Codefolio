@@ -18,7 +18,7 @@ import {
   postTitleBackgroundColor,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 
 /**
@@ -69,6 +69,7 @@ const Post: NextPage = () => {
       setIsSaved(false);
     }, 2000);
   };
+
   const onPost = async () => {
     // 게시 버튼
     const { data, error } = await supabase
