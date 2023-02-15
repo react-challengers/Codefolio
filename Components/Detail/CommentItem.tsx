@@ -3,6 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
 import DefaultButton from "../Common/DefaultButton";
 import ProfileImage from "../Common/ProfileImage";
+import { useState } from "react";
+import useInput from "@/hooks/common/useInput";
 
 interface CommentType {
   id: string;
@@ -15,8 +17,11 @@ interface CommentItemProps {
 }
 
 const CommentItem = ({ comment }: CommentItemProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, changeEditContent] = useInput(comment.content);
+
   const queryClient = useQueryClient();
-  const { mutate: deleteComment, isError } = useMutation(
+  const { mutate: deleteComment, isError: deleteError } = useMutation(
     (): any => supabase.from("comment").delete().eq("id", comment.id),
     {
       onSuccess: () => {
@@ -24,6 +29,26 @@ const CommentItem = ({ comment }: CommentItemProps) => {
       },
     }
   );
+  const { mutate: editComment, isError: editError } = useMutation(
+    (): any =>
+      supabase
+        .from("comment")
+        .update({ content: editContent })
+        .eq("id", comment.id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["getComment"]);
+      },
+    }
+  );
+
+  const handleEditClick = async () => {
+    if (isEditing) {
+      editComment();
+    }
+
+    setIsEditing((prev) => !prev);
+  };
 
   return (
     <CommentContainer>
@@ -38,7 +63,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
               text="수정"
               type="outline"
               size="s"
-              onClick={() => null}
+              onClick={handleEditClick}
             />
             <DefaultButton
               text="삭제"
@@ -48,7 +73,11 @@ const CommentItem = ({ comment }: CommentItemProps) => {
             />
           </CommentWrapper>
         </CommentTitle>
-        <CommentContent>{comment.content}</CommentContent>
+        {isEditing ? (
+          <input value={editContent} onChange={changeEditContent} />
+        ) : (
+          <CommentContent>{comment.content}</CommentContent>
+        )}
       </TextBox>
     </CommentContainer>
   );
