@@ -33,10 +33,6 @@ const PostEditor = ({ editorRef }: PostEditorProps) => {
     ["scrollSync"],
   ];
 
-  // if (editorRef.current) {
-  //   setEditorText(editorRef.current?.getInstance().getMarkdown());
-  // }
-
   useEffect(() => {
     if (editorRef.current) {
       const editorIns = editorRef.current.getInstance();
@@ -87,13 +83,6 @@ const PostEditor = ({ editorRef }: PostEditorProps) => {
     return result;
   };
 
-  // detail에 활용 가능
-  // const getContent = () => {
-  //   //글 내용 HTML 문자열로 불러오기
-  //   const editorIns = editorRef.current.getInstance();
-  //   return editorIns.getHTML();
-  // };
-
   const handleOnEditorChange = () => {
     // 유효성 검사
     const editorText = editorRef.current?.getInstance().getMarkdown();
@@ -103,23 +92,6 @@ const PostEditor = ({ editorRef }: PostEditorProps) => {
     // HTML 대신에 Markdown으로 저장합니다.
     setPostContent(editorText);
   };
-
-  // 진행 해야 함
-  // const getMarkDown = () => {
-  //   //글 내용 마크다운 문자열로 불러오기
-  //   const editorIns = editorRef.current.getInstance();
-  //   return editorIns.getMarkdown();
-  // };
-
-  // const validation_check = () => {
-  //   const title = titleRef.current.value.trim();
-  //   const content = getMarkDown();
-  //   if (title !== "" || content !== "") {
-  //     // DB에 저장
-  //   } else {
-  //     // 에러 표시
-  //   }
-  // };
 
   return (
     <Editor
@@ -132,13 +104,7 @@ const PostEditor = ({ editorRef }: PostEditorProps) => {
       useCommandShortcut
       toolbarItems={toolbarItems}
       language="ko-KR"
-      plugins={[
-        colorSyntax,
-        // 기본 색상 preset 적용
-        // {
-        //   preset: ["#1F2E3D", "#4c5864", "#ED7675"],
-        // },
-      ]}
+      plugins={[colorSyntax]}
       hooks={{
         // @ts-ignore
         addImageBlobHook: addImage,

@@ -86,7 +86,7 @@ interface NotificationType {
   target_id: string;
 }
 
-declare interface PostType {
+interface PostType {
   title: string;
   sub_title: string;
   title_background_color: string;
