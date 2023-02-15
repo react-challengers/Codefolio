@@ -1,10 +1,6 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import { postLargeCategory, postSubCategory } from "@/lib/recoil";
+import { useReducer } from "react";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 /**
@@ -54,18 +50,19 @@ const reducer = (_state: string[], action: { type: Field }): string[] => {
       return ["기타"];
   }
 };
-interface FieldDropDownProps {
-  setSelectedItem: Dispatch<SetStateAction<string>>;
-}
-const FieldDropDown = ({ setSelectedItem }: FieldDropDownProps) => {
+
+const FieldDropDown = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const setLargeCategory = useSetRecoilState(postLargeCategory);
+  const setSubCategory = useSetRecoilState(postSubCategory);
 
   const handleLargeCategory = (item: Field) => {
     dispatch({ type: item });
   };
 
-  const handleOverlayItem = (item: string) => {
-    setSelectedItem(item);
+  const handleClickSubCategory = (item: string) => {
+    setSubCategory(item);
   };
 
   return (
@@ -73,7 +70,10 @@ const FieldDropDown = ({ setSelectedItem }: FieldDropDownProps) => {
       <ul>
         {field.map((item) => (
           <FiledItemContainer
-            onMouseOver={() => handleLargeCategory(item)}
+            onMouseOver={() => {
+              handleLargeCategory(item);
+              setLargeCategory(item);
+            }}
             key={item.toString()}
           >
             {item}
@@ -85,8 +85,8 @@ const FieldDropDown = ({ setSelectedItem }: FieldDropDownProps) => {
         {state.map((item) => (
           <FiledItemContainer
             key={item.toString()}
-            onMouseOver={() => handleOverlayItem(item)}
-            dataCursor={true}
+            onClick={() => handleClickSubCategory(item)}
+            dataCursor
           >
             {item}
           </FiledItemContainer>

@@ -1,39 +1,10 @@
 import Image from "next/image";
 import styled from "styled-components";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import arrow_down from "@/public/images/arrow_down.jpg";
 import ProjectInfoDropDown from "./ProjectInfoDropDown";
-import { WithPersonType } from "./WithPeople";
 
-interface ProjectInfoDropDownProps {
-  startDate: Date;
-  setStartDate: Dispatch<SetStateAction<Date>>;
-  endDate: Date;
-  setEndDate: Dispatch<SetStateAction<Date>>;
-  techStack: string[];
-  setTechStack: Dispatch<SetStateAction<string[]>>;
-  tag: string[];
-  setTag: Dispatch<SetStateAction<string[]>>;
-  isPublic: boolean;
-  setIsPublic: Dispatch<SetStateAction<boolean>>;
-  people: WithPersonType[];
-  setPeople: Dispatch<SetStateAction<WithPersonType[]>>;
-}
-
-const ProjectInfo = ({
-  startDate,
-  setStartDate,
-  endDate,
-  setEndDate,
-  techStack,
-  setTechStack,
-  tag,
-  setTag,
-  isPublic,
-  setIsPublic,
-  people,
-  setPeople,
-}: ProjectInfoDropDownProps) => {
+const ProjectInfo = () => {
   const [openDropdown, setOpenDropdown] = useState(false);
 
   return (
@@ -44,22 +15,7 @@ const ProjectInfo = ({
           <DropdownImage src={arrow_down} alt="dropdown image" />
         </DropdownButton>
       </DropdownContainer>
-      {openDropdown && (
-        <ProjectInfoDropDown
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-          techStack={techStack}
-          setTechStack={setTechStack}
-          tag={tag}
-          setTag={setTag}
-          isPublic={isPublic}
-          setIsPublic={setIsPublic}
-          people={people}
-          setPeople={setPeople}
-        />
-      )}
+      {openDropdown && <ProjectInfoDropDown />}
     </div>
   );
 };

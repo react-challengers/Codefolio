@@ -6,9 +6,11 @@ import "@toast-ui/editor/dist/i18n/ko-kr";
 
 import { Editor } from "@toast-ui/react-editor";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import { Dispatch, LegacyRef, SetStateAction, useEffect, useRef } from "react";
+import { RefObject, useEffect } from "react";
 import supabase from "@/lib/supabase";
 import imageCompression from "browser-image-compression";
+import { useRecoilState } from "recoil";
+import { postContent as recoilPostContent } from "@/lib/recoil";
 
 /**
  * @TODO storage 삭제 구현 필요
@@ -16,16 +18,11 @@ import imageCompression from "browser-image-compression";
  */
 
 interface PostEditorProps {
-  postContent: string;
-  setPostContent: Dispatch<SetStateAction<string>>;
-  editorRef: LegacyRef<Editor>;
+  editorRef: RefObject<Editor>;
 }
 
-const PostEditor = ({
-  postContent,
-  setPostContent,
-  editorRef,
-}: PostEditorProps) => {
+const PostEditor = ({ editorRef }: PostEditorProps) => {
+  const [postContent, setPostContent] = useRecoilState(recoilPostContent);
   const toolbarItems = [
     ["heading", "bold", "italic", "strike"],
     ["hr"],
@@ -36,18 +33,27 @@ const PostEditor = ({
     ["scrollSync"],
   ];
 
+  // if (editorRef.current) {
+  //   setEditorText(editorRef.current?.getInstance().getMarkdown());
+  // }
+
   useEffect(() => {
-    const editorIns = editorRef.current.getInstance();
-    editorIns.removeHook("addImageBlobHook");
-    editorIns.addHook("addImageBlobHook", addImage);
+    if (editorRef.current) {
+      const editorIns = editorRef.current.getInstance();
+      editorIns.removeHook("addImageBlobHook");
+      editorIns.addHook("addImageBlobHook", addImage);
+    }
   }, []);
 
   // ------------- image Function ------------- // 에디터에 이미지 추가
 
-  const addImage = async (blob: File, dropImage) => {
-    // https://www.youtube.com/watch?v=dLqSmxX3r7I
+  type HookCallback = (url: string, text?: string) => void;
+
+  const addImage = async (blob: File, dropImage: HookCallback) => {
     const img = await compressImg(blob); // 이미지 압축
+    if (!img) return;
     const url = await uploadImage(img); // 업로드된 이미지 서버 url
+    if (!url) return;
     dropImage(url, `${blob.name}`); // 에디터에 이미지 추가
   };
 
@@ -88,10 +94,10 @@ const PostEditor = ({
   //   return editorIns.getHTML();
   // };
 
-  const handleRegisterButton = () => {
+  const handleOnEditorChange = () => {
     // 유효성 검사
     const editorText = editorRef.current?.getInstance().getMarkdown();
-    if ((editorText === " ") | (editorText === "")) {
+    if (editorText === " " || editorText === "" || editorText === undefined) {
       return;
     }
     // HTML 대신에 Markdown으로 저장합니다.
@@ -114,10 +120,11 @@ const PostEditor = ({
   //     // 에러 표시
   //   }
   // };
+
   return (
     <Editor
       ref={editorRef}
-      initialValue=" "
+      initialValue={postContent ?? null}
       previewStyle="vertical"
       // previewHighlight={false}
       height="600px"
@@ -133,8 +140,10 @@ const PostEditor = ({
         // },
       ]}
       hooks={{
+        // @ts-ignore
         addImageBlobHook: addImage,
       }}
+      onChange={() => handleOnEditorChange()}
     />
   );
 };

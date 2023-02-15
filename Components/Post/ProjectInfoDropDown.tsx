@@ -1,58 +1,35 @@
 import styled from "styled-components";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  postLargeCategory,
+  postProjectDuration,
+  postPublic,
+  postSkills,
+  postSubCategory,
+  postTags,
+} from "@/lib/recoil";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
+import getYYYYMM from "@/utils/commons/getYYYYMM";
 import FieldDropDown from "./FieldDropDown";
 import SkillList from "../Common/Skill/SkillList";
 import Toggle from "../Common/Toggle";
-import WithPeople, { WithPersonType } from "./WithPeople";
+import WithPeople from "./WithPeople";
+import Tags from "../Common/Tags";
 
 /**
  * @see https://www.youtube.com/shorts/4hpjO2onpNs
  * @TODO 월 선택 안됨 (z-index)
  */
 
-interface ProjectInfoDropDownProps {
-  startDate: Date;
-  setStartDate: Dispatch<SetStateAction<Date>>;
-  endDate: Date;
-  setEndDate: Dispatch<SetStateAction<Date>>;
-  techStack: string[];
-  setTechStack: Dispatch<SetStateAction<string[]>>;
-  tag: string[];
-  setTag: Dispatch<SetStateAction<string[]>>;
-  isPublic: boolean;
-  setIsPublic: Dispatch<SetStateAction<boolean>>;
-  people: WithPersonType[];
-  setPeople: Dispatch<SetStateAction<WithPersonType[]>>;
-}
-
-const ProjectInfoDropDown = ({
-  startDate,
-  setStartDate,
-  endDate,
-  setEndDate,
-  techStack,
-  setTechStack,
-  tag,
-  setTag,
-  isPublic,
-  setIsPublic,
-  people,
-  setPeople,
-}: ProjectInfoDropDownProps) => {
-  const [inputValue, setInputValue] = useState("");
-  const [selectedItem, setSelectedItem] = useState("");
-
-  const handleOnPush = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      setTechStack((prev) => [...prev, inputValue]);
-      setInputValue("");
-    }
-  };
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
+const ProjectInfoDropDown = () => {
+  const [postSkill, setPostSkill] = useRecoilState(postSkills);
+  const [[startDate, endDate], setDate] = useRecoilState(postProjectDuration);
+  const [tag, setTag] = useRecoilState(postTags);
+  const [isPublic, setIsPublic] = useRecoilState(postPublic);
+  const largeCategory = useRecoilValue(postLargeCategory);
+  const subCategory = useRecoilValue(postSubCategory);
 
   const [categoryVisible, setCategoryVisible] = useState(false);
 
@@ -65,19 +42,21 @@ const ProjectInfoDropDown = ({
       <ProjectInfoContainer>
         <CategoryContainer>
           <TEXTBOX>카테고리</TEXTBOX>
-          <CategoryPicker onClick={handleShowCategory}>
-            카테고리를 선택해주세요.
-            {categoryVisible && (
-              <FieldDropDown setSelectedItem={setSelectedItem} />
-            )}
-          </CategoryPicker>
+          {largeCategory && subCategory ? (
+            <Tags tagItems={[`${largeCategory} > ${subCategory}`]} size="md" />
+          ) : (
+            <CategoryPicker onClick={handleShowCategory}>
+              카테고리를 선택해주세요.
+              {categoryVisible && <FieldDropDown />}
+            </CategoryPicker>
+          )}
         </CategoryContainer>
         <DevelopStackContainer>
           <TEXTBOX>개발 스택</TEXTBOX>
           <SkillList
             text="개발 스택 추가"
-            editSkills={techStack}
-            setEditSkills={setTechStack}
+            editSkills={postSkill}
+            setEditSkills={setPostSkill}
           />
         </DevelopStackContainer>
         <Container>
@@ -85,23 +64,27 @@ const ProjectInfoDropDown = ({
           <DatePickerContainer>
             <StyledDatePicker
               showMonthYearPicker
-              selected={startDate}
+              selected={new Date(startDate)}
               dateFormat="yyyy-MM"
-              onChange={(date: Date) => setStartDate(date)}
+              onChange={(date: Date) =>
+                setDate((prev) => [getYYYYMM(date), prev[1]])
+              }
               selectsStart
-              startDate={startDate}
-              endDate={endDate}
+              startDate={new Date(startDate)}
+              endDate={new Date(endDate)}
             />
             <SpaceBetweenDatePicker> ~ </SpaceBetweenDatePicker>
             <StyledDatePicker
               showMonthYearPicker
-              selected={endDate}
+              selected={new Date(endDate)}
               dateFormat="yyyy-MM"
-              onChange={(date: Date) => setEndDate(date)}
+              onChange={(date: Date) =>
+                setDate((prev) => [prev[0], getYYYYMM(date)])
+              }
               selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              minDate={startDate}
+              startDate={new Date(startDate)}
+              endDate={new Date(endDate)}
+              minDate={new Date(startDate)}
             />
           </DatePickerContainer>
         </Container>
@@ -109,7 +92,7 @@ const ProjectInfoDropDown = ({
       <ProjectInfoContainer>
         <ProjectInfoWrapper>
           <TEXTBOX>함께한 사람들</TEXTBOX>
-          <WithPeople people={people} setPeople={setPeople} />
+          <WithPeople />
         </ProjectInfoWrapper>
         <ProjectInfoWrapper>
           <TEXTBOX>키워드 태그</TEXTBOX>
@@ -119,7 +102,7 @@ const ProjectInfoDropDown = ({
           <TEXTBOX>게시물 공개</TEXTBOX>
           <ToggleWrapper>
             <Toggle flicker={isPublic} setFlicker={setIsPublic} />
-            <p>비공개</p>
+            <p>{isPublic ? "공개" : "비공개"}</p>
           </ToggleWrapper>
         </ProjectInfoWrapper>
       </ProjectInfoContainer>

@@ -1,42 +1,33 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Image, { StaticImageData } from "next/image";
 import image_upload from "@/public/icons/image_upload.svg";
+import { useRecoilState } from "recoil";
+import {
+  postSubTitle,
+  postTitle,
+  postTitleBackgroundColor,
+} from "@/lib/recoil";
 
-interface PostTitleProps {
-  title: string;
-  setTitle: Dispatch<SetStateAction<string>>;
-  subTitle: string;
-  setSubTitle: Dispatch<SetStateAction<string>>;
-  imgFile: string;
-  setImgFile: Dispatch<SetStateAction<string>>;
-}
 /**
  * @TODO  StrictNull 로 오류 발생
  * @TODO  next Image width와 height 미지정으로 오류
  * @TODO  input을 커스텀 훅으로 만들기.
  */
-const PostTitle = ({
-  title,
-  setTitle,
-  subTitle,
-  setSubTitle,
-  imgFile,
-  setImgFile,
-}: PostTitleProps) => {
-  const onChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    const file = e.target.files[0];
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setImgFile(reader.result as string);
-    };
+const PostTitle = () => {
+  const [backgroundColor, setBackgroundColor] = useRecoilState(
+    postTitleBackgroundColor
+  );
+  const [title, setTitle] = useRecoilState(postTitle);
+  const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
+
+  const onChangeColor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBackgroundColor(e.target.value);
   };
 
   return (
-    <TitleContainer>
+    <TitleContainer color={backgroundColor ?? "#fff"}>
       <TitleInput
         value={title}
         onChange={(e) => setTitle(e.target.value)}
@@ -48,7 +39,7 @@ const PostTitle = ({
           onChange={(e) => setSubTitle(e.target.value)}
           placeholder="소제목을 입력하세요"
         />
-        <ImgLabel htmlFor="img-upload">
+        <ImgLabel htmlFor="background-color-picker">
           <ImgIcon
             src={image_upload}
             alt="이미지 업로드 아이콘"
@@ -56,23 +47,12 @@ const PostTitle = ({
             height={36}
           />
         </ImgLabel>
-        <ImgInput
-          id="img-upload"
-          type="file"
-          accept="images/*"
-          onChange={onChangeImg}
-          // ref={imgRef}
+        <TitleBackgroundColorPicker
+          id="background-color-picker"
+          type="color"
+          onChange={onChangeColor}
         />
       </SubTitleWrapper>
-      {imgFile && (
-        <BackgroundImgFile
-          src={imgFile}
-          alt="배경 미리보기"
-          layout="fill"
-          objectFit="cover"
-          objectPosition="center"
-        />
-      )}
     </TitleContainer>
   );
 };
@@ -86,6 +66,7 @@ const TitleContainer = styled.div`
   gap: 1.375rem;
   border: 1px solid black;
   position: relative;
+  background-color: ${(props) => props.color};
 `;
 const TitleInput = styled.input`
   display: inline-block;
@@ -108,16 +89,14 @@ const SubTitleInput = styled.input`
   font-size: 1.375rem;
   font-weight: 400;
   border: none;
+  background-color: transparent;
 `;
 const ImgLabel = styled.label``;
 const ImgIcon = styled(Image)<StaticImageData>`
   cursor: pointer;
 `;
-const ImgInput = styled.input`
-  display: none;
-`;
-
-const BackgroundImgFile = styled(Image)<StaticImageData>`
-  position: absolute;
-  z-index: -1;
+const TitleBackgroundColorPicker = styled.input`
+  opacity: 0;
+  width: 0;
+  height: 0;
 `;

@@ -3,11 +3,23 @@ import styled from "styled-components";
 import DefaultButton from "@/Components/Common/DefaultButton";
 import PostTitle from "@/Components/Post/PostTitle";
 import ProjectInfo from "@/Components/Post/ProjectInfo";
-import { useRef, useState } from "react";
-import dynamic from "next/dynamic";
-import { WithPersonType } from "./WithPeople";
+import { useRecoilValue } from "recoil";
+import {
+  postContent,
+  postLargeCategory as recoilPostLargeCategory,
+  postMembers,
+  postProjectDuration,
+  postPublic,
+  postSkills,
+  postSubCategory as recoilPostSubCategory,
+  postSubTitle,
+  postTags,
+  postTitle,
+  postTitleBackgroundColor,
+} from "@/lib/recoil";
 import supabase from "@/lib/supabase";
-import { PostType } from "@/types";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 /**
  * @TODO 코드블럭
@@ -19,104 +31,70 @@ import { PostType } from "@/types";
  * @TODO 카테고리 중복 선택 , 보여주는 UI
  * @TODO 서버통신 연결
  */
-const id = crypto.randomUUID();
 const Post: NextPage = () => {
-  const [title, setTitle] = useState("");
-  const [subTitle, setSubTitle] = useState("");
-  const [imgFile, setImgFile] = useState("");
+  const title = useRecoilValue(postTitle);
+  const subTitle = useRecoilValue(postSubTitle);
+  const titleBackgroundColor = useRecoilValue(postTitleBackgroundColor);
+  const [startDate, endDate] = useRecoilValue(postProjectDuration);
+  const skills = useRecoilValue(postSkills);
+  const tag = useRecoilValue(postTags);
+  const isPublic = useRecoilValue(postPublic);
+  const members = useRecoilValue(postMembers);
+  const content = useRecoilValue(postContent);
+  const postLargeCategory = useRecoilValue(recoilPostLargeCategory);
+  const postSubCategory = useRecoilValue(recoilPostSubCategory);
 
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  const router = useRouter();
 
-  const [techStack, setTechStack] = useState<string[]>([]);
-  const [tag, setTag] = useState<string[]>([]);
-  const [isPublic, setIsPublic] = useState(false);
-  const [people, setPeople] = useState<WithPersonType[]>([]);
-
-  const [postContent, setPostContent] = useState("");
-
-  const editorRef = useRef(null);
-  const editorText = editorRef.current?.getInstance().getMarkdown();
-
-  enum Field {
-    WEB = "웹",
-    APP = "앱",
-    SOFTWARE = "소프트웨어",
-    DATA = "데이터",
-    WEB3 = "블록체인",
-    DEVOPS = "데브옵스",
-    IOT_AND_EMBEDDED = "IOT,임베디드",
-    SECURITY = "보안",
-  }
-  const postRow = {
-    id,
-    user_id: id,
+  const newPostRow = {
     title,
     sub_title: subTitle,
-    content: postContent,
-    thumbnail: imgFile,
-    created_at: new Date(),
-    progress_date: [String(startDate), String(endDate)],
-    github_url: "https://github.com/",
-    url: "https://naver.com/",
-    is_public: isPublic,
+    title_background_color: titleBackgroundColor,
+    large_category: postLargeCategory,
+    sub_category: postSubCategory,
+    skills,
+    progress_date: [startDate, endDate],
+    members,
     tag,
-    members: people,
-    skills: techStack,
-    large_category: Field.WEB,
-    sub_category: "프론트엔드",
+    is_public: isPublic,
+    content,
   };
+
+  const [isSaved, setIsSaved] = useState(false);
 
   const onSave = () => {
     // 저장 버튼
-    setPostContent(editorText);
+    setIsSaved(true);
+    setTimeout(() => {
+      setIsSaved(false);
+    }, 2000);
   };
   const onPost = async () => {
     // 게시 버튼
-    setPostContent(editorText);
-    await supabase.from("post").insert(postRow);
+    const { data, error } = await supabase
+      .from("post")
+      .insert(newPostRow)
+      .select()
+      .single();
+    if (!error) {
+      router.push({
+        pathname: "/",
+        query: { id: data.id },
+      });
+    }
   };
-  console.log(postContent);
-  const PostEditor = dynamic(() => import("./PostEditor"), {
-    ssr: false,
-  });
 
   return (
     <MainWrapper>
       <PostHeader>
-        <SaveAlert>글이 저장 되었습니다.</SaveAlert>
+        <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert>
         <DefaultButton text="저장" type="outline" size="s" onClick={onSave} />
         <DefaultButton text="게시" type="full" size="s" onClick={onPost} />
       </PostHeader>
       <section>
-        <PostTitle
-          title={title}
-          setTitle={setTitle}
-          subTitle={subTitle}
-          setSubTitle={setSubTitle}
-          imgFile={imgFile}
-          setImgFile={setImgFile}
-        />
-        <ProjectInfo
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-          techStack={techStack}
-          setTechStack={setTechStack}
-          tag={tag}
-          setTag={setTag}
-          isPublic={isPublic}
-          setIsPublic={setIsPublic}
-          people={people}
-          setPeople={setPeople}
-        />
+        <PostTitle />
+        <ProjectInfo />
       </section>
-      <PostEditor
-        postContent={postContent}
-        setPostContent={setPostContent}
-        editorRef={editorRef}
-      />
     </MainWrapper>
   );
 };
@@ -133,6 +111,14 @@ const PostHeader = styled.section`
   padding: 2.8125rem 0;
   gap: 1.25rem;
 `;
-const SaveAlert = styled.span``;
+
+interface SaveAlertProps {
+  isSaved: boolean;
+}
+
+const SaveAlert = styled.span<SaveAlertProps>`
+  opacity: ${({ isSaved }) => (isSaved ? 1 : 0)};
+  transition: all 0.5s ease-in-out;
+`;
 
 export default Post;

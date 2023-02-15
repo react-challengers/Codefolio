@@ -87,23 +87,19 @@ interface NotificationType {
 }
 
 declare interface PostType {
-  id: string;
-  user_id: string;
   title: string;
   sub_title: string;
-  content: string;
-  thumbnail: string;
-  progress_date: [string, string];
-  github_url: string;
-  url: string;
-  is_public: boolean;
-  members: WithPersonType[];
+  title_background_color: string;
+  large_category: string;
+  sub_category: string;
   skills: string[];
+  progress_date: string[];
+  members: MembersType[];
   tag: string[];
-  created_at: Date;
-  large_category: FiledType;
-  sub_category: SubCategory;
-  //
+  is_public: boolean;
+  content: string;
+  id: string;
+  user_id: string;
 }
 
 interface FollowType {

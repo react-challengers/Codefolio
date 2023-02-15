@@ -1,19 +1,11 @@
+import { postMembers } from "@/lib/recoil";
 import Image from "next/image";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
-export interface WithPersonType {
-  name: string;
-  field: string;
-  github: string;
-}
-
-interface WithPeopleProps {
-  people: WithPersonType[];
-  setPeople: Dispatch<SetStateAction<WithPersonType[]>>;
-}
-
-const WithPeople = ({ people, setPeople }: WithPeopleProps) => {
+const WithPeople = () => {
+  const [people, setPeople] = useRecoilState(postMembers);
   const addPerson = () => {
     if (people.length === 0) {
       setPeople([...people, { name: "", field: "", github: "" }]);
