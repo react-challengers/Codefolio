@@ -177,9 +177,7 @@ const HomeDropDownItem = styled.li`
 `;
 
 const CardContainer = styled.div`
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
 `;
 
 export default MainSection;

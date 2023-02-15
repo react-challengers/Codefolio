@@ -26,7 +26,7 @@ const DetailModal = ({ setIsModalOpen }: DetailModalProps) => {
 };
 
 const ModalContainer = styled.div`
-  padding: 20px 0;
+  padding: 1.25rem 0;
 `;
 
 const ModalBackDrop = styled.div`
