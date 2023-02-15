@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import styled from "styled-components";
 import ProfileImage from "../ProfileImage";
@@ -26,7 +25,6 @@ type Field =
 interface CardProps {
   imageSrc: string;
   imageAlt: string;
-  linkURL: string;
   tagItems: string[];
   title: string;
   subTitle: string;
@@ -39,7 +37,6 @@ interface CardProps {
 /**
  * @param {string} imageSrc - 이미지 url가 보이는 url
  * @param {string} imageAlt - 이미지 alt 텍스트
- * @param {string} linkURL - 클릭하면 연결 Detail 페이지로 이동합니다.
  * @param {string[]} tagItems - 태그 목록
  * @param {string} title - 게시글 제목
  * @param {string} subTitle - 게시글 설명
@@ -59,14 +56,12 @@ interface CardProps {
  *    likes={203}
  *    comments={57}
  *    field="WEB"
- *    linkURL={`/detail/${1}`}
  * />
  */
 
 const CardItem = ({
   tagItems,
   imageSrc,
-  linkURL,
   imageAlt,
   title,
   subTitle,
@@ -86,22 +81,20 @@ const CardItem = ({
         setIsOverlay(false);
       }}
     >
-      <Link href={linkURL}>
-        <ImageContainer>
-          {isOverlay && (
-            <ImageOverlayContainer>
-              <ImageOverlayProfileContainer>
-                {/* todo: add src current user profile image */}
-                <ProfileImage alt={title} page="detailPage" />
-                {/* todo: add nickname current user */}
-                <ImageOverlayProfileName>이정익</ImageOverlayProfileName>
-              </ImageOverlayProfileContainer>
-            </ImageOverlayContainer>
-          )}
-          <Tags tagItems={[field]} size="sm" />
-          <CardImage src={`/images/${imageSrc}`} alt={imageAlt} layout="fill" />
-        </ImageContainer>
-      </Link>
+      <ImageContainer>
+        {isOverlay && (
+          <ImageOverlayContainer>
+            <ImageOverlayProfileContainer>
+              {/* todo: add src current user profile image */}
+              <ProfileImage alt={title} page="detailPage" />
+              {/* todo: add nickname current user */}
+              <ImageOverlayProfileName>이정익</ImageOverlayProfileName>
+            </ImageOverlayProfileContainer>
+          </ImageOverlayContainer>
+        )}
+        <Tags tagItems={[field]} size="sm" />
+        <CardImage src={`/images/${imageSrc}`} alt={imageAlt} layout="fill" />
+      </ImageContainer>
       <CardBottomWrapper>
         <DateCountContainer>
           <Date>{date}</Date>

@@ -1,8 +1,55 @@
 import styled from "styled-components";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import supabase from "@/lib/supabase";
 import DefaultButton from "../Common/DefaultButton";
 import ProfileImage from "../Common/ProfileImage";
+import { useState } from "react";
+import useInput from "@/hooks/common/useInput";
 
-const CommentItem = () => {
+interface CommentType {
+  id: string;
+  post_id: string;
+  user_id: string;
+  content: string;
+}
+interface CommentItemProps {
+  comment: CommentType;
+}
+
+const CommentItem = ({ comment }: CommentItemProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, changeEditContent] = useInput(comment.content);
+
+  const queryClient = useQueryClient();
+  const { mutate: deleteComment, isError: deleteError } = useMutation(
+    (): any => supabase.from("comment").delete().eq("id", comment.id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["getComment"]);
+      },
+    }
+  );
+  const { mutate: editComment, isError: editError } = useMutation(
+    (): any =>
+      supabase
+        .from("comment")
+        .update({ content: editContent })
+        .eq("id", comment.id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["getComment"]);
+      },
+    }
+  );
+
+  const handleEditClick = async () => {
+    if (isEditing) {
+      editComment();
+    }
+
+    setIsEditing((prev) => !prev);
+  };
+
   return (
     <CommentContainer>
       <ProfileImage alt="" page="detailPage" />
@@ -16,17 +63,21 @@ const CommentItem = () => {
               text="수정"
               type="outline"
               size="s"
-              onClick={() => null}
+              onClick={handleEditClick}
             />
             <DefaultButton
               text="삭제"
               type="outline"
               size="s"
-              onClick={() => null}
+              onClick={() => deleteComment()}
             />
           </CommentWrapper>
         </CommentTitle>
-        <CommentContent>내용 잘 봤습니다!!</CommentContent>
+        {isEditing ? (
+          <input value={editContent} onChange={changeEditContent} />
+        ) : (
+          <CommentContent>{comment.content}</CommentContent>
+        )}
       </TextBox>
     </CommentContainer>
   );
