@@ -86,7 +86,7 @@ const FieldDropDown = ({ setSelectedItem }: FieldDropDownProps) => {
           <FiledItemContainer
             key={item.toString()}
             onMouseOver={() => handleOverlayItem(item)}
-            cursor
+            dataCursor={true}
           >
             {item}
           </FiledItemContainer>
@@ -112,11 +112,11 @@ const FiledItemContainer = styled.li<{
   key?: string;
   onMouseOver?: () => void;
   onClick?: () => void;
-  cursor?: boolean;
+  dataCursor?: boolean;
 }>`
   padding: 0.75rem;
   width: 8.75rem;
-  ${(props) => props.cursor && "cursor: pointer;"};
+  ${(props) => props.dataCursor && "cursor: pointer;"};
   :hover {
     background: #e6e6e6;
   }
