@@ -80,21 +80,21 @@ const WithPeopleContainer = styled.div`
 
 const InputWrapper = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 1.25rem;
   align-items: center;
 `;
 
 const Input = styled.input`
   border: none;
-  border-bottom: 1px solid grey;
-  padding: 10px 20px;
+  border-bottom: 0.0625rem solid grey;
+  padding: 0.625rem 1.25rem;
   outline: none;
 `;
 
 const AddButton = styled.button`
-  width: 100px;
-  line-height: 30px;
-  border-radius: 25px;
+  width: 6.25rem;
+  line-height: 1.875rem;
+  border-radius: 1.5625rem;
   border: none;
   background-color: grey;
   color: white;

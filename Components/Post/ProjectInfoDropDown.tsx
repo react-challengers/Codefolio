@@ -130,7 +130,7 @@ const ProjectInfoDropDown = ({
 const ProjectInfoDropDownContainer = styled.div`
   height: 12.5rem;
 
-  margin-top: 2px;
+  margin-top: 0.125rem;
   border: 1px solid #cccccc;
 
   display: grid;
@@ -169,11 +169,11 @@ const DatePickerContainer = styled.div`
 
 const ToggleWrapper = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 0.75rem;
   align-items: center;
   p {
     color: #999999;
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
 `;
 
