@@ -26,7 +26,6 @@ type Field =
 interface CardProps {
   imageSrc: string;
   imageAlt: string;
-  linkURL: string;
   tagItems: string[];
   title: string;
   subTitle: string;
@@ -66,7 +65,6 @@ interface CardProps {
 const CardItem = ({
   tagItems,
   imageSrc,
-  linkURL,
   imageAlt,
   title,
   subTitle,
@@ -86,22 +84,20 @@ const CardItem = ({
         setIsOverlay(false);
       }}
     >
-      <Link href={linkURL}>
-        <ImageContainer>
-          {isOverlay && (
-            <ImageOverlayContainer>
-              <ImageOverlayProfileContainer>
-                {/* todo: add src current user profile image */}
-                <ProfileImage alt={title} page="detailPage" />
-                {/* todo: add nickname current user */}
-                <ImageOverlayProfileName>이정익</ImageOverlayProfileName>
-              </ImageOverlayProfileContainer>
-            </ImageOverlayContainer>
-          )}
-          <Tags tagItems={[field]} size="sm" />
-          <CardImage src={`/images/${imageSrc}`} alt={imageAlt} layout="fill" />
-        </ImageContainer>
-      </Link>
+      <ImageContainer>
+        {isOverlay && (
+          <ImageOverlayContainer>
+            <ImageOverlayProfileContainer>
+              {/* todo: add src current user profile image */}
+              <ProfileImage alt={title} page="detailPage" />
+              {/* todo: add nickname current user */}
+              <ImageOverlayProfileName>이정익</ImageOverlayProfileName>
+            </ImageOverlayProfileContainer>
+          </ImageOverlayContainer>
+        )}
+        <Tags tagItems={[field]} size="sm" />
+        <CardImage src={`/images/${imageSrc}`} alt={imageAlt} layout="fill" />
+      </ImageContainer>
       <CardBottomWrapper>
         <DateCountContainer>
           <Date>{date}</Date>
