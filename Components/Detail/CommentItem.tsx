@@ -4,33 +4,31 @@ import ProfileImage from "../Common/ProfileImage";
 
 const CommentItem = () => {
   return (
-    <>
-      <CommentContainer>
-        <ProfileImage alt="" page="detailPage" />
-        <TextBox>
-          <CommentTitle>
-            <CommentWrapper>
-              <h3> Alex </h3> <span> 5시간 전 </span>
-            </CommentWrapper>
-            <CommentWrapper>
-              <DefaultButton
-                text="수정"
-                type="outline"
-                size="s"
-                onClick={() => null}
-              />
-              <DefaultButton
-                text="삭제"
-                type="outline"
-                size="s"
-                onClick={() => null}
-              />
-            </CommentWrapper>
-          </CommentTitle>
-          <CommentContent>내용 잘 봤습니다!!</CommentContent>
-        </TextBox>
-      </CommentContainer>
-    </>
+    <CommentContainer>
+      <ProfileImage alt="" page="detailPage" />
+      <TextBox>
+        <CommentTitle>
+          <CommentWrapper>
+            <h3> Alex </h3> <span> 5시간 전 </span>
+          </CommentWrapper>
+          <CommentWrapper>
+            <DefaultButton
+              text="수정"
+              type="outline"
+              size="s"
+              onClick={() => null}
+            />
+            <DefaultButton
+              text="삭제"
+              type="outline"
+              size="s"
+              onClick={() => null}
+            />
+          </CommentWrapper>
+        </CommentTitle>
+        <CommentContent>내용 잘 봤습니다!!</CommentContent>
+      </TextBox>
+    </CommentContainer>
   );
 };
 

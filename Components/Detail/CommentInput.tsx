@@ -1,7 +1,10 @@
 import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
 import DefaultButton from "../Common/DefaultButton";
-
+/**
+ * @todo postComment 구현 필요
+ * @todo alert는 임시 입니다. 커스텀 필요
+ */
 const CommentInput = () => {
   const postComment = () => {
     alert("댓글 입력");
@@ -12,7 +15,7 @@ const CommentInput = () => {
   return (
     <>
       <CommentInputContainer>
-        <ProfileImage alt="" page="detailPage" />
+        <ProfileImage alt="dummy" page="detailPage" />
         <CommentTextarea placeholder="이 프로젝트에 대한 댓글을 남겨주세요." />
       </CommentInputContainer>
       <PostCommentButton>
@@ -20,7 +23,7 @@ const CommentInput = () => {
           text="작성하기"
           type="full"
           size="s"
-          onClick={() => postComment()}
+          onClick={postComment}
         ></DefaultButton>
       </PostCommentButton>
     </>
