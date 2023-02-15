@@ -6,7 +6,7 @@ import {
   RelatedProject,
 } from "@/Components/Detail";
 import { NextPage } from "next";
-import styled from "styled-components";
+import Comment from "@/Components/Detail/Comment";
 
 const DetailPage: NextPage = () => {
   const detailTitleData = {
