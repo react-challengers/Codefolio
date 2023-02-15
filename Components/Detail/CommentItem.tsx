@@ -1,8 +1,38 @@
+import { useMutation, useQueryClient } from "react-query";
 import styled from "styled-components";
+import supabase from "@/lib/supabase";
 import DefaultButton from "../Common/DefaultButton";
 import ProfileImage from "../Common/ProfileImage";
 
-const CommentItem = () => {
+interface CommentType {
+  id: string;
+  post_id: string;
+  user_id: string;
+  content: string;
+}
+interface CommentItemProps {
+  comment: CommentType;
+}
+
+const CommentItem = ({ comment }: CommentItemProps) => {
+  const queryClient = useQueryClient();
+  const { mutate: deleteComment, mutateAsync } = useMutation(
+    (): any => supabase.from("comment").delete().eq("id", comment.id)
+    // {
+    //   onSuccess: () => {
+    //     queryClient.invalidateQueries("getComment");
+    //   },
+    // }
+  );
+
+  const handleDelete = async () => {
+    await mutateAsync("", {
+      onSuccess: () => {
+        queryClient.invalidateQueries("getComment");
+      },
+    });
+  };
+
   return (
     <CommentContainer>
       <ProfileImage alt="" page="detailPage" />
@@ -22,11 +52,11 @@ const CommentItem = () => {
               text="삭제"
               type="outline"
               size="s"
-              onClick={() => null}
+              onClick={() => handleDelete()}
             />
           </CommentWrapper>
         </CommentTitle>
-        <CommentContent>내용 잘 봤습니다!!</CommentContent>
+        <CommentContent>{comment.content}</CommentContent>
       </TextBox>
     </CommentContainer>
   );

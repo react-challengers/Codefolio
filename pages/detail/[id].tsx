@@ -1,11 +1,12 @@
-
 import { NextPage } from "next";
-import styled from "styled-components";
+import Comment from "@/Components/Detail/Comment";
 
 const DetailPage: NextPage = () => {
-  return <div>,</div>;
+  return (
+    <div>
+      <Comment />
+    </div>
+  );
 };
-
-const DetailPageContainer = styled.div``;
 
 export default DetailPage;

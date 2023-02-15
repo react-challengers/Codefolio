@@ -12,7 +12,7 @@ const Comment = () => {
 };
 
 const CommentContainer = styled.div`
-  width: 75rem;
+  width: 100%;
 `;
 
 export default Comment;
