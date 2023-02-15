@@ -6,7 +6,7 @@ import "@toast-ui/editor/dist/i18n/ko-kr";
 
 import { Editor } from "@toast-ui/react-editor";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Dispatch, LegacyRef, SetStateAction, useEffect, useRef } from "react";
 import supabase from "@/lib/supabase";
 import imageCompression from "browser-image-compression";
 
@@ -18,11 +18,14 @@ import imageCompression from "browser-image-compression";
 interface PostEditorProps {
   postContent: string;
   setPostContent: Dispatch<SetStateAction<string>>;
+  editorRef: LegacyRef<Editor>;
 }
 
-const PostEditor = ({ postContent, setPostContent }: PostEditorProps) => {
-  const editorRef = useRef(null);
-
+const PostEditor = ({
+  postContent,
+  setPostContent,
+  editorRef,
+}: PostEditorProps) => {
   const toolbarItems = [
     ["heading", "bold", "italic", "strike"],
     ["hr"],
@@ -45,14 +48,13 @@ const PostEditor = ({ postContent, setPostContent }: PostEditorProps) => {
     // https://www.youtube.com/watch?v=dLqSmxX3r7I
     const img = await compressImg(blob); // 이미지 압축
     const url = await uploadImage(img); // 업로드된 이미지 서버 url
-    dropImage(url, "alt_text"); // 에디터에 이미지 추가
+    dropImage(url, `${blob.name}`); // 에디터에 이미지 추가
   };
 
   // 이미지 업로드
 
   const uploadImage = async (blob: File) => {
     try {
-      // firebase Storage Create Reference 파일 경로 / 파일 명 . 확장자
       const imgPath = crypto.randomUUID();
       await supabase.storage.from("post-image").upload(imgPath, blob);
 
