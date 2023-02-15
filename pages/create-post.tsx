@@ -1,5 +1,5 @@
 import GNB from "@/Components/Layouts/GNB";
-import Post from "@/Components/Post/post";
+import Post from "@/Components/Post/Post";
 import { NextPage, GetServerSideProps } from "next";
 
 const CreatePostPage: NextPage = () => {

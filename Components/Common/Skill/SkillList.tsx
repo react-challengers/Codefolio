@@ -3,11 +3,12 @@ import styled from "styled-components";
 import Skill, { commonStyle } from "./Skill";
 
 interface SkillPickerProps {
+  text: string;
   editSkills: string[];
   setEditSkills: Dispatch<React.SetStateAction<string[]>>;
 }
 
-const SkillList = ({ editSkills, setEditSkills }: SkillPickerProps) => {
+const SkillList = ({ text, editSkills, setEditSkills }: SkillPickerProps) => {
   const addSkill = () => {
     if (editSkills[editSkills.length - 1] !== "")
       setEditSkills([...editSkills, ""]);
@@ -29,7 +30,7 @@ const SkillList = ({ editSkills, setEditSkills }: SkillPickerProps) => {
           onDelete={onDelete}
         />
       ))}
-      <SkillButton onClick={addSkill}>+ 스킬 입력</SkillButton>
+      <SkillButton onClick={addSkill}>+ {text}</SkillButton>
     </SkillListContainer>
   );
 };

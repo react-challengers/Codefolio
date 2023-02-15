@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Dispatch, SetStateAction, useState } from "react";
 import arrow_down from "@/public/images/arrow_down.jpg";
 import ProjectInfoDropDown from "./ProjectInfoDropDown";
+import { WithPersonType } from "./WithPeople";
 
 interface ProjectInfoDropDownProps {
   startDate: Date;
@@ -11,6 +12,12 @@ interface ProjectInfoDropDownProps {
   setEndDate: Dispatch<SetStateAction<Date>>;
   techStack: string[];
   setTechStack: Dispatch<SetStateAction<string[]>>;
+  tag: string[];
+  setTag: Dispatch<SetStateAction<string[]>>;
+  isPublic: boolean;
+  setIsPublic: Dispatch<SetStateAction<boolean>>;
+  people: WithPersonType[];
+  setPeople: Dispatch<SetStateAction<WithPersonType[]>>;
 }
 
 const ProjectInfo = ({
@@ -20,6 +27,12 @@ const ProjectInfo = ({
   setEndDate,
   techStack,
   setTechStack,
+  tag,
+  setTag,
+  isPublic,
+  setIsPublic,
+  people,
+  setPeople,
 }: ProjectInfoDropDownProps) => {
   const [openDropdown, setOpenDropdown] = useState(false);
 
@@ -39,6 +52,12 @@ const ProjectInfo = ({
           setEndDate={setEndDate}
           techStack={techStack}
           setTechStack={setTechStack}
+          tag={tag}
+          setTag={setTag}
+          isPublic={isPublic}
+          setIsPublic={setIsPublic}
+          people={people}
+          setPeople={setPeople}
         />
       )}
     </div>
@@ -65,6 +84,7 @@ const DropdownButton = styled.button`
   border: none;
   margin-right: 2.5rem;
   background-color: white;
+  cursor: pointer;
 `;
 
 const DropdownImage = styled(Image)`

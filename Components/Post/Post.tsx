@@ -5,6 +5,7 @@ import PostTitle from "@/Components/Post/PostTitle";
 import ProjectInfo from "@/Components/Post/ProjectInfo";
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { WithPersonType } from "./WithPeople";
 
 /**
  * @TODO 코드블럭
@@ -26,6 +27,9 @@ const Post: NextPage = () => {
   const [endDate, setEndDate] = useState<Date>(new Date());
 
   const [techStack, setTechStack] = useState<string[]>([]);
+  const [tag, setTag] = useState<string[]>([]);
+  const [isPublic, setIsPublic] = useState(false);
+  const [people, setPeople] = useState<WithPersonType[]>([]);
 
   const onClickTest = () => {
     console.log("hi");
@@ -63,6 +67,12 @@ const Post: NextPage = () => {
           setEndDate={setEndDate}
           techStack={techStack}
           setTechStack={setTechStack}
+          tag={tag}
+          setTag={setTag}
+          isPublic={isPublic}
+          setIsPublic={setIsPublic}
+          people={people}
+          setPeople={setPeople}
         />
       </section>
       <section>
