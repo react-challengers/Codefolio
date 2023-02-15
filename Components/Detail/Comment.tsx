@@ -12,7 +12,8 @@ const Comment = () => {
 };
 
 const CommentContainer = styled.div`
-  width: 100%;
+  width: 75rem;
+  padding-top: 2.5rem;
 `;
 
 export default Comment;
