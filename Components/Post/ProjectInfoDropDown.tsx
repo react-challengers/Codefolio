@@ -169,7 +169,6 @@ const StyledDatePicker = styled(DatePicker)`
   display: flex;
   justify-content: center;
   text-align: center;
-  z-index: 10000;
 `;
 
 const SpaceBetweenDatePicker = styled.div`

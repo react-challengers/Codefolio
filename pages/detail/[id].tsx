@@ -50,6 +50,7 @@ const DetailPageContainer = styled.div`
   margin: 0 auto;
   background-color: white;
   border-radius: 0.5rem;
+  padding-bottom: 3.125rem;
 
   z-index: 1;
 `;
