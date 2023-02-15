@@ -31,7 +31,10 @@ const Post: NextPage = () => {
   const [isPublic, setIsPublic] = useState(false);
   const [people, setPeople] = useState<WithPersonType[]>([]);
 
+  const [postContent, setPostContent] = useState("");
+
   const onClickTest = () => {
+    // 저장하기
     console.log("hi");
   };
 
@@ -75,7 +78,7 @@ const Post: NextPage = () => {
           setPeople={setPeople}
         />
       </section>
-      <PostEditor />
+      <PostEditor postContent={postContent} setPostContent={setPostContent} />
     </MainWrapper>
   );
 };

@@ -6,7 +6,7 @@ import "@toast-ui/editor/dist/i18n/ko-kr";
 
 import { Editor } from "@toast-ui/react-editor";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import { LegacyRef, useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import supabase from "@/lib/supabase";
 import imageCompression from "browser-image-compression";
 
@@ -14,7 +14,13 @@ import imageCompression from "browser-image-compression";
  * @TODO storage 삭제 구현 필요
  * @TODO uuid flag 꽃아야 함 >> 게시와 임시저장의 용도로 분류
  */
-const PostEditor = () => {
+
+interface PostEditorProps {
+  postContent: string;
+  setPostContent: Dispatch<SetStateAction<string>>;
+}
+
+const PostEditor = ({ postContent, setPostContent }: PostEditorProps) => {
   const editorRef = useRef(null);
 
   const toolbarItems = [
@@ -35,7 +41,7 @@ const PostEditor = () => {
 
   // ------------- image Function ------------- // 에디터에 이미지 추가
 
-  const addImage = async (blob, dropImage) => {
+  const addImage = async (blob: File, dropImage) => {
     // https://www.youtube.com/watch?v=dLqSmxX3r7I
     const img = await compressImg(blob); // 이미지 압축
     const url = await uploadImage(img); // 업로드된 이미지 서버 url
@@ -44,13 +50,11 @@ const PostEditor = () => {
 
   // 이미지 업로드
 
-  const uploadImage = async (blob) => {
+  const uploadImage = async (blob: File) => {
     try {
       // firebase Storage Create Reference 파일 경로 / 파일 명 . 확장자
       const imgPath = crypto.randomUUID();
       await supabase.storage.from("post-image").upload(imgPath, blob);
-
-      const { data, error } = await supabase.storage.getBucket("post-image");
 
       // 이미지 올리기
       const urlResult = await supabase.storage
@@ -83,10 +87,13 @@ const PostEditor = () => {
   // };
 
   const handleRegisterButton = () => {
-    // 입력창에 입력한 내용을 HTML 태그 형태로 취득
-    console.log(editorRef.current?.getInstance().getHTML());
-    // 입력창에 입력한 내용을 MarkDown 형태로 취득
-    console.log(editorRef.current?.getInstance().getMarkdown());
+    // 유효성 검사
+    const editorText = editorRef.current?.getInstance().getMarkdown();
+    if ((editorText === " ") | (editorText === "")) {
+      return;
+    }
+    // HTML 대신에 Markdown으로 저장합니다.
+    setPostContent(editorText);
   };
 
   // 진행 해야 함
@@ -106,30 +113,27 @@ const PostEditor = () => {
   //   }
   // };
   return (
-    <>
-      <Editor
-        ref={editorRef}
-        initialValue="challenge!"
-        previewStyle="vertical"
-        // previewHighlight={false}
-        height="600px"
-        initialEditType="markdown"
-        useCommandShortcut
-        toolbarItems={toolbarItems}
-        language="ko-KR"
-        plugins={[
-          colorSyntax,
-          // 기본 색상 preset 적용
-          // {
-          //   preset: ["#1F2E3D", "#4c5864", "#ED7675"],
-          // },
-        ]}
-        hooks={{
-          addImageBlobHook: addImage,
-        }}
-      />
-      <button onClick={handleRegisterButton}>ddddddd</button>
-    </>
+    <Editor
+      ref={editorRef}
+      initialValue=" "
+      previewStyle="vertical"
+      // previewHighlight={false}
+      height="600px"
+      initialEditType="markdown"
+      useCommandShortcut
+      toolbarItems={toolbarItems}
+      language="ko-KR"
+      plugins={[
+        colorSyntax,
+        // 기본 색상 preset 적용
+        // {
+        //   preset: ["#1F2E3D", "#4c5864", "#ED7675"],
+        // },
+      ]}
+      hooks={{
+        addImageBlobHook: addImage,
+      }}
+    />
   );
 };
 
