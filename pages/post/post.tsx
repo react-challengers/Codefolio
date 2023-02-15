@@ -9,6 +9,8 @@ import dynamic from "next/dynamic";
 /**
  * @TODO 코드블럭
  * @TODO 게시 전 입력창 추가(인원, 기간 등 - 피그마 참고)
+ * @TODO file(img) input 에서 color picker로 변경
+ * @TODO date picker z-index 해결
  * @TODO Date recoil을 활용한 custom hook으로 리팩토링하기
  * @TODO 개발스택 UI my-page 참고
  * @TODO 카테고리 중복 선택 , 보여주는 UI
