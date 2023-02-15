@@ -1,6 +1,7 @@
 import { largeCategoryState, subCategoryState } from "@/lib/recoil";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import bottom_arrow from "@/public/icons/bottom_arrow.svg";
@@ -9,7 +10,11 @@ import CardItem from "../Common/Card/CardItem";
 
 // TODO: Tag 데이터 구조화 고민하기
 
-const MainSection = () => {
+interface MainSectionProps {
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const homeDropDownItems = ["최신순", "조회순", "추천순"];
   const [selectedDropDownItem, setSelectedDropDownItem] = useState(
@@ -19,6 +24,13 @@ const MainSection = () => {
     useRecoilState(largeCategoryState);
   const [selectedSubCategory, setSelectedSubCategory] =
     useRecoilState(subCategoryState);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (router.query.id) {
+      setIsModalOpen(true);
+    }
+  });
 
   const onClickDropDown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -68,18 +80,32 @@ const MainSection = () => {
         )}
       </HomeDropDownContainer>
       <HomeCardGrid>
-        <CardItem
-          imageSrc="anonImage.png"
-          imageAlt="ㅁ"
-          linkURL="google.com"
-          title="안드로이드 스튜디오에서 빌드가 안될때"
-          subTitle="안드로이드 스튜디오에서 빌드가 안될때"
-          tagItems={["App | Android, iOS, flutter"]}
-          date="2021.08.01"
-          comments={100}
-          likes={100}
-          field="APP"
-        />
+        <CardContainer
+          onClick={() => {
+            router.push(
+              {
+                query: {
+                  id: "1",
+                },
+              },
+              undefined,
+              { shallow: true }
+            );
+            setIsModalOpen(true);
+          }}
+        >
+          <CardItem
+            imageSrc="anonImage.png"
+            imageAlt="ㅁ"
+            title="안드로이드 스튜디오에서 빌드가 안될때"
+            subTitle="안드로이드 스튜디오에서 빌드가 안될때"
+            tagItems={["App | Android, iOS, flutter"]}
+            date="2021.08.01"
+            comments={100}
+            likes={100}
+            field="APP"
+          />
+        </CardContainer>
       </HomeCardGrid>
     </HomeMainContainer>
   );
@@ -148,6 +174,12 @@ const HomeDropDownItemContainer = styled.div`
 
 const HomeDropDownItem = styled.li`
   margin: 0.5rem;
+`;
+
+const CardContainer = styled.div`
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export default MainSection;
