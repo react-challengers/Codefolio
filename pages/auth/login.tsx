@@ -80,8 +80,6 @@ const Login: NextPage = () => {
       password,
     });
     if (!error) {
-      setEmail("");
-      setPassword("");
       router.push("/");
     } else {
       alert("로그인 실패");
