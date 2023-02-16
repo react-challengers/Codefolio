@@ -1,11 +1,13 @@
-import useInput from "@/hooks/common/useInput";
+import { myPagePhonNumber } from "@/lib/recoil";
 import { UserProfileType } from "@/types";
-import { Dispatch, useState } from "react";
+import {
+  getBirthYearsArray,
+  getCareerYearsArray,
+} from "@/utils/commons/getYearsArray";
+import { ChangeEvent, Dispatch, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import DefaultButton from "../Common/DefaultButton";
-import DropDown from "../Common/DropDown";
-import SkillList from "../Common/Skill/SkillList";
-import Toggle from "../Common/Toggle";
+import { DefaultButton, DropDown, SkillList, Toggle } from "../Common";
 import PositionTag from "./PositionTag";
 import ProfileContainer from "./ProfileContainer";
 import { ContentContainer, ContentWrapper } from "./ShowProfileContainer";
@@ -22,6 +24,10 @@ const fieldList = [
   "IOT/임베디드",
 ];
 
+// 앞 3자리는 010 뒤 8자리는 0~9에 해당하는지 유효성을 검증합니다.
+const checkIsPhoneNumber = (phoneNumber: string): boolean =>
+  !/^[0]{1}[1]{1}[0]{1}[0-9]{8}/.test(phoneNumber);
+
 interface EditProfileContainerProps {
   userInfo: UserProfileType;
   setIsEditing: Dispatch<React.SetStateAction<boolean>>;
@@ -34,19 +40,21 @@ const EditProfileContainer = ({
   const {
     gender,
     birth_year: birthYear,
-    phone,
     field: oldField,
     skills,
     careerer,
     is_public: isPublic,
   } = userInfo;
+
+  const [editPhone, changeEditPhone] = useRecoilState(myPagePhonNumber);
   const [activeField, setActiveField] = useState([...oldField]);
-  const [editPhone, changeEditPhone] = useInput(phone);
   const [currentItem, setCurrentItem] = useState(gender);
   const [editIsPublic, setEditIsPublic] = useState(isPublic);
   const [editSkills, setEditSkills] = useState(skills);
   const [editbirthYear, setEditBirthYear] = useState(birthYear);
   const [editCareer, setEditCareer] = useState(careerer);
+
+  const [isPhoneNumber, setIsPhoneNumber] = useState(false);
 
   const clickField = (field: string) => {
     if (activeField.includes(field)) {
@@ -57,6 +65,11 @@ const EditProfileContainer = ({
     } else {
       setActiveField([...activeField, field]);
     }
+  };
+
+  const handleEditPhone = (e: ChangeEvent<HTMLInputElement>) => {
+    changeEditPhone(e.target.value);
+    setIsPhoneNumber(checkIsPhoneNumber(e.target.value));
   };
 
   return (
@@ -81,7 +94,13 @@ const EditProfileContainer = ({
             </InfoWrapper>
             <InfoWrapper>
               <p>휴대전화</p>
-              <PhoneInput value={editPhone} onChange={changeEditPhone} />
+              <PhoneInput
+                type="number"
+                value={editPhone}
+                onChange={handleEditPhone}
+                placeholder="01012345678"
+              />
+              {isPhoneNumber && <span>전화번호 형식이 아닙니다.</span>}
             </InfoWrapper>
           </>
         </ProfileContainer>

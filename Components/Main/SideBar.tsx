@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import check from "@/public/icons/check.svg";
 import Image from "next/image";
-import LargeCategory from "./LargeCategory";
 import { useRecoilState } from "recoil";
 import { largeCategoryState, subCategoryState } from "@/lib/recoil";
+import LargeCategory from "./LargeCategory";
 
 interface SubCategoryItemsType {
   [key: string]: string[];
@@ -56,7 +56,7 @@ const SideBar = () => {
       <SideBarHr />
       <CategoryContainer>
         {largeCategoryItems.map((item: string) => (
-          <>
+          <li key={item}>
             <LargeCategory
               item={item}
               selectedCategory={selectedCategory}
@@ -91,7 +91,7 @@ const SideBar = () => {
                   )
                 )}
             </SubCategoryItemsContainer>
-          </>
+          </li>
         ))}
       </CategoryContainer>
     </SideBarContainer>
@@ -118,7 +118,7 @@ const SideBarHr = styled.hr`
   margin: 1.5rem 0;
 `;
 
-const CategoryContainer = styled.div`
+const CategoryContainer = styled.ul`
   display: flex;
   flex-direction: column;
   width: 100%;

@@ -71,7 +71,7 @@ interface UserProfileType {
   phone: string;
   field: Field;
   skills: string[];
-  careerer: string;
+  career: string;
   is_public: boolean;
   birth_year: number;
 }
@@ -100,6 +100,7 @@ interface PostType {
   content: string;
   id: string;
   user_id: string;
+  created_at: string;
 }
 
 interface FollowType {
