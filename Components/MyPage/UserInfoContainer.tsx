@@ -3,12 +3,19 @@ import {
   myPageSelfProfile,
   myPageUserName,
 } from "@/lib/recoil";
+import supabase from "@/lib/supabase";
+import { UserProfileType } from "@/types";
+import { Field } from "@/utils/constant/enums";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
+
+/**
+ * @TODO 업데이트 한 프로필을 서버에 반영합니다.
+ */
 
 const UserInfoContainer = () => {
   const [userName, setUserName] = useRecoilState(myPageUserName);
@@ -27,10 +34,27 @@ const UserInfoContainer = () => {
     setSelfProfile(e.target.value);
   };
 
-  const handleIsEditing = () => {
+  const userInfo: Omit<UserProfileType, "id"> = {
+    // id: "uuid",
+    user_id: "nno3onn@naver.com",
+    user_name: userName,
+    contact_email: contactEmail,
+    gender: "여자",
+    bookmark_folders: ["example"],
+    phone: "01063058727",
+    field: Field.WEB,
+    skills: ["a", "b", "c"],
+    career: "3년차",
+    is_public: true,
+    birth_year: 1997,
+    self_profile: selfProfile,
+  };
+
+  const handleIsEditing = async () => {
+    // 갱신된 데이터 서버에 반영
     if (isEditing) {
       setIsEditing(false);
-      // 갱신된 데이터 서버에 반영
+      await supabase.from("user-profile").insert(userInfo);
     } else {
       setIsEditing(true);
     }

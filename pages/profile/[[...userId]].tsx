@@ -47,7 +47,7 @@ const ProfilePage: NextPage = () => {
     phone: "01063058727",
     field: Field.WEB,
     skills: ["a", "b", "c"],
-    careerer: 3,
+    career: "3년차",
     is_public: true,
     birth_year: 1997,
     self_profile: selfProfile,
