@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Image, { StaticImageData } from "next/image";
-import image_upload from "@/public/icons/image_upload.svg";
+import color_fill from "@/public/icons/color_fill.svg";
 import { useRecoilState } from "recoil";
 import {
   postSubTitle,
@@ -10,8 +10,6 @@ import {
 } from "@/lib/recoil";
 
 /**
- * @TODO  StrictNull 로 오류 발생
- * @TODO  next Image width와 height 미지정으로 오류
  * @TODO  input을 커스텀 훅으로 만들기.
  */
 
@@ -41,8 +39,8 @@ const PostTitle = () => {
         />
         <ImgLabel htmlFor="background-color-picker">
           <ImgIcon
-            src={image_upload}
-            alt="이미지 업로드 아이콘"
+            src={color_fill}
+            alt="배경색 지정 아이콘"
             width={36}
             height={36}
           />

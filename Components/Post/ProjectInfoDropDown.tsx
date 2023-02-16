@@ -18,11 +18,6 @@ import Toggle from "../Common/Toggle";
 import WithPeople from "./WithPeople";
 import Tags from "../Common/Tags";
 
-/**
- * @see https://www.youtube.com/shorts/4hpjO2onpNs
- * @TODO 월 선택 안됨 (z-index)
- */
-
 const ProjectInfoDropDown = () => {
   const [postSkill, setPostSkill] = useRecoilState(postSkills);
   const [[startDate, endDate], setDate] = useRecoilState(postProjectDuration);
