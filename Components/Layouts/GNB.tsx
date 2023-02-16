@@ -17,11 +17,14 @@ const GNB = () => {
 
   const getSessionUser = async () => {
     const { data, error } = await supabase.auth.getSession();
-    const results = data.session ? setUserCheck(true) : setUserCheck(false);
     if (error) {
       throw new Error(error.message);
     }
-    return results;
+    if (data.session) {
+      setUserCheck(true);
+    } else {
+      setUserCheck(false);
+    }
   };
 
   return (
