@@ -35,7 +35,7 @@ const ShowProfileContainer = ({
         <ProfileContainer title="경력">
           <ContentContainer>
             <ContentWrapper>
-              <p>포지션</p> <Tags tagItems={[field]} />
+              <p>포지션</p> <Tags tagItems={field} />
             </ContentWrapper>
             <ContentWrapper>
               <p>경력</p>

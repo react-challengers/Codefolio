@@ -1,8 +1,4 @@
 import { myPagePhonNumber } from "@/lib/recoil";
-import {
-  getBirthYearsArray,
-  getCareerYearsArray,
-} from "@/utils/commons/getYearsArray";
 import { ChangeEvent, Dispatch, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";

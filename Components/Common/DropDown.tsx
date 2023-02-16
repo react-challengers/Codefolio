@@ -4,8 +4,8 @@ import styled from "styled-components";
 type ComponenetType = "birth_year" | "career";
 interface DropDownProps {
   type: ComponenetType;
-  editbirthYear?: number;
-  setEditBirthYear?: Dispatch<React.SetStateAction<number>>;
+  editbirthYear?: string;
+  setEditBirthYear?: Dispatch<React.SetStateAction<string>>;
   editCareer?: string;
   setEditCareer?: Dispatch<React.SetStateAction<string>>;
 }
@@ -39,7 +39,7 @@ const DropDown = ({
   }
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (setEditBirthYear) setEditBirthYear(Number(e.target.value));
+    if (setEditBirthYear) setEditBirthYear(e.target.value);
     if (setEditCareer) setEditCareer(e.target.value);
   };
 

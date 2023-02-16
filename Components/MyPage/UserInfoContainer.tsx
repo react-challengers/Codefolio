@@ -3,14 +3,14 @@ import {
   myPagePhonNumber,
   myPageSelfProfile,
   myPageUserName,
+  userLoginCheck,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import { Field } from "@/types/enums";
-import { userLoginCheck } from "@/lib/recoil";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
@@ -65,7 +65,7 @@ const UserInfoContainer = () => {
     gender: "여자",
     bookmark_folders: ["example"],
     phone,
-    field: Field.WEB,
+    field: [Field.WEB],
     skills: ["a", "b", "c"],
     career: "3년차",
     is_public: true,
@@ -88,11 +88,6 @@ const UserInfoContainer = () => {
     }
   };
 
-const UserInfoContainer = ({
-  username,
-  email,
-  selfProfile,
-}: UserInfoContainerProps) => {
   const router = useRouter();
 
   const setUserLogin = useSetRecoilState(userLoginCheck);
@@ -114,7 +109,7 @@ const UserInfoContainer = ({
           <ProfileImage alt="유저 프로필" page="myPage" />
         </ProfileImageWrapper>
         <IconWrapper>
-          <IconBox onClick={() => router.push("/profile/edit-profile")}>
+          <IconBox onClick={() => handleIsEditing()}>
             <Image
               src="/icons/edit.svg"
               alt="편집 아이콘"

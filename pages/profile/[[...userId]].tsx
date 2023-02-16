@@ -17,7 +17,6 @@ import {
   myPageUserName,
   myPagePhonNumber,
 } from "@/lib/recoil";
-import { Field } from "@/types/enums";
 
 const tabList = ["프로젝트", "팔로잉", "북마크", "좋아요", "보관함", "프로필"];
 
@@ -45,7 +44,6 @@ const ProfilePage: NextPage = () => {
     self_profile: selfProfile,
   };
 
-  const { user_name: userName, contact_email: contactEmail } = userInfo;
   const [itemList, setItemList] = useState<PostType[]>([]);
   const queryClient = useQueryClient();
 
