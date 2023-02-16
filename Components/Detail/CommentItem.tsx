@@ -58,27 +58,27 @@ const CommentItem = ({ comment }: CommentItemProps) => {
           <CommentWrapper>
             <h3> Alex </h3> <span> 5시간 전 </span>
           </CommentWrapper>
-          <CommentWrapper>
-            <DefaultButton
-              text="수정"
-              type="outline"
-              size="s"
-              onClick={handleEditClick}
-            />
-            <DefaultButton
-              text="삭제"
-              type="outline"
-              size="s"
-              onClick={() => deleteComment()}
-            />
-          </CommentWrapper>
         </CommentTitle>
         {isEditing ? (
-          <input value={editContent} onChange={changeEditContent} />
+          <EditInput value={editContent} onChange={changeEditContent} />
         ) : (
           <CommentContent>{comment.content}</CommentContent>
         )}
       </TextBox>
+      <ButtonWrapper>
+        <DefaultButton
+          text="수정"
+          type="outline"
+          size="s"
+          onClick={handleEditClick}
+        />
+        <DefaultButton
+          text="삭제"
+          type="outline"
+          size="s"
+          onClick={() => deleteComment()}
+        />
+      </ButtonWrapper>
     </CommentContainer>
   );
 };
@@ -86,6 +86,11 @@ const CommentItem = ({ comment }: CommentItemProps) => {
 const CommentContainer = styled.div`
   display: flex;
   margin-top: 2.5rem;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 1rem;
 `;
 
 const TextBox = styled.div`
@@ -111,6 +116,10 @@ const CommentTitle = styled.div`
     font-size: 0.8125rem;
     color: #b3b3b3;
   }
+`;
+
+const EditInput = styled.input`
+  width: 80%;
 `;
 
 const CommentWrapper = styled.div`
