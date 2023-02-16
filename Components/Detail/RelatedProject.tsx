@@ -3,14 +3,19 @@ import Image from "next/image";
 import styled from "styled-components";
 import SwiperCore, { Navigation, Scrollbar } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import CardItem from "../Common/Card/CardItem";
 
 import "swiper/swiper.min.css";
+import supabase from "@/lib/supabase";
+import { useQuery } from "@tanstack/react-query";
+import { PostType } from "@/types";
+import { findThumbnailInContent, getPostDate } from "@/utils/card";
+import { useRouter } from "next/router";
+import CardItem from "../Common/Card/CardItem";
 
 /**
  * @TODO onReachEnd 이벤트를 사용하여
  * 슬라이드가 끝에 도달했을 때, 다음 정보를 불러오는 infinite scroll을 구현해야한다.
- * @TODO 더미 데이터를 삭제하고, 실제 데이터를 불러와야한다.
+ * @TODO 디테일 페이지 서버통신 이후 연관 프로젝트를 불러오는 로직을 구현해야한다.
  */
 
 const RelatedProject = () => {
@@ -18,6 +23,27 @@ const RelatedProject = () => {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
 
+  const router = useRouter();
+
+  const getRelatedProjects = async () => {
+    const res = await supabase.from("post").select("*");
+
+    if (res.error) {
+      throw new Error(res.error.message);
+    }
+
+    return res.data;
+  };
+
+  const { data: relatedProjectsData, error: relatedProjectsError } = useQuery<
+    PostType[]
+  >(["GET_RELATED_PROJECTS"], {
+    queryFn: getRelatedProjects,
+  });
+
+  const onClickCardItem = (id: string) => {
+    router.push(`/detail/${id}`);
+  };
   return (
     <RelatedProjectContainer>
       <RelatedProjectTitle>연관 프로젝트</RelatedProjectTitle>
@@ -59,87 +85,28 @@ const RelatedProject = () => {
               swiper.navigation.update();
             }}
           >
-            <SwiperSlide>
-              <CardItem
-                imageSrc="anonImage.png"
-                imageAlt="ㅁ"
-                title="안드로이드 스튜디오에서 빌드가 안될때"
-                subTitle="안드로이드 스튜디오에서 빌드가 안될때"
-                tagItems={["App | Android, iOS, flutter"]}
-                date="2021.08.01"
-                comments={100}
-                likes={100}
-                field="APP"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <CardItem
-                imageSrc="anonImage.png"
-                imageAlt="ㅁ"
-                title="안드로이드 스튜디오에서 빌드가 안될때"
-                subTitle="안드로이드 스튜디오에서 빌드가 안될때"
-                tagItems={["App | Android, iOS, flutter"]}
-                date="2021.08.01"
-                comments={100}
-                likes={100}
-                field="APP"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <CardItem
-                imageSrc="anonImage.png"
-                imageAlt="ㅁ"
-                title="안드로이드 스튜디오에서 빌드가 안될때"
-                subTitle="안드로이드 스튜디오에서 빌드가 안될때"
-                tagItems={["App | Android, iOS, flutter"]}
-                date="2021.08.01"
-                comments={100}
-                likes={100}
-                field="APP"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <CardItem
-                imageSrc="anonImage.png"
-                imageAlt="ㅁ"
-                linkURL="google.com"
-                title="안드로이드 스튜디오에서 빌드가 안될때"
-                subTitle="안드로이드 스튜디오에서 빌드가 안될때"
-                tagItems={["App | Android, iOS, flutter"]}
-                date="2021.08.01"
-                comments={100}
-                likes={100}
-                field="APP"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <CardItem
-                imageSrc="anonImage.png"
-                imageAlt="ㅁ"
-                linkURL="google.com"
-                title="안드로이드 스튜디오에서 빌드가 안될때"
-                subTitle="안드로이드 스튜디오에서 빌드가 안될때"
-                tagItems={["App | Android, iOS, flutter"]}
-                date="2021.08.01"
-                comments={100}
-                likes={100}
-                field="APP"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <CardItem
-                imageSrc="anonImage.png"
-                imageAlt="ㅁ"
-                linkURL="google.com"
-                title="안드로이드 스튜디오에서 빌드가 안될때"
-                subTitle="안드로이드 스튜디오에서 빌드가 안될때"
-                tagItems={["App | Android, iOS, flutter"]}
-                date="2021.08.01"
-                comments={100}
-                likes={100}
-                field="APP"
-              />
-            </SwiperSlide>
+            {relatedProjectsData?.map((post) => (
+              <SwiperSlide key={post.id}>
+                <CardItemContainer
+                  onClick={() => {
+                    onClickCardItem(post.id);
+                  }}
+                >
+                  <CardItem
+                    imageSrc={findThumbnailInContent(post.content)}
+                    imageAlt={`${post.title}썸네일`}
+                    title={post.title}
+                    subTitle={post.sub_title}
+                    tagItems={post.tag}
+                    date={getPostDate(post.created_at)}
+                    // TODO: comments, likes 수 구하기
+                    comments={100}
+                    likes={100}
+                    field={`${post.large_category} | ${post.sub_category}`}
+                  />
+                </CardItemContainer>
+              </SwiperSlide>
+            ))}
           </Swiper>
         </SwiperWrapper>
         <NextButton type="button" ref={nextRef}>
@@ -205,6 +172,10 @@ const NextButton = styled.button`
   &:disabled {
     display: none;
   }
+`;
+
+const CardItemContainer = styled.div`
+  cursor: pointer;
 `;
 
 export default RelatedProject;
