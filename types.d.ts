@@ -71,7 +71,7 @@ interface UserProfileType {
   phone: string;
   field: Field;
   skills: string[];
-  careerer: number;
+  careerer: string;
   is_public: boolean;
   birth_year: number;
 }

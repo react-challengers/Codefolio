@@ -18,7 +18,7 @@ const userInfo = {
   phone: "01063058727",
   field: ["WEB"],
   skills: ["a", "b", "c"],
-  careerer: 3,
+  careerer: "3년차",
   is_public: true,
   birth_year: 1997,
 };
