@@ -12,8 +12,10 @@ import {
   postPublic,
   postContent,
 } from "@/lib/recoil/postAtoms";
+import userLoginCheck from "@/lib/recoil/userLoginCheck";
 
 export {
+  userLoginCheck,
   largeCategoryState,
   subCategoryState,
   postTitle,

@@ -27,8 +27,8 @@ const App = ({
         initialSession={pageProps.initialSession}
       >
         <ThemeProvider theme={theme}>
-          <GNB />
           <RecoilRoot>
+            <GNB />
             <Component {...pageProps} />
           </RecoilRoot>
         </ThemeProvider>

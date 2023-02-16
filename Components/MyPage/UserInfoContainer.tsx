@@ -1,6 +1,8 @@
+import { userLoginCheck } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
@@ -17,14 +19,16 @@ const UserInfoContainer = ({
   selfProfile,
 }: UserInfoContainerProps) => {
   const router = useRouter();
+  const setUserLogin = useSetRecoilState(userLoginCheck);
 
   const onLogoutButtonClick = async () => {
     const res = await supabase.auth.signOut();
+    setUserLogin(false);
     if (res.error) {
-      console.log("로그아웃 에러", res.error);
-      return;
+      throw new Error(res.error.message);
     }
     router.push("/");
+    return res;
   };
 
   return (
