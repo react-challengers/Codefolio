@@ -1,10 +1,12 @@
 import { NextPage, GetStaticProps } from "next";
 import styled from "styled-components";
-import LoginButton from "@/Components/Common/AuthLoginButton";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
+import { email_check, password_check } from "@/utils/commons/authValidate";
+import { ValidateText, AuthButton, AuthInput } from "@/Components/Common/Auth";
+
 // import { kakaoInit } from "@/utils/APIs/socialLogin";
 
 /**
@@ -18,6 +20,24 @@ const Login: NextPage = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailValidate, setEmailValidate] = useState(true);
+  const [passwordValidate, setPasswordValidate] = useState(true);
+
+  useEffect(() => {
+    // 로그인 상태 확인
+    const LoginState = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (data.session !== null) {
+        router.push("/");
+      }
+    };
+
+    LoginState();
+  }, []);
+
+  const logout = async () => {
+    const { error } = await supabase.auth.signOut();
+  };
 
   // const kakaoLogin = async () => {
   //   // 카카오 초기화
@@ -31,7 +51,7 @@ const Login: NextPage = () => {
   //         success: (res: any) => {
   //           // 로그인 성공할 경우 정보 확인 후 /kakao 페이지로 push
   //           console.log(res);
-  //           router.push("/on-boarding");
+  //           router.push("/");
   //         },
   //         fail: (error: any) => {
   //           console.log(error);
@@ -45,6 +65,20 @@ const Login: NextPage = () => {
   // };
 
   const signInWithEmail = async () => {
+    if (email === "" || password === "") {
+      return alert("이메일과 패스워드 모두 입력해주세요.");
+    }
+
+    if (!email_check(email)) {
+      setEmailValidate(false);
+      return alert("이메일의 형식을 확인해주세요.");
+    } else setEmailValidate(true);
+
+    if (!password_check(password)) {
+      setPasswordValidate(false);
+      return alert("비밀번호는 8자리 이상 입니다. ");
+    } else setPasswordValidate(true);
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -52,8 +86,9 @@ const Login: NextPage = () => {
     if (!error) {
       setEmail("");
       setPassword("");
-      alert("이메일 로그인 완료");
-      router.push("/on-boarding");
+      router.push("/");
+    } else {
+      alert("로그인 실패");
     }
   };
 
@@ -62,8 +97,9 @@ const Login: NextPage = () => {
       provider: "google",
     });
     if (!error) {
-      alert("구글 로그인 완료");
-      router.push("/on-boarding");
+      router.push("/");
+    } else {
+      alert("구글 로그인 실패");
     }
   };
 
@@ -72,8 +108,9 @@ const Login: NextPage = () => {
       provider: "github",
     });
     if (!error) {
-      alert("깃헙 로그인 완료");
-      router.push("/on-boarding");
+      router.push("/");
+    } else {
+      alert("깃헙 로그인 실패");
     }
   };
 
@@ -84,26 +121,38 @@ const Login: NextPage = () => {
         <LoginContainer>
           {/* <LoginButton>카카오로 로그인하기</LoginButton>
           <LoginButton>네이버로 로그인하기</LoginButton> */}
-          <LoginButton onClick={signInWithGoogle}>
-            구글로 로그인하기
-          </LoginButton>
-          <LoginButton onClick={signInWithGitHub}>
+          <AuthButton onClick={signInWithGoogle}>구글로 로그인하기</AuthButton>
+          <AuthButton onClick={signInWithGitHub}>
             Github로 로그인하기
-          </LoginButton>
-          <PerforatedLine data-content="또는" />
+          </AuthButton>
+          <HrContainer>
+            <span> 또는 </span>
+          </HrContainer>
           <LoginForm>
-            <LoginInput
+            <AuthInput
               type={email}
               placeholder="이메일"
               onChange={(e) => setEmail(e.target.value)}
-            ></LoginInput>
-            <LoginInput
+            ></AuthInput>
+            {emailValidate ? (
+              <ValidateText />
+            ) : (
+              <ValidateText> 이메일을 확인해주세요. </ValidateText>
+            )}
+            <AuthInput
               type={"password"}
               placeholder="비밀번호"
               onChange={(e) => setPassword(e.target.value)}
-            ></LoginInput>
+            ></AuthInput>
+            {passwordValidate ? (
+              <ValidateText />
+            ) : (
+              <ValidateText> 비밀번호를 확인해보세요. </ValidateText>
+            )}
           </LoginForm>
-          <LoginButton onClick={signInWithEmail}>로그인</LoginButton>
+          <AuthButton onClick={signInWithEmail}>로그인</AuthButton>
+          <button onClick={logout}>logout</button>
+
           <FooterMassage>
             아직 회원이 아니신가요?
             <Link href={"./signup"}>회원가입</Link>
@@ -122,6 +171,8 @@ export const getStaticProps: GetStaticProps = async () => {
 
 const LoginPageContainer = styled.div`
   display: flex;
+
+  justify-content: center;
 `;
 
 const EmptyContainer = styled.div`
@@ -138,41 +189,21 @@ const LoginSpace = styled.div`
 `;
 
 const LoginContainer = styled.div`
-  max-width: 28.125rem;
   height: 43.75rem;
 
   flex-grow: 1;
 `;
 
-const PerforatedLine = styled.hr`
-  margin-top: 1.875rem;
-
-  width: 26.5rem;
-  line-height: 1em;
-  position: relative;
-  outline: 0;
-  border: 0;
+const HrContainer = styled.div`
+  width: 26.875rem;
   text-align: center;
-  height: 1.5em;
-  opacity: 0.5;
-  &:before {
-    content: "";
-    background: linear-gradient;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    height: 0.625rem;
-  }
-  &:after {
-    content: attr(data-content);
-    position: relative;
-    display: inline-block;
+  border-bottom: 1px solid #a0a0a0;
+  line-height: 0.1em;
+  margin: 1.875rem 0.625rem 1.25rem;
 
-    padding: 0 0.5rem;
-    line-height: 1.5rem;
-    color: black;
-    background-color: white;
+  span {
+    background: #fff;
+    padding: 0 0.625rem;
   }
 `;
 
@@ -190,22 +221,6 @@ const LoginForm = styled.div`
   margin-bottom: 3.5rem;
 `;
 
-const LoginInput = styled.input`
-  width: 26.5rem;
-  height: 2.5rem;
-
-  outline: 0;
-  border-width: 0 0 1px;
-  border-color: black;
-
-  font-size: 1rem;
-
-  :focus {
-    border-color: blue;
-    border-width: 0 0 2px;
-  }
-`;
-
 const FooterMassage = styled.div`
   width: 26.5rem;
   height: 3.125rem;
@@ -216,6 +231,8 @@ const FooterMassage = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 0.8125rem;
+
+  gap: 0.5rem;
 `;
 
 export default Login;
