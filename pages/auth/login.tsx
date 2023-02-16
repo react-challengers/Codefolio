@@ -35,10 +35,6 @@ const Login: NextPage = () => {
     LoginState();
   }, []);
 
-  const logout = async () => {
-    const { error } = await supabase.auth.signOut();
-  };
-
   // const kakaoLogin = async () => {
   //   // 카카오 초기화
   //   const kakao = kakaoInit();
@@ -151,8 +147,6 @@ const Login: NextPage = () => {
             )}
           </LoginForm>
           <AuthButton onClick={signInWithEmail}>로그인</AuthButton>
-          <button onClick={logout}>logout</button>
-
           <FooterMassage>
             아직 회원이 아니신가요?
             <Link href={"./signup"}>회원가입</Link>
