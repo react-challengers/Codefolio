@@ -12,6 +12,11 @@ import {
   postPublic,
   postContent,
 } from "@/lib/recoil/postAtoms";
+import {
+  myPageUserName,
+  myPageContactEmail,
+  myPageSelfProfile,
+} from "@/lib/recoil/myPageAtoms";
 
 export {
   largeCategoryState,
@@ -27,4 +32,7 @@ export {
   postTags,
   postPublic,
   postContent,
+  myPageUserName,
+  myPageSelfProfile,
+  myPageContactEmail,
 };
