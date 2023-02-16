@@ -80,26 +80,19 @@ const Post: NextPage = () => {
   };
 
   return (
-    <MainWrapper>
+    <section>
       <PostHeader>
         <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert>
         <DefaultButton text="저장" type="outline" size="s" onClick={onSave} />
         <DefaultButton text="게시" type="full" size="s" onClick={onPost} />
       </PostHeader>
-      <section>
-        <PostTitle />
-        <ProjectInfo />
-      </section>
-    </MainWrapper>
+      <PostTitle />
+      <ProjectInfo />
+    </section>
   );
 };
 
-const MainWrapper = styled.main`
-  max-width: 98.75rem;
-  margin: 0 auto;
-`;
-
-const PostHeader = styled.section`
+const PostHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
