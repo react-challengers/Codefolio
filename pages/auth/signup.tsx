@@ -16,7 +16,7 @@ import {
  * @TODO custom hooks (made by nne3enn) 을 사용해서 리팩토링
  */
 
-const signup: NextPage = () => {
+const SignUpPage: NextPage = () => {
   const router = useRouter();
 
   const [userName, setUserName] = useState("");
@@ -32,7 +32,7 @@ const signup: NextPage = () => {
   useEffect(() => {
     // 로그인 상태 확인
     const LoginState = async () => {
-      const { data, error } = await supabase.auth.getSession();
+      const { data } = await supabase.auth.getSession();
       if (data.session !== null) {
         router.push("/");
       }
@@ -49,17 +49,20 @@ const signup: NextPage = () => {
     if (!userName_check(userName)) {
       setUserNameValidate(false);
       return alert("이름(닉네임)은 2글자 이상입니다.");
-    } else setUserNameValidate(true);
+    }
+    setUserNameValidate(true);
 
     if (!email_check(email)) {
       setEmailValidate(false);
       return alert("이메일의 형식을 확인해주세요.");
-    } else setEmailValidate(true);
+    }
+    setEmailValidate(true);
 
     if (!password_check(password)) {
       setPasswordValidate(false);
       return alert("비밀번호는 8자리 이상 입니다. ");
-    } else setPasswordValidate(true);
+    }
+    setPasswordValidate(true);
 
     if (!(password === passwordCheck)) {
       setPasswordCheckValidate(false);
@@ -67,7 +70,7 @@ const signup: NextPage = () => {
     }
     setPasswordCheckValidate(true);
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -81,10 +84,9 @@ const signup: NextPage = () => {
       resetInputs();
 
       alert("회원가입 완료");
-      router.push("/");
-    } else {
-      return alert("회원가입 실패");
+      return router.push("/");
     }
+    return alert("회원가입 실패");
   };
 
   // 인풋창 초기화
@@ -97,14 +99,14 @@ const signup: NextPage = () => {
 
   return (
     <SignupPageContainer>
-      <EmptyContainer></EmptyContainer>
+      <EmptyContainer />
       <SignupSpace>
         <SignupForm>
           <AuthInput
             value={userName}
             placeholder="이름(닉네임) 2글자 이상"
             onChange={(e) => setUserName(e.target.value)}
-          ></AuthInput>
+          />
           {userNameValidate ? (
             <ValidateText />
           ) : (
@@ -115,29 +117,29 @@ const signup: NextPage = () => {
             value={email}
             placeholder="이메일"
             onChange={(e) => setEmail(e.target.value)}
-          ></AuthInput>
+          />
           {emailValidate ? (
             <ValidateText />
           ) : (
             <ValidateText> 이메일을 형식을 확인해주세요. </ValidateText>
           )}
           <AuthInput
-            type={"password"}
+            type="password"
             value={password}
             placeholder="비밀번호 8글자 이상"
             onChange={(e) => setPassword(e.target.value)}
-          ></AuthInput>
+          />
           {passwordValidate ? (
             <ValidateText />
           ) : (
             <ValidateText> 비밀번호 8자리 이상 입니다. </ValidateText>
           )}
           <AuthInput
-            type={"password"}
+            type="password"
             value={passwordCheck}
             placeholder="비밀번호 확인"
             onChange={(e) => setPasswordCheck(e.target.value)}
-          ></AuthInput>
+          />
           {passwordCheckValidate ? (
             <ValidateText />
           ) : (
@@ -145,7 +147,7 @@ const signup: NextPage = () => {
           )}
           <SignupButton onClick={signupWithEmail}>회원가입</SignupButton>
           <FooterMassage>
-            <CustomLink href={"./login"}>로그인하러가기</CustomLink>
+            <CustomLink href="./login">로그인하러가기</CustomLink>
           </FooterMassage>
         </SignupForm>
       </SignupSpace>
@@ -204,4 +206,4 @@ const CustomLink = styled(Link)`
   color: black;
 `;
 
-export default signup;
+export default SignUpPage;

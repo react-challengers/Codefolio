@@ -51,7 +51,7 @@ const EditProfileContainer = ({
   const [editIsPublic, setEditIsPublic] = useState(isPublic);
   const [editSkills, setEditSkills] = useState(skills);
   const [editbirthYear, setEditBirthYear] = useState(birthYear);
-  const [editCareer, setEditCareer] = useState(careerer);
+  const [editCareer, setEditCareer] = useState(career);
 
   const [isPhoneNumber, setIsPhoneNumber] = useState(false);
 

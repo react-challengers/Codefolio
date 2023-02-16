@@ -9,7 +9,6 @@ import {
   UserInfoContainer,
 } from "@/Components/MyPage";
 import { useQueryClient } from "@tanstack/react-query";
-import { PostType } from "@/types";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import { useRecoilValue } from "recoil";
 import {
@@ -21,20 +20,6 @@ import {
 import { Field } from "@/types/enums";
 
 const tabList = ["프로젝트", "팔로잉", "북마크", "좋아요", "보관함", "프로필"];
-const userInfo = {
-  id: "nno3onn",
-  user_id: "nno3onn@naver.com",
-  user_name: "허다은",
-  contact_email: "nno3onn@gmail.com",
-  gender: "여자",
-  bookmark_folders: ["example"],
-  phone: "01063058727",
-  field: ["WEB"],
-  skills: ["a", "b", "c"],
-  careerer: "3년차",
-  is_public: true,
-  birth_year: 1997,
-};
 
 const ProfilePage: NextPage = () => {
   const [currentTab, setCurrentTab] = useState(0);
@@ -51,7 +36,7 @@ const ProfilePage: NextPage = () => {
     gender: "여자",
     bookmark_folders: ["example"],
     phone,
-    field: Field.WEB,
+    field: ["WEB"],
     skills: ["a", "b", "c"],
     career: "3년차",
     is_public: true,

@@ -5,7 +5,6 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
-import type { PostType } from "@/types";
 import bottom_arrow from "@/public/icons/bottom_arrow.svg";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { getAllPosts } from "@/utils/APIs/supabase";

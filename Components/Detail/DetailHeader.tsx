@@ -21,7 +21,7 @@ const DetailHeader = () => {
     const { data } = await supabase.auth.getUser();
     setUser(data.user);
   };
-  
+
   const getBookmark = async () => {
     const { data } = await supabase
       .from("bookmark")
@@ -29,7 +29,7 @@ const DetailHeader = () => {
       .eq("user_id", user?.id)
       .eq("post_id", postId)
       .single();
-      setIsBookmark(!!data?.data);
+    setIsBookmark(!!data?.data);
   };
 
   const addBookmark = async () => {
@@ -51,7 +51,7 @@ const DetailHeader = () => {
       setIsBookmark(false);
     }
   };
-  
+
   const getLike = async () => {
     const { data } = await supabase
       .from("like")
@@ -97,7 +97,7 @@ const DetailHeader = () => {
       addBookmark();
     }
   };
-  
+
   const clickLikeButton = async () => {
     if (isLike) {
       deleteLike();

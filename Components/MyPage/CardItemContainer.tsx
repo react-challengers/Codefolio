@@ -1,4 +1,3 @@
-import { PostType } from "@/types";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { useRouter } from "next/router";
 import styled from "styled-components";
