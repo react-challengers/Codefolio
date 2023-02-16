@@ -1,4 +1,3 @@
-import { UserProfileType } from "@/types";
 import { useState } from "react";
 import EditProfileContainer from "./EditProfileContainer";
 import PrivateProfileContainer from "./PrivateProfileContainer";
@@ -6,7 +5,7 @@ import ShowProfileContainer from "./ShowProfileContainer";
 
 interface TabProfileProps {
   isPrivate?: boolean;
-  userInfo: UserProfileType;
+  userInfo: Omit<UserProfileType, "id">;
 }
 
 const TabProfile = ({ isPrivate = false, userInfo }: TabProfileProps) => {

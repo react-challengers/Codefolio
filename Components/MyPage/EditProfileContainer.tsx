@@ -1,5 +1,4 @@
 import { myPagePhonNumber } from "@/lib/recoil";
-import { UserProfileType } from "@/types";
 import {
   getBirthYearsArray,
   getCareerYearsArray,
@@ -29,7 +28,7 @@ const checkIsPhoneNumber = (phoneNumber: string): boolean =>
   !/^[0]{1}[1]{1}[0]{1}[0-9]{8}/.test(phoneNumber);
 
 interface EditProfileContainerProps {
-  userInfo: UserProfileType;
+  userInfo: Omit<UserProfileType, "id">;
   setIsEditing: Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -44,7 +43,7 @@ const EditProfileContainer = ({
     birth_year: birthYear,
     field: oldField,
     skills,
-    careerer,
+    career,
     is_public: isPublic,
   } = userInfo;
 
@@ -119,7 +118,7 @@ const EditProfileContainer = ({
               </ContentWrapper>
               <ContentWrapper>
                 <p>경력</p>
-                <DropDown defaultValue={careerer} options={careerYearsArray} />
+                <DropDown defaultValue={career} options={careerYearsArray} />
               </ContentWrapper>
               <ContentWrapper>
                 <p>스킬</p>

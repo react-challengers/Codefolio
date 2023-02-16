@@ -5,7 +5,7 @@ import Tags from "../Common/Tags";
 import ProfileContainer from "./ProfileContainer";
 
 interface ShowProfileContainerProps {
-  userInfo: UserProfileType;
+  userInfo: Omit<UserProfileType, "id">;
   setIsEditing: Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -19,7 +19,7 @@ const ShowProfileContainer = ({
     phone,
     field,
     skills,
-    careerer,
+    career,
   } = userInfo;
   return (
     <>
@@ -35,11 +35,11 @@ const ShowProfileContainer = ({
         <ProfileContainer title="경력">
           <ContentContainer>
             <ContentWrapper>
-              <p>포지션</p> <Tags tagItems={field} />
+              <p>포지션</p> <Tags tagItems={[field]} />
             </ContentWrapper>
             <ContentWrapper>
               <p>경력</p>
-              <p>{careerer}</p>
+              <p>{career}</p>
             </ContentWrapper>
             <ContentWrapper>
               <p>스킬</p> <Tags tagItems={skills} />

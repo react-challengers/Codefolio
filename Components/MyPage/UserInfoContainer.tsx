@@ -1,14 +1,15 @@
 import {
   myPageContactEmail,
+  myPagePhonNumber,
   myPageSelfProfile,
   myPageUserName,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
-import { UserProfileType } from "@/types";
+
 import { Field } from "@/types/enums";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
-import { useRecoilState } from "recoil";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
@@ -21,8 +22,29 @@ const UserInfoContainer = () => {
   const [userName, setUserName] = useRecoilState(myPageUserName);
   const [contactEmail, setContactEmail] = useRecoilState(myPageContactEmail);
   const [selfProfile, setSelfProfile] = useRecoilState(myPageSelfProfile);
+  const phone = useRecoilValue(myPagePhonNumber);
 
   const [isEditing, setIsEditing] = useState(false);
+
+  const getUserProfile = async () => {
+    const { data: userProfile } = await supabase
+      .from("user-profile")
+      .select()
+      .eq("id", "dbabf656-18e8-484d-aac9-e5065667a31a")
+      .single();
+    const {
+      contact_email: contactEmailData,
+      user_name: userNameData,
+      self_profile: selfProfileData,
+    } = userProfile;
+    setUserName(userNameData);
+    setContactEmail(contactEmailData);
+    setSelfProfile(selfProfileData);
+  };
+
+  useEffect(() => {
+    getUserProfile();
+  }, []);
 
   const handleUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
@@ -41,12 +63,13 @@ const UserInfoContainer = () => {
     contact_email: contactEmail,
     gender: "여자",
     bookmark_folders: ["example"],
-    phone: "01063058727",
+    phone,
     field: Field.WEB,
     skills: ["a", "b", "c"],
     career: "3년차",
     is_public: true,
-    birth_year: 1997,
+    birth_year: "1997",
+    profile_image: "",
     self_profile: selfProfile,
   };
 
@@ -54,7 +77,11 @@ const UserInfoContainer = () => {
     // 갱신된 데이터 서버에 반영
     if (isEditing) {
       setIsEditing(false);
-      await supabase.from("user-profile").insert(userInfo);
+      const { error } = await supabase
+        .from("user-profile")
+        .update(userInfo)
+        .eq("id", "dbabf656-18e8-484d-aac9-e5065667a31a");
+      console.log(error);
     } else {
       setIsEditing(true);
     }
