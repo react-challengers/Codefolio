@@ -19,7 +19,7 @@ const ShowProfileContainer = ({
     phone,
     field,
     skills,
-    careerer,
+    career,
   } = userInfo;
   return (
     <>
@@ -39,7 +39,7 @@ const ShowProfileContainer = ({
             </ContentWrapper>
             <ContentWrapper>
               <p>경력</p>
-              <p>{careerer}</p>
+              <p>{career}</p>
             </ContentWrapper>
             <ContentWrapper>
               <p>스킬</p> <Tags tagItems={skills} />

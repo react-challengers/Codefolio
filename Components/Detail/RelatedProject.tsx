@@ -7,7 +7,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.min.css";
 import supabase from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
-import { PostType } from "@/types";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { useRouter } from "next/router";
 import CardItem from "../Common/Card/CardItem";

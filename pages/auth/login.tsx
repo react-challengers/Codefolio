@@ -68,26 +68,27 @@ const Login: NextPage = () => {
     if (!email_check(email)) {
       setEmailValidate(false);
       return alert("이메일의 형식을 확인해주세요.");
-    } else setEmailValidate(true);
+    }
+    setEmailValidate(true);
 
     if (!password_check(password)) {
       setPasswordValidate(false);
       return alert("비밀번호는 8자리 이상 입니다. ");
-    } else setPasswordValidate(true);
+    }
+    setPasswordValidate(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     if (!error) {
-      router.push("/");
-    } else {
-      alert("로그인 실패");
+      return router.push("/");
     }
+    return alert("로그인 실패");
   };
 
   const signInWithGoogle = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
     if (!error) {
@@ -98,7 +99,7 @@ const Login: NextPage = () => {
   };
 
   const signInWithGitHub = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "github",
     });
     if (!error) {
@@ -110,7 +111,7 @@ const Login: NextPage = () => {
 
   return (
     <LoginPageContainer>
-      <EmptyContainer></EmptyContainer>
+      <EmptyContainer />
       <LoginSpace>
         {/* <LoginButton>카카오로 로그인하기</LoginButton>
           <LoginButton>네이버로 로그인하기</LoginButton> */}
@@ -124,17 +125,17 @@ const Login: NextPage = () => {
             type={email}
             placeholder="이메일"
             onChange={(e) => setEmail(e.target.value)}
-          ></AuthInput>
+          />
           {emailValidate ? (
             <ValidateText />
           ) : (
             <ValidateText> 이메일을 확인해주세요. </ValidateText>
           )}
           <AuthInput
-            type={"password"}
+            type="password"
             placeholder="비밀번호"
             onChange={(e) => setPassword(e.target.value)}
-          ></AuthInput>
+          />
           {passwordValidate ? (
             <ValidateText />
           ) : (
@@ -144,7 +145,7 @@ const Login: NextPage = () => {
         <AuthButton onClick={signInWithEmail}>로그인</AuthButton>
         <FooterMassage>
           아직 회원이 아니신가요?
-          <Link href={"./signup"}>회원가입</Link>
+          <Link href="./signup">회원가입</Link>
         </FooterMassage>
       </LoginSpace>
     </LoginPageContainer>

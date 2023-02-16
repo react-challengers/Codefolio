@@ -10,16 +10,16 @@ import DefaultButton from "../Common/DefaultButton";
  */
 const CommentInput = () => {
   const queryClient = useQueryClient();
-  const post_id = "9157621b-2a0d-4059-b0de-5d77b591fe09";
-  const user_id = "7af6cc75-50f7-4901-9691-36657cb274b5";
+  const POST_ID = "9157621b-2a0d-4059-b0de-5d77b591fe09";
+  const USER_ID = "7af6cc75-50f7-4901-9691-36657cb274b5";
 
   const [commentInput, setCommentInput, resetCommentInput] = useInput();
   const { mutate: createComment } = useMutation(
     (): any =>
       supabase.from("comment").insert({
         id: crypto.randomUUID(),
-        post_id,
-        user_id,
+        post_id: POST_ID,
+        user_id: USER_ID,
         content: commentInput,
       }),
     {

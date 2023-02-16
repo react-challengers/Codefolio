@@ -1,9 +1,9 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
 import DefaultButton from "../Common/DefaultButton";
 import ProfileImage from "../Common/ProfileImage";
-import { useState } from "react";
 
 /**
  * @TODO useInput으로 리팩토링 고민
@@ -23,7 +23,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
   const queryClient = useQueryClient();
-  const { mutate: deleteComment, isError: deleteError } = useMutation(
+  const { mutate: deleteComment } = useMutation(
     (): any => supabase.from("comment").delete().eq("id", comment.id),
     {
       onSuccess: () => {
@@ -31,7 +31,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
       },
     }
   );
-  const { mutate: editComment, isError: editError } = useMutation(
+  const { mutate: editComment } = useMutation(
     (): any =>
       supabase
         .from("comment")
