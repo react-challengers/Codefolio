@@ -5,7 +5,7 @@ import ShowProfileContainer from "./ShowProfileContainer";
 
 interface TabProfileProps {
   isPrivate?: boolean;
-  userInfo: UserProfileType;
+  userInfo: Omit<UserProfileType, "id">;
 }
 
 const TabProfile = ({ isPrivate = false, userInfo }: TabProfileProps) => {

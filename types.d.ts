@@ -71,7 +71,9 @@ interface UserProfileType {
   skills: string[];
   career: string;
   is_public: boolean;
-  birth_year: number;
+  birth_year: string;
+  self_profile: string;
+  profile_image: string;
 }
 
 interface NotificationType {

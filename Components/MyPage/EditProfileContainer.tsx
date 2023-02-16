@@ -24,7 +24,7 @@ const checkIsPhoneNumber = (phoneNumber: string): boolean =>
   !/^[0]{1}[1]{1}[0]{1}[0-9]{8}/.test(phoneNumber);
 
 interface EditProfileContainerProps {
-  userInfo: UserProfileType;
+  userInfo: Omit<UserProfileType, "id">;
   setIsEditing: Dispatch<React.SetStateAction<boolean>>;
 }
 

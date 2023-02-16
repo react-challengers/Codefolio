@@ -11,20 +11,27 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import { useRecoilValue } from "recoil";
-import { myPagePhonNumber } from "@/lib/recoil";
+import {
+  myPageContactEmail,
+  myPageSelfProfile,
+  myPageUserName,
+  myPagePhonNumber,
+} from "@/lib/recoil";
 
 const tabList = ["프로젝트", "팔로잉", "북마크", "좋아요", "보관함", "프로필"];
 
 const ProfilePage: NextPage = () => {
   const [currentTab, setCurrentTab] = useState(0);
 
+  const userName = useRecoilValue(myPageUserName);
+  const contactEmail = useRecoilValue(myPageContactEmail);
+  const selfProfile = useRecoilValue(myPageSelfProfile);
   const phone = useRecoilValue(myPagePhonNumber);
 
-  const userInfo: UserProfileType = {
-    id: "nno3onn",
+  const userInfo: Omit<UserProfileType, "id"> = {
     user_id: "nno3onn@naver.com",
-    user_name: "허다은",
-    contact_email: "nno3onn@gmail.com",
+    user_name: userName,
+    contact_email: contactEmail,
     gender: "여자",
     bookmark_folders: ["example"],
     phone,
@@ -32,10 +39,11 @@ const ProfilePage: NextPage = () => {
     skills: ["a", "b", "c"],
     career: "3년차",
     is_public: true,
-    birth_year: 1997,
+    birth_year: "1997",
+    profile_image: "",
+    self_profile: selfProfile,
   };
 
-  const { user_name: userName, contact_email: contactEmail } = userInfo;
   const [itemList, setItemList] = useState<PostType[]>([]);
   const queryClient = useQueryClient();
 
@@ -70,11 +78,7 @@ const ProfilePage: NextPage = () => {
   // TODO: itemList 이용해서 필터링된 카드 아이템 리스트 만들기
   return (
     <MyPageContainer>
-      <UserInfoContainer
-        username={userName}
-        email={contactEmail}
-        selfProfile="안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요"
-      />
+      <UserInfoContainer />
       <MyPageTab
         tabList={tabList}
         currentTab={currentTab}

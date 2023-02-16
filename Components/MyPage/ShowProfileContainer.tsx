@@ -5,7 +5,7 @@ import Tags from "../Common/Tags";
 import ProfileContainer from "./ProfileContainer";
 
 interface ShowProfileContainerProps {
-  userInfo: UserProfileType;
+  userInfo: Omit<UserProfileType, "id">;
   setIsEditing: Dispatch<React.SetStateAction<boolean>>;
 }
 

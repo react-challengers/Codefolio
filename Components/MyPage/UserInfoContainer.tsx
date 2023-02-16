@@ -1,23 +1,93 @@
-import { userLoginCheck } from "@/lib/recoil";
+import {
+  myPageContactEmail,
+  myPagePhonNumber,
+  myPageSelfProfile,
+  myPageUserName,
+  userLoginCheck,
+} from "@/lib/recoil";
 import supabase from "@/lib/supabase";
+import { Field } from "@/types/enums";
 import Image from "next/image";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
 
-interface UserInfoContainerProps {
-  username: string;
-  email: string;
-  selfProfile: string;
-}
+/**
+ * @TODO 업데이트 한 프로필을 서버에 반영합니다.
+ */
 
-const UserInfoContainer = ({
-  username,
-  email,
-  selfProfile,
-}: UserInfoContainerProps) => {
+const UserInfoContainer = () => {
+  const [userName, setUserName] = useRecoilState(myPageUserName);
+  const [contactEmail, setContactEmail] = useRecoilState(myPageContactEmail);
+  const [selfProfile, setSelfProfile] = useRecoilState(myPageSelfProfile);
+  const phone = useRecoilValue(myPagePhonNumber);
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const getUserProfile = async () => {
+    const { data: userProfile } = await supabase
+      .from("user-profile")
+      .select()
+      .eq("id", "dbabf656-18e8-484d-aac9-e5065667a31a")
+      .single();
+    const {
+      contact_email: contactEmailData,
+      user_name: userNameData,
+      self_profile: selfProfileData,
+    } = userProfile;
+    setUserName(userNameData);
+    setContactEmail(contactEmailData);
+    setSelfProfile(selfProfileData);
+  };
+
+  useEffect(() => {
+    getUserProfile();
+  }, []);
+
+  const handleUserName = (e: ChangeEvent<HTMLInputElement>) => {
+    setUserName(e.target.value);
+  };
+  const handleContactEmail = (e: ChangeEvent<HTMLInputElement>) => {
+    setContactEmail(e.target.value);
+  };
+  const handleSelfProfile = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setSelfProfile(e.target.value);
+  };
+
+  const userInfo: Omit<UserProfileType, "id"> = {
+    // id: "uuid",
+    user_id: "nno3onn@naver.com",
+    user_name: userName,
+    contact_email: contactEmail,
+    gender: "여자",
+    bookmark_folders: ["example"],
+    phone,
+    field: [Field.WEB],
+    skills: ["a", "b", "c"],
+    career: "3년차",
+    is_public: true,
+    birth_year: "1997",
+    profile_image: "",
+    self_profile: selfProfile,
+  };
+
+  const handleIsEditing = async () => {
+    // 갱신된 데이터 서버에 반영
+    if (isEditing) {
+      setIsEditing(false);
+      const { error } = await supabase
+        .from("user-profile")
+        .update(userInfo)
+        .eq("id", "dbabf656-18e8-484d-aac9-e5065667a31a");
+      console.log(error);
+    } else {
+      setIsEditing(true);
+    }
+  };
+
   const router = useRouter();
 
   const setUserLogin = useSetRecoilState(userLoginCheck);
@@ -39,7 +109,7 @@ const UserInfoContainer = ({
           <ProfileImage alt="유저 프로필" page="myPage" />
         </ProfileImageWrapper>
         <IconWrapper>
-          <IconBox onClick={() => router.push("/profile/edit-profile")}>
+          <IconBox onClick={() => handleIsEditing()}>
             <Image
               src="/icons/edit.svg"
               alt="편집 아이콘"
@@ -54,9 +124,22 @@ const UserInfoContainer = ({
           </IconBox>
         </IconWrapper>
         <TextWrapper>
-          <UserNameWrapper>{username}</UserNameWrapper>
-          <EmailWrapper>{email}</EmailWrapper>
-          <SelfProfileWrapper>{selfProfile}</SelfProfileWrapper>
+          {isEditing ? (
+            <>
+              <UserNameInput value={userName} onChange={handleUserName} />
+              <EmailInput value={contactEmail} onChange={handleContactEmail} />
+              <SelfProfileInput
+                value={selfProfile}
+                onChange={handleSelfProfile}
+              />
+            </>
+          ) : (
+            <>
+              <UserNameWrapper>{userName}</UserNameWrapper>
+              <EmailWrapper>{contactEmail}</EmailWrapper>
+              <SelfProfileWrapper>{selfProfile}</SelfProfileWrapper>
+            </>
+          )}
         </TextWrapper>
       </UserInfoWrapper>
     </InfoContainer>
@@ -100,18 +183,44 @@ const IconBox = styled.div`
 
 const TextWrapper = styled.div`
   margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
 `;
+
+// isEditing false
 const UserNameWrapper = styled.p`
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
 `;
+
 const EmailWrapper = styled.p`
   color: grey;
   margin-bottom: 1.5rem;
 `;
+
 const SelfProfileWrapper = styled.div`
   padding: 1.25rem;
-  border: 0.0625rem solid lightgrey;
+  border: 1px solid lightgrey;
+`;
+
+// isEditing true
+const UserNameInput = styled.input`
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+`;
+
+const EmailInput = styled.input`
+  color: gray;
+  margin-bottom: 1.5rem;
+  width: 100%;
+`;
+
+const SelfProfileInput = styled.textarea`
+  padding: 1.25rem;
+  font-size: 1rem;
+  border: 1px solid lightgrey;
+  width: 64rem;
 `;
 
 export default UserInfoContainer;

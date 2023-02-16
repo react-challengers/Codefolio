@@ -1,4 +1,5 @@
 import { largeCategoryState, subCategoryState } from "@/lib/recoil/atoms";
+
 import {
   postTitle,
   postSubTitle,
@@ -14,7 +15,12 @@ import {
 } from "@/lib/recoil/postAtoms";
 import userLoginCheck from "@/lib/recoil/userLoginCheck";
 
-import myPagePhonNumber from "./myPageAtoms";
+import {
+  myPageUserName,
+  myPageContactEmail,
+  myPageSelfProfile,
+  myPagePhonNumber,
+} from "@/lib/recoil/myPageAtoms";
 
 export {
   userLoginCheck,
@@ -31,5 +37,8 @@ export {
   postTags,
   postPublic,
   postContent,
+  myPageUserName,
+  myPageSelfProfile,
+  myPageContactEmail,
   myPagePhonNumber,
 };
