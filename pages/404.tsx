@@ -1,4 +1,4 @@
-import LoginButton from "@/Components/Common/AuthLoginButton";
+import { AuthButton } from "@/Components/Common/Auth";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -22,7 +22,7 @@ const NotFoundPage: NextPage = () => {
           "찾으려는 페이지의 주소가 잘못 입력되었거나 \n 주소의 변경 혹은 삭제로 인해 사용하실 수 없습니다. \n 입력하신 페이지의 주소가 정확한지 다시 한 번 확인해주세요."
         }
       </Paragraph>
-      <LoginButton onClick={handleBackToHome}>홈으로 가기</LoginButton>
+      <AuthButton onClick={handleBackToHome}>홈으로 가기</AuthButton>
     </PageNotFoundContainer>
   );
 };
