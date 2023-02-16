@@ -40,7 +40,6 @@ const DropDown = ({ type }: DropDownProps) => {
   const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectValue(e.target.value);
   };
-
   return (
     <Select onChange={onChangeHandler} defaultValue={options[0]}>
       {options.map((option) => (

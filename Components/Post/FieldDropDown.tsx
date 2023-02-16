@@ -1,4 +1,6 @@
+import { postLargeCategory, postSubCategory } from "@/lib/recoil";
 import { useReducer } from "react";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 /**
@@ -51,8 +53,16 @@ const reducer = (_state: string[], action: { type: Field }): string[] => {
 
 const FieldDropDown = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const setLargeCategory = useSetRecoilState(postLargeCategory);
+  const setSubCategory = useSetRecoilState(postSubCategory);
+
   const handleLargeCategory = (item: Field) => {
     dispatch({ type: item });
+  };
+
+  const handleClickSubCategory = (item: string) => {
+    setSubCategory(item);
   };
 
   return (
@@ -60,7 +70,10 @@ const FieldDropDown = () => {
       <ul>
         {field.map((item) => (
           <FiledItemContainer
-            onMouseOver={() => handleLargeCategory(item)}
+            onMouseOver={() => {
+              handleLargeCategory(item);
+              setLargeCategory(item);
+            }}
             key={item.toString()}
           >
             {item}
@@ -70,7 +83,11 @@ const FieldDropDown = () => {
       <Divider />
       <ul>
         {state.map((item) => (
-          <FiledItemContainer key={item.toString()} cursor>
+          <FiledItemContainer
+            key={item.toString()}
+            onClick={() => handleClickSubCategory(item)}
+            dataCursor
+          >
             {item}
           </FiledItemContainer>
         ))}
@@ -79,19 +96,6 @@ const FieldDropDown = () => {
   );
 };
 
-const FiledItemContainer = styled.li<{
-  key?: string;
-  onMouseOver?: () => void;
-  cursor?: boolean;
-}>`
-  padding: 0.75rem;
-  width: 8.75rem;
-  ${(props) => props.cursor && "cursor: pointer;"};
-  :hover {
-    background: #e6e6e6;
-  }
-`;
-
 const FieldDropDownContainer = styled.div`
   width: 21.5rem;
   box-shadow: 0px 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
@@ -99,6 +103,23 @@ const FieldDropDownContainer = styled.div`
   display: flex;
   border-radius: 0.2rem;
   gap: 0;
+  position: absolute;
+  background-color: #fff;
+  z-index: 21;
+`;
+
+const FiledItemContainer = styled.li<{
+  key?: string;
+  onMouseOver?: () => void;
+  onClick?: () => void;
+  dataCursor?: boolean;
+}>`
+  padding: 0.75rem;
+  width: 8.75rem;
+  ${(props) => props.dataCursor && "cursor: pointer;"};
+  :hover {
+    background: #e6e6e6;
+  }
 `;
 
 const Divider = styled.hr`

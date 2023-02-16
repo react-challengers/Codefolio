@@ -7,11 +7,11 @@ import { Dispatch, useState } from "react";
 import styled from "styled-components";
 import DefaultButton from "../Common/DefaultButton";
 import DropDown from "../Common/DropDown";
+import SkillList from "../Common/Skill/SkillList";
 import Toggle from "../Common/Toggle";
 import PositionTag from "./PositionTag";
 import ProfileContainer from "./ProfileContainer";
 import { ContentContainer, ContentWrapper } from "./ShowProfileContainer";
-import SkillList from "./SkillList";
 import SwitchButton from "./SwitchButton";
 
 const fieldList = [
@@ -108,6 +108,7 @@ const EditProfileContainer = ({
               <ContentWrapper>
                 <p>스킬</p>
                 <SkillList
+                  text="스킬 입력"
                   editSkills={editSkills}
                   setEditSkills={setEditSkills}
                 />

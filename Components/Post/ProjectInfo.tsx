@@ -1,8 +1,8 @@
 import Image from "next/image";
 import styled from "styled-components";
 import { useState } from "react";
-import ProjectInfoDropDown from "./ProjectInfoDropDown";
 import arrow_down from "@/public/images/arrow_down.jpg";
+import ProjectInfoDropDown from "./ProjectInfoDropDown";
 
 const ProjectInfo = () => {
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -15,13 +15,12 @@ const ProjectInfo = () => {
           <DropdownImage src={arrow_down} alt="dropdown image" />
         </DropdownButton>
       </DropdownContainer>
-      {openDropdown && <ProjectInfoDropDown></ProjectInfoDropDown>}
+      {openDropdown && <ProjectInfoDropDown />}
     </div>
   );
 };
 
 const DropdownContainer = styled.div`
-  width: 98.75rem;
   height: 3.6569rem;
 
   border: 1px solid #cccccc;
@@ -41,6 +40,7 @@ const DropdownButton = styled.button`
   border: none;
   margin-right: 2.5rem;
   background-color: white;
+  cursor: pointer;
 `;
 
 const DropdownImage = styled(Image)`

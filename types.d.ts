@@ -1,6 +1,8 @@
+import { WithPersonType } from "./Components/Post/WithPeople";
+
 type Gender = "남자" | "여자" | "선택안함";
 
-enum Field {
+declare enum Field {
   WEB = "웹",
   APP = "앱",
   SOFTWARE = "소프트웨어",
@@ -85,21 +87,19 @@ interface NotificationType {
 }
 
 interface PostType {
+  title: string;
+  sub_title: string;
+  title_background_color: string;
+  large_category: string;
+  sub_category: string;
+  skills: string[];
+  progress_date: string[];
+  members: MembersType[];
+  tag: string[];
+  is_public: boolean;
+  content: string;
   id: string;
   user_id: string;
-  title: string;
-  content: string;
-  thumbnail: string;
-  large_category: Field;
-  sub_category: SubCategory;
-  created_at: Date;
-  progress_date: [string, string];
-  github_url: string;
-  url: string;
-  is_public: boolean;
-  skills: string[];
-  members: string[];
-  tag: string[];
 }
 
 interface FollowType {
