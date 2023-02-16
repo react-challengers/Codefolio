@@ -43,9 +43,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
   );
 
   const handleEditClick = async () => {
-    if (isEditing) {
-      editComment();
-    }
+    editComment();
 
     setIsEditing((prev) => !prev);
   };
@@ -66,18 +64,37 @@ const CommentItem = ({ comment }: CommentItemProps) => {
         )}
       </TextBox>
       <ButtonWrapper>
-        <DefaultButton
-          text="수정"
-          type="outline"
-          size="s"
-          onClick={handleEditClick}
-        />
-        <DefaultButton
-          text="삭제"
-          type="outline"
-          size="s"
-          onClick={() => deleteComment()}
-        />
+        {isEditing ? (
+          <>
+            <DefaultButton
+              text="완료"
+              type="outline"
+              size="s"
+              onClick={handleEditClick}
+            />
+            <DefaultButton
+              text="취소"
+              type="outline"
+              size="s"
+              onClick={() => setIsEditing((prev) => !prev)}
+            />
+          </>
+        ) : (
+          <>
+            <DefaultButton
+              text="수정"
+              type="outline"
+              size="s"
+              onClick={() => setIsEditing((prev) => !prev)}
+            />
+            <DefaultButton
+              text="삭제"
+              type="outline"
+              size="s"
+              onClick={() => deleteComment()}
+            />
+          </>
+        )}
       </ButtonWrapper>
     </CommentContainer>
   );
@@ -119,7 +136,7 @@ const CommentTitle = styled.div`
 `;
 
 const EditInput = styled.input`
-  width: 80%;
+  width: 90%;
 `;
 
 const CommentWrapper = styled.div`
