@@ -1,5 +1,3 @@
-import { WithPersonType } from "./Components/Post/WithPeople";
-
 type Gender = "남자" | "여자" | "선택안함";
 
 declare enum Field {
@@ -69,7 +67,7 @@ interface UserProfileType {
   gender: Gender;
   bookmark_folders: string[];
   phone: string;
-  field: Field;
+  field: string[];
   skills: string[];
   career: string;
   is_public: boolean;

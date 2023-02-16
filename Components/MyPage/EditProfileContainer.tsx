@@ -1,9 +1,4 @@
 import { myPagePhonNumber } from "@/lib/recoil";
-import { UserProfileType } from "@/types";
-import {
-  getBirthYearsArray,
-  getCareerYearsArray,
-} from "@/utils/commons/getYearsArray";
 import { ChangeEvent, Dispatch, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
@@ -42,7 +37,7 @@ const EditProfileContainer = ({
     birth_year: birthYear,
     field: oldField,
     skills,
-    careerer,
+    career,
     is_public: isPublic,
   } = userInfo;
 
@@ -52,7 +47,7 @@ const EditProfileContainer = ({
   const [editIsPublic, setEditIsPublic] = useState(isPublic);
   const [editSkills, setEditSkills] = useState(skills);
   const [editbirthYear, setEditBirthYear] = useState(birthYear);
-  const [editCareer, setEditCareer] = useState(careerer);
+  const [editCareer, setEditCareer] = useState(career);
 
   const [isPhoneNumber, setIsPhoneNumber] = useState(false);
 
