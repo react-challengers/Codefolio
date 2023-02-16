@@ -62,7 +62,6 @@ const TitleContainer = styled.div`
   flex-direction: column;
   padding: 3rem;
   gap: 1.375rem;
-  border: 1px solid black;
   position: relative;
   background-color: ${(props) => props.color};
 `;
