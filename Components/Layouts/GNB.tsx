@@ -1,9 +1,32 @@
+import { userLoginCheck as recoilUserLoginCheck } from "@/lib/recoil";
+import supabase from "@/lib/supabase";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
 const GNB = () => {
   const router = useRouter();
+  const [userCheck, setUserCheck] = useRecoilState(recoilUserLoginCheck);
+
+  useEffect(() => {
+    getSessionUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getSessionUser = async () => {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) {
+      throw new Error(error.message);
+    }
+    if (data.session) {
+      setUserCheck(true);
+    } else {
+      setUserCheck(false);
+    }
+  };
+
   return (
     <GNBContainer>
       <ButtonWrapper onClick={() => router.push("/")}>Codefolio</ButtonWrapper>
@@ -24,7 +47,11 @@ const GNB = () => {
             height="24"
           />
         </ButtonWrapper> */}
-        <ButtonWrapper onClick={() => router.push("/create-post")}>
+        <ButtonWrapper
+          onClick={() =>
+            router.push(userCheck ? "/create-post" : "/auth/login")
+          }
+        >
           <Image
             src="/icons/post.svg"
             alt="게시글 등록 아이콘"
@@ -32,14 +59,20 @@ const GNB = () => {
             height="24"
           />
         </ButtonWrapper>
-        <ButtonWrapper onClick={() => router.push("/profile")}>
-          <Image
-            src="/icons/person.svg"
-            alt="내 프로필 아이콘"
-            width="24"
-            height="24"
-          />
-        </ButtonWrapper>
+        {userCheck ? (
+          <ButtonWrapper onClick={() => router.push("/profile")}>
+            <Image
+              src="/icons/person.svg"
+              alt="내 프로필 아이콘"
+              width="24"
+              height="24"
+            />
+          </ButtonWrapper>
+        ) : (
+          <ButtonWrapper onClick={() => router.push("/auth/login")}>
+            <span>로그인</span>
+          </ButtonWrapper>
+        )}
       </ButtonsContainer>
     </GNBContainer>
   );

@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   CardItemContainer,
@@ -8,6 +8,9 @@ import {
   TabProfile,
   UserInfoContainer,
 } from "@/Components/MyPage";
+import { useQueryClient } from "@tanstack/react-query";
+import { PostType } from "@/types";
+import { getAllPosts } from "@/utils/APIs/supabase";
 import { useRecoilValue } from "recoil";
 import {
   myPageContactEmail,
@@ -18,23 +21,23 @@ import {
 import { Field } from "@/types/enums";
 
 const tabList = ["프로젝트", "팔로잉", "북마크", "좋아요", "보관함", "프로필"];
-
-const cardItem = {
-  imageSrc: "OK-LGTM.png",
-  imageAlt: "Test",
-  tagItems: ["Components", "API"],
-  title: "React Profiler API로 컴포넌트 측정하기",
-  subTitle: "조금씩 추상화하면서 설계하기",
-  date: "2023.02.10",
-  likes: 203,
-  comments: 57,
-  field: "WEB",
-  linkURL: `/detail/${1}`,
+const userInfo = {
+  id: "nno3onn",
+  user_id: "nno3onn@naver.com",
+  user_name: "허다은",
+  contact_email: "nno3onn@gmail.com",
+  gender: "여자",
+  bookmark_folders: ["example"],
+  phone: "01063058727",
+  field: ["WEB"],
+  skills: ["a", "b", "c"],
+  careerer: "3년차",
+  is_public: true,
+  birth_year: 1997,
 };
 
 const ProfilePage: NextPage = () => {
   const [currentTab, setCurrentTab] = useState(0);
-  const itemList = new Array(10).fill(cardItem);
 
   const userName = useRecoilValue(myPageUserName);
   const contactEmail = useRecoilValue(myPageContactEmail);
@@ -57,10 +60,39 @@ const ProfilePage: NextPage = () => {
     self_profile: selfProfile,
   };
 
+  const { user_name: userName, contact_email: contactEmail } = userInfo;
+  const [itemList, setItemList] = useState<PostType[]>([]);
+  const queryClient = useQueryClient();
+
   const handleClick = (idx: number) => {
     setCurrentTab(idx);
   };
 
+  const fetchAllPosts = async () => {
+    const newQueryData = await queryClient.fetchQuery<PostType[]>(
+      ["GET_POSTS"],
+      getAllPosts
+    );
+
+    return newQueryData;
+  };
+
+  useEffect(() => {
+    const queryData: PostType[] | undefined = queryClient.getQueryData([
+      "GET_POSTS",
+    ]);
+    if (queryData) {
+      setItemList(queryData);
+    } else {
+      fetchAllPosts().then((res) => {
+        if (res) {
+          setItemList(res);
+        }
+      });
+    }
+  }, []);
+
+  // TODO: itemList 이용해서 필터링된 카드 아이템 리스트 만들기
   return (
     <MyPageContainer>
       <UserInfoContainer />

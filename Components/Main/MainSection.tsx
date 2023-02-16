@@ -4,7 +4,11 @@ import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { useQuery } from "@tanstack/react-query";
+import type { PostType } from "@/types";
 import bottom_arrow from "@/public/icons/bottom_arrow.svg";
+import { findThumbnailInContent, getPostDate } from "@/utils/card";
+import { getAllPosts } from "@/utils/APIs/supabase";
 import Tags from "../Common/Tags";
 import CardItem from "../Common/Card/CardItem";
 
@@ -26,14 +30,33 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     useRecoilState(subCategoryState);
   const router = useRouter();
 
+  const { data: allPostsData } = useQuery<PostType[]>(["GET_POSTS"], {
+    queryFn: getAllPosts,
+  });
+
   useEffect(() => {
     if (router.query.id) {
       setIsModalOpen(true);
+    } else {
+      setIsModalOpen(false);
     }
-  });
+  }, [router.query.id, setIsModalOpen]);
 
   const onClickDropDown = () => {
     setIsDropDownOpen((prev) => !prev);
+  };
+
+  const openModal = (id: string) => {
+    router.push(
+      {
+        query: {
+          id,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+    setIsModalOpen(true);
   };
 
   // 다른 페이지에 갔다가 다시 돌아왔을 시, 카테고리가 초기화 되도록 설정
@@ -80,32 +103,27 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         )}
       </HomeDropDownContainer>
       <HomeCardGrid>
-        <CardContainer
-          onClick={() => {
-            router.push(
-              {
-                query: {
-                  id: "1",
-                },
-              },
-              undefined,
-              { shallow: true }
-            );
-            setIsModalOpen(true);
-          }}
-        >
-          <CardItem
-            imageSrc="anonImage.png"
-            imageAlt="ㅁ"
-            title="안드로이드 스튜디오에서 빌드가 안될때"
-            subTitle="안드로이드 스튜디오에서 빌드가 안될때"
-            tagItems={["App | Android, iOS, flutter"]}
-            date="2021.08.01"
-            comments={100}
-            likes={100}
-            field="APP"
-          />
-        </CardContainer>
+        {allPostsData?.map((post: PostType) => (
+          <CardContainer
+            key={post.id}
+            onClick={() => {
+              openModal(post.id);
+            }}
+          >
+            <CardItem
+              imageSrc={findThumbnailInContent(post.content)}
+              imageAlt={`${post.title}썸네일`}
+              title={post.title}
+              subTitle={post.sub_title}
+              tagItems={post.tag}
+              date={getPostDate(post.created_at)}
+              // TODO: comments, likes 수 구하기
+              comments={100}
+              likes={100}
+              field={`${post.large_category} | ${post.sub_category}`}
+            />
+          </CardContainer>
+        ))}
       </HomeCardGrid>
     </HomeMainContainer>
   );

@@ -5,10 +5,11 @@ import {
   myPageUserName,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
-
 import { Field } from "@/types/enums";
+import { userLoginCheck } from "@/lib/recoil";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
@@ -87,6 +88,24 @@ const UserInfoContainer = () => {
     }
   };
 
+const UserInfoContainer = ({
+  username,
+  email,
+  selfProfile,
+}: UserInfoContainerProps) => {
+  const router = useRouter();
+
+  const setUserLogin = useSetRecoilState(userLoginCheck);
+
+  const onLogoutButtonClick = async () => {
+    const res = await supabase.auth.signOut();
+    setUserLogin(false);
+    if (res.error) {
+      throw new Error(res.error.message);
+    }
+    return router.push("/");
+  };
+
   return (
     <InfoContainer>
       <Banner />
@@ -94,14 +113,21 @@ const UserInfoContainer = () => {
         <ProfileImageWrapper>
           <ProfileImage alt="유저 프로필" page="myPage" />
         </ProfileImageWrapper>
-        <EditIconWrapper onClick={handleIsEditing}>
-          <Image
-            src="/icons/edit.svg"
-            alt="편집 아이콘"
-            width="24"
-            height="24"
-          />
-        </EditIconWrapper>
+        <IconWrapper>
+          <IconBox onClick={() => router.push("/profile/edit-profile")}>
+            <Image
+              src="/icons/edit.svg"
+              alt="편집 아이콘"
+              width="24"
+              height="24"
+            />
+          </IconBox>
+          <IconBox>
+            <button type="button" onClick={() => onLogoutButtonClick()}>
+              로그아웃
+            </button>
+          </IconBox>
+        </IconWrapper>
         <TextWrapper>
           {isEditing ? (
             <>
@@ -149,10 +175,15 @@ const ProfileImageWrapper = styled.div`
   top: -3.25rem;
 `;
 
-const EditIconWrapper = styled.div`
-  cursor: pointer;
+const IconWrapper = styled.div`
+  display: flex;
+  gap: 0.75rem;
   position: absolute;
   right: 0rem;
+`;
+
+const IconBox = styled.div`
+  cursor: pointer;
 `;
 
 const TextWrapper = styled.div`

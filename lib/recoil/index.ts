@@ -13,6 +13,7 @@ import {
   postPublic,
   postContent,
 } from "@/lib/recoil/postAtoms";
+import userLoginCheck from "@/lib/recoil/userLoginCheck";
 
 import {
   myPageUserName,
@@ -22,6 +23,7 @@ import {
 } from "@/lib/recoil/myPageAtoms";
 
 export {
+  userLoginCheck,
   largeCategoryState,
   subCategoryState,
   postTitle,

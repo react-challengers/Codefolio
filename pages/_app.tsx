@@ -9,6 +9,7 @@ import { useState } from "react";
 import GNB from "@/Components/Layouts/GNB";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
 
@@ -27,12 +28,13 @@ const App = ({
         initialSession={pageProps.initialSession}
       >
         <ThemeProvider theme={theme}>
-          <GNB />
           <RecoilRoot>
+            <GNB />
             <Component {...pageProps} />
           </RecoilRoot>
         </ThemeProvider>
       </SessionContextProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };
