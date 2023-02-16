@@ -101,6 +101,7 @@ const signup: NextPage = () => {
       <SignupSpace>
         <SignupForm>
           <AuthInput
+            value={userName}
             placeholder="이름(닉네임) 2글자 이상"
             onChange={(e) => setUserName(e.target.value)}
           ></AuthInput>
@@ -111,6 +112,7 @@ const signup: NextPage = () => {
           )}
           <AuthInput
             type={email}
+            value={email}
             placeholder="이메일"
             onChange={(e) => setEmail(e.target.value)}
           ></AuthInput>
@@ -121,6 +123,7 @@ const signup: NextPage = () => {
           )}
           <AuthInput
             type={"password"}
+            value={password}
             placeholder="비밀번호 8글자 이상"
             onChange={(e) => setPassword(e.target.value)}
           ></AuthInput>
@@ -131,6 +134,7 @@ const signup: NextPage = () => {
           )}
           <AuthInput
             type={"password"}
+            value={passwordCheck}
             placeholder="비밀번호 확인"
             onChange={(e) => setPasswordCheck(e.target.value)}
           ></AuthInput>
