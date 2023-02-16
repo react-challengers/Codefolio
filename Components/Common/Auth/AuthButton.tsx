@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const LoginButton = styled.button`
+const AuthButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,4 +23,4 @@ const LoginButton = styled.button`
   }
 `;
 
-export default LoginButton;
+export default AuthButton;

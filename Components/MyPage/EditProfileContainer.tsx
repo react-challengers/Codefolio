@@ -37,8 +37,6 @@ const EditProfileContainer = ({
   userInfo,
   setIsEditing,
 }: EditProfileContainerProps) => {
-  const birthYearsArray = getBirthYearsArray();
-  const careerYearsArray = getCareerYearsArray();
   const {
     gender,
     birth_year: birthYear,
@@ -53,6 +51,8 @@ const EditProfileContainer = ({
   const [currentItem, setCurrentItem] = useState(gender);
   const [editIsPublic, setEditIsPublic] = useState(isPublic);
   const [editSkills, setEditSkills] = useState(skills);
+  const [editbirthYear, setEditBirthYear] = useState(birthYear);
+  const [editCareer, setEditCareer] = useState(careerer);
 
   const [isPhoneNumber, setIsPhoneNumber] = useState(false);
 
@@ -86,7 +86,11 @@ const EditProfileContainer = ({
             </InfoWrapper>
             <InfoWrapper>
               <p>출생년도</p>
-              <DropDown defaultValue={birthYear} options={birthYearsArray} />
+              <DropDown
+                type="birth_year"
+                editbirthYear={editbirthYear}
+                setEditBirthYear={setEditBirthYear}
+              />
             </InfoWrapper>
             <InfoWrapper>
               <p>휴대전화</p>
@@ -119,7 +123,11 @@ const EditProfileContainer = ({
               </ContentWrapper>
               <ContentWrapper>
                 <p>경력</p>
-                <DropDown defaultValue={careerer} options={careerYearsArray} />
+                <DropDown
+                  type="career"
+                  editCareer={editCareer}
+                  setEditCareer={setEditCareer}
+                />
               </ContentWrapper>
               <ContentWrapper>
                 <p>스킬</p>

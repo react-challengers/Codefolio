@@ -19,6 +19,7 @@ const UserInfoContainer = ({
   selfProfile,
 }: UserInfoContainerProps) => {
   const router = useRouter();
+
   const setUserLogin = useSetRecoilState(userLoginCheck);
 
   const onLogoutButtonClick = async () => {
@@ -27,8 +28,7 @@ const UserInfoContainer = ({
     if (res.error) {
       throw new Error(res.error.message);
     }
-    router.push("/");
-    return res;
+    return router.push("/");
   };
 
   return (
@@ -39,19 +39,19 @@ const UserInfoContainer = ({
           <ProfileImage alt="유저 프로필" page="myPage" />
         </ProfileImageWrapper>
         <IconWrapper>
-          <EditIconWrapper onClick={() => router.push("/profile/edit-profile")}>
+          <IconBox onClick={() => router.push("/profile/edit-profile")}>
             <Image
               src="/icons/edit.svg"
               alt="편집 아이콘"
               width="24"
               height="24"
             />
-          </EditIconWrapper>
-          <LogoutIconWrapper>
+          </IconBox>
+          <IconBox>
             <button type="button" onClick={() => onLogoutButtonClick()}>
               로그아웃
             </button>
-          </LogoutIconWrapper>
+          </IconBox>
         </IconWrapper>
         <TextWrapper>
           <UserNameWrapper>{username}</UserNameWrapper>
@@ -94,11 +94,7 @@ const IconWrapper = styled.div`
   right: 0rem;
 `;
 
-const EditIconWrapper = styled.div`
-  cursor: pointer;
-`;
-
-const LogoutIconWrapper = styled.div`
+const IconBox = styled.div`
   cursor: pointer;
 `;
 

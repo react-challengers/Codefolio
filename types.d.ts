@@ -100,6 +100,7 @@ interface PostType {
   content: string;
   id: string;
   user_id: string;
+  created_at: string;
 }
 
 interface FollowType {
