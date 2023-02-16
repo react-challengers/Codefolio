@@ -4,7 +4,10 @@ import supabase from "@/lib/supabase";
 import DefaultButton from "../Common/DefaultButton";
 import ProfileImage from "../Common/ProfileImage";
 import { useState } from "react";
-import useInput from "@/hooks/common/useInput";
+
+/**
+ * @TODO useInput으로 리팩토링 고민
+ */
 
 interface CommentType {
   id: string;
@@ -18,8 +21,7 @@ interface CommentItemProps {
 
 const CommentItem = ({ comment }: CommentItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editContent, changeEditContent] = useInput(comment.content);
-
+  const [editContent, setEditContent] = useState(comment.content);
   const queryClient = useQueryClient();
   const { mutate: deleteComment, isError: deleteError } = useMutation(
     (): any => supabase.from("comment").delete().eq("id", comment.id),
@@ -43,8 +45,14 @@ const CommentItem = ({ comment }: CommentItemProps) => {
   );
 
   const handleEditClick = async () => {
-    editComment();
+    if (isEditing) {
+      editComment();
+    }
+    setIsEditing((prev) => !prev);
+  };
 
+  const handleCanceled = async () => {
+    setEditContent(comment.content);
     setIsEditing((prev) => !prev);
   };
 
@@ -58,7 +66,10 @@ const CommentItem = ({ comment }: CommentItemProps) => {
           </CommentWrapper>
         </CommentTitle>
         {isEditing ? (
-          <EditInput value={editContent} onChange={changeEditContent} />
+          <EditInput
+            value={editContent}
+            onChange={(e) => setEditContent(e.target.value)}
+          />
         ) : (
           <CommentContent>{comment.content}</CommentContent>
         )}
@@ -76,7 +87,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
               text="취소"
               type="outline"
               size="s"
-              onClick={() => setIsEditing((prev) => !prev)}
+              onClick={handleCanceled}
             />
           </>
         ) : (
@@ -85,7 +96,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
               text="수정"
               type="outline"
               size="s"
-              onClick={() => setIsEditing((prev) => !prev)}
+              onClick={handleEditClick}
             />
             <DefaultButton
               text="삭제"
@@ -137,6 +148,10 @@ const CommentTitle = styled.div`
 
 const EditInput = styled.input`
   width: 90%;
+  margin-top: 0.25rem;
+  outline: 0;
+
+  border-width: 0 0 1px;
 `;
 
 const CommentWrapper = styled.div`
