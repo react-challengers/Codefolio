@@ -13,6 +13,7 @@ const DetailHeader = () => {
   const [showMore, setShowMore] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isBookmark, setIsBookmark] = useState(false);
+  const [isLike, setIsLike] = useState(false);
 
   const showMoreModal = () => setShowMore((prev) => !prev);
 
@@ -20,7 +21,7 @@ const DetailHeader = () => {
     const { data } = await supabase.auth.getUser();
     setUser(data.user);
   };
-
+  
   const getBookmark = async () => {
     const { data } = await supabase
       .from("bookmark")
@@ -28,7 +29,7 @@ const DetailHeader = () => {
       .eq("user_id", user?.id)
       .eq("post_id", postId)
       .single();
-    setIsBookmark(!!data?.data);
+      setIsBookmark(!!data?.data);
   };
 
   const addBookmark = async () => {
@@ -50,10 +51,43 @@ const DetailHeader = () => {
       setIsBookmark(false);
     }
   };
+  
+  const getLike = async () => {
+    const { data } = await supabase
+      .from("like")
+      .select()
+      .eq("user_id", user?.id)
+      .eq("post_id", postId)
+      .single();
+    setIsLike(!!data?.data);
+  };
+
+  const addLike = async () => {
+    const { error } = await supabase
+      .from("like")
+      .insert({ post_id: postId, user_id: user?.id });
+    console.log(error);
+    if (!error) {
+      setIsLike(true);
+    }
+  };
+
+  const deleteLike = async () => {
+    const { error } = await supabase
+      .from("like")
+      .delete()
+      .eq("user_id", user?.id)
+      .eq("post_id", postId);
+    console.log(error);
+    if (!error) {
+      setIsLike(false);
+    }
+  };
 
   useEffect(() => {
     getUser();
     getBookmark();
+    getLike();
   }, []);
 
   const clickBookmarkButton = async () => {
@@ -61,6 +95,14 @@ const DetailHeader = () => {
       deleteBookmark();
     } else {
       addBookmark();
+    }
+  };
+  
+  const clickLikeButton = async () => {
+    if (isLike) {
+      deleteLike();
+    } else {
+      addLike();
     }
   };
 
@@ -75,6 +117,14 @@ const DetailHeader = () => {
           alt="북마크 버튼"
           onClick={clickBookmarkButton}
           isBookmark={isBookmark}
+        />
+        <LikeButton
+          src="/icons/like.svg"
+          width={36}
+          height={36}
+          alt="좋아요 버튼"
+          onClick={clickLikeButton}
+          isLike={isLike}
         />
         <Image
           src="/icons/more.svg"
@@ -113,6 +163,13 @@ const DetailHeaderWrapper = styled.div`
   align-items: center;
   padding-right: 2.5rem;
   gap: 1.875rem;
+`;
+
+const LikeButton = styled(Image)<{ isLike: boolean }>`
+  background-color: ${({ isLike }) => (isLike ? "pink" : "transparent")};
+  &:hover {
+    background-color: pink;
+  }
 `;
 
 export default DetailHeader;
