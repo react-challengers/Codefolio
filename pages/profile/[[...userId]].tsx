@@ -10,6 +10,7 @@ import {
 } from "@/Components/MyPage";
 import { useRecoilValue } from "recoil";
 import { myPagePhonNumber } from "@/lib/recoil";
+import { UserProfileType } from "@/types";
 
 const tabList = ["프로젝트", "팔로잉", "북마크", "좋아요", "보관함", "프로필"];
 
@@ -32,7 +33,7 @@ const ProfilePage: NextPage = () => {
 
   const phone = useRecoilValue(myPagePhonNumber);
 
-  const userInfo = {
+  const userInfo: UserProfileType = {
     id: "nno3onn",
     user_id: "nno3onn@naver.com",
     user_name: "허다은",
@@ -40,9 +41,9 @@ const ProfilePage: NextPage = () => {
     gender: "여자",
     bookmark_folders: ["example"],
     phone,
-    field: ["WEB"],
+    field: "WEB",
     skills: ["a", "b", "c"],
-    careerer: 3,
+    career: "3년차",
     is_public: true,
     birth_year: 1997,
   };
