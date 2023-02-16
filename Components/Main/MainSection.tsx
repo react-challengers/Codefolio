@@ -5,13 +5,12 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
-import supabase from "@/lib/supabase";
 import type { PostType } from "@/types";
 import bottom_arrow from "@/public/icons/bottom_arrow.svg";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
+import { getAllPosts } from "@/utils/APIs/supabase";
 import Tags from "../Common/Tags";
 import CardItem from "../Common/Card/CardItem";
-import { getAllPosts } from "@/utils/APIs/supabase";
 
 // TODO: Tag 데이터 구조화 고민하기
 
@@ -31,12 +30,9 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     useRecoilState(subCategoryState);
   const router = useRouter();
 
-  const { data: allPostsData, error: allPostsError } = useQuery<PostType[]>(
-    ["GET_POSTS"],
-    {
-      queryFn: getAllPosts,
-    }
-  );
+  const { data: allPostsData } = useQuery<PostType[]>(["GET_POSTS"], {
+    queryFn: getAllPosts,
+  });
 
   useEffect(() => {
     if (router.query.id) {
