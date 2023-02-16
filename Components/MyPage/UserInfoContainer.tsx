@@ -1,3 +1,4 @@
+import supabase from "@/lib/supabase";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -16,6 +17,16 @@ const UserInfoContainer = ({
   selfProfile,
 }: UserInfoContainerProps) => {
   const router = useRouter();
+
+  const onLogoutButtonClick = async () => {
+    const res = await supabase.auth.signOut();
+    if (res.error) {
+      console.log("로그아웃 에러", res.error);
+      return;
+    }
+    router.push("/");
+  };
+
   return (
     <InfoContainer>
       <Banner />
@@ -23,14 +34,21 @@ const UserInfoContainer = ({
         <ProfileImageWrapper>
           <ProfileImage alt="유저 프로필" page="myPage" />
         </ProfileImageWrapper>
-        <EditIconWrapper onClick={() => router.push("/profile/edit-profile")}>
-          <Image
-            src="/icons/edit.svg"
-            alt="편집 아이콘"
-            width="24"
-            height="24"
-          />
-        </EditIconWrapper>
+        <IconWrapper>
+          <EditIconWrapper onClick={() => router.push("/profile/edit-profile")}>
+            <Image
+              src="/icons/edit.svg"
+              alt="편집 아이콘"
+              width="24"
+              height="24"
+            />
+          </EditIconWrapper>
+          <LogoutIconWrapper>
+            <button type="button" onClick={() => onLogoutButtonClick()}>
+              로그아웃
+            </button>
+          </LogoutIconWrapper>
+        </IconWrapper>
         <TextWrapper>
           <UserNameWrapper>{username}</UserNameWrapper>
           <EmailWrapper>{email}</EmailWrapper>
@@ -65,10 +83,19 @@ const ProfileImageWrapper = styled.div`
   top: -3.25rem;
 `;
 
-const EditIconWrapper = styled.div`
-  cursor: pointer;
+const IconWrapper = styled.div`
+  display: flex;
+  gap: 0.75rem;
   position: absolute;
   right: 0rem;
+`;
+
+const EditIconWrapper = styled.div`
+  cursor: pointer;
+`;
+
+const LogoutIconWrapper = styled.div`
+  cursor: pointer;
 `;
 
 const TextWrapper = styled.div`
