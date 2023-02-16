@@ -5,7 +5,7 @@ import {
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import { UserProfileType } from "@/types";
-import { Field } from "@/utils/constant/enums";
+import { Field } from "@/types/enums";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { useRecoilState } from "recoil";

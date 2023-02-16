@@ -1,4 +1,5 @@
 import { largeCategoryState, subCategoryState } from "@/lib/recoil/atoms";
+
 import {
   postTitle,
   postSubTitle,
@@ -12,6 +13,7 @@ import {
   postPublic,
   postContent,
 } from "@/lib/recoil/postAtoms";
+
 import {
   myPageUserName,
   myPageContactEmail,

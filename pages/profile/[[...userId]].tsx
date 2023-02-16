@@ -12,7 +12,7 @@ import {
   myPageSelfProfile,
   myPageUserName,
 } from "@/lib/recoil";
-import { Field } from "@/utils/constant/enums";
+import { Field } from "@/types/enums";
 import { UserProfileType } from "@/types";
 
 const tabList = ["프로젝트", "팔로잉", "북마크", "좋아요", "보관함", "프로필"];

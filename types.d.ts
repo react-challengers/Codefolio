@@ -6,7 +6,7 @@ import {
   AppSubCategory,
   ETCSubCategory,
   SoftWareCategory,
-} from "./utils/constant/enums";
+} from "./types/enums";
 
 type Gender = "남자" | "여자" | "선택안함";
 
