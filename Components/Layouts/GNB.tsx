@@ -44,7 +44,11 @@ const GNB = () => {
             height="24"
           />
         </ButtonWrapper>
-        <ButtonWrapper onClick={() => router.push("/create-post")}>
+        <ButtonWrapper
+          onClick={() =>
+            router.push(userCheck ? "/create-post" : "/auth/login")
+          }
+        >
           <Image
             src="/icons/post.svg"
             alt="게시글 등록 아이콘"
