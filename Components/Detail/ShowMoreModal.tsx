@@ -10,6 +10,7 @@ const ShowMoreModal = () => {
 };
 
 const ShowMoreModalContainer = styled.div`
+  background-color: white;
   width: 11.25rem;
   position: absolute;
   top: 3.75rem;

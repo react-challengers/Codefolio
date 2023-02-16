@@ -35,7 +35,7 @@ const DetailWithContainer = styled.div`
 
   display: grid;
   align-items: center;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1.2fr 1fr;
 `;
 
 const GithubImage = styled(Image)`

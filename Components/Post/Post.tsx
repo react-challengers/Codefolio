@@ -63,6 +63,7 @@ const Post: NextPage = () => {
       setIsSaved(false);
     }, 2000);
   };
+
   const onPost = async () => {
     // 게시 버튼
     const { data, error } = await supabase

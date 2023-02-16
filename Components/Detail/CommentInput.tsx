@@ -67,7 +67,7 @@ const PostCommentButton = styled.div`
 `;
 
 const CommentTextarea = styled.textarea`
-  width: 70rem;
+  width: 100%;
   vertical-align: text-top;
   padding: 0.5rem 0.75rem;
 

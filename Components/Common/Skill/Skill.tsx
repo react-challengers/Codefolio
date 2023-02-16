@@ -25,8 +25,8 @@ const Skill = ({ skill, idx, onDelete, setEditSkills }: SkillProps) => {
         onClick={() => onDelete(idx)}
         src="/icons/cancel.svg"
         alt="취소 버튼"
-        width="8"
-        height="8"
+        width="12"
+        height="12"
       />
     </SkillContainer>
   );
@@ -44,6 +44,8 @@ export const commonStyle = {
 
 const SkillContainer = styled.label`
   ${commonStyle}
+  display:flex;
+  align-items: center;
 `;
 
 const SkillInput = styled.input`
