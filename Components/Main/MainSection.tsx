@@ -11,6 +11,7 @@ import bottom_arrow from "@/public/icons/bottom_arrow.svg";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import Tags from "../Common/Tags";
 import CardItem from "../Common/Card/CardItem";
+import { getAllPosts } from "@/utils/APIs/supabase";
 
 // TODO: Tag 데이터 구조화 고민하기
 
@@ -29,14 +30,6 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   const [selectedSubCategory, setSelectedSubCategory] =
     useRecoilState(subCategoryState);
   const router = useRouter();
-
-  const getAllPosts = async () => {
-    const res = await supabase.from("post").select("*");
-    if (res.error) {
-      throw new Error(res.error.message);
-    }
-    return res.data;
-  };
 
   const { data: allPostsData, error: allPostsError } = useQuery<PostType[]>(
     ["GET_POSTS"],
