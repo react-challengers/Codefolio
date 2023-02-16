@@ -13,6 +13,8 @@ import {
   postContent,
 } from "@/lib/recoil/postAtoms";
 
+import myPagePhonNumber from "./myPageAtoms";
+
 export {
   largeCategoryState,
   subCategoryState,
@@ -27,4 +29,5 @@ export {
   postTags,
   postPublic,
   postContent,
+  myPagePhonNumber,
 };
