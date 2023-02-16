@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
 import type { PostType } from "@/types";
 import bottom_arrow from "@/public/icons/bottom_arrow.svg";
+import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import Tags from "../Common/Tags";
 import CardItem from "../Common/Card/CardItem";
 
@@ -47,6 +48,8 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   useEffect(() => {
     if (router.query.id) {
       setIsModalOpen(true);
+    } else {
+      setIsModalOpen(false);
     }
   }, [router.query.id, setIsModalOpen]);
 
@@ -54,30 +57,24 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     setIsDropDownOpen((prev) => !prev);
   };
 
+  const openModal = (id: string) => {
+    router.push(
+      {
+        query: {
+          id,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+    setIsModalOpen(true);
+  };
+
   // 다른 페이지에 갔다가 다시 돌아왔을 시, 카테고리가 초기화 되도록 설정
   useEffect(() => {
     setSelectedLargeCategory([]);
     setSelectedSubCategory([]);
   }, [setSelectedLargeCategory, setSelectedSubCategory]);
-
-  const findThumbnailInContent = (content: string) => {
-    // https://xxfgrnzupwpguxifhwsq.supabase.co/storage/v1/object/public/post-image/a6b4c159-e98f-4762-a6bb-dbf64f6ccc94 형식이 포함된 첫번째 url을 찾는다.
-    const regex =
-      /https:\/\/[a-z0-9]+\.supabase\.co\/storage\/v1\/object\/public\/post-image\/[a-z0-9-]+/g;
-    const result = content.match(regex);
-    if (result) {
-      return result[0];
-    }
-    return "/images/anonImage.png";
-  };
-
-  const getPostDate = (date: string) => {
-    const postDate = new Date(date);
-    const year = postDate.getFullYear();
-    const month = postDate.getMonth() + 1;
-    const day = postDate.getDate();
-    return `${year}.${month}.${day}`;
-  };
 
   return (
     <HomeMainContainer>
@@ -121,16 +118,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
           <CardContainer
             key={post.id}
             onClick={() => {
-              router.push(
-                {
-                  query: {
-                    id: post.id,
-                  },
-                },
-                undefined,
-                { shallow: true }
-              );
-              setIsModalOpen(true);
+              openModal(post.id);
             }}
           >
             <CardItem
