@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+const myPagePhonNumber = atom<string>({
+  key: "myPagePhonNumber",
+  default: "01063058727",
+});
+
 const myPageUserName = atom({ key: "userName", default: "허다은" });
 
 const myPageContactEmail = atom({
@@ -13,4 +18,9 @@ const myPageSelfProfile = atom({
     "안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요",
 });
 
-export { myPageUserName, myPageContactEmail, myPageSelfProfile };
+export {
+  myPagePhonNumber,
+  myPageUserName,
+  myPageContactEmail,
+  myPageSelfProfile,
+};
