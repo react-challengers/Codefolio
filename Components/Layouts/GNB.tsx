@@ -8,7 +8,7 @@ const GNB = () => {
     <GNBContainer>
       <ButtonWrapper onClick={() => router.push("/")}>Codefolio</ButtonWrapper>
       <ButtonsContainer>
-        <ButtonWrapper onClick={() => null}>
+        {/* <ButtonWrapper onClick={() => null}>
           <Image
             src="/icons/search.svg"
             alt="검색 아이콘"
@@ -23,7 +23,7 @@ const GNB = () => {
             width="24"
             height="24"
           />
-        </ButtonWrapper>
+        </ButtonWrapper> */}
         <ButtonWrapper onClick={() => router.push("/create-post")}>
           <Image
             src="/icons/post.svg"
