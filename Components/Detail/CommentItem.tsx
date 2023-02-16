@@ -4,7 +4,10 @@ import supabase from "@/lib/supabase";
 import DefaultButton from "../Common/DefaultButton";
 import ProfileImage from "../Common/ProfileImage";
 import { useState } from "react";
-import useInput from "@/hooks/common/useInput";
+
+/**
+ * @TODO useInput으로 리팩토링 고민
+ */
 
 interface CommentType {
   id: string;
@@ -18,8 +21,7 @@ interface CommentItemProps {
 
 const CommentItem = ({ comment }: CommentItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editContent, changeEditContent] = useInput(comment.content);
-
+  const [editContent, setEditContent] = useState(comment.content);
   const queryClient = useQueryClient();
   const { mutate: deleteComment, isError: deleteError } = useMutation(
     (): any => supabase.from("comment").delete().eq("id", comment.id),
@@ -46,7 +48,11 @@ const CommentItem = ({ comment }: CommentItemProps) => {
     if (isEditing) {
       editComment();
     }
+    setIsEditing((prev) => !prev);
+  };
 
+  const handleCanceled = async () => {
+    setEditContent(comment.content);
     setIsEditing((prev) => !prev);
   };
 
@@ -58,7 +64,34 @@ const CommentItem = ({ comment }: CommentItemProps) => {
           <CommentWrapper>
             <h3> Alex </h3> <span> 5시간 전 </span>
           </CommentWrapper>
-          <CommentWrapper>
+        </CommentTitle>
+        {isEditing ? (
+          <EditInput
+            value={editContent}
+            onChange={(e) => setEditContent(e.target.value)}
+          />
+        ) : (
+          <CommentContent>{comment.content}</CommentContent>
+        )}
+      </TextBox>
+      <ButtonWrapper>
+        {isEditing ? (
+          <>
+            <DefaultButton
+              text="완료"
+              type="outline"
+              size="s"
+              onClick={handleEditClick}
+            />
+            <DefaultButton
+              text="취소"
+              type="outline"
+              size="s"
+              onClick={handleCanceled}
+            />
+          </>
+        ) : (
+          <>
             <DefaultButton
               text="수정"
               type="outline"
@@ -71,14 +104,9 @@ const CommentItem = ({ comment }: CommentItemProps) => {
               size="s"
               onClick={() => deleteComment()}
             />
-          </CommentWrapper>
-        </CommentTitle>
-        {isEditing ? (
-          <input value={editContent} onChange={changeEditContent} />
-        ) : (
-          <CommentContent>{comment.content}</CommentContent>
+          </>
         )}
-      </TextBox>
+      </ButtonWrapper>
     </CommentContainer>
   );
 };
@@ -86,6 +114,11 @@ const CommentItem = ({ comment }: CommentItemProps) => {
 const CommentContainer = styled.div`
   display: flex;
   margin-top: 2.5rem;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 1rem;
 `;
 
 const TextBox = styled.div`
@@ -111,6 +144,14 @@ const CommentTitle = styled.div`
     font-size: 0.8125rem;
     color: #b3b3b3;
   }
+`;
+
+const EditInput = styled.input`
+  width: 90%;
+  margin-top: 0.25rem;
+  outline: 0;
+
+  border-width: 0 0 1px;
 `;
 
 const CommentWrapper = styled.div`
