@@ -4,6 +4,9 @@ import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { useQuery } from "@tanstack/react-query";
+import supabase from "@/lib/supabase";
+import type { PostType } from "@/types";
 import bottom_arrow from "@/public/icons/bottom_arrow.svg";
 import Tags from "../Common/Tags";
 import CardItem from "../Common/Card/CardItem";
@@ -26,11 +29,26 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     useRecoilState(subCategoryState);
   const router = useRouter();
 
+  const getAllPosts = async () => {
+    const res = await supabase.from("post").select("*");
+    if (res.error) {
+      throw new Error(res.error.message);
+    }
+    return res.data;
+  };
+
+  const { data: allPostsData, error: allPostsError } = useQuery<PostType[]>(
+    ["GET_POSTS"],
+    {
+      queryFn: getAllPosts,
+    }
+  );
+
   useEffect(() => {
     if (router.query.id) {
       setIsModalOpen(true);
     }
-  });
+  }, [router.query.id, setIsModalOpen]);
 
   const onClickDropDown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -41,6 +59,25 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     setSelectedLargeCategory([]);
     setSelectedSubCategory([]);
   }, [setSelectedLargeCategory, setSelectedSubCategory]);
+
+  const findThumbnailInContent = (content: string) => {
+    // https://xxfgrnzupwpguxifhwsq.supabase.co/storage/v1/object/public/post-image/a6b4c159-e98f-4762-a6bb-dbf64f6ccc94 형식이 포함된 첫번째 url을 찾는다.
+    const regex =
+      /https:\/\/[a-z0-9]+\.supabase\.co\/storage\/v1\/object\/public\/post-image\/[a-z0-9-]+/g;
+    const result = content.match(regex);
+    if (result) {
+      return result[0];
+    }
+    return "/images/anonImage.png";
+  };
+
+  const getPostDate = (date: string) => {
+    const postDate = new Date(date);
+    const year = postDate.getFullYear();
+    const month = postDate.getMonth() + 1;
+    const day = postDate.getDate();
+    return `${year}.${month}.${day}`;
+  };
 
   return (
     <HomeMainContainer>
@@ -80,32 +117,36 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         )}
       </HomeDropDownContainer>
       <HomeCardGrid>
-        <CardContainer
-          onClick={() => {
-            router.push(
-              {
-                query: {
-                  id: "1",
+        {allPostsData?.map((post: PostType) => (
+          <CardContainer
+            key={post.id}
+            onClick={() => {
+              router.push(
+                {
+                  query: {
+                    id: post.id,
+                  },
                 },
-              },
-              undefined,
-              { shallow: true }
-            );
-            setIsModalOpen(true);
-          }}
-        >
-          <CardItem
-            imageSrc="anonImage.png"
-            imageAlt="ㅁ"
-            title="안드로이드 스튜디오에서 빌드가 안될때"
-            subTitle="안드로이드 스튜디오에서 빌드가 안될때"
-            tagItems={["App | Android, iOS, flutter"]}
-            date="2021.08.01"
-            comments={100}
-            likes={100}
-            field="APP"
-          />
-        </CardContainer>
+                undefined,
+                { shallow: true }
+              );
+              setIsModalOpen(true);
+            }}
+          >
+            <CardItem
+              imageSrc={findThumbnailInContent(post.content)}
+              imageAlt={`${post.title}썸네일`}
+              title={post.title}
+              subTitle={post.sub_title}
+              tagItems={post.tag}
+              date={getPostDate(post.created_at)}
+              // TODO: comments, likes 수 구하기
+              comments={100}
+              likes={100}
+              field={`${post.large_category} | ${post.sub_category}`}
+            />
+          </CardContainer>
+        ))}
       </HomeCardGrid>
     </HomeMainContainer>
   );

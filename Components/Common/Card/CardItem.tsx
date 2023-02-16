@@ -12,16 +12,6 @@ import IconWithCount from "./IconWithCount";
  * @TODO Image Hover에 작성자 프로필 보여주기
  */
 
-type Field =
-  | "WEB"
-  | "APP"
-  | "SOFTWARE"
-  | "DATA"
-  | "WEB3"
-  | "DEVOPS"
-  | "IOT_AND_EMBEDDED"
-  | "SECURITY";
-
 interface CardProps {
   imageSrc: string;
   imageAlt: string;
@@ -31,7 +21,7 @@ interface CardProps {
   date: string;
   likes: number;
   comments: number;
-  field: Field;
+  field: string;
 }
 
 /**
@@ -93,7 +83,7 @@ const CardItem = ({
           </ImageOverlayContainer>
         )}
         <Tags tagItems={[field]} size="sm" />
-        <CardImage src={`/images/${imageSrc}`} alt={imageAlt} layout="fill" />
+        <CardImage src={`${imageSrc}`} alt={imageAlt} layout="fill" />
       </ImageContainer>
       <CardBottomWrapper>
         <DateCountContainer>
