@@ -62,7 +62,7 @@ const Login: NextPage = () => {
 
   const signInWithEmail = async () => {
     if (email === "" || password === "") {
-      return alert("이메일과 패스워드 모두 입력해주세요.");
+      return alert("이메일과 비밀번호 모두 입력해주세요.");
     }
 
     if (!email_check(email)) {
@@ -114,44 +114,40 @@ const Login: NextPage = () => {
     <LoginPageContainer>
       <EmptyContainer></EmptyContainer>
       <LoginSpace>
-        <LoginContainer>
-          {/* <LoginButton>카카오로 로그인하기</LoginButton>
+        {/* <LoginButton>카카오로 로그인하기</LoginButton>
           <LoginButton>네이버로 로그인하기</LoginButton> */}
-          <AuthButton onClick={signInWithGoogle}>구글로 로그인하기</AuthButton>
-          <AuthButton onClick={signInWithGitHub}>
-            Github로 로그인하기
-          </AuthButton>
-          <HrContainer>
-            <span> 또는 </span>
-          </HrContainer>
-          <LoginForm>
-            <AuthInput
-              type={email}
-              placeholder="이메일"
-              onChange={(e) => setEmail(e.target.value)}
-            ></AuthInput>
-            {emailValidate ? (
-              <ValidateText />
-            ) : (
-              <ValidateText> 이메일을 확인해주세요. </ValidateText>
-            )}
-            <AuthInput
-              type={"password"}
-              placeholder="비밀번호"
-              onChange={(e) => setPassword(e.target.value)}
-            ></AuthInput>
-            {passwordValidate ? (
-              <ValidateText />
-            ) : (
-              <ValidateText> 비밀번호를 확인해보세요. </ValidateText>
-            )}
-          </LoginForm>
-          <AuthButton onClick={signInWithEmail}>로그인</AuthButton>
-          <FooterMassage>
-            아직 회원이 아니신가요?
-            <Link href={"./signup"}>회원가입</Link>
-          </FooterMassage>
-        </LoginContainer>
+        <AuthButton onClick={signInWithGoogle}>구글로 로그인하기</AuthButton>
+        <AuthButton onClick={signInWithGitHub}>Github로 로그인하기</AuthButton>
+        <HrContainer>
+          <span> 또는 </span>
+        </HrContainer>
+        <LoginForm>
+          <AuthInput
+            type={email}
+            placeholder="이메일"
+            onChange={(e) => setEmail(e.target.value)}
+          ></AuthInput>
+          {emailValidate ? (
+            <ValidateText />
+          ) : (
+            <ValidateText> 이메일을 확인해주세요. </ValidateText>
+          )}
+          <AuthInput
+            type={"password"}
+            placeholder="비밀번호"
+            onChange={(e) => setPassword(e.target.value)}
+          ></AuthInput>
+          {passwordValidate ? (
+            <ValidateText />
+          ) : (
+            <ValidateText> 비밀번호를 확인해보세요. </ValidateText>
+          )}
+        </LoginForm>
+        <AuthButton onClick={signInWithEmail}>로그인</AuthButton>
+        <FooterMassage>
+          아직 회원이 아니신가요?
+          <Link href={"./signup"}>회원가입</Link>
+        </FooterMassage>
       </LoginSpace>
     </LoginPageContainer>
   );
@@ -165,8 +161,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
 const LoginPageContainer = styled.div`
   display: flex;
-
-  justify-content: center;
+  width: 100vw;
 `;
 
 const EmptyContainer = styled.div`
@@ -178,14 +173,10 @@ const EmptyContainer = styled.div`
 const LoginSpace = styled.div`
   flex-grow: 1;
   display: flex;
+  flex-direction: column;
+
   justify-content: center;
   align-items: center;
-`;
-
-const LoginContainer = styled.div`
-  height: 43.75rem;
-
-  flex-grow: 1;
 `;
 
 const HrContainer = styled.div`
