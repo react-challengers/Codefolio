@@ -54,7 +54,7 @@ const GNBContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0 40px;
+  padding: 0 2.5rem;
 `;
 
 const ButtonsContainer = styled.div`
