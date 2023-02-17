@@ -18,9 +18,15 @@ const myPageSelfProfile = atom({
     "안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요",
 });
 
+const myPageBackgroundColor = atom({
+  key: "myPageBackgroundColor",
+  default: "#ffffff",
+});
+
 export {
   myPagePhonNumber,
   myPageUserName,
   myPageContactEmail,
   myPageSelfProfile,
+  myPageBackgroundColor,
 };
