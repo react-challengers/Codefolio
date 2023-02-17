@@ -6,6 +6,8 @@ import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
 import { email_check, password_check } from "@/utils/commons/authValidate";
 import { ValidateText, AuthButton, AuthInput } from "@/Components/Common/Auth";
+import { useSetRecoilState } from "recoil";
+import { userLoginCheck } from "@/lib/recoil";
 
 // import { kakaoInit } from "@/utils/APIs/socialLogin";
 
@@ -22,6 +24,8 @@ const Login: NextPage = () => {
   const [password, setPassword] = useState("");
   const [emailValidate, setEmailValidate] = useState(true);
   const [passwordValidate, setPasswordValidate] = useState(true);
+
+  const setIsLogin = useSetRecoilState(userLoginCheck);
 
   useEffect(() => {
     // 로그인 상태 확인
@@ -82,6 +86,7 @@ const Login: NextPage = () => {
       password,
     });
     if (!error) {
+      setIsLogin(true);
       return router.push("/");
     }
     return alert("로그인 실패");
@@ -92,6 +97,7 @@ const Login: NextPage = () => {
       provider: "google",
     });
     if (!error) {
+      setIsLogin(true);
       router.push("/");
     } else {
       alert("구글 로그인 실패");
@@ -103,6 +109,7 @@ const Login: NextPage = () => {
       provider: "github",
     });
     if (!error) {
+      setIsLogin(true);
       router.push("/");
     } else {
       alert("깃헙 로그인 실패");

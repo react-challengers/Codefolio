@@ -10,6 +10,8 @@ import {
   password_check,
   userName_check,
 } from "@/utils/commons/authValidate";
+import { useSetRecoilState } from "recoil";
+import { userLoginCheck } from "@/lib/recoil";
 
 /**
  * 현재 가장 기본적 유효성검사, "빈 인풋 체크"와 비밀번호 확인 부분만 추가되어 있습니다.
@@ -28,6 +30,8 @@ const SignUpPage: NextPage = () => {
   const [emailValidate, setEmailValidate] = useState(true);
   const [passwordValidate, setPasswordValidate] = useState(true);
   const [passwordCheckValidate, setPasswordCheckValidate] = useState(true);
+
+  const setIsLogin = useSetRecoilState(userLoginCheck);
 
   useEffect(() => {
     // 로그인 상태 확인
@@ -82,7 +86,7 @@ const SignUpPage: NextPage = () => {
 
     if (!error) {
       resetInputs();
-
+      setIsLogin(true);
       alert("회원가입 완료");
       return router.push("/");
     }
