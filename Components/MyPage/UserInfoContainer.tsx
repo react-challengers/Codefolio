@@ -2,6 +2,7 @@ import {
   myPageContactEmail,
   myPagePhonNumber,
   myPageSelfProfile,
+  myPageUserId,
   myPageUserName,
   userLoginCheck,
 } from "@/lib/recoil";
@@ -15,27 +16,35 @@ import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
 
-/**
- * @TODO 회원가입에 user-profile row 추가 기능 확인하면 USER_ID 상수를 삭제하고 서버 데이터를 활용합니다.
- * @TODO SelfProfileWrapper 최대 3줄로 제한하기
- */
+type BackgroundColor = {
+  background_color: string;
+};
 
-const USER_ID = "dbabf656-18e8-484d-aac9-e5065667a31a";
+/**
+ * @TODO SelfProfileWrapper 최대 3줄로 제한하기
+ * @TODO 잠시 "허다은"으로 이름이 있는 문제 해결하기
+ */
 
 const UserInfoContainer = () => {
   const [userName, setUserName] = useRecoilState(myPageUserName);
   const [contactEmail, setContactEmail] = useRecoilState(myPageContactEmail);
   const [selfProfile, setSelfProfile] = useRecoilState(myPageSelfProfile);
   const phone = useRecoilValue(myPagePhonNumber);
+  const [userId, setUserId] = useRecoilState(myPageUserId);
 
   const [isEditing, setIsEditing] = useState(false);
 
   const getUserProfile = async () => {
-    const { data: userProfile } = await supabase
+    const { data, error: getUserIdError } = await supabase.auth.getUser();
+    if (getUserIdError || !data.user?.email) return;
+
+    const { data: userProfile, error } = await supabase
       .from("user-profile")
-      .select()
-      .eq("id", USER_ID)
+      .select("*")
+      .eq("user_id", data.user?.email)
       .single();
+
+    if (error) return;
     const {
       contact_email: contactEmailData,
       user_name: userNameData,
@@ -44,11 +53,12 @@ const UserInfoContainer = () => {
     setUserName(userNameData);
     setContactEmail(contactEmailData);
     setSelfProfile(selfProfileData);
+    setUserId(data.user?.email as string);
   };
 
   useEffect(() => {
     getUserProfile();
-  }, [setUserName, setContactEmail, setSelfProfile]);
+  }, [setUserName, setContactEmail, setSelfProfile, userId]);
 
   const handleUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
@@ -60,9 +70,10 @@ const UserInfoContainer = () => {
     setSelfProfile(e.target.value);
   };
 
-  const userInfo: Omit<UserProfileType, "id"> = {
+  // 잠시 타입 결합으로 해결합니다.
+  const userInfo: Omit<UserProfileType, "id"> & BackgroundColor = {
     // id: "uuid",
-    user_id: "nno3onn@naver.com",
+    user_id: userId,
     user_name: userName,
     contact_email: contactEmail,
     gender: "여자",
@@ -75,17 +86,17 @@ const UserInfoContainer = () => {
     birth_year: "1997",
     profile_image: "",
     self_profile: selfProfile,
+    background_color: "#ffffff",
   };
 
   const handleIsEditing = async () => {
     // 갱신된 데이터 서버에 반영
     if (isEditing) {
       setIsEditing(false);
-      const { error } = await supabase
+      await supabase
         .from("user-profile")
         .update(userInfo)
-        .eq("id", USER_ID);
-      console.log(error);
+        .eq("user_id", userId);
     } else {
       setIsEditing(true);
     }
@@ -207,6 +218,7 @@ const SelfProfileWrapper = styled.div`
   border: 1px solid lightgrey;
   line-height: 1.5rem;
   text-overflow: ellipsis;
+  width: 64rem;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
