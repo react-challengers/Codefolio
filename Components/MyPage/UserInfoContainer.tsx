@@ -9,7 +9,7 @@ import {
 import supabase from "@/lib/supabase";
 import { Field } from "@/types/enums";
 import Image from "next/image";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -34,29 +34,30 @@ const UserInfoContainer = () => {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const getUserProfile = async () => {
-    const { data, error: getUserIdError } = await supabase.auth.getUser();
-    if (getUserIdError || !data.user?.email) return;
-
-    const { data: userProfile, error } = await supabase
-      .from("user-profile")
-      .select("*")
-      .eq("user_id", data.user?.email)
-      .single();
-
-    if (error) return;
-    const {
-      contact_email: contactEmailData,
-      user_name: userNameData,
-      self_profile: selfProfileData,
-    } = userProfile;
-    setUserName(userNameData);
-    setContactEmail(contactEmailData);
-    setSelfProfile(selfProfileData);
-    setUserId(data.user?.email as string);
-  };
+  const userNameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    const getUserProfile = async () => {
+      const { data, error: getUserIdError } = await supabase.auth.getUser();
+      if (getUserIdError || !data.user?.email) return;
+
+      const { data: userProfile, error } = await supabase
+        .from("user-profile")
+        .select("*")
+        .eq("user_id", data.user?.email)
+        .single();
+
+      if (error) return;
+      const {
+        contact_email: contactEmailData,
+        user_name: userNameData,
+        self_profile: selfProfileData,
+      } = userProfile;
+      setUserName(userNameData);
+      setContactEmail(contactEmailData);
+      setSelfProfile(selfProfileData);
+      setUserId(data.user?.email as string);
+    };
     getUserProfile();
   }, [setUserName, setContactEmail, setSelfProfile, userId]);
 
@@ -99,6 +100,8 @@ const UserInfoContainer = () => {
         .eq("user_id", userId);
     } else {
       setIsEditing(true);
+      userNameRef.current?.focus();
+      console.log("userName", userNameRef.current);
     }
   };
 
@@ -139,15 +142,19 @@ const UserInfoContainer = () => {
         </IconWrapper>
         <TextWrapper>
           {isEditing ? (
-            <>
-              <UserNameInput value={userName} onChange={handleUserName} />
+            <InputWrapper>
+              <UserNameInput
+                value={userName}
+                onChange={handleUserName}
+                ref={userNameRef}
+              />
               <EmailInput value={contactEmail} onChange={handleContactEmail} />
               <SelfProfileInput
                 value={selfProfile}
                 onChange={handleSelfProfile}
                 rows={3}
               />
-            </>
+            </InputWrapper>
           ) : (
             <>
               <UserNameWrapper>{userName}</UserNameWrapper>
@@ -217,41 +224,45 @@ const SelfProfileWrapper = styled.div`
   padding: 1.25rem;
   border: 1px solid lightgrey;
   line-height: 1.5rem;
-  text-overflow: ellipsis;
   width: 64rem;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
 `;
 
 // isEditing true
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const UserNameInput = styled.input`
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
-  width: calc(100% - 2rem);
-  padding: 1rem;
-  border-radius: 0.25rem;
-  border: solid 1px gray;
+  font-size: 1.5rem;
+  text-align: center;
+  width: 32rem;
+  border-width: 0 0 1px;
+  border-color: gray;
+  padding: 0.5rem 0;
+  margin: 0 0 0.5rem;
 `;
 
 const EmailInput = styled.input`
   color: gray;
-  margin-bottom: 0.75rem;
-  width: calc(100% - 2rem);
-  padding: 0.75rem 1rem;
-  border-radius: 0.25rem;
-  border: solid 1px gray;
+  width: 32rem;
+  text-align: center;
+  font-size: 1rem;
+  margin: 0 0 1rem;
+  border-width: 0 0 1px;
+  border-color: gray;
+  padding: 0.5rem 0;
+  margin: 0.5rem 0 1.25rem;
 `;
 
 const SelfProfileInput = styled.textarea`
-  padding: 1.25rem;
+  padding: 1.25rem 0;
   font-size: 1rem;
-  width: calc(100% - 2rem);
-  border-radius: 0.25rem;
-  border: solid 1px gray;
+  text-align: center;
+  height: calc(4.125rem - 2.5rem);
   width: 64rem;
+  border: 1px solid lightgrey;
   resize: none;
 `;
 
