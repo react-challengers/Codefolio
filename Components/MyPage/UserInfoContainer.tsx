@@ -48,7 +48,7 @@ const UserInfoContainer = () => {
 
   useEffect(() => {
     getUserProfile();
-  }, []);
+  }, [setUserName, setContactEmail, setSelfProfile]);
 
   const handleUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
