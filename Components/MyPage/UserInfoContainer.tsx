@@ -15,16 +15,13 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
 import color_fill from "../../public/icons/color_fill.svg";
 
 type BackgroundColor = {
   background_color: string;
-};
-
-type ImgDataUrlType = {
-  imgDataUrl: string | ArrayBuffer | null | undefined;
 };
 
 /**
@@ -56,8 +53,10 @@ const UserInfoContainer = () => {
       const { data: userProfile, error } = await supabase
         .from("user-profile")
         .select("*")
-        .eq("user_id", data.user?.email)
+        .eq("user_id", data.user.id)
         .single();
+
+      console.log(userProfile, error);
 
       if (error) return;
       const {
@@ -73,7 +72,6 @@ const UserInfoContainer = () => {
       setProfileImage(profileImageData);
     };
     getUserProfile();
-    console.log(userId, userName, userBackground, selfProfile);
   }, [setUserName, setContactEmail, setSelfProfile, userId]);
 
   const handleUserName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -136,20 +134,15 @@ const UserInfoContainer = () => {
     return router.push("/");
   };
 
-  const uploadImage = async (blob: File) => {
-    try {
-      const imgPath = crypto.randomUUID();
-      await supabase.storage.from("post-image").upload(imgPath, blob);
+  const uploadImage = async (file: File) => {
+    const imgPath = crypto.randomUUID();
+    await supabase.storage.from("post-image").upload(imgPath, file);
 
-      // 이미지 올리기
-      const urlResult = await supabase.storage
-        .from("post-image")
-        .getPublicUrl(imgPath);
-      return urlResult.data.publicUrl;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
+    // 이미지 올리기
+    const urlResult = await supabase.storage
+      .from("post-image")
+      .getPublicUrl(imgPath);
+    return urlResult.data.publicUrl;
   };
 
   const handleProfileImage = (e: ChangeEvent<HTMLInputElement>) => {
@@ -158,12 +151,10 @@ const UserInfoContainer = () => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async (uploadedBlob) => {
-      // base64 -> blob -> file
-      const imgDataUrl = uploadedBlob.target?.result; // data:image/jpeg;base64,/
-      const base64 = await fetch(`${imgDataUrl}`);
-      const blob = await base64.blob();
-      const blobFile = new File([blob], "name");
-      const publicImageURL = await uploadImage(blobFile);
+      const imgDataUrl = uploadedBlob.target?.result as string; // input의 파일을 base64로 받습니다.
+      if (!imgDataUrl) return;
+      const imgFile = await convertEase64ToFile(imgDataUrl);
+      const publicImageURL = await uploadImage(imgFile);
       if (!publicImageURL) return;
       setProfileImage(publicImageURL);
     };
