@@ -1,7 +1,7 @@
 import { largeCategoryState, subCategoryState } from "@/lib/recoil";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
@@ -23,6 +23,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   const [selectedDropDownItem, setSelectedDropDownItem] = useState(
     homeDropDownItems[0]
   );
+  const [filteredPosts, setFilteredPosts] = useState<PostType[]>([]);
   const [selectedLargeCategory, setSelectedLargeCategory] =
     useRecoilState(largeCategoryState);
   const [selectedSubCategory, setSelectedSubCategory] =
@@ -33,6 +34,28 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     queryFn: getAllPosts,
   });
 
+  // 카테고리 선택 시, 해당 카테고리에 맞는 포스트만 보여주기
+  const filterPosts = useMemo(() => {
+    if (allPostsData === undefined) return [];
+    if (
+      selectedLargeCategory.length !== 0 &&
+      selectedSubCategory.length === 0
+    ) {
+      return allPostsData.filter((post) =>
+        selectedLargeCategory.includes(post.large_category)
+      );
+    }
+    if (
+      selectedLargeCategory.length !== 0 &&
+      selectedSubCategory.length !== 0
+    ) {
+      return allPostsData.filter((post) =>
+        selectedSubCategory.includes(post.sub_category)
+      );
+    }
+    return allPostsData;
+  }, [allPostsData, selectedLargeCategory, selectedSubCategory]);
+
   useEffect(() => {
     if (router.query.id) {
       setIsModalOpen(true);
@@ -40,6 +63,11 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
       setIsModalOpen(false);
     }
   }, [router.query.id, setIsModalOpen]);
+
+  useEffect(() => {
+    const posts = filterPosts;
+    setFilteredPosts(posts);
+  }, [filterPosts]);
 
   const onClickDropDown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -102,7 +130,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         )}
       </HomeDropDownContainer>
       <HomeCardGrid>
-        {allPostsData?.map((post: PostType) => (
+        {filteredPosts?.map((post: PostType) => (
           <CardContainer
             key={post.id}
             onClick={() => {

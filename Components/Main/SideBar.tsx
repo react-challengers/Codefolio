@@ -16,25 +16,25 @@ const SideBar = () => {
     useRecoilState(subCategoryState);
 
   const largeCategoryItems = [
-    "Web",
-    "App",
-    "Software",
-    "Data",
-    "Web3",
-    "DevOps",
-    "IOT&Embedded",
-    "Security",
+    "웹",
+    "앱",
+    "소프트웨어",
+    "데이터",
+    "블록체인",
+    "데브옵스",
+    "IOT,임베디드",
+    "보안",
   ];
 
   const subCategoryItems: SubCategoryItemsType = {
-    Web: ["Front-End", "Back-End", "Full-Stack"],
-    App: ["iOS", "Android", "Flutter", "React Native"],
-    Software: ["사무자동화", "공장자동화", "ERP", "유니티", "언리얼"],
-    Data: ["데이터 엔지니어", "머신러닝 엔지니어", "데이터 사이언스"],
-    Web3: ["기타"],
-    DevOps: ["기타"],
-    "IOT&Embedded": ["기타"],
-    Security: ["기타"],
+    웹: ["프론트엔드", "백엔드", "풀스택"],
+    앱: ["안드로이드", "iOS", "리액트 네이티브", "플러터"],
+    소프트웨어: ["사무자동화", "공장자동화", "ERP", "유니티", "언리얼", "기타"],
+    데이터: ["데이터 엔지니어링", "머신러닝 엔지니어링", "데이터 사이언스"],
+    블록체인: ["블록체인"],
+    데브옵스: ["데브옵스"],
+    "IOT,임베디드": ["IOT,임베디드"],
+    보안: ["보안"],
   };
 
   const onClickSubCategory = (e: React.MouseEvent<HTMLDivElement>) => {
