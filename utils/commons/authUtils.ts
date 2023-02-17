@@ -16,8 +16,8 @@ export const checkUserName = (userName: string): boolean => {
 };
 
 export const postUserProfile = async (
-  userProfileEmail: string | undefined,
   userProfileUserId: string | undefined,
+  userProfileEmail: string | undefined,
   userProfileUserName: string | undefined
 ) => {
   const { error } = await supabase.from("user-profile").insert({
