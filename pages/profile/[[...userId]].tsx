@@ -16,6 +16,7 @@ import {
   myPageSelfProfile,
   myPageUserName,
   myPagePhonNumber,
+  myPageBackgroundColor,
 } from "@/lib/recoil";
 
 const tabList = ["프로젝트", "팔로잉", "북마크", "좋아요", "보관함", "프로필"];
@@ -27,6 +28,7 @@ const ProfilePage: NextPage = () => {
   const contactEmail = useRecoilValue(myPageContactEmail);
   const selfProfile = useRecoilValue(myPageSelfProfile);
   const phone = useRecoilValue(myPagePhonNumber);
+  const userBackground = useRecoilValue(myPageBackgroundColor);
 
   const userInfo: Omit<UserProfileType, "id"> = {
     user_id: "nno3onn@naver.com",
@@ -42,6 +44,7 @@ const ProfilePage: NextPage = () => {
     birth_year: "1997",
     profile_image: "",
     self_profile: selfProfile,
+    background_color: userBackground,
   };
 
   const [itemList, setItemList] = useState<PostType[]>([]);

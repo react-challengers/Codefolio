@@ -4,6 +4,7 @@ import {
   myPageSelfProfile,
   myPageUserName,
   userLoginCheck,
+  myPageBackgroundColor,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import { Field } from "@/types/enums";
@@ -25,7 +26,9 @@ const UserInfoContainer = () => {
   const [contactEmail, setContactEmail] = useRecoilState(myPageContactEmail);
   const [selfProfile, setSelfProfile] = useRecoilState(myPageSelfProfile);
   const phone = useRecoilValue(myPagePhonNumber);
-  const [userBackground, setUserBackground] = useState("");
+  const [userBackground, setUserBackground] = useRecoilState(
+    myPageBackgroundColor
+  );
 
   const [isEditing, setIsEditing] = useState(false);
 
