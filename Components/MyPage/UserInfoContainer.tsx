@@ -27,6 +27,7 @@ type BackgroundColor = {
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한하기
  * @TODO 잠시 "허다은"으로 이름이 있는 문제 해결하기
+ * @TODO 프로필 데이터 react-query를 캐싱하기
  */
 
 const UserInfoContainer = () => {
@@ -62,15 +63,24 @@ const UserInfoContainer = () => {
         user_name: userNameData,
         self_profile: selfProfileData,
         profile_image: profileImageData,
+        background_color: backgroundColor,
       } = userProfile;
-      setUserId(data.user?.email as string);
+      setUserId(data.user.id as string);
       setUserName(userNameData);
       setContactEmail(contactEmailData);
       setSelfProfile(selfProfileData);
       setProfileImage(profileImageData);
+      setUserBackground(backgroundColor);
     };
     getUserProfile();
-  }, [setUserName, setContactEmail, setSelfProfile, userId]);
+  }, [
+    setUserName,
+    setContactEmail,
+    setSelfProfile,
+    setUserBackground,
+    setUserId,
+    setProfileImage,
+  ]);
 
   const handleUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
@@ -106,6 +116,7 @@ const UserInfoContainer = () => {
   };
 
   const handleIsEditing = async () => {
+    console.log(userInfo);
     // 갱신된 데이터 서버에 반영
     if (isEditing) {
       setIsEditing(false);
