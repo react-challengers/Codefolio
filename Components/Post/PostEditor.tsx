@@ -42,7 +42,6 @@ const PostEditor = ({ editorRef }: PostEditorProps) => {
     const url = await uploadImage(img); // 업로드된 이미지 서버 url
     if (!url) return;
     dropImage(url, `${blob.name}`); // 에디터에 이미지 추가
-    console.log("이미지 추가");
   }, []);
 
   useEffect(() => {
