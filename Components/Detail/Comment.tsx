@@ -1,12 +1,33 @@
 import styled from "styled-components";
 import CommentInput from "./CommentInput";
 import CommentList from "./CommentList";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import supabase from "@/lib/supabase";
 
 const Comment = () => {
+  const router = useRouter();
+  const POST_ID = router.query.id;
+  const [currentUser, setCurrentUser] = useState(false);
+
+  useEffect(() => {
+    // 로그인 상태 확인
+    const LoginState = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setCurrentUser(true);
+      } else {
+        setCurrentUser(false);
+      }
+    };
+
+    LoginState();
+  }, []);
+
   return (
     <CommentContainer>
-      <CommentInput />
-      <CommentList />
+      {currentUser && <CommentInput POST_ID={POST_ID} />}
+      <CommentList POST_ID={POST_ID} />
     </CommentContainer>
   );
 };
