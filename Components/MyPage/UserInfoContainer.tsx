@@ -7,13 +7,14 @@ import {
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import { Field } from "@/types/enums";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
+import color_fill from "../../public/icons/color_fill.svg";
 
 /**
  * @TODO 업데이트 한 프로필을 서버에 반영합니다.
@@ -24,6 +25,7 @@ const UserInfoContainer = () => {
   const [contactEmail, setContactEmail] = useRecoilState(myPageContactEmail);
   const [selfProfile, setSelfProfile] = useRecoilState(myPageSelfProfile);
   const phone = useRecoilValue(myPagePhonNumber);
+  const [userBackground, setUserBackground] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -37,10 +39,12 @@ const UserInfoContainer = () => {
       contact_email: contactEmailData,
       user_name: userNameData,
       self_profile: selfProfileData,
+      background_color: backgroundColorData,
     } = userProfile;
     setUserName(userNameData);
     setContactEmail(contactEmailData);
     setSelfProfile(selfProfileData);
+    setUserBackground(backgroundColorData);
   };
 
   useEffect(() => {
@@ -57,6 +61,10 @@ const UserInfoContainer = () => {
     setSelfProfile(e.target.value);
   };
 
+  const onChangeBackgroundColor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserBackground(e.target.value);
+  };
+
   const userInfo: Omit<UserProfileType, "id"> = {
     // id: "uuid",
     user_id: "nno3onn@naver.com",
@@ -71,6 +79,7 @@ const UserInfoContainer = () => {
     is_public: true,
     birth_year: "1997",
     profile_image: "",
+    background_color: userBackground,
     self_profile: selfProfile,
   };
 
@@ -103,7 +112,7 @@ const UserInfoContainer = () => {
 
   return (
     <InfoContainer>
-      <Banner />
+      <Banner userBackground={userBackground} />
       <UserInfoWrapper>
         <ProfileImageWrapper>
           <ProfileImage alt="유저 프로필" page="myPage" />
@@ -132,6 +141,19 @@ const UserInfoContainer = () => {
                 value={selfProfile}
                 onChange={handleSelfProfile}
               />
+              <ImgLabel htmlFor="background-color-picker">
+                <ImgIcon
+                  src={color_fill}
+                  alt="배경색 지정 아이콘"
+                  width={36}
+                  height={36}
+                />
+                <UserBackgroundColorPicker
+                  id="background-color-picker"
+                  type="color"
+                  onChange={onChangeBackgroundColor}
+                />
+              </ImgLabel>
             </>
           ) : (
             <>
@@ -221,6 +243,19 @@ const SelfProfileInput = styled.textarea`
   font-size: 1rem;
   border: 1px solid lightgrey;
   width: 64rem;
+`;
+const ImgLabel = styled.label`
+  position: absolute;
+  right: 0;
+  top: 0;
+`;
+const ImgIcon = styled(Image)<StaticImageData>`
+  cursor: pointer;
+`;
+const UserBackgroundColorPicker = styled.input`
+  opacity: 0;
+  width: 0;
+  height: 0;
 `;
 
 export default UserInfoContainer;
