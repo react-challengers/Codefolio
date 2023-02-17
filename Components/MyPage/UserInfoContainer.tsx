@@ -26,7 +26,6 @@ type BackgroundColor = {
 
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한하기
- * @TODO 잠시 "허다은"으로 이름이 있는 문제 해결하기
  * @TODO 프로필 데이터 react-query를 캐싱하기
  */
 
@@ -116,7 +115,6 @@ const UserInfoContainer = () => {
   };
 
   const handleIsEditing = async () => {
-    console.log(userInfo);
     // 갱신된 데이터 서버에 반영
     if (isEditing) {
       setIsEditing(false);

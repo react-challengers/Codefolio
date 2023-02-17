@@ -1,4 +1,11 @@
-import { myPagePhonNumber } from "@/lib/recoil";
+import {
+  myPageCareer,
+  myPageGender,
+  myPageIsPublic,
+  myPagePhonNumber,
+  myPageSkills,
+} from "@/lib/recoil";
+import checkIsPhoneNumber from "@/utils/commons/checkIsPhoneNumber";
 import { ChangeEvent, Dispatch, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
@@ -7,6 +14,11 @@ import PositionTag from "./PositionTag";
 import ProfileContainer from "./ProfileContainer";
 import { ContentContainer, ContentWrapper } from "./ShowProfileContainer";
 import SwitchButton from "./SwitchButton";
+
+/**
+ * @TODO field, birthYear recoil state 연결
+ * @TODO 서버에 데이터 저장
+ */
 
 const fieldList = [
   "웹",
@@ -19,10 +31,6 @@ const fieldList = [
   "IOT/임베디드",
 ];
 
-// 앞 3자리는 010 뒤 8자리는 0~9에 해당하는지 유효성을 검증합니다.
-const checkIsPhoneNumber = (phoneNumber: string): boolean =>
-  !/^[0]{1}[1]{1}[0]{1}[0-9]{8}/.test(phoneNumber);
-
 interface EditProfileContainerProps {
   userInfo: Omit<UserProfileType, "id">;
   setIsEditing: Dispatch<React.SetStateAction<boolean>>;
@@ -33,7 +41,6 @@ const EditProfileContainer = ({
   setIsEditing,
 }: EditProfileContainerProps) => {
   const {
-    gender,
     birth_year: birthYear,
     field: oldField,
     skills,
@@ -42,13 +49,16 @@ const EditProfileContainer = ({
   } = userInfo;
 
   const [editPhone, changeEditPhone] = useRecoilState(myPagePhonNumber);
+  const [currentItem, setCurrentItem] = useRecoilState(myPageGender);
+  const [editIsPublic, setEditIsPublic] = useRecoilState(myPageIsPublic);
+  // const [activeField, setActiveField] = useRecoilState(myPageField);
   const [activeField, setActiveField] = useState([...oldField]);
-  const [currentItem, setCurrentItem] = useState(gender);
-  const [editIsPublic, setEditIsPublic] = useState(isPublic);
-  const [editSkills, setEditSkills] = useState(skills);
-  const [editbirthYear, setEditBirthYear] = useState(birthYear);
-  const [editCareer, setEditCareer] = useState(career);
+  const [editSkills, setEditSkills] = useRecoilState(myPageSkills);
+  // const [editBirthYear, setEditBirthYear] = useRecoilState(myPageBirthYear);
+  const [editBirthYear, setEditBirthYear] = useState(birthYear);
+  const [editCareer, setEditCareer] = useRecoilState(myPageCareer);
 
+  // local state로 편집 상태 제어
   const [isPhoneNumber, setIsPhoneNumber] = useState(false);
 
   const clickField = (field: string) => {
@@ -61,6 +71,8 @@ const EditProfileContainer = ({
       setActiveField([...activeField, field]);
     }
   };
+
+  // const handleBirthYear = () => {}
 
   const handleEditPhone = (e: ChangeEvent<HTMLInputElement>) => {
     changeEditPhone(e.target.value);
@@ -83,7 +95,7 @@ const EditProfileContainer = ({
               <p>출생년도</p>
               <DropDown
                 type="birth_year"
-                editbirthYear={editbirthYear}
+                editBirthYear={editBirthYear}
                 setEditBirthYear={setEditBirthYear}
               />
             </InfoWrapper>

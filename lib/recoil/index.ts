@@ -16,6 +16,7 @@ import {
 import userLoginCheck from "@/lib/recoil/userLoginCheck";
 
 import {
+  myPageUserProfile,
   myPageUserName,
   myPageContactEmail,
   myPageSelfProfile,
@@ -23,6 +24,12 @@ import {
   myPageUserId,
   myPageBackgroundColor,
   myPageProfileImage,
+  myPageGender,
+  myPageBirthYear,
+  myPageCareer,
+  myPageField,
+  myPageIsPublic,
+  myPageSkills,
 } from "@/lib/recoil/myPageAtoms";
 
 export {
@@ -42,6 +49,7 @@ export {
   postPublic,
   postContent,
   // myPage
+  myPageUserProfile,
   myPageUserName,
   myPageSelfProfile,
   myPageContactEmail,
@@ -49,4 +57,10 @@ export {
   myPageUserId,
   myPageBackgroundColor,
   myPageProfileImage,
+  myPageGender,
+  myPageBirthYear,
+  myPageCareer,
+  myPageField,
+  myPageIsPublic,
+  myPageSkills,
 };

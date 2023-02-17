@@ -43,6 +43,23 @@ enum SoftWareCategory {
   UNREAL = "언리얼",
 }
 
+const rangeType20 = [...Array(21).keys()].map((item) => {
+  if (item === 0) return "신입";
+  if (item === 20) return "20년차 이상";
+  return `${item}년차`;
+});
+
+// Object.values(rangeType20) as const;
+
+function strEnum<T extends string>(o: Array<T>): { [K in T]: K } {
+  return o.reduce((res, key) => {
+    res[key] = key;
+    return res;
+  }, Object.create(null));
+}
+
+const Career = strEnum(rangeType20);
+
 export {
   Field,
   WebSubCategory,
@@ -50,4 +67,5 @@ export {
   AppSubCategory,
   ETCSubCategory,
   SoftWareCategory,
+  Career,
 };
