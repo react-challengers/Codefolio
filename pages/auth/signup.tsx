@@ -85,10 +85,11 @@ const SignUpPage: NextPage = () => {
     });
 
     if (!error) {
-      const userProfileUserId: string | undefined = data.user?.email;
+      const userProfileUserId: string | undefined = data.user?.id;
+      const userProfileEmail: string | undefined = data.user?.email;
       const userProfileUserName: string | undefined =
         data.user?.user_metadata.user_name;
-      postUserProfile(userProfileUserId, userProfileUserName);
+      postUserProfile(userProfileUserId, userProfileEmail, userProfileUserName);
       setIsLogin(true);
       alert("회원가입 완료");
       return router.push("/");
