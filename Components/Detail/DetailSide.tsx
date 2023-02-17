@@ -24,8 +24,6 @@ const DetailSide = ({
   members,
   userId,
 }: DetailSideProps) => {
-  const date = 2;
-
   const getAuthor = async () => {
     const { data, error } = await supabase
       .from("user-profile")
@@ -44,7 +42,9 @@ const DetailSide = ({
       <DetailSideContainer>
         <div>
           <Title>프로젝트 기간</Title>
-          <Description>{date}개월</Description>
+          <Description>
+            {progressDate[0]} ~ {progressDate[1]}
+          </Description>
         </div>
 
         <DetailSideWrapper>
