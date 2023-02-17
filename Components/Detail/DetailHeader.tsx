@@ -7,6 +7,7 @@ import styled from "styled-components";
 import ShowMoreModal from "./ShowMoreModal";
 
 const DetailHeader = () => {
+  const router = useRouter();
   const {
     query: { id: postId }, // c078f3bf-4e86-44a2-a672-583f36c1aa8f
   } = useRouter();
@@ -22,6 +23,12 @@ const DetailHeader = () => {
     setUser(data.user);
   };
 
+  const isAnonymous = () => {
+    if (!user) {
+      router.push("/auth/login");
+    }
+  };
+
   const getBookmark = async () => {
     const { data } = await supabase
       .from("bookmark")
@@ -33,6 +40,7 @@ const DetailHeader = () => {
   };
 
   const addBookmark = async () => {
+    isAnonymous();
     const { error } = await supabase
       .from("bookmark")
       .insert({ post_id: postId, user_id: user?.id });
@@ -42,6 +50,7 @@ const DetailHeader = () => {
   };
 
   const deleteBookmark = async () => {
+    isAnonymous();
     const { error } = await supabase
       .from("bookmark")
       .delete()
@@ -63,22 +72,22 @@ const DetailHeader = () => {
   };
 
   const addLike = async () => {
+    isAnonymous();
     const { error } = await supabase
       .from("like")
       .insert({ post_id: postId, user_id: user?.id });
-    console.log(error);
     if (!error) {
       setIsLike(true);
     }
   };
 
   const deleteLike = async () => {
+    isAnonymous();
     const { error } = await supabase
       .from("like")
       .delete()
       .eq("user_id", user?.id)
       .eq("post_id", postId);
-    console.log(error);
     if (!error) {
       setIsLike(false);
     }
@@ -109,7 +118,6 @@ const DetailHeader = () => {
   return (
     <DetailHeaderContainer>
       <DetailHeaderWrapper>
-        <Image src="/icons/like.svg" width={36} height={36} alt="좋아요 버튼" />
         <BookmarkButton
           src="/icons/bookmark.svg"
           width={36}
