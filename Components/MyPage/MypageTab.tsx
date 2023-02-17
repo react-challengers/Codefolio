@@ -32,6 +32,7 @@ interface TabWrapperProps {
 }
 
 const TabWrapper = styled.div<TabWrapperProps>`
+  width: 9.8rem;
   text-align: center;
   padding: 1rem;
   border-bottom: 0.125rem solid
