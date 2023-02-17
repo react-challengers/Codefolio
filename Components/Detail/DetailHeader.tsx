@@ -25,7 +25,6 @@ const DetailHeader = () => {
   };
 
   const addBookmark = async () => {
-    isAnonymous();
     const { error } = await supabase
       .from("bookmark")
       .insert({ post_id: postId, user_id: user?.id });
@@ -35,7 +34,6 @@ const DetailHeader = () => {
   };
 
   const deleteBookmark = async () => {
-    isAnonymous();
     const { error } = await supabase
       .from("bookmark")
       .delete()
@@ -47,7 +45,6 @@ const DetailHeader = () => {
   };
 
   const addLike = async () => {
-    isAnonymous();
     const { error } = await supabase
       .from("like")
       .insert({ post_id: postId, user_id: user?.id });
@@ -57,7 +54,6 @@ const DetailHeader = () => {
   };
 
   const deleteLike = async () => {
-    isAnonymous();
     const { error } = await supabase
       .from("like")
       .delete()
@@ -102,6 +98,7 @@ const DetailHeader = () => {
   }, []);
 
   const clickBookmarkButton = async () => {
+    isAnonymous();
     if (isBookmark) {
       deleteBookmark();
     } else {
@@ -110,6 +107,7 @@ const DetailHeader = () => {
   };
 
   const clickLikeButton = async () => {
+    isAnonymous();
     if (isLike) {
       deleteLike();
     } else {
