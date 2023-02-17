@@ -6,7 +6,7 @@ import "@toast-ui/editor/dist/i18n/ko-kr";
 
 import { Editor } from "@toast-ui/react-editor";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import { RefObject, useEffect } from "react";
+import { RefObject, useCallback, useEffect } from "react";
 import supabase from "@/lib/supabase";
 import imageCompression from "browser-image-compression";
 import { useRecoilState } from "recoil";
@@ -33,25 +33,25 @@ const PostEditor = ({ editorRef }: PostEditorProps) => {
     ["scrollSync"],
   ];
 
+  // 이미지 추가
+  type HookCallback = (url: string, text?: string) => void;
+
+  const addImage = useCallback(async (blob: File, dropImage: HookCallback) => {
+    const img = await compressImg(blob); // 이미지 압축
+    if (!img) return;
+    const url = await uploadImage(img); // 업로드된 이미지 서버 url
+    if (!url) return;
+    dropImage(url, `${blob.name}`); // 에디터에 이미지 추가
+    console.log("이미지 추가");
+  }, []);
+
   useEffect(() => {
     if (editorRef.current) {
       const editorIns = editorRef.current.getInstance();
       editorIns.removeHook("addImageBlobHook");
       editorIns.addHook("addImageBlobHook", addImage);
     }
-  }, []);
-
-  // ------------- image Function ------------- // 에디터에 이미지 추가
-
-  type HookCallback = (url: string, text?: string) => void;
-
-  const addImage = async (blob: File, dropImage: HookCallback) => {
-    const img = await compressImg(blob); // 이미지 압축
-    if (!img) return;
-    const url = await uploadImage(img); // 업로드된 이미지 서버 url
-    if (!url) return;
-    dropImage(url, `${blob.name}`); // 에디터에 이미지 추가
-  };
+  }, [editorRef, addImage]);
 
   // 이미지 업로드
 

@@ -26,14 +26,14 @@ const Login: NextPage = () => {
   useEffect(() => {
     // 로그인 상태 확인
     const LoginState = async () => {
-      const { data, error } = await supabase.auth.getSession();
+      const { data } = await supabase.auth.getSession();
       if (data.session !== null) {
         router.push("/");
       }
     };
 
     LoginState();
-  }, []);
+  }, [router]);
 
   // const kakaoLogin = async () => {
   //   // 카카오 초기화
