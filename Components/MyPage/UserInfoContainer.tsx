@@ -8,7 +8,7 @@ import {
 import supabase from "@/lib/supabase";
 import { Field } from "@/types/enums";
 import Image from "next/image";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -29,6 +29,9 @@ const UserInfoContainer = () => {
   const phone = useRecoilValue(myPagePhonNumber);
 
   const [isEditing, setIsEditing] = useState(false);
+
+  const uploadedImage = useRef<HTMLInputElement>(null);
+  const imageUploader = useRef(null);
 
   const getUserProfile = async () => {
     const { data: userProfile } = await supabase
@@ -104,12 +107,53 @@ const UserInfoContainer = () => {
     return router.push("/");
   };
 
+  const uploadImage = async (blob: File) => {
+    try {
+      const imgPath = crypto.randomUUID();
+      await supabase.storage.from("post-image").upload(imgPath, blob);
+
+      // 이미지 올리기
+      const { data } = await supabase.storage
+        .from("post-image")
+        .getPublicUrl(imgPath);
+      console.log("upload image", data);
+      return data.publicUrl;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+
+  const handleProfileImage = (e: ChangeEvent<HTMLInputElement>) => {
+    const [file] = e.target.files!;
+    if (!file) return;
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = async (uploadedBlob) => {
+      const imgDataUrl = uploadedBlob.target?.result; // data:image/jpeg;base64,/
+      // 타입 지정 문제
+      uploadImage(imgDataUrl);
+      // recoil로 set하기
+    };
+  };
+
   return (
     <InfoContainer>
       <Banner />
       <UserInfoWrapper>
         <ProfileImageWrapper>
-          <ProfileImage alt="유저 프로필" page="myPage" />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleProfileImage}
+            ref={imageUploader}
+            multiple={false}
+          />
+          <ProfileImage
+            alt="유저 프로필"
+            page="myPage"
+            src="https://xxfgrnzupwpguxifhwsq.supabase.co/storage/v1/object/public/profile-imgage/1ad99168-f160-4114-bdd8-25ccdc26053c_screenshot.jpg?t=2023-02-17T05%3A02%3A17.171Z"
+          />
         </ProfileImageWrapper>
         <IconWrapper>
           <IconBox onClick={() => handleIsEditing()}>
