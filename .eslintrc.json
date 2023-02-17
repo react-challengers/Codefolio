@@ -33,6 +33,7 @@
     ],
     // no-extraneous-dependencies 오류가 발생해 임시로 해제
     "import/no-extraneous-dependencies": 0,
-    "@typescript-eslint/ban-ts-comment": 0
+    "@typescript-eslint/ban-ts-comment": 0,
+    "prettier/prettier": ["error", { "endOfLine": "auto" }]
   }
 }
