@@ -4,8 +4,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
-import { email_check, password_check } from "@/utils/commons/authValidate";
+import { checkEmail, checkPassword } from "@/utils/commons/authUtils";
 import { ValidateText, AuthButton, AuthInput } from "@/Components/Common/Auth";
+import { useSetRecoilState } from "recoil";
+import { userLoginCheck } from "@/lib/recoil";
 
 // import { kakaoInit } from "@/utils/APIs/socialLogin";
 
@@ -23,17 +25,19 @@ const Login: NextPage = () => {
   const [emailValidate, setEmailValidate] = useState(true);
   const [passwordValidate, setPasswordValidate] = useState(true);
 
+  const setIsLogin = useSetRecoilState(userLoginCheck);
+
   useEffect(() => {
     // 로그인 상태 확인
     const LoginState = async () => {
-      const { data, error } = await supabase.auth.getSession();
+      const { data } = await supabase.auth.getSession();
       if (data.session !== null) {
         router.push("/");
       }
     };
 
     LoginState();
-  }, []);
+  }, [router]);
 
   // const kakaoLogin = async () => {
   //   // 카카오 초기화
@@ -65,13 +69,13 @@ const Login: NextPage = () => {
       return alert("이메일과 비밀번호 모두 입력해주세요.");
     }
 
-    if (!email_check(email)) {
+    if (!checkEmail(email)) {
       setEmailValidate(false);
       return alert("이메일의 형식을 확인해주세요.");
     }
     setEmailValidate(true);
 
-    if (!password_check(password)) {
+    if (!checkPassword(password)) {
       setPasswordValidate(false);
       return alert("비밀번호는 8자리 이상 입니다. ");
     }
@@ -82,6 +86,7 @@ const Login: NextPage = () => {
       password,
     });
     if (!error) {
+      setIsLogin(true);
       return router.push("/");
     }
     return alert("로그인 실패");
@@ -92,6 +97,7 @@ const Login: NextPage = () => {
       provider: "google",
     });
     if (!error) {
+      setIsLogin(true);
       router.push("/");
     } else {
       alert("구글 로그인 실패");
@@ -103,6 +109,7 @@ const Login: NextPage = () => {
       provider: "github",
     });
     if (!error) {
+      setIsLogin(true);
       router.push("/");
     } else {
       alert("깃헙 로그인 실패");

@@ -51,8 +51,23 @@ const UserInfoContainer = () => {
   };
 
   useEffect(() => {
+    const getUserProfile = async () => {
+      const { data: userProfile } = await supabase
+        .from("user-profile")
+        .select()
+        .eq("id", "dbabf656-18e8-484d-aac9-e5065667a31a")
+        .single();
+      const {
+        contact_email: contactEmailData,
+        user_name: userNameData,
+        self_profile: selfProfileData,
+      } = userProfile;
+      setUserName(userNameData);
+      setContactEmail(contactEmailData);
+      setSelfProfile(selfProfileData);
+    };
     getUserProfile();
-  }, []);
+  }, [setUserName, setContactEmail, setSelfProfile]);
 
   const handleUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);

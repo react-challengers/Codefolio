@@ -4,14 +4,21 @@ import supabase from "@/lib/supabase";
 import useInput from "@/hooks/common/useInput";
 import ProfileImage from "../Common/ProfileImage";
 import DefaultButton from "../Common/DefaultButton";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+
 /**
  * @todo postComment 구현 필요
  * @todo alert는 임시 입니다. 커스텀 필요
  */
-const CommentInput = () => {
+
+interface CommentInputProps {
+  POST_ID: string | string[] | undefined;
+  USER_ID: string | undefined;
+}
+
+const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
   const queryClient = useQueryClient();
-  const POST_ID = "9157621b-2a0d-4059-b0de-5d77b591fe09";
-  const USER_ID = "7af6cc75-50f7-4901-9691-36657cb274b5";
 
   const [commentInput, setCommentInput, resetCommentInput] = useInput();
   const { mutate: createComment } = useMutation(

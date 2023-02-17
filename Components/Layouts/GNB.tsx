@@ -11,21 +11,19 @@ const GNB = () => {
   const [userCheck, setUserCheck] = useRecoilState(recoilUserLoginCheck);
 
   useEffect(() => {
+    const getSessionUser = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        throw new Error(error.message);
+      }
+      if (data.session) {
+        setUserCheck(true);
+      } else {
+        setUserCheck(false);
+      }
+    };
     getSessionUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const getSessionUser = async () => {
-    const { data, error } = await supabase.auth.getSession();
-    if (error) {
-      throw new Error(error.message);
-    }
-    if (data.session) {
-      setUserCheck(true);
-    } else {
-      setUserCheck(false);
-    }
-  };
+  }, [setUserCheck]);
 
   return (
     <GNBContainer>

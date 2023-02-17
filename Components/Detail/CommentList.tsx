@@ -7,11 +7,14 @@ interface CommentType {
   post_id: string;
   user_id: string;
   content: string;
+  created_at: string;
 }
 
-const CommentList = () => {
-  const POST_ID = "9157621b-2a0d-4059-b0de-5d77b591fe09";
+interface CommentListProps {
+  POST_ID: string | string[] | undefined;
+}
 
+const CommentList = ({ POST_ID }: CommentListProps) => {
   const getComments = async () => {
     const res = await supabase
       .from("comment")

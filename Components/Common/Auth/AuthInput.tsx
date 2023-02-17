@@ -6,12 +6,12 @@ const AuthInput = styled.input`
 
   border-width: 0 0 1px;
   border-color: black;
-
+  outline: none;
   font-size: 1rem;
 
   :focus {
     border-color: blue;
-    border-width: 0 0 2px;
+    border-width: 0 0 3px;
   }
 `;
 

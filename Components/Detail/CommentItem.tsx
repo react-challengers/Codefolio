@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
+import viewCreateAt from "@/utils/commons/viewCreateAt";
 import DefaultButton from "../Common/DefaultButton";
 import ProfileImage from "../Common/ProfileImage";
 
@@ -14,15 +15,32 @@ interface CommentType {
   post_id: string;
   user_id: string;
   content: string;
+  created_at: string;
 }
+
 interface CommentItemProps {
   comment: CommentType;
 }
 
 const CommentItem = ({ comment }: CommentItemProps) => {
+  const queryClient = useQueryClient();
+
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
-  const queryClient = useQueryClient();
+  const [currentUSERID, setCurrentUSERID] = useState<string | undefined>("");
+
+  useEffect(() => {
+    // 로그인 상태 확인
+    const LoginState = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data) {
+        setCurrentUSERID(data.session?.user.email);
+      }
+    };
+
+    LoginState();
+  }, []);
+
   const { mutate: deleteComment } = useMutation(
     (): any => supabase.from("comment").delete().eq("id", comment.id),
     {
@@ -31,6 +49,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
       },
     }
   );
+
   const { mutate: editComment } = useMutation(
     (): any =>
       supabase
@@ -56,13 +75,16 @@ const CommentItem = ({ comment }: CommentItemProps) => {
     setIsEditing((prev) => !prev);
   };
 
+  const commentDateView = viewCreateAt(comment.created_at);
+
   return (
     <CommentContainer>
-      <ProfileImage alt="" page="detailPage" />
+      <ProfileImage alt="프로필이미지" page="detailPage" />
       <TextBox>
         <CommentTitle>
           <CommentWrapper>
-            <h3> Alex </h3> <span> 5시간 전 </span>
+            <h3> {comment.user_id} </h3>
+            <span> {commentDateView} </span>
           </CommentWrapper>
         </CommentTitle>
         {isEditing ? (
@@ -74,39 +96,43 @@ const CommentItem = ({ comment }: CommentItemProps) => {
           <CommentContent>{comment.content}</CommentContent>
         )}
       </TextBox>
-      <ButtonWrapper>
-        {isEditing ? (
-          <>
-            <DefaultButton
-              text="완료"
-              type="outline"
-              size="s"
-              onClick={handleEditClick}
-            />
-            <DefaultButton
-              text="취소"
-              type="outline"
-              size="s"
-              onClick={handleCanceled}
-            />
-          </>
-        ) : (
-          <>
-            <DefaultButton
-              text="수정"
-              type="outline"
-              size="s"
-              onClick={handleEditClick}
-            />
-            <DefaultButton
-              text="삭제"
-              type="outline"
-              size="s"
-              onClick={() => deleteComment()}
-            />
-          </>
-        )}
-      </ButtonWrapper>
+      {currentUSERID === comment.user_id ? (
+        <ButtonWrapper>
+          {isEditing ? (
+            <>
+              <DefaultButton
+                text="완료"
+                type="outline"
+                size="s"
+                onClick={handleEditClick}
+              />
+              <DefaultButton
+                text="취소"
+                type="outline"
+                size="s"
+                onClick={handleCanceled}
+              />
+            </>
+          ) : (
+            <>
+              <DefaultButton
+                text="수정"
+                type="outline"
+                size="s"
+                onClick={handleEditClick}
+              />
+              <DefaultButton
+                text="삭제"
+                type="outline"
+                size="s"
+                onClick={() => deleteComment()}
+              />
+            </>
+          )}
+        </ButtonWrapper>
+      ) : (
+        <ButtonWrapper />
+      )}
     </CommentContainer>
   );
 };
@@ -136,13 +162,13 @@ const CommentTitle = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  h3 {
-    font-size: 1rem;
-  }
-
   span {
-    font-size: 0.8125rem;
+    font-size: 1rem;
     color: #b3b3b3;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 `;
 
