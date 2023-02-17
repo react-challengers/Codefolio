@@ -25,6 +25,8 @@ const GNB = () => {
     getSessionUser();
   }, [setUserCheck]);
 
+  if (router.pathname.includes("auth")) return <> </>;
+
   return (
     <GNBContainer>
       <ButtonWrapper onClick={() => router.push("/")}>Codefolio</ButtonWrapper>
