@@ -1,5 +1,3 @@
-import supabase from "@/lib/supabase";
-
 // 이메일 유효성 검사 함수
 export const email_check = (email: string): boolean => {
   const regex =
