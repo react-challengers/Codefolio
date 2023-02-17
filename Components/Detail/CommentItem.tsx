@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
 import DefaultButton from "../Common/DefaultButton";
 import ProfileImage from "../Common/ProfileImage";
+import { commentCreateAt } from "@/utils/commons/commentDateView";
 
 /**
  * @TODO useInput으로 리팩토링 고민
@@ -74,13 +75,15 @@ const CommentItem = ({ comment }: CommentItemProps) => {
     setIsEditing((prev) => !prev);
   };
 
+  const commentDateView = commentCreateAt(comment.created_at);
+
   return (
     <CommentContainer>
       <ProfileImage alt="프로필이미지" page="detailPage" />
       <TextBox>
         <CommentTitle>
           <CommentWrapper>
-            <h3> {comment.user_id} </h3> <span> {comment.created_at} </span>
+            <h3> {comment.user_id} </h3> <span> {commentDateView} </span>
           </CommentWrapper>
         </CommentTitle>
         {isEditing ? (
@@ -158,13 +161,13 @@ const CommentTitle = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  h3 {
-    font-size: 1rem;
-  }
-
   span {
-    font-size: 0.8125rem;
+    font-size: 1rem;
     color: #b3b3b3;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 `;
 
