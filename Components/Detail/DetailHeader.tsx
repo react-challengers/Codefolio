@@ -75,6 +75,7 @@ const DetailHeader = () => {
     };
 
     const getBookmark = async () => {
+      if (!user) return;
       const { data } = await supabase
         .from("bookmark")
         .select()
@@ -85,6 +86,7 @@ const DetailHeader = () => {
     };
 
     const getLike = async () => {
+      if (!user) return;
       const { data } = await supabase
         .from("like")
         .select()
@@ -93,10 +95,11 @@ const DetailHeader = () => {
         .single();
       setIsLike(!!data?.data);
     };
+
     getUser();
     getBookmark();
     getLike();
-  }, [postId, user?.id]);
+  }, []);
 
   const clickBookmarkButton = async () => {
     if (isBookmark) {
