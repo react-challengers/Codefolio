@@ -37,9 +37,8 @@ const SignUpPage: NextPage = () => {
         router.push("/");
       }
     };
-
     LoginState();
-  }, []);
+  }, [router]);
 
   const signupWithEmail = async () => {
     if (!userName || !email || !password || !passwordCheck) {
