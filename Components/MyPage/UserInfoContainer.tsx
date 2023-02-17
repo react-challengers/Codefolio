@@ -6,11 +6,12 @@ import {
   myPageUserName,
   userLoginCheck,
   myPageBackgroundColor,
+  myPageProfileImage,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import { Field } from "@/types/enums";
 import Image, { StaticImageData } from "next/image";
-import { ChangeEvent, useEffect, useRef, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -20,6 +21,10 @@ import color_fill from "../../public/icons/color_fill.svg";
 
 type BackgroundColor = {
   background_color: string;
+};
+
+type ImgDataUrlType = {
+  imgDataUrl: string | ArrayBuffer | null | undefined;
 };
 
 /**
@@ -36,11 +41,11 @@ const UserInfoContainer = () => {
   const [userBackground, setUserBackground] = useRecoilState(
     myPageBackgroundColor
   );
+  const [profileImage, setProfileImage] = useRecoilState(myPageProfileImage);
 
   const [isEditing, setIsEditing] = useState(false);
 
   const userNameRef = useRef<HTMLInputElement>(null);
-  const uploadedImage = useRef<HTMLInputElement>(null);
   const imageUploader = useRef(null);
 
   useEffect(() => {
@@ -59,13 +64,16 @@ const UserInfoContainer = () => {
         contact_email: contactEmailData,
         user_name: userNameData,
         self_profile: selfProfileData,
+        profile_image: profileImageData,
       } = userProfile;
+      setUserId(data.user?.email as string);
       setUserName(userNameData);
       setContactEmail(contactEmailData);
       setSelfProfile(selfProfileData);
-      setUserId(data.user?.email as string);
+      setProfileImage(profileImageData);
     };
     getUserProfile();
+    console.log(userId, userName, userBackground, selfProfile);
   }, [setUserName, setContactEmail, setSelfProfile, userId]);
 
   const handleUserName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -96,7 +104,7 @@ const UserInfoContainer = () => {
     career: "3년차",
     is_public: true,
     birth_year: "1997",
-    profile_image: "",
+    profile_image: profileImage,
     background_color: userBackground,
     self_profile: selfProfile,
   };
@@ -112,7 +120,6 @@ const UserInfoContainer = () => {
     } else {
       setIsEditing(true);
       userNameRef.current?.focus();
-      console.log("userName", userNameRef.current);
     }
   };
 
@@ -135,11 +142,10 @@ const UserInfoContainer = () => {
       await supabase.storage.from("post-image").upload(imgPath, blob);
 
       // 이미지 올리기
-      const { data } = await supabase.storage
+      const urlResult = await supabase.storage
         .from("post-image")
         .getPublicUrl(imgPath);
-      console.log("upload image", data);
-      return data.publicUrl;
+      return urlResult.data.publicUrl;
     } catch (error) {
       console.log(error);
       return false;
@@ -147,15 +153,19 @@ const UserInfoContainer = () => {
   };
 
   const handleProfileImage = (e: ChangeEvent<HTMLInputElement>) => {
-    const [file] = e.target.files!;
+    const [file] = e.target.files as FileList;
     if (!file) return;
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async (uploadedBlob) => {
+      // base64 -> blob -> file
       const imgDataUrl = uploadedBlob.target?.result; // data:image/jpeg;base64,/
-      // 타입 지정 문제
-      uploadImage(imgDataUrl);
-      // recoil로 set하기
+      const base64 = await fetch(`${imgDataUrl}`);
+      const blob = await base64.blob();
+      const blobFile = new File([blob], "name");
+      const publicImageURL = await uploadImage(blobFile);
+      if (!publicImageURL) return;
+      setProfileImage(publicImageURL);
     };
   };
 
@@ -171,11 +181,7 @@ const UserInfoContainer = () => {
             ref={imageUploader}
             multiple={false}
           />
-          <ProfileImage
-            alt="유저 프로필"
-            page="myPage"
-            src="https://xxfgrnzupwpguxifhwsq.supabase.co/storage/v1/object/public/profile-imgage/1ad99168-f160-4114-bdd8-25ccdc26053c_screenshot.jpg?t=2023-02-17T05%3A02%3A17.171Z"
-          />
+          <ProfileImage alt="유저 프로필" page="myPage" src={profileImage} />
         </ProfileImageWrapper>
         <IconWrapper>
           <IconBox onClick={() => handleIsEditing()}>

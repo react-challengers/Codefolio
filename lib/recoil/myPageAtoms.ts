@@ -27,6 +27,11 @@ const myPageBackgroundColor = atom({
   default: "#ffffff",
 });
 
+const myPageProfileImage = atom({
+  key: "myPageProfileImage",
+  default: "",
+});
+
 export {
   myPagePhonNumber,
   myPageUserName,
@@ -34,4 +39,5 @@ export {
   myPageSelfProfile,
   myPageBackgroundColor,
   myPageUserId,
+  myPageProfileImage,
 };

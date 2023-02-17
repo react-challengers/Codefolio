@@ -22,12 +22,14 @@ import {
   myPagePhonNumber,
   myPageUserId,
   myPageBackgroundColor,
+  myPageProfileImage,
 } from "@/lib/recoil/myPageAtoms";
 
 export {
   userLoginCheck,
   largeCategoryState,
   subCategoryState,
+  // post
   postTitle,
   postSubTitle,
   postTitleBackgroundColor,
@@ -39,10 +41,12 @@ export {
   postTags,
   postPublic,
   postContent,
+  // myPage
   myPageUserName,
   myPageSelfProfile,
   myPageContactEmail,
   myPagePhonNumber,
   myPageUserId,
   myPageBackgroundColor,
+  myPageProfileImage,
 };
