@@ -4,8 +4,6 @@ import supabase from "@/lib/supabase";
 import useInput from "@/hooks/common/useInput";
 import ProfileImage from "../Common/ProfileImage";
 import DefaultButton from "../Common/DefaultButton";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
 /**
  * @todo postComment 구현 필요
