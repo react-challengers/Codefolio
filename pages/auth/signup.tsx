@@ -94,7 +94,7 @@ const SignUpPage: NextPage = () => {
 
   return (
     <SignupPageContainer>
-      W <EmptyContainer />
+      <EmptyContainer />
       <SignupSpace>
         <SignupForm>
           <AuthInput
