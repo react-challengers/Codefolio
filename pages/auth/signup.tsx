@@ -6,10 +6,13 @@ import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
 import { AuthButton, AuthInput, ValidateText } from "@/Components/Common/Auth";
 import {
-  email_check,
-  password_check,
-  userName_check,
-} from "@/utils/commons/authValidate";
+  checkEmail,
+  checkPassword,
+  checkUserName,
+  postUserProfile,
+} from "@/utils/commons/authUtils";
+import { useSetRecoilState } from "recoil";
+import { userLoginCheck } from "@/lib/recoil";
 
 /**
  * 현재 가장 기본적 유효성검사, "빈 인풋 체크"와 비밀번호 확인 부분만 추가되어 있습니다.
@@ -29,6 +32,8 @@ const SignUpPage: NextPage = () => {
   const [passwordValidate, setPasswordValidate] = useState(true);
   const [passwordCheckValidate, setPasswordCheckValidate] = useState(true);
 
+  const setIsLogin = useSetRecoilState(userLoginCheck);
+
   useEffect(() => {
     // 로그인 상태 확인
     const LoginState = async () => {
@@ -37,28 +42,27 @@ const SignUpPage: NextPage = () => {
         router.push("/");
       }
     };
-
     LoginState();
-  }, []);
+  }, [router]);
 
   const signupWithEmail = async () => {
     if (!userName || !email || !password || !passwordCheck) {
       return alert("모든 데이터를 입력해주세요.");
     }
 
-    if (!userName_check(userName)) {
+    if (!checkUserName(userName)) {
       setUserNameValidate(false);
       return alert("이름(닉네임)은 2글자 이상입니다.");
     }
     setUserNameValidate(true);
 
-    if (!email_check(email)) {
+    if (!checkEmail(email)) {
       setEmailValidate(false);
       return alert("이메일의 형식을 확인해주세요.");
     }
     setEmailValidate(true);
 
-    if (!password_check(password)) {
+    if (!checkPassword(password)) {
       setPasswordValidate(false);
       return alert("비밀번호는 8자리 이상 입니다. ");
     }
@@ -70,7 +74,7 @@ const SignUpPage: NextPage = () => {
     }
     setPasswordCheckValidate(true);
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -81,20 +85,15 @@ const SignUpPage: NextPage = () => {
     });
 
     if (!error) {
-      resetInputs();
-
+      const userProfileUserId: string | undefined = data.user?.email;
+      const userProfileUserName: string | undefined =
+        data.user?.user_metadata.user_name;
+      postUserProfile(userProfileUserId, userProfileUserName);
+      setIsLogin(true);
       alert("회원가입 완료");
       return router.push("/");
     }
     return alert("회원가입 실패");
-  };
-
-  // 인풋창 초기화
-  const resetInputs = () => {
-    setUserName("");
-    setEmail("");
-    setPassword("");
-    setPasswordCheck("");
   };
 
   return (

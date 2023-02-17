@@ -3,6 +3,7 @@ import styled from "styled-components";
 interface DetailTitleProps {
   title: string;
   subtitle: string;
+  backgroundColor: string;
   field: string;
   subCategory: string;
 }
@@ -10,11 +11,12 @@ interface DetailTitleProps {
 const DetailTitle = ({
   title,
   subtitle,
+  backgroundColor,
   field,
   subCategory,
 }: DetailTitleProps) => {
   return (
-    <DetailTitleContainer>
+    <DetailTitleContainer backgroundColor={backgroundColor}>
       <DetailTitleHeader>
         {field} {">"} {subCategory}
       </DetailTitleHeader>
@@ -26,11 +28,11 @@ const DetailTitle = ({
   );
 };
 
-const DetailTitleContainer = styled.div`
+const DetailTitleContainer = styled.div<{ backgroundColor: string }>`
   width: 100%;
   height: 16.25rem;
   padding: 1.5rem 8.75rem 2.5rem 8.75rem;
-  background-color: #e6e6e6;
+  background-color: ${({ backgroundColor }) => backgroundColor};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
