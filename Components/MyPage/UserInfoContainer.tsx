@@ -16,8 +16,11 @@ import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
 
 /**
- * @TODO 업데이트 한 프로필을 서버에 반영합니다.
+ * @TODO 회원가입에 user-profile row 추가 기능 확인하면 USER_ID 상수를 삭제하고 서버 데이터를 활용합니다.
+ * @TODO SelfProfileWrapper 최대 3줄로 제한하기
  */
+
+const USER_ID = "dbabf656-18e8-484d-aac9-e5065667a31a";
 
 const UserInfoContainer = () => {
   const [userName, setUserName] = useRecoilState(myPageUserName);
@@ -31,7 +34,7 @@ const UserInfoContainer = () => {
     const { data: userProfile } = await supabase
       .from("user-profile")
       .select()
-      .eq("id", "dbabf656-18e8-484d-aac9-e5065667a31a")
+      .eq("id", USER_ID)
       .single();
     const {
       contact_email: contactEmailData,
@@ -81,7 +84,7 @@ const UserInfoContainer = () => {
       const { error } = await supabase
         .from("user-profile")
         .update(userInfo)
-        .eq("id", "dbabf656-18e8-484d-aac9-e5065667a31a");
+        .eq("id", USER_ID);
       console.log(error);
     } else {
       setIsEditing(true);
@@ -131,6 +134,7 @@ const UserInfoContainer = () => {
               <SelfProfileInput
                 value={selfProfile}
                 onChange={handleSelfProfile}
+                rows={3}
               />
             </>
           ) : (
@@ -201,26 +205,42 @@ const EmailWrapper = styled.p`
 const SelfProfileWrapper = styled.div`
   padding: 1.25rem;
   border: 1px solid lightgrey;
+  line-height: 1.5rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
 `;
 
 // isEditing true
 const UserNameInput = styled.input`
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  width: 100%;
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  width: calc(100% - 2rem);
+  padding: 1rem;
+  border-radius: 0.25rem;
+  border: solid 1px gray;
 `;
 
 const EmailInput = styled.input`
   color: gray;
-  margin-bottom: 1.5rem;
-  width: 100%;
+  margin-bottom: 0.75rem;
+  width: calc(100% - 2rem);
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  border: solid 1px gray;
 `;
 
 const SelfProfileInput = styled.textarea`
   padding: 1.25rem;
   font-size: 1rem;
-  border: 1px solid lightgrey;
+  width: calc(100% - 2rem);
+  border-radius: 0.25rem;
+  border: solid 1px gray;
   width: 64rem;
+  resize: none;
 `;
 
 export default UserInfoContainer;
