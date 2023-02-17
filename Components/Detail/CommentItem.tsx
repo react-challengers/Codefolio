@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
+import viewCreateAt from "@/utils/commons/viewCreateAt";
 import DefaultButton from "../Common/DefaultButton";
 import ProfileImage from "../Common/ProfileImage";
-import { commentCreateAt } from "@/utils/commons/commentDateView";
 
 /**
  * @TODO useInput으로 리팩토링 고민
@@ -17,6 +17,7 @@ interface CommentType {
   content: string;
   created_at: string;
 }
+
 interface CommentItemProps {
   comment: CommentType;
 }
@@ -26,15 +27,14 @@ const CommentItem = ({ comment }: CommentItemProps) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
-  const [currentUSER_ID, setCurrentUSER_ID] = useState<string | undefined>("");
+  const [currentUSERID, setCurrentUSERID] = useState<string | undefined>("");
 
   useEffect(() => {
     // 로그인 상태 확인
     const LoginState = async () => {
       const { data } = await supabase.auth.getSession();
-      console.log("data확인", data.session?.user.email);
       if (data) {
-        setCurrentUSER_ID(data.session?.user.email);
+        setCurrentUSERID(data.session?.user.email);
       }
     };
 
@@ -75,7 +75,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
     setIsEditing((prev) => !prev);
   };
 
-  const commentDateView = commentCreateAt(comment.created_at);
+  const commentDateView = viewCreateAt(comment.created_at);
 
   return (
     <CommentContainer>
@@ -83,7 +83,8 @@ const CommentItem = ({ comment }: CommentItemProps) => {
       <TextBox>
         <CommentTitle>
           <CommentWrapper>
-            <h3> {comment.user_id} </h3> <span> {commentDateView} </span>
+            <h3> {comment.user_id} </h3>
+            <span> {commentDateView} </span>
           </CommentWrapper>
         </CommentTitle>
         {isEditing ? (
@@ -95,7 +96,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
           <CommentContent>{comment.content}</CommentContent>
         )}
       </TextBox>
-      {currentUSER_ID === comment.user_id ? (
+      {currentUSERID === comment.user_id ? (
         <ButtonWrapper>
           {isEditing ? (
             <>

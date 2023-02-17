@@ -1,4 +1,4 @@
-export const commentCreateAt = (value: string) => {
+const viewCreateAt = (value: string) => {
   const today = new Date();
   const timeValue = new Date(value);
 
@@ -22,3 +22,5 @@ export const commentCreateAt = (value: string) => {
 
   return `${Math.floor(betweenTimeDay / 365)}년전`;
 };
+
+export default viewCreateAt;
