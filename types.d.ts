@@ -74,6 +74,7 @@ interface UserProfileType {
   birth_year: string;
   self_profile: string;
   profile_image: string;
+  background_color: string;
 }
 
 interface NotificationType {

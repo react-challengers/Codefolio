@@ -1,3 +1,9 @@
+import dynamic from "next/dynamic";
+import supabase from "@/lib/supabase";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 import {
   Comment,
   DetailHeader,
@@ -5,35 +11,92 @@ import {
   DetailTitle,
   RelatedProject,
 } from "@/Components/Detail";
-import { NextPage } from "next";
-import styled from "styled-components";
+
+const Viewer = dynamic(() => import("@/Components/Detail/DetailContent"), {
+  ssr: false,
+});
 
 const DetailPage: NextPage = () => {
-  const detailTitleData = {
-    title: "타이틀",
-    subtitle: "서브타이틀",
-    field: "대분류",
-    subCategory: "소분류",
+  const {
+    query: { id: postId },
+  } = useRouter();
+  const [titleData, setTitleData] = useState({
+    title: "",
+    subtitle: "",
+    backgroundColor: "",
+    field: "",
+    subCategory: "",
+  });
+  const [sideData, setSideData] = useState({
+    progressDate: ["", ""],
+    stack: [""],
+    skills: ["Front-end", "Android"],
+    tag: [""],
+    members: [""],
+    userId: "",
+  });
+  const [content, setContent] = useState("");
+
+  const getData = async () => {
+    const { data, error } = await supabase
+      .from("post")
+      .select()
+      .eq("id", postId)
+      .single();
+
+    if (error) {
+      return;
+    }
+
+    const {
+      title,
+      sub_title: subTitle,
+      title_background_color: backgroundColor,
+      large_category: field,
+      sub_category: subCategory,
+      content: postContent,
+      progress_date: progressDate,
+      stack,
+      tag,
+      skills,
+      members,
+      user_id: userId,
+    } = data;
+
+    setTitleData({
+      title,
+      subtitle: subTitle,
+      backgroundColor,
+      field,
+      subCategory,
+    });
+
+    setSideData({
+      progressDate,
+      stack,
+      tag,
+      skills,
+      members,
+      userId,
+    });
+
+    setContent(postContent);
   };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <DetailPageContainer>
       <DetailHeader />
-      <DetailTitle {...detailTitleData} />
+      <DetailTitle {...titleData} />
       <DetailContentsContainer>
         <DetailContentsSide>
-          <DetailSide />
+          <DetailSide {...sideData} />
         </DetailContentsSide>
         <DetailContentsMain>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nemo animi
-          vitae odit aut! Quisquam nam, minima facere aspernatur enim illo
-          corporis error obcaecati. Magnam cum possimus in fugit excepturi
-          pariatur! Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          Nemo animi vitae odit aut! Quisquam nam, minima facere aspernatur enim
-          illo corporis error obcaecati. Magnam cum possimus in fugit excepturi
-          pariatur! Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          Nemo animi vitae odit aut! Quisquam nam, minima facere aspernatur enim
-          illo corporis error obcaecati. Magnam cum possimus in fugit excepturi
-          pariatur!
+          <Viewer content={content} />
         </DetailContentsMain>
       </DetailContentsContainer>
       <RelatedProject />

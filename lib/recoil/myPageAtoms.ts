@@ -22,10 +22,16 @@ const myPageUserId = atom({
   default: "",
 });
 
+const myPageBackgroundColor = atom({
+  key: "myPageBackgroundColor",
+  default: "#ffffff",
+});
+
 export {
   myPagePhonNumber,
   myPageUserName,
   myPageContactEmail,
   myPageSelfProfile,
+  myPageBackgroundColor,
   myPageUserId,
 };

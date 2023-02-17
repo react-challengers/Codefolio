@@ -21,6 +21,7 @@ import {
   myPageSelfProfile,
   myPagePhonNumber,
   myPageUserId,
+  myPageBackgroundColor,
 } from "@/lib/recoil/myPageAtoms";
 
 export {
@@ -43,4 +44,5 @@ export {
   myPageContactEmail,
   myPagePhonNumber,
   myPageUserId,
+  myPageBackgroundColor,
 };

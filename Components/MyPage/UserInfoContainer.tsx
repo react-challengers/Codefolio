@@ -5,16 +5,18 @@ import {
   myPageUserId,
   myPageUserName,
   userLoginCheck,
+  myPageBackgroundColor,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import { Field } from "@/types/enums";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
+import color_fill from "../../public/icons/color_fill.svg";
 
 type BackgroundColor = {
   background_color: string;
@@ -31,6 +33,9 @@ const UserInfoContainer = () => {
   const [selfProfile, setSelfProfile] = useRecoilState(myPageSelfProfile);
   const phone = useRecoilValue(myPagePhonNumber);
   const [userId, setUserId] = useRecoilState(myPageUserId);
+  const [userBackground, setUserBackground] = useRecoilState(
+    myPageBackgroundColor
+  );
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -71,6 +76,10 @@ const UserInfoContainer = () => {
     setSelfProfile(e.target.value);
   };
 
+  const onChangeBackgroundColor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserBackground(e.target.value);
+  };
+
   // 잠시 타입 결합으로 해결합니다.
   const userInfo: Omit<UserProfileType, "id"> & BackgroundColor = {
     // id: "uuid",
@@ -86,6 +95,7 @@ const UserInfoContainer = () => {
     is_public: true,
     birth_year: "1997",
     profile_image: "",
+    background_color: userBackground,
     self_profile: selfProfile,
     background_color: "#ffffff",
   };
@@ -120,7 +130,7 @@ const UserInfoContainer = () => {
 
   return (
     <InfoContainer>
-      <Banner />
+      <Banner userBackground={userBackground} />
       <UserInfoWrapper>
         <ProfileImageWrapper>
           <ProfileImage alt="유저 프로필" page="myPage" />
@@ -154,7 +164,20 @@ const UserInfoContainer = () => {
                 onChange={handleSelfProfile}
                 rows={3}
               />
-            </InputWrapper>
+              <ImgLabel htmlFor="background-color-picker">
+                <ImgIcon
+                  src={color_fill}
+                  alt="배경색 지정 아이콘"
+                  width={36}
+                  height={36}
+                />
+                <UserBackgroundColorPicker
+                  id="background-color-picker"
+                  type="color"
+                  onChange={onChangeBackgroundColor}
+                />
+              </ImgLabel>
+            </>
           ) : (
             <>
               <UserNameWrapper>{userName}</UserNameWrapper>
@@ -264,6 +287,22 @@ const SelfProfileInput = styled.textarea`
   width: 64rem;
   border: 1px solid lightgrey;
   resize: none;
+`;
+
+const ImgLabel = styled.label`
+  position: absolute;
+  right: 0;
+  top: 0;
+`;
+
+const ImgIcon = styled(Image)<StaticImageData>`
+  cursor: pointer;
+`;
+
+const UserBackgroundColorPicker = styled.input`
+  opacity: 0;
+  width: 0;
+  height: 0;
 `;
 
 export default UserInfoContainer;
