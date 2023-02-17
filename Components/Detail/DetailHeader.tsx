@@ -18,24 +18,10 @@ const DetailHeader = () => {
 
   const showMoreModal = () => setShowMore((prev) => !prev);
 
-  const getUser = async () => {
-    const { data } = await supabase.auth.getUser();
-    setUser(data.user);
-  };
-
   const isAnonymous = () => {
     if (!user) {
       router.push("/auth/login");
     }
-  };
-
-  const getBookmark = async () => {
-    const { data } = await supabase
-      .from("bookmark")
-      .select()
-      .eq("user_id", user?.id)
-      .eq("post_id", postId);
-    setIsBookmark(!!data);
   };
 
   const addBookmark = async () => {
@@ -58,15 +44,6 @@ const DetailHeader = () => {
     if (!error) {
       setIsBookmark(false);
     }
-  };
-
-  const getLike = async () => {
-    const { data, error } = await supabase
-      .from("like")
-      .select()
-      .eq("user_id", user?.id)
-      .eq("post_id", postId);
-    setIsLike(!!data);
   };
 
   const addLike = async () => {
@@ -92,10 +69,34 @@ const DetailHeader = () => {
   };
 
   useEffect(() => {
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    };
+
+    const getBookmark = async () => {
+      const { data } = await supabase
+        .from("bookmark")
+        .select()
+        .eq("user_id", user?.id)
+        .eq("post_id", postId)
+        .single();
+      setIsBookmark(!!data?.data);
+    };
+
+    const getLike = async () => {
+      const { data } = await supabase
+        .from("like")
+        .select()
+        .eq("user_id", user?.id)
+        .eq("post_id", postId)
+        .single();
+      setIsLike(!!data?.data);
+    };
     getUser();
     getBookmark();
     getLike();
-  }, []);
+  }, [postId, user?.id]);
 
   const clickBookmarkButton = async () => {
     if (isBookmark) {
