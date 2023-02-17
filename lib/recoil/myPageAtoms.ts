@@ -2,20 +2,24 @@ import { atom } from "recoil";
 
 const myPagePhonNumber = atom<string>({
   key: "myPagePhonNumber",
-  default: "01063058727",
+  default: "",
 });
 
 const myPageUserName = atom({ key: "userName", default: "허다은" });
 
 const myPageContactEmail = atom({
   key: "myPageContactEmail",
-  default: "nno3onn@gmail.com",
+  default: "",
 });
 
 const myPageSelfProfile = atom({
   key: "myPageselfProfile",
-  default:
-    "안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요",
+  default: "",
+});
+
+const myPageUserId = atom({
+  key: "myPageUserId",
+  default: "",
 });
 
 const myPageBackgroundColor = atom({
@@ -29,4 +33,5 @@ export {
   myPageContactEmail,
   myPageSelfProfile,
   myPageBackgroundColor,
+  myPageUserId,
 };

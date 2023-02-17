@@ -2,6 +2,7 @@ import {
   myPageContactEmail,
   myPagePhonNumber,
   myPageSelfProfile,
+  myPageUserId,
   myPageUserName,
   userLoginCheck,
   myPageBackgroundColor,
@@ -9,7 +10,7 @@ import {
 import supabase from "@/lib/supabase";
 import { Field } from "@/types/enums";
 import Image, { StaticImageData } from "next/image";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -17,8 +18,13 @@ import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
 import color_fill from "../../public/icons/color_fill.svg";
 
+type BackgroundColor = {
+  background_color: string;
+};
+
 /**
- * @TODO 업데이트 한 프로필을 서버에 반영합니다.
+ * @TODO SelfProfileWrapper 최대 3줄로 제한하기
+ * @TODO 잠시 "허다은"으로 이름이 있는 문제 해결하기
  */
 
 const UserInfoContainer = () => {
@@ -26,37 +32,27 @@ const UserInfoContainer = () => {
   const [contactEmail, setContactEmail] = useRecoilState(myPageContactEmail);
   const [selfProfile, setSelfProfile] = useRecoilState(myPageSelfProfile);
   const phone = useRecoilValue(myPagePhonNumber);
+  const [userId, setUserId] = useRecoilState(myPageUserId);
   const [userBackground, setUserBackground] = useRecoilState(
     myPageBackgroundColor
   );
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const getUserProfile = async () => {
-    const { data: userProfile } = await supabase
-      .from("user-profile")
-      .select()
-      .eq("id", "dbabf656-18e8-484d-aac9-e5065667a31a")
-      .single();
-    const {
-      contact_email: contactEmailData,
-      user_name: userNameData,
-      self_profile: selfProfileData,
-      background_color: backgroundColorData,
-    } = userProfile;
-    setUserName(userNameData);
-    setContactEmail(contactEmailData);
-    setSelfProfile(selfProfileData);
-    setUserBackground(backgroundColorData);
-  };
+  const userNameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const getUserProfile = async () => {
-      const { data: userProfile } = await supabase
+      const { data, error: getUserIdError } = await supabase.auth.getUser();
+      if (getUserIdError || !data.user?.email) return;
+
+      const { data: userProfile, error } = await supabase
         .from("user-profile")
-        .select()
-        .eq("id", "dbabf656-18e8-484d-aac9-e5065667a31a")
+        .select("*")
+        .eq("user_id", data.user?.email)
         .single();
+
+      if (error) return;
       const {
         contact_email: contactEmailData,
         user_name: userNameData,
@@ -65,9 +61,10 @@ const UserInfoContainer = () => {
       setUserName(userNameData);
       setContactEmail(contactEmailData);
       setSelfProfile(selfProfileData);
+      setUserId(data.user?.email as string);
     };
     getUserProfile();
-  }, [setUserName, setContactEmail, setSelfProfile]);
+  }, [setUserName, setContactEmail, setSelfProfile, userId]);
 
   const handleUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
@@ -83,9 +80,10 @@ const UserInfoContainer = () => {
     setUserBackground(e.target.value);
   };
 
-  const userInfo: Omit<UserProfileType, "id"> = {
+  // 잠시 타입 결합으로 해결합니다.
+  const userInfo: Omit<UserProfileType, "id"> & BackgroundColor = {
     // id: "uuid",
-    user_id: "nno3onn@naver.com",
+    user_id: userId,
     user_name: userName,
     contact_email: contactEmail,
     gender: "여자",
@@ -105,13 +103,14 @@ const UserInfoContainer = () => {
     // 갱신된 데이터 서버에 반영
     if (isEditing) {
       setIsEditing(false);
-      const { error } = await supabase
+      await supabase
         .from("user-profile")
         .update(userInfo)
-        .eq("id", "dbabf656-18e8-484d-aac9-e5065667a31a");
-      console.log(error);
+        .eq("user_id", userId);
     } else {
       setIsEditing(true);
+      userNameRef.current?.focus();
+      console.log("userName", userNameRef.current);
     }
   };
 
@@ -152,12 +151,17 @@ const UserInfoContainer = () => {
         </IconWrapper>
         <TextWrapper>
           {isEditing ? (
-            <>
-              <UserNameInput value={userName} onChange={handleUserName} />
+            <InputWrapper>
+              <UserNameInput
+                value={userName}
+                onChange={handleUserName}
+                ref={userNameRef}
+              />
               <EmailInput value={contactEmail} onChange={handleContactEmail} />
               <SelfProfileInput
                 value={selfProfile}
                 onChange={handleSelfProfile}
+                rows={3}
               />
               <ImgLabel htmlFor="background-color-picker">
                 <ImgIcon
@@ -172,7 +176,7 @@ const UserInfoContainer = () => {
                   onChange={onChangeBackgroundColor}
                 />
               </ImgLabel>
-            </>
+            </InputWrapper>
           ) : (
             <>
               <UserNameWrapper>{userName}</UserNameWrapper>
@@ -241,26 +245,47 @@ const EmailWrapper = styled.p`
 const SelfProfileWrapper = styled.div`
   padding: 1.25rem;
   border: 1px solid lightgrey;
+  line-height: 1.5rem;
+  width: 64rem;
 `;
 
 // isEditing true
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const UserNameInput = styled.input`
   font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  width: 100%;
+  text-align: center;
+  width: 32rem;
+  border-width: 0 0 1px;
+  border-color: gray;
+  padding: 0.5rem 0;
+  margin: 0 0 0.5rem;
 `;
 
 const EmailInput = styled.input`
   color: gray;
-  margin-bottom: 1.5rem;
-  width: 100%;
+  width: 32rem;
+  text-align: center;
+  font-size: 1rem;
+  margin: 0 0 1rem;
+  border-width: 0 0 1px;
+  border-color: gray;
+  padding: 0.5rem 0;
+  margin: 0.5rem 0 1.25rem;
 `;
 
 const SelfProfileInput = styled.textarea`
-  padding: 1.25rem;
+  padding: 1.25rem 0;
   font-size: 1rem;
-  border: 1px solid lightgrey;
+  text-align: center;
+  height: calc(4.125rem - 2.5rem);
   width: 64rem;
+  border: 1px solid lightgrey;
+  resize: none;
 `;
 
 const ImgLabel = styled.label`
