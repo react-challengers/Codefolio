@@ -97,7 +97,6 @@ const UserInfoContainer = () => {
     profile_image: "",
     background_color: userBackground,
     self_profile: selfProfile,
-    background_color: "#ffffff",
   };
 
   const handleIsEditing = async () => {
@@ -177,7 +176,7 @@ const UserInfoContainer = () => {
                   onChange={onChangeBackgroundColor}
                 />
               </ImgLabel>
-            </>
+            </InputWrapper>
           ) : (
             <>
               <UserNameWrapper>{userName}</UserNameWrapper>
