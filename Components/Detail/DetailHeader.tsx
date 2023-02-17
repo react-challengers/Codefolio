@@ -34,9 +34,8 @@ const DetailHeader = () => {
       .from("bookmark")
       .select()
       .eq("user_id", user?.id)
-      .eq("post_id", postId)
-      .single();
-    setIsBookmark(!!data?.data);
+      .eq("post_id", postId);
+    setIsBookmark(!!data);
   };
 
   const addBookmark = async () => {
@@ -62,13 +61,12 @@ const DetailHeader = () => {
   };
 
   const getLike = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("like")
       .select()
       .eq("user_id", user?.id)
-      .eq("post_id", postId)
-      .single();
-    setIsLike(!!data?.data);
+      .eq("post_id", postId);
+    setIsLike(!!data);
   };
 
   const addLike = async () => {
@@ -118,21 +116,21 @@ const DetailHeader = () => {
   return (
     <DetailHeaderContainer>
       <DetailHeaderWrapper>
-        <BookmarkButton
-          src="/icons/bookmark.svg"
-          width={36}
-          height={36}
-          alt="북마크 버튼"
-          onClick={clickBookmarkButton}
-          isBookmark={isBookmark}
-        />
         <LikeButton
-          src="/icons/like.svg"
+          src={`/icons/like${isLike ? "Hover" : ""}.svg`}
           width={36}
           height={36}
           alt="좋아요 버튼"
           onClick={clickLikeButton}
           isLike={isLike}
+        />
+        <BookmarkButton
+          src={`/icons/bookmark${isBookmark ? "Hover" : ""}.svg`}
+          width={36}
+          height={36}
+          alt="북마크 버튼"
+          onClick={clickBookmarkButton}
+          isBookmark={isBookmark}
         />
         <Image
           src="/icons/more.svg"
@@ -156,10 +154,10 @@ const DetailHeaderContainer = styled.div`
 `;
 
 const BookmarkButton = styled(Image)<{ isBookmark: boolean }>`
-  background-color: ${({ isBookmark }) =>
-    isBookmark ? "yellow" : "transparent"};
+  /* background-color: ${({ isBookmark }) =>
+    isBookmark ? "yellow" : "transparent"}; */
   &:hover {
-    background-color: yellow;
+    /* background-color: yellow; */
   }
 `;
 
@@ -174,9 +172,9 @@ const DetailHeaderWrapper = styled.div`
 `;
 
 const LikeButton = styled(Image)<{ isLike: boolean }>`
-  background-color: ${({ isLike }) => (isLike ? "pink" : "transparent")};
+  /* background-color: ${({ isLike }) => (isLike ? "pink" : "transparent")}; */
   &:hover {
-    background-color: pink;
+    /* background-color: pink; */
   }
 `;
 
