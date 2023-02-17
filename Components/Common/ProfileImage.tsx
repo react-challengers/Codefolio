@@ -22,7 +22,7 @@ interface ProfileImageProps {
 const ProfileImage = ({ src = anonProfile, alt, page }: ProfileImageProps) => {
   return (
     <ProfileImageItem
-      src={src}
+      src={src || anonProfile}
       alt={alt}
       width={page === "myPage" ? 100 : 40}
       height={page === "myPage" ? 100 : 40}
