@@ -174,14 +174,17 @@ const UserInfoContainer = () => {
       <Banner userBackground={userBackground} />
       <UserInfoWrapper>
         <ProfileImageWrapper>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleProfileImage}
-            ref={imageUploader}
-            multiple={false}
-          />
-          <ProfileImage alt="유저 프로필" page="myPage" src={profileImage} />
+          <label htmlFor="user-profile">
+            <ProfileFileImageInput
+              type="file"
+              accept="image/*"
+              onChange={handleProfileImage}
+              ref={imageUploader}
+              multiple={false}
+              id="user-profile"
+            />
+            <ProfileImage alt="유저 프로필" page="myPage" src={profileImage} />
+          </label>
         </ProfileImageWrapper>
         <IconWrapper>
           <IconBox onClick={() => handleIsEditing()}>
@@ -261,6 +264,10 @@ const UserInfoWrapper = styled.div`
 const ProfileImageWrapper = styled.div`
   position: absolute;
   top: -3.25rem;
+`;
+
+const ProfileFileImageInput = styled.input`
+  display: none;
 `;
 
 const IconWrapper = styled.div`
