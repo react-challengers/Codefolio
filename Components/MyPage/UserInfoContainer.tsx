@@ -244,14 +244,17 @@ const SelfProfileInput = styled.textarea`
   border: 1px solid lightgrey;
   width: 64rem;
 `;
+
 const ImgLabel = styled.label`
   position: absolute;
   right: 0;
   top: 0;
 `;
+
 const ImgIcon = styled(Image)<StaticImageData>`
   cursor: pointer;
 `;
+
 const UserBackgroundColorPicker = styled.input`
   opacity: 0;
   width: 0;
