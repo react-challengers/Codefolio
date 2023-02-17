@@ -1,15 +1,14 @@
-import { useRef } from "react";
-import Image from "next/image";
 import styled from "styled-components";
 import SwiperCore, { Navigation, Scrollbar } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-
 import "swiper/swiper.min.css";
 import supabase from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { useRouter } from "next/router";
 import CardItem from "../Common/Card/CardItem";
+import SwiperPrevButton from "./SwiperPrevButton";
+import SwiperNextButton from "./SwiperNextButton";
 
 /**
  * @TODO onReachEnd 이벤트를 사용하여
@@ -19,8 +18,6 @@ import CardItem from "../Common/Card/CardItem";
 
 const RelatedProject = () => {
   SwiperCore.use([Navigation, Scrollbar]);
-  const prevRef = useRef<HTMLButtonElement>(null);
-  const nextRef = useRef<HTMLButtonElement>(null);
 
   const router = useRouter();
 
@@ -34,11 +31,12 @@ const RelatedProject = () => {
     return res.data;
   };
 
-  const { data: relatedProjectsData, error: relatedProjectsError } = useQuery<
-    PostType[]
-  >(["GET_RELATED_PROJECTS"], {
-    queryFn: getRelatedProjects,
-  });
+  const { data: relatedProjectsData } = useQuery<PostType[]>(
+    ["GET_RELATED_PROJECTS"],
+    {
+      queryFn: getRelatedProjects,
+    }
+  );
 
   const onClickCardItem = (id: string) => {
     router.push(`/detail/${id}`);
@@ -47,43 +45,19 @@ const RelatedProject = () => {
     <RelatedProjectContainer>
       <RelatedProjectTitle>연관 프로젝트</RelatedProjectTitle>
       <SwiperContainer>
-        <PrevButton type="button" ref={prevRef}>
-          <Image
-            src="/icons/prev_button.svg"
-            alt="이전"
-            width={50}
-            height={50}
-          />
-        </PrevButton>
         <SwiperWrapper>
           <Swiper
             modules={[Navigation, Scrollbar]}
             spaceBetween={20}
             slidesPerView={4}
-            navigation
+            navigation={{
+              prevEl: ".swiper-button-prev",
+              nextEl: ".swiper-button-next",
+            }}
             scrollbar={{ draggable: true }}
             onReachEnd={() => console.log("end")}
-            onBeforeInit={(swiper) => {
-              if (
-                swiper.params.navigation &&
-                typeof swiper.params.navigation !== "boolean"
-              ) {
-                if (prevRef.current && nextRef.current) {
-                  /* no-param-reassign은 파라미터를 재할당하는 것을 막는다.
-               하지만, swiper.params.navigation.prevEl, swiper.params.navigation.nextEl은
-               SwiperCore.use([Navigation, Scrollbar]);에서 정의된 파라미터이기 때문에
-               재할당을 해야한다.
-               따라서 eslint-disable-next-line no-param-reassign을 사용하여
-               재할당을 허용한다. */
-                  // eslint-disable-next-line no-param-reassign
-                  swiper.params.navigation.prevEl = prevRef.current;
-                  // eslint-disable-next-line no-param-reassign
-                  swiper.params.navigation.nextEl = nextRef.current;
-                }
-              }
-              swiper.navigation.update();
-            }}
           >
+            <SwiperPrevButton />
             {relatedProjectsData?.map((post) => (
               <SwiperSlide key={post.id}>
                 <CardItemContainer
@@ -106,16 +80,9 @@ const RelatedProject = () => {
                 </CardItemContainer>
               </SwiperSlide>
             ))}
+            <SwiperNextButton />
           </Swiper>
         </SwiperWrapper>
-        <NextButton type="button" ref={nextRef}>
-          <Image
-            src="/icons/next_button.svg"
-            alt="다음"
-            width={50}
-            height={50}
-          />
-        </NextButton>
       </SwiperContainer>
     </RelatedProjectContainer>
   );
@@ -144,33 +111,6 @@ const SwiperContainer = styled.div`
 const SwiperWrapper = styled.div`
   width: 78.75rem;
   height: 100%;
-`;
-
-const PrevButton = styled.button`
-  position: absolute;
-  background: none;
-  top: 40%;
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-
-  &:disabled {
-    display: none;
-  }
-`;
-
-const NextButton = styled.button`
-  position: absolute;
-  background: none;
-  top: 40%;
-  right: 1rem;
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-
-  &:disabled {
-    display: none;
-  }
 `;
 
 const CardItemContainer = styled.div`
