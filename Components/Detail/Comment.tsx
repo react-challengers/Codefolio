@@ -9,6 +9,7 @@ const Comment = () => {
   const router = useRouter();
   const POST_ID = router.query.id;
   const [currentUser, setCurrentUser] = useState(false);
+  const [USER_ID, setUSER_ID] = useState<string | undefined>("");
 
   useEffect(() => {
     // 로그인 상태 확인
@@ -19,6 +20,7 @@ const Comment = () => {
       } else {
         setCurrentUser(false);
       }
+      setUSER_ID(data.session?.user.email);
     };
 
     LoginState();
@@ -26,7 +28,7 @@ const Comment = () => {
 
   return (
     <CommentContainer>
-      {currentUser && <CommentInput POST_ID={POST_ID} />}
+      {currentUser && <CommentInput POST_ID={POST_ID} USER_ID={USER_ID} />}
       <CommentList POST_ID={POST_ID} />
     </CommentContainer>
   );
