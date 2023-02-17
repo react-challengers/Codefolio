@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useRouter } from "next/router";
+import Link from "next/link";
 import React from "react";
 import styled from "styled-components";
 import DetailBox from "./DetailBox";
@@ -11,19 +11,18 @@ interface DetailWithProps {
 }
 
 const DetailWith = ({ name, field, github }: DetailWithProps) => {
-  const router = useRouter();
-
   return (
     <DetailWithContainer>
       <p>{name}</p>
       <DetailBox>{field}</DetailBox>
-      <GithubImage
-        src="/icons/github.svg"
-        onClick={() => router.push(github)}
-        width={20}
-        height={20}
-        alt="깃허브 주소"
-      />
+      <Link href={github || ""}>
+        <GithubImage
+          src="/icons/github.svg"
+          width={20}
+          height={20}
+          alt="깃허브 주소"
+        />
+      </Link>
     </DetailWithContainer>
   );
 };

@@ -1,5 +1,7 @@
 import supabase from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import styled from "styled-components";
 
 const ShowMoreModal = () => {
@@ -7,6 +9,12 @@ const ShowMoreModal = () => {
   const {
     query: { id: postId },
   } = router;
+  const [user, setUser] = useState<User | null>(null);
+
+  const getUser = async () => {
+    const { data } = await supabase.auth.getUser();
+    setUser(data.user);
+  };
 
   const editPost = async () => {
     router.push(`/edit-post/${postId}`);

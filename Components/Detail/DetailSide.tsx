@@ -1,3 +1,5 @@
+import supabase from "@/lib/supabase";
+import { useEffect } from "react";
 import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
 import Tags from "../Common/Tags";
@@ -5,10 +7,37 @@ import DefaultBox from "./DetailBox";
 import DetailSideContainer from "./DetailSideContainer";
 import DetailWith from "./DetailWith";
 
-const DetailSide = () => {
+interface DetailSideProps {
+  progressDate: string[];
+  stack: string[];
+  tag: string[];
+  skills: string[];
+  members: string[];
+  userId: string;
+}
+
+const DetailSide = ({
+  progressDate,
+  stack,
+  tag,
+  skills,
+  members,
+  userId,
+}: DetailSideProps) => {
   const date = 2;
-  const skills = ["Front-end", "Android"];
-  const tag = ["#Components", "#API"];
+
+  const getAuthor = async () => {
+    const { data, error } = await supabase
+      .from("user-profile")
+      .select()
+      .eq("user_id", userId);
+
+    // @TODO : 회원가입 시 프로필 자동 생성되는 기능 구현되면 아래에 코드 작성
+  };
+
+  useEffect(() => {
+    getAuthor();
+  }, []);
 
   return (
     <SideContainer>
@@ -38,7 +67,7 @@ const DetailSide = () => {
               alt="프로필 사진"
               page="detailPage"
             />
-            <Name>허다은</Name>
+            <Name>이름</Name>
           </ProfileWrapper>
           <ButtonsWrapper>
             {skills.map((skill) => (
@@ -49,21 +78,13 @@ const DetailSide = () => {
 
         <DetailSideWrapper>
           <Title>함께한 사람들</Title>
-          <DetailWith
-            name="윤준호"
-            field="Front-end"
-            github="https://github.com/yunjunhojj"
-          />
-          <DetailWith
-            name="윤준호"
-            field="Front-end"
-            github="https://github.com/yunjunhojj"
-          />
-          <DetailWith
-            name="윤준호"
-            field="Front-end"
-            github="https://github.com/yunjunhojj"
-          />
+          {members.map((member) => (
+            <DetailWith
+              name={member.name}
+              field={member.field}
+              github={member.github}
+            />
+          ))}
         </DetailSideWrapper>
       </DetailSideContainer>
     </SideContainer>

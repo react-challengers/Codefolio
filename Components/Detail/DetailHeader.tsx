@@ -116,21 +116,19 @@ const DetailHeader = () => {
   return (
     <DetailHeaderContainer>
       <DetailHeaderWrapper>
-        <LikeButton
+        <Image
           src={`/icons/like${isLike ? "Hover" : ""}.svg`}
           width={36}
           height={36}
           alt="좋아요 버튼"
           onClick={clickLikeButton}
-          isLike={isLike}
         />
-        <BookmarkButton
+        <Image
           src={`/icons/bookmark${isBookmark ? "Hover" : ""}.svg`}
           width={36}
           height={36}
           alt="북마크 버튼"
           onClick={clickBookmarkButton}
-          isBookmark={isBookmark}
         />
         <Image
           src="/icons/more.svg"
@@ -153,14 +151,6 @@ const DetailHeaderContainer = styled.div`
   }
 `;
 
-const BookmarkButton = styled(Image)<{ isBookmark: boolean }>`
-  /* background-color: ${({ isBookmark }) =>
-    isBookmark ? "yellow" : "transparent"}; */
-  &:hover {
-    /* background-color: yellow; */
-  }
-`;
-
 const DetailHeaderWrapper = styled.div`
   height: 5rem;
   display: flex;
@@ -169,13 +159,6 @@ const DetailHeaderWrapper = styled.div`
   align-items: center;
   padding-right: 2.5rem;
   gap: 1.875rem;
-`;
-
-const LikeButton = styled(Image)<{ isLike: boolean }>`
-  /* background-color: ${({ isLike }) => (isLike ? "pink" : "transparent")}; */
-  &:hover {
-    /* background-color: pink; */
-  }
 `;
 
 export default DetailHeader;
