@@ -4,7 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import DetailBox from "./DetailBox";
 
-interface DetailWithProps {
+export interface DetailWithProps {
   name: string;
   field: string;
   github: string;

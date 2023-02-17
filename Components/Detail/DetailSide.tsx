@@ -5,7 +5,7 @@ import ProfileImage from "../Common/ProfileImage";
 import Tags from "../Common/Tags";
 import DefaultBox from "./DetailBox";
 import DetailSideContainer from "./DetailSideContainer";
-import DetailWith from "./DetailWith";
+import DetailWith, { DetailWithProps } from "./DetailWith";
 
 interface DetailSideProps {
   progressDate: string[];
@@ -78,13 +78,15 @@ const DetailSide = ({
 
         <DetailSideWrapper>
           <Title>함께한 사람들</Title>
-          {members.map((member) => (
-            <DetailWith
-              name={member.name}
-              field={member.field}
-              github={member.github}
-            />
-          ))}
+          {members.map(
+            (
+              // 에러 어떻게 해결하죠....
+              { name, field, github }: any,
+              idx
+            ) => (
+              <DetailWith key={idx} name={name} field={field} github={github} />
+            )
+          )}
         </DetailSideWrapper>
       </DetailSideContainer>
     </SideContainer>

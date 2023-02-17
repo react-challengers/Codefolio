@@ -12,11 +12,9 @@ import {
   RelatedProject,
 } from "@/Components/Detail";
 
-// import DetailContent from "@/Components/Detail/DetailContent";
-const DetailContent = dynamic(
-  () => import("@/COmponents/Detail/DetailContent"),
-  { ssr: false }
-);
+const Viewer = dynamic(() => import("@/Components/Detail/DetailContent"), {
+  ssr: false,
+});
 
 const DetailPage: NextPage = () => {
   const {
@@ -47,7 +45,6 @@ const DetailPage: NextPage = () => {
       .single();
 
     if (error) {
-      alert("다시 시도해주세요.");
       return;
     }
 
@@ -58,7 +55,7 @@ const DetailPage: NextPage = () => {
       large_category: field,
       sub_category: subCategory,
       content: postContent,
-      progressDate,
+      progress_date: progressDate,
       stack,
       tag,
       skills,
@@ -99,7 +96,7 @@ const DetailPage: NextPage = () => {
           <DetailSide {...sideData} />
         </DetailContentsSide>
         <DetailContentsMain>
-          <DetailContent content={content} />
+          <Viewer content={content} />
         </DetailContentsMain>
       </DetailContentsContainer>
       <RelatedProject />
