@@ -98,14 +98,11 @@ const CardItem = ({
         {isOverlay && (
           <ImageOverlayContainer>
             <ImageOverlayProfileContainer>
-              {/* todo: add src current user profile image */}
-              {/* scr / alt */}
               <ProfileImage
                 src={userProfileImage}
                 alt="프로필 사진"
                 page="detailPage"
               />
-              {/* todo: add nickname current user */}
               <ImageOverlayProfileName>{userName}</ImageOverlayProfileName>
             </ImageOverlayProfileContainer>
           </ImageOverlayContainer>
