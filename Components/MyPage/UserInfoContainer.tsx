@@ -56,8 +56,6 @@ const UserInfoContainer = () => {
         .eq("user_id", data.user.id)
         .single();
 
-      console.log(userProfile, error);
-
       if (error) return;
       const {
         contact_email: contactEmailData,
