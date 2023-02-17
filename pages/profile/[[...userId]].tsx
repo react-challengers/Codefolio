@@ -51,16 +51,15 @@ const ProfilePage: NextPage = () => {
     setCurrentTab(idx);
   };
 
-  const fetchAllPosts = async () => {
-    const newQueryData = await queryClient.fetchQuery<PostType[]>(
-      ["GET_POSTS"],
-      getAllPosts
-    );
-
-    return newQueryData;
-  };
-
   useEffect(() => {
+    const fetchAllPosts = async () => {
+      const newQueryData = await queryClient.fetchQuery<PostType[]>(
+        ["GET_POSTS"],
+        getAllPosts
+      );
+      return newQueryData;
+    };
+
     const queryData: PostType[] | undefined = queryClient.getQueryData([
       "GET_POSTS",
     ]);
@@ -73,7 +72,7 @@ const ProfilePage: NextPage = () => {
         }
       });
     }
-  }, []);
+  }, [queryClient]);
 
   // TODO: itemList 이용해서 필터링된 카드 아이템 리스트 만들기
   return (
