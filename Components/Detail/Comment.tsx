@@ -7,7 +7,7 @@ import CommentList from "./CommentList";
 
 const Comment = () => {
   const router = useRouter();
-  const POST_ID = router.query.id;
+  const POSTID = router.query.id;
   const [currentUser, setCurrentUser] = useState(false);
   const [userId, setUserId] = useState<string | undefined>("");
 
@@ -28,8 +28,8 @@ const Comment = () => {
 
   return (
     <CommentContainer>
-      {currentUser && <CommentInput POST_ID={POST_ID} USER_ID={userId} />}
-      <CommentList POST_ID={POST_ID} />
+      {currentUser && <CommentInput POST_ID={POSTID} USER_ID={userId} />}
+      {POSTID && <CommentList POST_ID={POSTID} />}
     </CommentContainer>
   );
 };

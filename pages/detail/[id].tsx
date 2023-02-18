@@ -96,7 +96,7 @@ const DetailPage: NextPage = () => {
           <DetailSide {...sideData} />
         </DetailContentsSide>
         <DetailContentsMain>
-          <Viewer content={content} />
+          {content && <Viewer content={content} />}{" "}
         </DetailContentsMain>
       </DetailContentsContainer>
       <RelatedProject />
