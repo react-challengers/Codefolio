@@ -49,6 +49,7 @@ const DetailHeader = () => {
       .from("like")
       .insert({ post_id: postId, user_id: user?.id });
     if (!error) {
+      await supabase.rpc("increment_like", { row_id: postId });
       setIsLike(true);
     }
   };
@@ -60,6 +61,7 @@ const DetailHeader = () => {
       .eq("user_id", user?.id)
       .eq("post_id", postId);
     if (!error) {
+      await supabase.rpc("decrement_like", { row_id: postId });
       setIsLike(false);
     }
   };

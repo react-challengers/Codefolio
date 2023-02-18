@@ -29,9 +29,8 @@ const CardItemContainer = ({ itemList }: CardItemContainerProps) => {
               subTitle={post.sub_title}
               tagItems={post.tag}
               date={getPostDate(post.created_at)}
-              // TODO: comments, likes 수 구하기
-              comments={100}
-              likes={100}
+              comments={post.comment_count}
+              likes={post.like_count}
               field={`${post.large_category} | ${post.sub_category}`}
             />
           </CardItemWrapper>
