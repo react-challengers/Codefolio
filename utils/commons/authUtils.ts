@@ -17,12 +17,13 @@ export const checkUserName = (userName: string): boolean => {
 
 export const postUserProfile = async (
   userProfileUserId: string | undefined,
+  userProfileEmail: string | undefined,
   userProfileUserName: string | undefined
 ) => {
   const { error } = await supabase.from("user-profile").insert({
     user_id: userProfileUserId,
     user_name: userProfileUserName,
-    contact_email: userProfileUserId,
+    contact_email: userProfileEmail,
     gender: "",
     is_public: true,
     profile_image: "",
