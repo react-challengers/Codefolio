@@ -1,5 +1,6 @@
+import supabase from "@/lib/supabase";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ProfileImage from "../ProfileImage";
 import Tags from "../Tags";
@@ -22,6 +23,7 @@ interface CardProps {
   likes: number;
   comments: number;
   field: string;
+  userId: string;
 }
 
 /**
@@ -34,6 +36,7 @@ interface CardProps {
  * @param {string} likes - 좋아요 수
  * @param {string} comments - 댓글 수
  * @param {string} filed - 분야
+ * @param {string} user_id - 작성자 id
  * @constructor
  * @example
  * <CardItem
@@ -59,8 +62,28 @@ const CardItem = ({
   likes,
   comments,
   field,
+  userId,
 }: CardProps) => {
   const [isOverlay, setIsOverlay] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [userProfileImage, setUserProfileImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      const { data, error } = await supabase
+        .from("user-profile")
+        .select("*")
+        .eq("user_id", userId)
+        .single();
+      if (data) {
+        setUserName(data.user_name || null);
+        setUserProfileImage(data.profile_image || null);
+      }
+      if (error) console.log(error.message);
+    };
+
+    getUserInfo();
+  }, [userId]);
 
   return (
     <CardContainer
@@ -75,10 +98,12 @@ const CardItem = ({
         {isOverlay && (
           <ImageOverlayContainer>
             <ImageOverlayProfileContainer>
-              {/* todo: add src current user profile image */}
-              <ProfileImage alt={title} page="detailPage" />
-              {/* todo: add nickname current user */}
-              <ImageOverlayProfileName>이정익</ImageOverlayProfileName>
+              <ProfileImage
+                src={userProfileImage}
+                alt="프로필 사진"
+                page="detailPage"
+              />
+              <ImageOverlayProfileName>{userName}</ImageOverlayProfileName>
             </ImageOverlayProfileContainer>
           </ImageOverlayContainer>
         )}

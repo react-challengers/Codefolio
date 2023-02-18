@@ -148,6 +148,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
               comments={100}
               likes={100}
               field={`${post.large_category} | ${post.sub_category}`}
+              userId={post.user_id}
             />
           </CardContainer>
         ))}
