@@ -6,6 +6,7 @@ import {
   myPageUserName,
   userLoginCheck,
   myPageBackgroundColor,
+  myPageProfileImage,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import { Field } from "@/types/enums";
@@ -14,6 +15,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
 import color_fill from "../../public/icons/color_fill.svg";
@@ -24,7 +26,7 @@ type BackgroundColor = {
 
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한하기
- * @TODO 잠시 "허다은"으로 이름이 있는 문제 해결하기
+ * @TODO 프로필 데이터 react-query를 캐싱하기
  */
 
 const UserInfoContainer = () => {
@@ -36,10 +38,12 @@ const UserInfoContainer = () => {
   const [userBackground, setUserBackground] = useRecoilState(
     myPageBackgroundColor
   );
+  const [profileImage, setProfileImage] = useRecoilState(myPageProfileImage);
 
   const [isEditing, setIsEditing] = useState(false);
 
   const userNameRef = useRef<HTMLInputElement>(null);
+  const imageUploader = useRef(null);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -49,7 +53,7 @@ const UserInfoContainer = () => {
       const { data: userProfile, error } = await supabase
         .from("user-profile")
         .select("*")
-        .eq("user_id", data.user?.email)
+        .eq("user_id", data.user.id)
         .single();
 
       if (error) return;
@@ -57,14 +61,25 @@ const UserInfoContainer = () => {
         contact_email: contactEmailData,
         user_name: userNameData,
         self_profile: selfProfileData,
+        profile_image: profileImageData,
+        background_color: backgroundColor,
       } = userProfile;
+      setUserId(data.user.id as string);
       setUserName(userNameData);
       setContactEmail(contactEmailData);
       setSelfProfile(selfProfileData);
-      setUserId(data.user?.email as string);
+      setProfileImage(profileImageData);
+      setUserBackground(backgroundColor);
     };
     getUserProfile();
-  }, [setUserName, setContactEmail, setSelfProfile, userId]);
+  }, [
+    setUserName,
+    setContactEmail,
+    setSelfProfile,
+    setUserBackground,
+    setUserId,
+    setProfileImage,
+  ]);
 
   const handleUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
@@ -94,7 +109,7 @@ const UserInfoContainer = () => {
     career: "3년차",
     is_public: true,
     birth_year: "1997",
-    profile_image: "",
+    profile_image: profileImage,
     background_color: userBackground,
     self_profile: selfProfile,
   };
@@ -110,7 +125,6 @@ const UserInfoContainer = () => {
     } else {
       setIsEditing(true);
       userNameRef.current?.focus();
-      console.log("userName", userNameRef.current);
     }
   };
 
@@ -127,12 +141,48 @@ const UserInfoContainer = () => {
     return router.push("/");
   };
 
+  const uploadImage = async (file: File) => {
+    const imgPath = crypto.randomUUID();
+    await supabase.storage.from("post-image").upload(imgPath, file);
+
+    // 이미지 올리기
+    const urlResult = await supabase.storage
+      .from("post-image")
+      .getPublicUrl(imgPath);
+    return urlResult.data.publicUrl;
+  };
+
+  const handleProfileImage = (e: ChangeEvent<HTMLInputElement>) => {
+    const [file] = e.target.files as FileList;
+    if (!file) return;
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = async (uploadedBlob) => {
+      const imgDataUrl = uploadedBlob.target?.result as string; // input의 파일을 base64로 받습니다.
+      if (!imgDataUrl) return;
+      const imgFile = await convertEase64ToFile(imgDataUrl);
+      const publicImageURL = await uploadImage(imgFile);
+      if (!publicImageURL) return;
+      setProfileImage(publicImageURL);
+    };
+  };
+
   return (
     <InfoContainer>
       <Banner userBackground={userBackground} />
       <UserInfoWrapper>
         <ProfileImageWrapper>
-          <ProfileImage alt="유저 프로필" page="myPage" />
+          <label htmlFor="user-profile">
+            <ProfileFileImageInput
+              type="file"
+              accept="image/*"
+              onChange={handleProfileImage}
+              ref={imageUploader}
+              multiple={false}
+              id="user-profile"
+            />
+            <ProfileImage alt="유저 프로필" page="myPage" src={profileImage} />
+          </label>
         </ProfileImageWrapper>
         <IconWrapper>
           <IconBox onClick={() => handleIsEditing()}>
@@ -212,6 +262,10 @@ const UserInfoWrapper = styled.div`
 const ProfileImageWrapper = styled.div`
   position: absolute;
   top: -3.25rem;
+`;
+
+const ProfileFileImageInput = styled.input`
+  display: none;
 `;
 
 const IconWrapper = styled.div`

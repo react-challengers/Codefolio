@@ -4,14 +4,14 @@ import styled from "styled-components";
 type ComponenetType = "birth_year" | "career";
 interface DropDownProps {
   type: ComponenetType;
-  editbirthYear?: string;
+  editBirthYear?: string;
   setEditBirthYear?: Dispatch<React.SetStateAction<string>>;
   editCareer?: string;
   setEditCareer?: Dispatch<React.SetStateAction<string>>;
 }
 const DropDown = ({
   type,
-  editbirthYear,
+  editBirthYear: editbirthYear,
   setEditBirthYear,
   editCareer,
   setEditCareer,
