@@ -43,8 +43,6 @@ const EditProfileContainer = ({
   const {
     birth_year: birthYear,
     field: oldField,
-    skills,
-    career,
     is_public: isPublic,
   } = userInfo;
 
@@ -78,6 +76,8 @@ const EditProfileContainer = ({
     changeEditPhone(e.target.value);
     setIsPhoneNumber(checkIsPhoneNumber(e.target.value));
   };
+
+  const handleSave = () => {};
 
   return (
     <>

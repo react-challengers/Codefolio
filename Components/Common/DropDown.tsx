@@ -1,14 +1,23 @@
 import React, { Dispatch } from "react";
 import styled from "styled-components";
 
-type ComponenetType = "birth_year" | "career";
+/**
+ * @TODO 결합도 낮추기
+ * career와 birthYear 2가지 유스케이스만 대응하는 컴포넌트입니다.
+ * 비즈니스 로직은 호출한 공용컴포넌트 내부에 있을 필요가 없습니다.
+ * UI에 대한 책임만 갖고 있어야 합니다.
+ */
+
+type ComponentType = "birth_year" | "career";
+
 interface DropDownProps {
-  type: ComponenetType;
+  type: ComponentType;
   editBirthYear?: string;
   setEditBirthYear?: Dispatch<React.SetStateAction<string>>;
   editCareer?: string;
   setEditCareer?: Dispatch<React.SetStateAction<string>>;
 }
+
 const DropDown = ({
   type,
   editBirthYear: editbirthYear,
@@ -31,10 +40,10 @@ const DropDown = ({
   }
 
   if (type === "career") {
+    options.push("신입");
     for (let i = 1; i < 20; i += 1) {
       options.push(`${i}년차`);
     }
-    options.unshift("신입");
     options.push("20년차 이상");
   }
 
