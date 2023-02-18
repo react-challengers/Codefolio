@@ -1,13 +1,14 @@
 import {
-  myPageCareer,
-  myPageGender,
+  myPageField,
   myPageIsPublic,
   myPagePhonNumber,
   myPageSkills,
+  myPageUserProfile,
 } from "@/lib/recoil";
+import supabase from "@/lib/supabase";
 import checkIsPhoneNumber from "@/utils/commons/checkIsPhoneNumber";
 import { ChangeEvent, Dispatch, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { DefaultButton, DropDown, SkillList, Toggle } from "../Common";
 import PositionTag from "./PositionTag";
@@ -32,30 +33,15 @@ const fieldList = [
 ];
 
 interface EditProfileContainerProps {
-  userInfo: Omit<UserProfileType, "id">;
   setIsEditing: Dispatch<React.SetStateAction<boolean>>;
 }
 
-const EditProfileContainer = ({
-  userInfo,
-  setIsEditing,
-}: EditProfileContainerProps) => {
-  const {
-    birth_year: birthYear,
-    field: oldField,
-    is_public: isPublic,
-  } = userInfo;
-
-  const [editPhone, changeEditPhone] = useRecoilState(myPagePhonNumber);
-  const [currentItem, setCurrentItem] = useRecoilState(myPageGender);
-  const [editIsPublic, setEditIsPublic] = useRecoilState(myPageIsPublic);
-  // const [activeField, setActiveField] = useRecoilState(myPageField);
-  const [activeField, setActiveField] = useState([...oldField]);
+const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
+  const [phoneNumber, setPhoneNumber] = useRecoilState(myPagePhonNumber);
+  const [isPublic, setIsPublic] = useRecoilState(myPageIsPublic);
+  const [activeField, setActiveField] = useRecoilState(myPageField);
   const [editSkills, setEditSkills] = useRecoilState(myPageSkills);
-  // const [editBirthYear, setEditBirthYear] = useRecoilState(myPageBirthYear);
-  const [editBirthYear, setEditBirthYear] = useState(birthYear);
-  const [editCareer, setEditCareer] = useRecoilState(myPageCareer);
-
+  const userProfile = useRecoilValue(myPageUserProfile);
   // local state로 편집 상태 제어
   const [isPhoneNumber, setIsPhoneNumber] = useState(false);
 
@@ -70,14 +56,22 @@ const EditProfileContainer = ({
     }
   };
 
-  // const handleBirthYear = () => {}
-
-  const handleEditPhone = (e: ChangeEvent<HTMLInputElement>) => {
-    changeEditPhone(e.target.value);
+  const handleEditPhoneNumber = (e: ChangeEvent<HTMLInputElement>) => {
+    setPhoneNumber(e.target.value);
     setIsPhoneNumber(checkIsPhoneNumber(e.target.value));
   };
 
-  const handleSave = () => {};
+  const handleSave = async () => {
+    setIsEditing(false);
+    try {
+      await supabase
+        .from("user-profile")
+        .update(userProfile)
+        .eq("user_id", userProfile.user_id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -86,25 +80,18 @@ const EditProfileContainer = ({
           <>
             <InfoWrapper>
               <p>성별</p>
-              <SwitchButton
-                currentItem={currentItem}
-                setCurrentItem={setCurrentItem}
-              />
+              <SwitchButton />
             </InfoWrapper>
             <InfoWrapper>
               <p>출생년도</p>
-              <DropDown
-                type="birth_year"
-                editBirthYear={editBirthYear}
-                setEditBirthYear={setEditBirthYear}
-              />
+              <DropDown type="birth_year" />
             </InfoWrapper>
             <InfoWrapper>
               <p>휴대전화</p>
               <PhoneInput
                 type="number"
-                value={editPhone}
-                onChange={handleEditPhone}
+                value={phoneNumber}
+                onChange={handleEditPhoneNumber}
                 placeholder="01012345678"
               />
               {isPhoneNumber && <span>전화번호 형식이 아닙니다.</span>}
@@ -130,11 +117,7 @@ const EditProfileContainer = ({
               </ContentWrapper>
               <ContentWrapper>
                 <p>경력</p>
-                <DropDown
-                  type="career"
-                  editCareer={editCareer}
-                  setEditCareer={setEditCareer}
-                />
+                <DropDown type="career" />
               </ContentWrapper>
               <ContentWrapper>
                 <p>스킬</p>
@@ -151,7 +134,7 @@ const EditProfileContainer = ({
             <ContentWrapper>
               <p>프로필 공개여부</p>
               <ToggleWrapper>
-                <Toggle flicker={editIsPublic} setFlicker={setEditIsPublic} />
+                <Toggle flicker={isPublic} setFlicker={setIsPublic} />
                 <p>{isPublic ? "공개" : "비공개"}</p>
               </ToggleWrapper>
             </ContentWrapper>
@@ -169,7 +152,7 @@ const EditProfileContainer = ({
           text="저장"
           type="full"
           size="m"
-          onClick={() => setIsEditing(false)}
+          onClick={() => handleSave()}
         />
       </ButtonWrapper>
     </>

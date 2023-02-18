@@ -7,11 +7,18 @@ import {
   userLoginCheck,
   myPageBackgroundColor,
   myPageProfileImage,
+  myPageUserProfile,
+  myPageId,
+  myPageGender,
+  myPageCareer,
+  myPageField,
+  myPageBirthYear,
+  myPageSkills,
+  myPageIsPublic,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
-import { Field } from "@/types/enums";
 import Image, { StaticImageData } from "next/image";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -20,37 +27,38 @@ import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
 import color_fill from "../../public/icons/color_fill.svg";
 
-type BackgroundColor = {
-  background_color: string;
-};
-
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한하기
  * @TODO 프로필 데이터 react-query를 캐싱하기
  */
 
 const UserInfoContainer = () => {
+  const setUserProfileId = useSetRecoilState(myPageId);
   const [userName, setUserName] = useRecoilState(myPageUserName);
   const [contactEmail, setContactEmail] = useRecoilState(myPageContactEmail);
   const [selfProfile, setSelfProfile] = useRecoilState(myPageSelfProfile);
-  const phone = useRecoilValue(myPagePhonNumber);
+  const setPhone = useSetRecoilState(myPagePhonNumber);
   const [userId, setUserId] = useRecoilState(myPageUserId);
   const [userBackground, setUserBackground] = useRecoilState(
     myPageBackgroundColor
   );
   const [profileImage, setProfileImage] = useRecoilState(myPageProfileImage);
+  const userProfile = useRecoilValue(myPageUserProfile);
+  const setGender = useSetRecoilState(myPageGender);
+  const setCareer = useSetRecoilState(myPageCareer);
+  const setField = useSetRecoilState(myPageField);
+  const setBirthYear = useSetRecoilState(myPageBirthYear);
+  const setSkills = useSetRecoilState(myPageSkills);
+  const setPublic = useSetRecoilState(myPageIsPublic);
 
   const [isEditing, setIsEditing] = useState(false);
-
-  const userNameRef = useRef<HTMLInputElement>(null);
-  const imageUploader = useRef(null);
 
   useEffect(() => {
     const getUserProfile = async () => {
       const { data, error: getUserIdError } = await supabase.auth.getUser();
       if (getUserIdError || !data.user?.email) return;
 
-      const { data: userProfile, error } = await supabase
+      const { data: userProfileData, error } = await supabase
         .from("user-profile")
         .select("*")
         .eq("user_id", data.user.id)
@@ -63,13 +71,29 @@ const UserInfoContainer = () => {
         self_profile: selfProfileData,
         profile_image: profileImageData,
         background_color: backgroundColor,
-      } = userProfile;
+        id,
+        phone,
+        gender,
+        career,
+        field,
+        birth_year: birthYear,
+        skills,
+        is_public: isPublic,
+      } = userProfileData as UserProfileType;
+      setUserProfileId(id);
       setUserId(data.user.id as string);
       setUserName(userNameData);
       setContactEmail(contactEmailData);
       setSelfProfile(selfProfileData);
       setProfileImage(profileImageData);
       setUserBackground(backgroundColor);
+      setPhone(phone);
+      setGender(gender);
+      setCareer(career);
+      setField(JSON.parse(`${field}`));
+      setBirthYear(birthYear);
+      setSkills(skills);
+      setPublic(isPublic);
     };
     getUserProfile();
   }, [
@@ -79,6 +103,14 @@ const UserInfoContainer = () => {
     setUserBackground,
     setUserId,
     setProfileImage,
+    setUserProfileId,
+    setPhone,
+    setGender,
+    setBirthYear,
+    setCareer,
+    setField,
+    setPublic,
+    setSkills,
   ]);
 
   const handleUserName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -95,36 +127,16 @@ const UserInfoContainer = () => {
     setUserBackground(e.target.value);
   };
 
-  // 잠시 타입 결합으로 해결합니다.
-  const userInfo: Omit<UserProfileType, "id"> & BackgroundColor = {
-    // id: "uuid",
-    user_id: userId,
-    user_name: userName,
-    contact_email: contactEmail,
-    gender: "여자",
-    bookmark_folders: ["example"],
-    phone,
-    field: [Field.WEB],
-    skills: ["a", "b", "c"],
-    career: "3년차",
-    is_public: true,
-    birth_year: "1997",
-    profile_image: profileImage,
-    background_color: userBackground,
-    self_profile: selfProfile,
-  };
-
   const handleIsEditing = async () => {
     // 갱신된 데이터 서버에 반영
     if (isEditing) {
       setIsEditing(false);
       await supabase
         .from("user-profile")
-        .update(userInfo)
+        .update(userProfile)
         .eq("user_id", userId);
     } else {
       setIsEditing(true);
-      userNameRef.current?.focus();
     }
   };
 
@@ -143,13 +155,15 @@ const UserInfoContainer = () => {
 
   const uploadImage = async (file: File) => {
     const imgPath = crypto.randomUUID();
-    await supabase.storage.from("post-image").upload(imgPath, file);
-
-    // 이미지 올리기
-    const urlResult = await supabase.storage
-      .from("post-image")
-      .getPublicUrl(imgPath);
-    return urlResult.data.publicUrl;
+    try {
+      await supabase.storage.from("post-image").upload(imgPath, file);
+      const { data } = await supabase.storage
+        .from("post-image")
+        .getPublicUrl(imgPath);
+      return data.publicUrl;
+    } catch (error) {
+      return "";
+    }
   };
 
   const handleProfileImage = (e: ChangeEvent<HTMLInputElement>) => {
@@ -177,7 +191,6 @@ const UserInfoContainer = () => {
               type="file"
               accept="image/*"
               onChange={handleProfileImage}
-              ref={imageUploader}
               multiple={false}
               id="user-profile"
             />
@@ -202,11 +215,7 @@ const UserInfoContainer = () => {
         <TextWrapper>
           {isEditing ? (
             <InputWrapper>
-              <UserNameInput
-                value={userName}
-                onChange={handleUserName}
-                ref={userNameRef}
-              />
+              <UserNameInput value={userName} onChange={handleUserName} />
               <EmailInput value={contactEmail} onChange={handleContactEmail} />
               <SelfProfileInput
                 value={selfProfile}

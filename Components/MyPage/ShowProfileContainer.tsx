@@ -1,26 +1,30 @@
+import {
+  myPageBirthYear,
+  myPageCareer,
+  myPageField,
+  myPageGender,
+  myPagePhonNumber,
+  myPageSkills,
+} from "@/lib/recoil";
 import { Dispatch } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import DefaultButton from "../Common/DefaultButton";
 import Tags from "../Common/Tags";
 import ProfileContainer from "./ProfileContainer";
 
 interface ShowProfileContainerProps {
-  userInfo: Omit<UserProfileType, "id">;
   setIsEditing: Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ShowProfileContainer = ({
-  userInfo,
-  setIsEditing,
-}: ShowProfileContainerProps) => {
-  const {
-    gender,
-    birth_year: birthYear,
-    phone,
-    field,
-    skills,
-    career,
-  } = userInfo;
+const ShowProfileContainer = ({ setIsEditing }: ShowProfileContainerProps) => {
+  const gender = useRecoilValue(myPageGender);
+  const birthYear = useRecoilValue(myPageBirthYear);
+  const phone = useRecoilValue(myPagePhonNumber);
+  const field = useRecoilValue(myPageField);
+  const skills = useRecoilValue(myPageSkills);
+  const career = useRecoilValue(myPageCareer);
+
   return (
     <>
       <TabProfileContainer>

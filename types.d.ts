@@ -71,7 +71,7 @@ interface UserProfileType {
   skills: string[];
   career: string;
   is_public: boolean;
-  birth_year: string;
+  birth_year: number;
   self_profile: string;
   profile_image: string;
   background_color: string;
