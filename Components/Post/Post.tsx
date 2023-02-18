@@ -38,7 +38,7 @@ const Post: NextPage = () => {
   const content = useRecoilValue(postContent);
   const postLargeCategory = useRecoilValue(recoilPostLargeCategory);
   const postSubCategory = useRecoilValue(recoilPostSubCategory);
-  const [user_id, setUser_id] = useState<string | undefined>("");
+  const [userId, setUserId] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -54,14 +54,14 @@ const Post: NextPage = () => {
     tag,
     is_public: isPublic,
     content,
-    user_id,
+    user_id: userId,
   };
 
   useEffect(() => {
     const LoginState = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        setUser_id(data.session?.user.id);
+        setUserId(data.session?.user.id);
       }
     };
 
