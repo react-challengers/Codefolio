@@ -1,15 +1,14 @@
 import supabase from "@/lib/supabase";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
 import Tags from "../Common/Tags";
 import DefaultBox from "./DetailBox";
 import DetailSideContainer from "./DetailSideContainer";
-import DetailWith, { DetailWithProps } from "./DetailWith";
+import DetailWith from "./DetailWith";
 
 interface DetailSideProps {
   progressDate: string[];
-  stack: string[];
   tag: string[];
   skills: string[];
   members: string[];
@@ -18,24 +17,36 @@ interface DetailSideProps {
 
 const DetailSide = ({
   progressDate,
-  stack,
   tag,
   skills,
   members,
   userId,
 }: DetailSideProps) => {
-  const getAuthor = async () => {
+  const [userName, setUserName] = useState("익명");
+  const [userProfileImage, setUserProfileImage] = useState(
+    "/images/anonProfile.jpeg"
+  );
+
+  const getAuthor = useCallback(async () => {
     const { data, error } = await supabase
       .from("user-profile")
       .select()
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .single();
 
-    // @TODO : 회원가입 시 프로필 자동 생성되는 기능 구현되면 아래에 코드 작성
-  };
+    if (error) {
+      console.log(error);
+    }
+
+    if (data) {
+      setUserName(data?.user_name);
+      setUserProfileImage(data?.profile_image);
+    }
+  }, [userId]);
 
   useEffect(() => {
     getAuthor();
-  }, []);
+  }, [getAuthor]);
 
   return (
     <SideContainer>
@@ -63,11 +74,11 @@ const DetailSide = ({
           <Title>작성자</Title>
           <ProfileWrapper>
             <ProfileImage
-              src="/images/anonProfile.jpeg"
+              src={userProfileImage}
               alt="프로필 사진"
               page="detailPage"
             />
-            <Name>이름</Name>
+            <Name>{userName}</Name>
           </ProfileWrapper>
           <ButtonsWrapper>
             {skills.map((skill) => (

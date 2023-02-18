@@ -74,15 +74,11 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   };
 
   const openModal = (id: string) => {
-    router.push(
-      {
-        query: {
-          id,
-        },
+    router.push({
+      query: {
+        id,
       },
-      undefined,
-      { shallow: true }
-    );
+    });
     setIsModalOpen(true);
   };
 

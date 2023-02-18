@@ -1,8 +1,7 @@
 import dynamic from "next/dynamic";
-import supabase from "@/lib/supabase";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import styled from "styled-components";
 import {
   Comment,
@@ -11,6 +10,7 @@ import {
   DetailTitle,
   RelatedProject,
 } from "@/Components/Detail";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Viewer = dynamic(() => import("@/Components/Detail/DetailContent"), {
   ssr: false,
@@ -20,72 +20,55 @@ const DetailPage: NextPage = () => {
   const {
     query: { id: postId },
   } = useRouter();
-  const [titleData, setTitleData] = useState({
-    title: "",
-    subtitle: "",
-    backgroundColor: "",
-    field: "",
-    subCategory: "",
-  });
-  const [sideData, setSideData] = useState({
-    progressDate: ["", ""],
-    stack: [""],
-    skills: ["Front-end", "Android"],
-    tag: [""],
-    members: [""],
-    userId: "",
-  });
-  const [content, setContent] = useState("");
 
-  const getData = async () => {
-    const { data, error } = await supabase
-      .from("post")
-      .select()
-      .eq("id", postId)
-      .single();
+  const queryClient = useQueryClient();
 
-    if (error) {
-      return;
-    }
+  const postById = useMemo(() => {
+    return queryClient
+      .getQueryData<PostType[]>(["GET_POSTS"])
+      ?.find((post) => post.id === postId);
+  }, [postId, queryClient]);
 
-    const {
-      title,
-      sub_title: subTitle,
-      title_background_color: backgroundColor,
-      large_category: field,
-      sub_category: subCategory,
-      content: postContent,
-      progress_date: progressDate,
-      stack,
-      tag,
-      skills,
-      members,
-      user_id: userId,
-    } = data;
+  const titleData = useMemo(() => {
+    if (!postById)
+      return {
+        title: "",
+        subtitle: "",
+        backgroundColor: "",
+        field: "",
+        subCategory: "",
+      };
+    return {
+      title: postById.title,
+      subtitle: postById.sub_title,
+      backgroundColor: postById.title_background_color,
+      field: postById.large_category,
+      subCategory: postById.sub_category,
+    };
+  }, [postById]);
 
-    setTitleData({
-      title,
-      subtitle: subTitle,
-      backgroundColor,
-      field,
-      subCategory,
-    });
+  const sideData = useMemo(() => {
+    if (!postById)
+      return {
+        progressDate: [],
+        tag: [],
+        skills: [],
+        members: [],
+        userId: "",
+      };
+    return {
+      progressDate: postById.progress_date,
+      tag: postById.tag,
+      skills: postById.skills,
+      members: postById.members,
+      userId: postById.user_id,
+    };
+  }, [postById]);
 
-    setSideData({
-      progressDate,
-      stack,
-      tag,
-      skills,
-      members,
-      userId,
-    });
-
-    setContent(postContent);
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
+  const content = useMemo(() => {
+    if (!postById) return "";
+    return postById.content;
+  }, [postById]);
 
   return (
     <DetailPageContainer>
