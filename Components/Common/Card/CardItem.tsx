@@ -83,7 +83,12 @@ const CardItem = ({
           </ImageOverlayContainer>
         )}
         <Tags tagItems={[field]} size="sm" />
-        <CardImage src={`${imageSrc}`} alt={imageAlt} layout="fill" />
+        <CardImage
+          src={`${imageSrc}`}
+          alt={imageAlt}
+          layout="fill"
+          unoptimized
+        />
       </ImageContainer>
       <CardBottomWrapper>
         <DateCountContainer>
