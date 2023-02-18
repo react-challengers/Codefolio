@@ -18,12 +18,13 @@ import {
   postTitleBackgroundColor,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 /**
  * @TODO custom hook으로 리팩토링하기
  * @TODO 카테고리 중복 선택 , 보여주는 UI
+ * @TODO user_id 리코일로 관리
  */
 const Post: NextPage = () => {
   const title = useRecoilValue(postTitle);
@@ -37,6 +38,7 @@ const Post: NextPage = () => {
   const content = useRecoilValue(postContent);
   const postLargeCategory = useRecoilValue(recoilPostLargeCategory);
   const postSubCategory = useRecoilValue(recoilPostSubCategory);
+  const [userId, setUserId] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -52,7 +54,19 @@ const Post: NextPage = () => {
     tag,
     is_public: isPublic,
     content,
+    user_id: userId,
   };
+
+  useEffect(() => {
+    const LoginState = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setUserId(data.session?.user.id);
+      }
+    };
+
+    LoginState();
+  }, []);
 
   const [isSaved, setIsSaved] = useState(false);
 
