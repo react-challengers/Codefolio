@@ -79,7 +79,7 @@ const CardItem = ({
         setUserName(data.user_name || null);
         setUserProfileImage(data.profile_image || null);
       }
-      if (error) console.log(error.message);
+      if (error) console.log(error);
     };
 
     getUserInfo();
@@ -111,8 +111,9 @@ const CardItem = ({
         <CardImage
           src={`${imageSrc}`}
           alt={imageAlt}
-          layout="fill"
           unoptimized
+          width={300}
+          height={180}
         />
       </ImageContainer>
       <CardBottomWrapper>
