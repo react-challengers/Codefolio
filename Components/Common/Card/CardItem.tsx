@@ -79,7 +79,7 @@ const CardItem = ({
         setUserName(data.user_name || null);
         setUserProfileImage(data.profile_image || null);
       }
-      if (error) console.log(error.message);
+      if (error) console.log(error);
     };
 
     getUserInfo();
