@@ -8,6 +8,7 @@ import { checkEmail, checkPassword } from "@/utils/commons/authUtils";
 import { ValidateText, AuthButton, AuthInput } from "@/Components/Common/Auth";
 import { useSetRecoilState } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
+import Modal from "@/Components/Common/Modal";
 
 // import { kakaoInit } from "@/utils/APIs/socialLogin";
 
@@ -24,6 +25,10 @@ const Login: NextPage = () => {
   const [password, setPassword] = useState("");
   const [emailValidate, setEmailValidate] = useState(true);
   const [passwordValidate, setPasswordValidate] = useState(true);
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState<string | null>("");
+  const [modalContent, setModalContent] = useState<string | null>("");
 
   const setIsLogin = useSetRecoilState(userLoginCheck);
 
@@ -66,18 +71,18 @@ const Login: NextPage = () => {
 
   const signInWithEmail = async () => {
     if (email === "" || password === "") {
-      return alert("이메일과 비밀번호 모두 입력해주세요.");
+      return OpenModal("이메일과 비밀번호 모두 입력해주세요.", null);
     }
 
     if (!checkEmail(email)) {
       setEmailValidate(false);
-      return alert("이메일의 형식을 확인해주세요.");
+      return OpenModal("이메일의 형식을 확인해주세요.", null);
     }
     setEmailValidate(true);
 
     if (!checkPassword(password)) {
       setPasswordValidate(false);
-      return alert("비밀번호는 8자리 이상 입니다. ");
+      return OpenModal("비밀번호는 8자리 이상 입니다.", null);
     }
     setPasswordValidate(true);
 
@@ -89,7 +94,7 @@ const Login: NextPage = () => {
       setIsLogin(true);
       return router.push("/");
     }
-    return alert("로그인 실패");
+    return OpenModal("로그인 실패", null);
   };
 
   const signInWithGoogle = async () => {
@@ -98,10 +103,9 @@ const Login: NextPage = () => {
     });
     if (!error) {
       setIsLogin(true);
-      router.push("/");
-    } else {
-      alert("구글 로그인 실패");
+      return router.push("/");
     }
+    return OpenModal("구글 로그인 실패", null);
   };
 
   const signInWithGitHub = async () => {
@@ -112,12 +116,23 @@ const Login: NextPage = () => {
       setIsLogin(true);
       router.push("/");
     } else {
-      alert("깃헙 로그인 실패");
+      OpenModal("github 로그인 실패", null);
     }
+  };
+
+  const OpenModal = (title: string | null, content: string | null) => {
+    setModalTitle(title);
+    setModalContent(content);
+    setShowModal(true);
   };
 
   return (
     <LoginPageContainer>
+      {showModal && (
+        <Modal onClose={() => setShowModal(false)} title={modalTitle}>
+          {modalContent}
+        </Modal>
+      )}
       <EmptyContainer />
       <LoginSpace>
         {/* <LoginButton>카카오로 로그인하기</LoginButton>

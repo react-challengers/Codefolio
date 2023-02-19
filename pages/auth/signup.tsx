@@ -13,6 +13,7 @@ import {
 } from "@/utils/commons/authUtils";
 import { useSetRecoilState } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
+import Modal from "@/Components/Common/Modal";
 
 /**
  * 현재 가장 기본적 유효성검사, "빈 인풋 체크"와 비밀번호 확인 부분만 추가되어 있습니다.
@@ -34,6 +35,10 @@ const SignUpPage: NextPage = () => {
 
   const setIsLogin = useSetRecoilState(userLoginCheck);
 
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState<string | null>("");
+  const [modalContent, setModalContent] = useState<string | null>("");
+
   useEffect(() => {
     // 로그인 상태 확인
     const LoginState = async () => {
@@ -47,30 +52,30 @@ const SignUpPage: NextPage = () => {
 
   const signupWithEmail = async () => {
     if (!userName || !email || !password || !passwordCheck) {
-      return alert("모든 데이터를 입력해주세요.");
+      return OpenModal("모든 데이터를 입력해주세요.", null);
     }
 
     if (!checkUserName(userName)) {
       setUserNameValidate(false);
-      return alert("이름(닉네임)은 2글자 이상입니다.");
+      return OpenModal("이름(닉네임)은 2글자 이상입니다.", null);
     }
     setUserNameValidate(true);
 
     if (!checkEmail(email)) {
       setEmailValidate(false);
-      return alert("이메일의 형식을 확인해주세요.");
+      return OpenModal("이메일의 형식을 확인해주세요.", null);
     }
     setEmailValidate(true);
 
     if (!checkPassword(password)) {
       setPasswordValidate(false);
-      return alert("비밀번호는 8자리 이상 입니다. ");
+      return OpenModal("비밀번호는 8자리 이상 입니다. ", null);
     }
     setPasswordValidate(true);
 
     if (!(password === passwordCheck)) {
       setPasswordCheckValidate(false);
-      return alert("비밀번호가 일치하지 않습니다.");
+      return OpenModal("비밀번호가 일치하지 않습니다.", null);
     }
     setPasswordCheckValidate(true);
 
@@ -91,14 +96,25 @@ const SignUpPage: NextPage = () => {
         data.user?.user_metadata.user_name;
       postUserProfile(userProfileUserId, userProfileEmail, userProfileUserName);
       setIsLogin(true);
-      alert("회원가입 완료");
+      OpenModal("회원가입 완료", null);
       return router.push("/");
     }
-    return alert("회원가입 실패");
+    return OpenModal("회원가입 실패", null);
+  };
+
+  const OpenModal = (title: string | null, content: string | null) => {
+    setModalTitle(title);
+    setModalContent(content);
+    setShowModal(true);
   };
 
   return (
     <SignupPageContainer>
+      {showModal && (
+        <Modal onClose={() => setShowModal(false)} title={modalTitle}>
+          {modalContent}
+        </Modal>
+      )}
       <EmptyContainer />
       <SignupSpace>
         <SignupForm>
