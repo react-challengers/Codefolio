@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { ChangeEvent, useState } from "react";
 
 interface UseInputArgsType {
@@ -24,16 +25,8 @@ const useInput = (inputGroup: UseInputArgsType) => {
     };
   };
 
-  // reset
   const resetAllInput = () => {
-    setInputValues((prev) => {
-      const resetObject: UseInputArgsType = {};
-      Object.keys(prev).forEach((item) => {
-        resetObject[item] = "";
-      });
-      console.log("resetObject", resetObject);
-      return resetObject;
-    });
+    setInputValues((prev) => _.mapValues(prev, () => ""));
   };
 
   const resetSpecificInput = (field: string) => {
