@@ -34,9 +34,8 @@ const LargeCategory = ({
   selectedCategory,
   setSelectedCategory,
 }: LargeCategoryProps) => {
-  const onClickLargeCategory = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLElement;
-    const largeCategory = target.innerText;
+  const onClickLargeCategory = () => {
+    const largeCategory = item;
 
     if (selectedCategory.includes(largeCategory)) {
       setSelectedCategory(
@@ -47,7 +46,7 @@ const LargeCategory = ({
     setSelectedCategory((prev) => [...prev, largeCategory]);
   };
   return (
-    <LargeCategoryContainer onClick={(e) => onClickLargeCategory(e)}>
+    <LargeCategoryContainer onClick={() => onClickLargeCategory()}>
       <LargeCategoryItem>{item}</LargeCategoryItem>
       <Image src={bottom_arrow} alt="bottom_arrow" width={32} height={32} />
     </LargeCategoryContainer>
