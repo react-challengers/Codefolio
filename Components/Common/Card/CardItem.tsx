@@ -1,6 +1,6 @@
 import supabase from "@/lib/supabase";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import styled from "styled-components";
 import ProfileImage from "../ProfileImage";
 import Tags from "../Tags";
@@ -68,18 +68,22 @@ const CardItem = ({
   const [userName, setUserName] = useState<string | null>(null);
   const [userProfileImage, setUserProfileImage] = useState<string | null>(null);
 
-  useEffect(() => {
+  useMemo(() => {
     const getUserInfo = async () => {
       const { data, error } = await supabase
-        .from("post")
+        .from("user-profile")
         .select("*")
         .eq("user_id", userId)
         .single();
-      if (data) {
+
+      if (error) console.log(error);
+
+      if (data === null) {
+        setUserName("sns계정");
+      } else {
         setUserName(data.user_name || null);
         setUserProfileImage(data.profile_image || null);
       }
-      if (error) console.log(error);
     };
 
     getUserInfo();
