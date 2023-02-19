@@ -4,7 +4,6 @@ import {
   myPageSelfProfile,
   myPageUserId,
   myPageUserName,
-  userLoginCheck,
   myPageBackgroundColor,
   myPageProfileImage,
 } from "@/lib/recoil";
@@ -12,8 +11,7 @@ import supabase from "@/lib/supabase";
 import { Field } from "@/types/enums";
 import Image, { StaticImageData } from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import ProfileImage from "../Common/ProfileImage";
@@ -128,19 +126,6 @@ const UserInfoContainer = () => {
     }
   };
 
-  const router = useRouter();
-
-  const setUserLogin = useSetRecoilState(userLoginCheck);
-
-  const onLogoutButtonClick = async () => {
-    const res = await supabase.auth.signOut();
-    setUserLogin(false);
-    if (res.error) {
-      throw new Error(res.error.message);
-    }
-    return router.push("/");
-  };
-
   const uploadImage = async (file: File) => {
     const imgPath = crypto.randomUUID();
     await supabase.storage.from("post-image").upload(imgPath, file);
@@ -192,11 +177,6 @@ const UserInfoContainer = () => {
               width="24"
               height="24"
             />
-          </IconBox>
-          <IconBox>
-            <button type="button" onClick={() => onLogoutButtonClick()}>
-              로그아웃
-            </button>
           </IconBox>
         </IconWrapper>
         <TextWrapper>
