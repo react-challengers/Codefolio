@@ -71,7 +71,7 @@ const CardItem = ({
   useEffect(() => {
     const getUserInfo = async () => {
       const { data, error } = await supabase
-        .from("user-profile")
+        .from("post")
         .select("*")
         .eq("user_id", userId)
         .single();
