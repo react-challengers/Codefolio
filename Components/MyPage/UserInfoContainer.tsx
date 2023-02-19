@@ -23,6 +23,7 @@ import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
+import { useUserProfile } from "@/hooks/query";
 import ProfileImage from "../Common/ProfileImage";
 import Banner from "./Banner";
 import color_fill from "../../public/icons/color_fill.svg";
@@ -33,12 +34,14 @@ import color_fill from "../../public/icons/color_fill.svg";
  */
 
 const UserInfoContainer = () => {
+  const { updateProfileData } = useUserProfile();
+
   const setUserProfileId = useSetRecoilState(myPageId);
   const [userName, setUserName] = useRecoilState(myPageUserName);
   const [contactEmail, setContactEmail] = useRecoilState(myPageContactEmail);
   const [selfProfile, setSelfProfile] = useRecoilState(myPageSelfProfile);
   const setPhone = useSetRecoilState(myPagePhonNumber);
-  const [userId, setUserId] = useRecoilState(myPageUserId);
+  const setUserId = useSetRecoilState(myPageUserId);
   const [userBackground, setUserBackground] = useRecoilState(
     myPageBackgroundColor
   );
@@ -68,6 +71,7 @@ const UserInfoContainer = () => {
       const {
         contact_email: contactEmailData,
         user_name: userNameData,
+        user_id: userId,
         self_profile: selfProfileData,
         profile_image: profileImageData,
         background_color: backgroundColor,
@@ -79,9 +83,9 @@ const UserInfoContainer = () => {
         birth_year: birthYear,
         skills,
         is_public: isPublic,
-      } = userProfileData as UserProfileType;
+      } = userProfileData;
       setUserProfileId(id);
-      setUserId(data.user.id as string);
+      setUserId(userId);
       setUserName(userNameData);
       setContactEmail(contactEmailData);
       setSelfProfile(selfProfileData);
@@ -131,10 +135,7 @@ const UserInfoContainer = () => {
     // 갱신된 데이터 서버에 반영
     if (isEditing) {
       setIsEditing(false);
-      await supabase
-        .from("user-profile")
-        .update(userProfile)
-        .eq("user_id", userId);
+      updateProfileData(userProfile);
     } else {
       setIsEditing(true);
     }
