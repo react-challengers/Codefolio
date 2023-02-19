@@ -1,30 +1,19 @@
-import {
-  getUser,
-  patchUserProfile,
-  getUserProfile,
-} from "@/utils/APIs/supabase";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { patchUserProfile } from "@/utils/APIs/supabase";
+import { useMutation } from "@tanstack/react-query";
 
 /**
- * user-profile의 서버 데이터를 읽고 쓰기
- * @
+ * @TODO 현재는 user-profile에 쓰기만 가능합니다. 의존성 쿼리 패턴으로 읽기 구현이 필요합니다.
  */
 const useUserProfile = () => {
   // 본인 id 쿼리
   // const { data: authData } = useQuery(["profile"], getUser);
 
-  // if (!authData || authData instanceof AuthError) return;
-  // const profileId = authData;
-
-  // user profile 쿼리
+  // user-profile 쿼리
   // const { data: profileData } = useQuery(
   //   ["profile", `${profileId?.id}`],
   //   () => getUserProfile(profileId?.id),
   //   { enabled: !!profileId }
   // );
-  // console.log(profileData);
-
-  // const userProfileData = profileData as UserProfileType;
 
   const { mutate: updateProfileData } = useMutation(patchUserProfile);
 
