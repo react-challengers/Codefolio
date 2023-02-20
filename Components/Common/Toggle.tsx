@@ -1,4 +1,5 @@
 import { Dispatch } from "react";
+import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
 
 /**
@@ -11,7 +12,9 @@ import styled from "styled-components";
 
 interface ToggleProps {
   flicker?: boolean;
-  setFlicker: Dispatch<React.SetStateAction<boolean>>;
+  setFlicker:
+    | Dispatch<React.SetStateAction<boolean>>
+    | SetterOrUpdater<boolean>;
 }
 
 const Toggle = ({ flicker = false, setFlicker }: ToggleProps) => {

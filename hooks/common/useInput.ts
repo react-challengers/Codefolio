@@ -1,25 +1,42 @@
+import _ from "lodash";
 import { ChangeEvent, useState } from "react";
 
-type ChangeValueType = (
-  e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-) => void;
+interface UseInputArgsType {
+  [key: string]: string;
+}
 
-type ResetValueType = () => void;
+/**
+ * @see https://javascript.plainenglish.io/4-react-tips-to-instantly-improve-your-code-7456e028cfa3
+ * @param inputGroup 예시: { name: "", surname: "", address: "" }
+ * @returns { inputValues, handleInputChange } 앞은 input 값 뒤는 handler 함수
+ * @example
+ * <input value={inputValues.name} onChange={handleInputChange("name")} />
+ */
 
-type UseInputType = (
-  initial?: string
-) => [string, ChangeValueType, ResetValueType];
+const useInput = (inputGroup: UseInputArgsType) => {
+  const [inputValues, setInputValues] = useState(inputGroup);
 
-const useInput: UseInputType = (initial = "") => {
-  const [state, setState] = useState(initial);
-
-  const onChangeValue: ChangeValueType = ({ target: { value } }) => {
-    setState(value);
+  const handleInputChange = (field: string) => {
+    return (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setInputValues((prev) => ({
+        ...prev,
+        [field]: e.target.value,
+      }));
+    };
   };
 
-  const resetValue = () => setState(initial);
+  const resetAllInput = () => {
+    setInputValues((prev) => _.mapValues(prev, () => ""));
+  };
 
-  return [state, onChangeValue, resetValue];
+  const resetSpecificInput = (field: string) => {
+    setInputValues((prev) => ({
+      ...prev,
+      [field]: "",
+    }));
+  };
+
+  return { inputValues, handleInputChange, resetAllInput, resetSpecificInput };
 };
 
 export default useInput;

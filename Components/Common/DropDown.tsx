@@ -1,26 +1,30 @@
-import React, { Dispatch } from "react";
+import { myPageBirthYear, myPageCareer } from "@/lib/recoil";
+import BASE_YEAR from "@/utils/constant";
+import { ChangeEvent } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
-type ComponenetType = "birth_year" | "career";
+/**
+ * @TODO 결합도 낮추기
+ * career와 birthYear 2가지 유스케이스만 대응하는 컴포넌트입니다.
+ * 비즈니스 로직은 호출한 공용컴포넌트 내부에 있을 필요가 없습니다.
+ * UI에 대한 책임만 갖고 있어야 합니다.
+ */
+
+type ComponentType = "birth_year" | "career";
+
 interface DropDownProps {
-  type: ComponenetType;
-  editBirthYear?: string;
-  setEditBirthYear?: Dispatch<React.SetStateAction<string>>;
-  editCareer?: string;
-  setEditCareer?: Dispatch<React.SetStateAction<string>>;
+  type: ComponentType;
 }
-const DropDown = ({
-  type,
-  editBirthYear: editbirthYear,
-  setEditBirthYear,
-  editCareer,
-  setEditCareer,
-}: DropDownProps) => {
-  const BASEYEAR = 1950;
+
+const DropDown = ({ type }: DropDownProps) => {
   const options: (string | number)[] = [];
 
+  const [birthYear, setBirthYear] = useRecoilState(myPageBirthYear);
+  const [career, setCareer] = useRecoilState(myPageCareer);
+
   const years = Array.from(
-    { length: new Date().getFullYear() - BASEYEAR + 1 },
+    { length: new Date().getFullYear() - BASE_YEAR + 1 },
     (_, i) => {
       return new Date().getFullYear() - i;
     }
@@ -31,22 +35,22 @@ const DropDown = ({
   }
 
   if (type === "career") {
+    options.push("신입");
     for (let i = 1; i < 20; i += 1) {
       options.push(`${i}년차`);
     }
-    options.unshift("신입");
     options.push("20년차 이상");
   }
 
-  const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (setEditBirthYear) setEditBirthYear(e.target.value);
-    if (setEditCareer) setEditCareer(e.target.value);
+  const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+    if (type === "birth_year") setBirthYear(parseInt(e.target.value, 10));
+    if (type === "career") setCareer(e.target.value);
   };
 
   return (
     <Select
       onChange={onChangeHandler}
-      defaultValue={type === "birth_year" ? editbirthYear : editCareer}
+      defaultValue={type === "birth_year" ? birthYear : career}
     >
       {options.map((option) => (
         <option key={option} value={option}>

@@ -1,12 +1,9 @@
-import { Dispatch } from "react";
+import { myPageGender } from "@/lib/recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
-interface SwitchButtonProps {
-  currentItem: string;
-  setCurrentItem: Dispatch<React.SetStateAction<Gender>>;
-}
-
-const SwitchButton = ({ currentItem, setCurrentItem }: SwitchButtonProps) => {
+const SwitchButton = () => {
+  const [currentItem, setCurrentItem] = useRecoilState(myPageGender);
   const items: Gender[] = ["남자", "여자", "선택안함"];
   return (
     <SwitchButtonContainer>

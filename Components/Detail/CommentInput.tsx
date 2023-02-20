@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
-import useInput from "@/hooks/common/useInput";
+import { useInput } from "@/hooks/common";
 import ProfileImage from "../Common/ProfileImage";
 import DefaultButton from "../Common/DefaultButton";
 
@@ -18,30 +18,37 @@ interface CommentInputProps {
 const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
   const queryClient = useQueryClient();
 
-  const [commentInput, setCommentInput, resetCommentInput] = useInput();
+  const { inputValues, handleInputChange, resetAllInput } = useInput({
+    comment: "",
+  });
+
   const { mutate: createComment } = useMutation(
     (): any =>
       supabase.from("comment").insert({
         id: crypto.randomUUID(),
         post_id: POST_ID,
         user_id: USER_ID,
-        content: commentInput,
+        content: inputValues.comment,
       }),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["getComment"]);
-        resetCommentInput();
       },
     }
   );
+
+  const handleAddComment = () => {
+    createComment();
+    resetAllInput();
+  };
 
   return (
     <>
       <CommentInputContainer>
         <ProfileImage alt="dummy" page="detailPage" />
         <CommentTextarea
-          value={commentInput}
-          onChange={setCommentInput}
+          value={inputValues.comment}
+          onChange={handleInputChange("comment")}
           placeholder="이 프로젝트에 대한 댓글을 남겨주세요."
         />
       </CommentInputContainer>
@@ -50,7 +57,7 @@ const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
           text="작성하기"
           type="full"
           size="s"
-          onClick={() => createComment()}
+          onClick={handleAddComment}
         />
       </PostCommentButton>
     </>

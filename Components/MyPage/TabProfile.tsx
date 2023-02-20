@@ -5,10 +5,9 @@ import ShowProfileContainer from "./ShowProfileContainer";
 
 interface TabProfileProps {
   isPrivate?: boolean;
-  userInfo: Omit<UserProfileType, "id">;
 }
 
-const TabProfile = ({ isPrivate = false, userInfo }: TabProfileProps) => {
+const TabProfile = ({ isPrivate = false }: TabProfileProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   if (isPrivate) {
@@ -16,14 +15,10 @@ const TabProfile = ({ isPrivate = false, userInfo }: TabProfileProps) => {
   }
 
   if (isEditing) {
-    return (
-      <EditProfileContainer userInfo={userInfo} setIsEditing={setIsEditing} />
-    );
+    return <EditProfileContainer setIsEditing={setIsEditing} />;
   }
 
-  return (
-    <ShowProfileContainer userInfo={userInfo} setIsEditing={setIsEditing} />
-  );
+  return <ShowProfileContainer setIsEditing={setIsEditing} />;
 };
 
 export default TabProfile;
