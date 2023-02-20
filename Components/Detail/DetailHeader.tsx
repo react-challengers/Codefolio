@@ -15,6 +15,7 @@ const DetailHeader = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isBookmark, setIsBookmark] = useState(false);
   const [isLike, setIsLike] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
 
   const showMoreModal = () => setShowMore((prev) => !prev);
 
@@ -99,6 +100,26 @@ const DetailHeader = () => {
     getLike();
   }, []);
 
+  useEffect(() => {
+    const checkPostOwner = async () => {
+      if (!router.query?.id) return;
+      const { data, error } = await supabase
+        .from("post")
+        .select("user_id")
+        .eq("id", postId)
+        .single();
+
+      if (error) {
+        return;
+      }
+
+      if (data?.user_id === user?.id) {
+        setIsOwner(true);
+      }
+    };
+    checkPostOwner();
+  }, [router.query?.id, user?.id]);
+
   const clickBookmarkButton = async () => {
     isAnonymous();
     if (isBookmark) {
@@ -134,13 +155,15 @@ const DetailHeader = () => {
           alt="북마크 버튼"
           onClick={clickBookmarkButton}
         />
-        <Image
-          src="/icons/more.svg"
-          onClick={showMoreModal}
-          width={36}
-          height={36}
-          alt="더보기 버튼"
-        />
+        {isOwner && (
+          <Image
+            src="/icons/more.svg"
+            onClick={showMoreModal}
+            width={36}
+            height={36}
+            alt="더보기 버튼"
+          />
+        )}
       </DetailHeaderWrapper>
       {showMore && <ShowMoreModal />}
     </DetailHeaderContainer>

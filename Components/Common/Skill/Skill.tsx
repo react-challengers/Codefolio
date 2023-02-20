@@ -1,16 +1,31 @@
 import Image from "next/image";
-import { ChangeEvent, Dispatch } from "react";
+import { ChangeEvent, Dispatch, useState } from "react";
 import styled from "styled-components";
 
 interface SkillProps {
   skill: string;
   idx: number;
   onDelete: (idx: number) => void;
+  editSkills: string[];
   setEditSkills: Dispatch<React.SetStateAction<string[]>>;
 }
 
-const Skill = ({ skill, idx, onDelete, setEditSkills }: SkillProps) => {
+const Skill = ({
+  skill,
+  idx,
+  onDelete,
+  setEditSkills,
+  editSkills,
+}: SkillProps) => {
+  const [isDuplicate, setIsDuplicate] = useState(false);
+
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (editSkills.includes(e.target.value)) {
+      setIsDuplicate(true);
+    }
+    if (!editSkills.includes(e.target.value)) {
+      setIsDuplicate(false);
+    }
     setEditSkills((prevSkill) => {
       const newSkill = [...prevSkill];
       newSkill[idx] = e.target.value;
@@ -20,7 +35,12 @@ const Skill = ({ skill, idx, onDelete, setEditSkills }: SkillProps) => {
 
   return (
     <SkillContainer>
-      <SkillInput value={skill} onChange={onChange} maxLength={15} />
+      <SkillInput
+        value={skill}
+        onChange={onChange}
+        maxLength={15}
+        isDuplicate={isDuplicate}
+      />
       <CancelButton
         onClick={() => onDelete(idx)}
         src="/icons/cancel.svg"
@@ -48,9 +68,19 @@ const SkillContainer = styled.label`
   align-items: center;
 `;
 
+interface SkillInputProps {
+  isDuplicate?: boolean;
+}
+
 const SkillInput = styled.input`
   ${commonStyle}
   width:5rem;
+  ${({ isDuplicate }: SkillInputProps) => ({
+    color: isDuplicate ? "orange" : "white",
+    textDecoration: isDuplicate ? "line-through" : "none",
+    fontWeight: isDuplicate ? "bold" : "normal",
+  })}
+  padding: 0 0.5rem;
 `;
 
 const CancelButton = styled(Image)`

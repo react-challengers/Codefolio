@@ -5,7 +5,7 @@ import ProfileImage from "../Common/ProfileImage";
 import Tags from "../Common/Tags";
 import DefaultBox from "./DetailBox";
 import DetailSideContainer from "./DetailSideContainer";
-import DetailWith, { DetailWithProps } from "./DetailWith";
+import DetailWith from "./DetailWith";
 
 interface DetailSideProps {
   progressDate: string[];
@@ -75,7 +75,7 @@ const DetailSide = ({
         </DetailSideWrapper>
 
         <DetailSideWrapper>
-          <Title>함께한 사람들</Title>
+          {members.length !== 0 && <Title>함께한 사람들</Title>}
           {members.map(
             (
               // 에러 어떻게 해결하죠....

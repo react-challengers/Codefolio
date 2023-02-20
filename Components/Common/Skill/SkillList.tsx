@@ -26,6 +26,7 @@ const SkillList = ({ text, editSkills, setEditSkills }: SkillPickerProps) => {
         <Skill
           key={idx}
           skill={skill}
+          editSkills={editSkills}
           setEditSkills={setEditSkills}
           idx={idx}
           onDelete={onDelete}

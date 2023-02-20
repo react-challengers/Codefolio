@@ -94,7 +94,7 @@ interface PostType {
   large_category: string;
   sub_category: string;
   skills: string[];
-  progress_date: string[];
+  progress_date: [string, string];
   members: MembersType[];
   tag: string[];
   is_public: boolean;

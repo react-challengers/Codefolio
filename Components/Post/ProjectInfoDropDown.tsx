@@ -106,10 +106,12 @@ const ProjectInfoDropDown = () => {
 };
 
 const ProjectInfoDropDownContainer = styled.div`
-  height: 12.5rem;
+  height: auto;
+  min-height: 12.5rem;
 
   margin-top: 0.125rem;
   border: 1px solid #cccccc;
+  padding: 1.25rem 0;
 
   display: grid;
   grid-template-columns: 1fr 1fr;

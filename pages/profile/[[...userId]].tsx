@@ -11,6 +11,9 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import supabase from "@/lib/supabase";
+import { useRouter } from "next/router";
+import { useRecoilValue } from "recoil";
+import { userLoginCheck } from "@/lib/recoil";
 
 const tabList = ["프로젝트", "북마크", "좋아요", "프로필"];
 
@@ -20,7 +23,9 @@ const ProfilePage: NextPage = () => {
   const [itemList, setItemList] = useState<PostType[]>([]);
   const [likeIds, setLikeIds] = useState<string[]>([]);
   const [bookmarkIds, setBookmarkIds] = useState<string[]>([]);
+  const isLogin = useRecoilValue(userLoginCheck);
 
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const handleClick = (idx: number) => {
@@ -33,6 +38,12 @@ const ProfilePage: NextPage = () => {
       setUserId(data.session?.user.id);
     }
   };
+
+  useEffect(() => {
+    if (!isLogin) {
+      router.push("/auth/login");
+    }
+  }, []);
 
   useEffect(() => {
     handleUserId();

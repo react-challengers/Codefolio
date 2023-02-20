@@ -1,6 +1,6 @@
 import { myPageBirthYear, myPageCareer } from "@/lib/recoil";
 import BASE_YEAR from "@/utils/constant";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
@@ -46,6 +46,11 @@ const DropDown = ({ type }: DropDownProps) => {
     if (type === "birth_year") setBirthYear(+e.target.value);
     if (type === "career") setCareer(e.target.value);
   };
+
+  useEffect(() => {
+    if (type === "birth_year") setBirthYear(years[0]);
+    if (type === "career") setCareer("신입");
+  }, []);
 
   return (
     <Select

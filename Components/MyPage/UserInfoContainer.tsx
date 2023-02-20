@@ -67,7 +67,6 @@ const UserInfoContainer = () => {
         .single();
 
       if (error) return;
-      if (userProfile.career) return;
       const {
         contact_email: contactEmailData,
         user_name: userNameData,
@@ -166,6 +165,10 @@ const UserInfoContainer = () => {
       const publicImageURL = await uploadImage(imgFile);
       if (!publicImageURL) return;
       setProfileImage(publicImageURL);
+      await supabase
+        .from("user_profile")
+        .update({ profile_image: publicImageURL })
+        .eq("id", userProfile.id);
     };
   };
 

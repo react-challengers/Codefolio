@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
 import { useInput } from "@/hooks/common";
+import { useState } from "react";
 import ProfileImage from "../Common/ProfileImage";
 import DefaultButton from "../Common/DefaultButton";
 
@@ -22,6 +23,8 @@ const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
     comment: "",
   });
 
+  const [isHelperText, setIsHelperText] = useState(false);
+
   const { mutate: createComment } = useMutation(
     (): any =>
       supabase.from("comment").insert({
@@ -39,6 +42,15 @@ const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
   );
 
   const handleAddComment = () => {
+    if (!inputValues.comment) {
+      setIsHelperText(true);
+
+      setTimeout(() => {
+        setIsHelperText(false);
+      }, 2000);
+
+      return;
+    }
     createComment();
     resetAllInput();
   };
@@ -53,6 +65,7 @@ const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
           placeholder="이 프로젝트에 대한 댓글을 남겨주세요."
         />
       </CommentInputContainer>
+      <HelperText isHelperText={isHelperText}>댓글을 입력해주세요.</HelperText>
       <PostCommentButton>
         <DefaultButton
           text="작성하기"
@@ -88,6 +101,19 @@ const CommentTextarea = styled.textarea`
   border: 1px solid #dfdfdf;
 
   resize: none;
+`;
+
+interface HelperTextProps {
+  isHelperText: boolean;
+}
+
+const HelperText = styled.div<HelperTextProps>`
+  margin-top: 0.5rem;
+  margin-left: 3.5rem;
+  font-size: 1rem;
+  color: #ff0000;
+  opacity: ${({ isHelperText }) => (isHelperText ? 1 : 0)};
+  transition: all 0.5s ease-in-out;
 `;
 
 export default CommentInput;

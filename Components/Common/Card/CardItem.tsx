@@ -70,13 +70,11 @@ const CardItem = ({
 
   useMemo(() => {
     const getUserInfo = async () => {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("user_profile")
         .select("*")
         .eq("user_id", userId)
         .single();
-
-      if (error) console.log(error);
 
       if (!data) setUserName("sns계정");
       else {

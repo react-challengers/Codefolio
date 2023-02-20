@@ -48,14 +48,14 @@ const RelatedProject = () => {
         <SwiperWrapper>
           <Swiper
             modules={[Navigation, Scrollbar]}
-            spaceBetween={20}
+            spaceBetween={80}
             slidesPerView={4}
             navigation={{
               prevEl: ".swiper-button-prev",
               nextEl: ".swiper-button-next",
             }}
             scrollbar={{ draggable: true }}
-            onReachEnd={() => console.log("end")}
+            // onReachEnd={() => console.log("end")}
           >
             <SwiperPrevButton />
             {relatedProjectsData?.map((post) => (
