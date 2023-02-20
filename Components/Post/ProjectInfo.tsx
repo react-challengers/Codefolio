@@ -5,7 +5,7 @@ import arrow_down from "@/public/images/arrow_down.jpg";
 import ProjectInfoDropDown from "./ProjectInfoDropDown";
 
 const ProjectInfo = () => {
-  const [openDropdown, setOpenDropdown] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(true);
 
   return (
     <div>
@@ -21,8 +21,6 @@ const ProjectInfo = () => {
 };
 
 const DropdownContainer = styled.div`
-  height: 3.6569rem;
-
   border: 1px solid #cccccc;
 
   display: flex;

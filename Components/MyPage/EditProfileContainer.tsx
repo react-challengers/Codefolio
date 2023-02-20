@@ -44,15 +44,17 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
   const userProfile = useRecoilValue(myPageUserProfile);
   // local state로 편집 상태 제어
   const [isPhoneNumber, setIsPhoneNumber] = useState(false);
+  const [isEmptyField, setIsEmptyField] = useState(false);
+  const [isEmptySkills, setIsEmptySkills] = useState(false);
 
   const clickField = (field: string) => {
-    if (activeField.includes(field)) {
+    if (activeField?.includes(field)) {
       const newActiveField = activeField.filter(
         (activeFieldItem) => activeFieldItem !== field
       );
       setActiveField(newActiveField);
     } else {
-      setActiveField([...activeField, field]);
+      setActiveField((prev) => (prev ? [...prev, field] : [field]));
     }
   };
 
@@ -62,10 +64,24 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
   };
 
   const handleSave = async () => {
+    if (activeField.length === 0) {
+      setIsEmptyField(true);
+      setTimeout(() => {
+        setIsEmptyField(false);
+      }, 2000);
+      return;
+    }
+    if (editSkills.length === 0) {
+      setIsEmptySkills(true);
+      setTimeout(() => {
+        setIsEmptySkills(false);
+      }, 2000);
+      return;
+    }
     setIsEditing(false);
     try {
       await supabase
-        .from("user-profile")
+        .from("user_profile")
         .update(userProfile)
         .eq("user_id", userProfile.user_id);
     } catch (error) {
@@ -108,11 +124,14 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
                     <PositionTag
                       onClick={() => clickField(field)}
                       key={field}
-                      active={activeField.includes(field)}
+                      active={activeField?.includes(field)}
                     >
                       {field}
                     </PositionTag>
                   ))}
+                  <FieldHelpText isEmptyField={isEmptyField}>
+                    필드를 선택해주세요.
+                  </FieldHelpText>
                 </FieldWrapper>
               </ContentWrapper>
               <ContentWrapper>
@@ -127,6 +146,9 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
                   setEditSkills={setEditSkills}
                 />
               </ContentWrapper>
+              <SkillHelpText isEmptySkills={isEmptySkills}>
+                스킬을 입력해주세요. (예: React, Node.js, Python)
+              </SkillHelpText>
             </ContentContainer>
           </ProfileContainer>
 
@@ -211,4 +233,26 @@ const PhoneInput = styled.input`
   padding: 0 0.75rem;
 `;
 
+interface FieldHelpTextProps {
+  isEmptyField: boolean;
+}
+
+const FieldHelpText = styled.span<FieldHelpTextProps>`
+  color: red;
+  font-size: 1rem;
+  opacity: ${({ isEmptyField }) => (isEmptyField ? 1 : 0)};
+  transition: opacity 0.5s;
+`;
+
+interface SkillHelpTextProps {
+  isEmptySkills: boolean;
+}
+
+const SkillHelpText = styled.span<SkillHelpTextProps>`
+  color: red;
+  font-size: 1rem;
+  margin-left: 8rem;
+  opacity: ${({ isEmptySkills }) => (isEmptySkills ? 1 : 0)};
+  transition: opacity 0.5s;
+`;
 export default EditProfileContainer;

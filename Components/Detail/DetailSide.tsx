@@ -1,15 +1,15 @@
 import supabase from "@/lib/supabase";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ProfileImage from "../Common/ProfileImage";
 import Tags from "../Common/Tags";
 import DefaultBox from "./DetailBox";
 import DetailSideContainer from "./DetailSideContainer";
-import DetailWith, { DetailWithProps } from "./DetailWith";
+import DetailWith from "./DetailWith";
 
 interface DetailSideProps {
   progressDate: string[];
-  stack: string[];
+  subCategory: string;
   tag: string[];
   skills: string[];
   members: string[];
@@ -18,24 +18,35 @@ interface DetailSideProps {
 
 const DetailSide = ({
   progressDate,
-  stack,
+  subCategory,
   tag,
   skills,
   members,
   userId,
 }: DetailSideProps) => {
+  const [author, setAuthor] = useState("");
+  const [authorProfileImage, setAuthorProfileImage] = useState("");
+
   const getAuthor = async () => {
     const { data, error } = await supabase
-      .from("user-profile")
+      .from("user_profile")
       .select()
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .single();
 
-    // @TODO : 회원가입 시 프로필 자동 생성되는 기능 구현되면 아래에 코드 작성
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    setAuthor(data?.user_name);
+    setAuthorProfileImage(data?.profile_image);
   };
 
   useEffect(() => {
+    if (!userId) return;
     getAuthor();
-  }, []);
+  }, [userId]);
 
   return (
     <SideContainer>
@@ -63,21 +74,19 @@ const DetailSide = ({
           <Title>작성자</Title>
           <ProfileWrapper>
             <ProfileImage
-              src="/images/anonProfile.jpeg"
+              src={authorProfileImage}
               alt="프로필 사진"
               page="detailPage"
             />
-            <Name>이름</Name>
+            <Name>{author}</Name>
           </ProfileWrapper>
           <ButtonsWrapper>
-            {skills.map((skill) => (
-              <DefaultBox key={skill}>{skill}</DefaultBox>
-            ))}
+            <DefaultBox>{subCategory}</DefaultBox>
           </ButtonsWrapper>
         </DetailSideWrapper>
 
         <DetailSideWrapper>
-          <Title>함께한 사람들</Title>
+          {members.length !== 0 && <Title>함께한 사람들</Title>}
           {members.map(
             (
               // 에러 어떻게 해결하죠....

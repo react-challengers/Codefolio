@@ -37,14 +37,15 @@ const ProjectInfoDropDown = () => {
       <ProjectInfoContainer>
         <CategoryContainer>
           <TEXTBOX>카테고리</TEXTBOX>
-          {largeCategory && subCategory ? (
+          {largeCategory && subCategory && (
             <Tags tagItems={[`${largeCategory} > ${subCategory}`]} size="md" />
-          ) : (
-            <CategoryPicker onClick={handleShowCategory}>
-              카테고리를 선택해주세요.
-              {categoryVisible && <FieldDropDown />}
-            </CategoryPicker>
           )}
+          <CategoryPicker onClick={handleShowCategory}>
+            {largeCategory && subCategory
+              ? "카테고리 변경"
+              : "카테고리를 선택해주세요."}
+            {categoryVisible && <FieldDropDown />}
+          </CategoryPicker>
         </CategoryContainer>
         <DevelopStackContainer>
           <TEXTBOX>개발 스택</TEXTBOX>
@@ -106,10 +107,12 @@ const ProjectInfoDropDown = () => {
 };
 
 const ProjectInfoDropDownContainer = styled.div`
-  height: 12.5rem;
+  height: auto;
+  min-height: 12.5rem;
 
   margin-top: 0.125rem;
   border: 1px solid #cccccc;
+  padding: 1.25rem 0;
 
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -128,10 +131,12 @@ const ProjectInfoWrapper = styled.div`
 
 const CategoryContainer = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const CategoryPicker = styled.div`
   position: relative;
+  margin-left: 1rem;
 `;
 
 const DevelopStackContainer = styled.div`

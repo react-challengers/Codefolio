@@ -55,7 +55,7 @@ const RelatedProject = () => {
               nextEl: ".swiper-button-next",
             }}
             scrollbar={{ draggable: true }}
-            onReachEnd={() => console.log("end")}
+            // onReachEnd={() => console.log("end")}
           >
             <SwiperPrevButton />
             {relatedProjectsData?.map((post) => (

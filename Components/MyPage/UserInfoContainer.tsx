@@ -61,7 +61,7 @@ const UserInfoContainer = () => {
       if (getUserIdError || !data.user?.email) return;
 
       const { data: userProfileData, error } = await supabase
-        .from("user-profile")
+        .from("user_profile")
         .select("*")
         .eq("user_id", data.user.id)
         .single();
@@ -87,14 +87,14 @@ const UserInfoContainer = () => {
       setUserId(userId);
       setUserName(userNameData);
       setContactEmail(contactEmailData);
-      setSelfProfile(selfProfileData);
+      setSelfProfile(selfProfileData ?? "자기소개를 입력해 보세요!");
       setProfileImage(profileImageData);
       setUserBackground(backgroundColor);
-      setPhone(phone);
-      setGender(gender);
-      setCareer(career);
+      setPhone(phone ?? "00000000000");
+      setGender(gender ?? "선택안함");
+      setCareer(career ?? "신입");
       setField(JSON.parse(`${field}`));
-      setBirthYear(birthYear);
+      setBirthYear(birthYear ?? 2000);
       setSkills(skills);
       setPublic(isPublic);
     };
@@ -165,6 +165,10 @@ const UserInfoContainer = () => {
       const publicImageURL = await uploadImage(imgFile);
       if (!publicImageURL) return;
       setProfileImage(publicImageURL);
+      await supabase
+        .from("user_profile")
+        .update({ profile_image: publicImageURL })
+        .eq("id", userProfile.id);
     };
   };
 
@@ -173,13 +177,13 @@ const UserInfoContainer = () => {
       <Banner userBackground={userBackground} />
       <UserInfoWrapper>
         <ProfileImageWrapper>
-          <label htmlFor="user-profile">
+          <label htmlFor="user_profile">
             <ProfileFileImageInput
               type="file"
               accept="image/*"
               onChange={handleProfileImage}
               multiple={false}
-              id="user-profile"
+              id="user_profile"
             />
             <ProfileImage alt="유저 프로필" page="myPage" src={profileImage} />
           </label>

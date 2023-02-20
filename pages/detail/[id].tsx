@@ -29,7 +29,7 @@ const DetailPage: NextPage = () => {
   });
   const [sideData, setSideData] = useState({
     progressDate: ["", ""],
-    stack: [""],
+    subCategory: "",
     skills: ["Front-end", "Android"],
     tag: [""],
     members: [""],
@@ -56,7 +56,6 @@ const DetailPage: NextPage = () => {
       sub_category: subCategory,
       content: postContent,
       progress_date: progressDate,
-      stack,
       tag,
       skills,
       members,
@@ -73,18 +72,20 @@ const DetailPage: NextPage = () => {
 
     setSideData({
       progressDate,
-      stack,
       tag,
       skills,
       members,
       userId,
+      subCategory,
     });
 
     setContent(postContent);
   };
 
   useEffect(() => {
-    getData();
+    if (postId) {
+      getData();
+    }
   }, []);
 
   return (
@@ -96,7 +97,7 @@ const DetailPage: NextPage = () => {
           <DetailSide {...sideData} />
         </DetailContentsSide>
         <DetailContentsMain>
-          {content && <Viewer content={content} />}{" "}
+          {content && <Viewer content={content} />}
         </DetailContentsMain>
       </DetailContentsContainer>
       <RelatedProject />

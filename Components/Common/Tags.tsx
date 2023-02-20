@@ -61,7 +61,7 @@ const tagSizeSwitch = (size: TagSizeType) => {
 const Tags = ({ tagItems, size = "md" }: TagsProps) => {
   return (
     <TagsContainer>
-      {tagItems.map((item) => (
+      {tagItems?.map((item) => (
         <TagsItem key={item} size={size}>
           {item}
         </TagsItem>
@@ -81,6 +81,7 @@ type TagsItemType = {
 };
 
 const TagsItem = styled.li<TagsItemType>`
+  display: inline-block;
   background-color: #999999;
   color: #f2f2f2;
   /* font-size: 0.75rem;
@@ -88,8 +89,7 @@ const TagsItem = styled.li<TagsItemType>`
   border-radius: 0.75rem; */
   ${(props) => tagSizeSwitch(props.size)}
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-bottom: 0.25rem;
 `;
 
 export default Tags;

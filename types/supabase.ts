@@ -179,7 +179,7 @@ export interface Database {
           user_id?: string;
         };
       };
-      "user-profile": {
+      user_profile: {
         Row: {
           birth_year: string | null;
           bookmark_folders: string[] | null;

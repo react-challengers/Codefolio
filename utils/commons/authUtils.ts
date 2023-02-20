@@ -20,7 +20,7 @@ export const postUserProfile = async (
   userProfileEmail: string | undefined,
   userProfileUserName: string | undefined
 ) => {
-  const { error } = await supabase.from("user-profile").insert({
+  const { error } = await supabase.from("user_profile").insert({
     user_id: userProfileUserId,
     user_name: userProfileUserName,
     contact_email: userProfileEmail,

@@ -59,10 +59,11 @@ const StyledModalBody = styled.div`
 const StyledModalWrapper = styled.div`
   width: 32rem;
   height: 12rem;
-  background: white;
+  background: #eee;
 
   border-radius: 1rem;
   padding: 1.5rem;
+  z-index: 1000;
 `;
 
 const ButtonWrapper = styled.div`

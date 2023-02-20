@@ -34,14 +34,19 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     queryFn: getAllPosts,
   });
 
+  const publicPosts = useMemo(() => {
+    if (allPostsData === undefined) return [];
+    return allPostsData.filter((post) => post.is_public === true);
+  }, [allPostsData]);
+
   // 카테고리 선택 시, 해당 카테고리에 맞는 포스트만 보여주기
   const filterPosts = useMemo(() => {
-    if (allPostsData === undefined) return [];
+    if (publicPosts === undefined) return [];
     if (
       selectedLargeCategory.length !== 0 &&
       selectedSubCategory.length === 0
     ) {
-      return allPostsData.filter((post) =>
+      return publicPosts.filter((post) =>
         selectedLargeCategory.includes(post.large_category)
       );
     }
@@ -49,12 +54,12 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
       selectedLargeCategory.length !== 0 &&
       selectedSubCategory.length !== 0
     ) {
-      return allPostsData.filter((post) =>
+      return publicPosts.filter((post) =>
         selectedSubCategory.includes(post.sub_category)
       );
     }
-    return allPostsData;
-  }, [allPostsData, selectedLargeCategory, selectedSubCategory]);
+    return publicPosts;
+  }, [publicPosts, selectedLargeCategory, selectedSubCategory]);
 
   // 포스트 정렬
   const sortPosts = useMemo(() => {
@@ -91,7 +96,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         },
       },
       undefined,
-      { shallow: true }
+      { shallow: false }
     );
     setIsModalOpen(true);
   };

@@ -31,7 +31,7 @@ const ShowProfileContainer = ({ setIsEditing }: ShowProfileContainerProps) => {
         <ProfileContainer title="기본 정보">
           <>
             <p>{gender}</p>
-            <p>{birthYear}년생</p>
+            <p>{`${birthYear} 년생`}</p>
             <p>{phone}</p>
           </>
         </ProfileContainer>

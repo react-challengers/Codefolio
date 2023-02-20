@@ -54,12 +54,12 @@ const postTags = atom<string[]>({
 
 const postPublic = atom<boolean>({
   key: "postPublic",
-  default: false,
+  default: true,
 });
 
 const postContent = atom<string>({
   key: "postContent",
-  default: "",
+  default: "프로젝트 내용을 입력해주세요.",
 });
 
 export {

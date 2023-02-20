@@ -1,23 +1,36 @@
-import { patchUserProfile } from "@/utils/APIs/supabase";
-import { useMutation } from "@tanstack/react-query";
+import { getUserProfile, patchUserProfile } from "@/utils/APIs/supabase";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+const USER_PROFILE = "user_profile";
 
 /**
- * @TODO 현재는 user-profile에 쓰기만 가능합니다. 의존성 쿼리 패턴으로 읽기 구현이 필요합니다.
+ * @see https://tanstack.com/query/v4/docs/react/guides/optimistic-updates
  */
+
 const useUserProfile = () => {
-  // 본인 id 쿼리
-  // const { data: authData } = useQuery(["profile"], getUser);
+  const queryClient = useQueryClient();
 
-  // user-profile 쿼리
-  // const { data: profileData } = useQuery(
-  //   ["profile", `${profileId?.id}`],
-  //   () => getUserProfile(profileId?.id),
-  //   { enabled: !!profileId }
-  // );
+  // get
+  const { data: profileData } = useQuery([USER_PROFILE], getUserProfile, {});
 
-  const { mutate: updateProfileData } = useMutation(patchUserProfile);
+  // patch
+  const { mutate: updateProfileData } = useMutation(patchUserProfile, {
+    onMutate: async (newProfile) => {
+      await queryClient.cancelQueries({ queryKey: [USER_PROFILE] });
+      const previousProfile = queryClient.getQueriesData([USER_PROFILE]);
+      queryClient.setQueriesData([USER_PROFILE], newProfile);
 
-  return { updateProfileData };
+      return { newProfile, previousProfile };
+    },
+    onError: (_err, _newProfile, context) => {
+      queryClient.setQueriesData([USER_PROFILE], context?.previousProfile);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [USER_PROFILE] });
+    },
+  });
+
+  return { profileData, updateProfileData };
 };
 
 export default useUserProfile;
