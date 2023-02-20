@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import bottom_arrow from "@/public/icons/bottom_arrow.svg";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { getAllPosts } from "@/utils/APIs/supabase";
+import _ from "lodash";
 import Tags from "../Common/Tags";
 import CardItem from "../Common/Card/CardItem";
 
@@ -19,11 +20,10 @@ interface MainSectionProps {
 
 const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  const homeDropDownItems = ["최신순", "조회순", "추천순"];
+  const homeDropDownItems = ["최신순", "댓글순", "추천순"];
   const [selectedDropDownItem, setSelectedDropDownItem] = useState(
     homeDropDownItems[0]
   );
-  const [filteredPosts, setFilteredPosts] = useState<PostType[]>([]);
   const [selectedLargeCategory, setSelectedLargeCategory] =
     useRecoilState(largeCategoryState);
   const [selectedSubCategory, setSelectedSubCategory] =
@@ -56,6 +56,21 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     return allPostsData;
   }, [allPostsData, selectedLargeCategory, selectedSubCategory]);
 
+  // 포스트 정렬
+  const sortPosts = useMemo(() => {
+    if (filterPosts.length === 0) return [];
+    switch (selectedDropDownItem) {
+      case "최신순":
+        return _.orderBy(filterPosts, ["created_at"], ["desc"]);
+      case "댓글순":
+        return _.orderBy(filterPosts, ["comment_count"], ["desc"]);
+      case "추천순":
+        return _.orderBy(filterPosts, ["like_count"], ["desc"]);
+      default:
+        return filterPosts;
+    }
+  }, [filterPosts, selectedDropDownItem]);
+
   useEffect(() => {
     if (router.query.id) {
       setIsModalOpen(true);
@@ -63,11 +78,6 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
       setIsModalOpen(false);
     }
   }, [router.query.id, setIsModalOpen]);
-
-  useEffect(() => {
-    const posts = filterPosts;
-    setFilteredPosts(posts);
-  }, [filterPosts]);
 
   const onClickDropDown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -130,7 +140,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         )}
       </HomeDropDownContainer>
       <HomeCardGrid>
-        {filteredPosts?.map((post: PostType) => (
+        {sortPosts?.map((post: PostType) => (
           <CardContainer
             key={post.id}
             onClick={() => {
@@ -144,9 +154,8 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
               subTitle={post.sub_title}
               tagItems={post.tag}
               date={getPostDate(post.created_at)}
-              // TODO: comments, likes 수 구하기
-              comments={100}
-              likes={100}
+              comments={post.comment_count}
+              likes={post.like_count}
               field={`${post.large_category} | ${post.sub_category}`}
               userId={post.user_id}
             />

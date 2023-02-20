@@ -120,8 +120,8 @@ const CardItem = ({
         <DateCountContainer>
           <Date>{date}</Date>
           <IconCountContainer>
+            <IconWithCount icon="comment" count={comments} />
             <IconWithCount icon="ico-heart" count={likes} />
-            <IconWithCount icon="ico-heart" count={comments} />
           </IconCountContainer>
         </DateCountContainer>
         <TitleWrapper>

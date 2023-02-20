@@ -102,6 +102,8 @@ interface PostType {
   id: string;
   user_id: string;
   created_at: string;
+  comment_count: number;
+  like_count: number;
 }
 
 interface FollowType {

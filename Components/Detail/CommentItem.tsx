@@ -44,7 +44,8 @@ const CommentItem = ({ comment }: CommentItemProps) => {
   const { mutate: deleteComment } = useMutation(
     (): any => supabase.from("comment").delete().eq("id", comment.id),
     {
-      onSuccess: () => {
+      onSuccess: async () => {
+        await supabase.rpc("decrement_comment", { row_id: comment.post_id });
         queryClient.invalidateQueries(["getComment"]);
       },
     }
