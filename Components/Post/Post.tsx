@@ -4,7 +4,7 @@ import DefaultButton from "@/Components/Common/DefaultButton";
 import PostTitle from "@/Components/Post/PostTitle";
 import ProjectInfo from "@/Components/Post/ProjectInfo";
 import Modal from "@/Components/Common/Modal";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import {
   postContent,
   postLargeCategory as recoilPostLargeCategory,
@@ -150,7 +150,7 @@ const Post: NextPage = () => {
     // 유효성 검사
     if (!validatePost()) return;
     // 게시
-    if (router.asPath === "/post") {
+    if (router.asPath === "/create-post") {
       const { data, error } = await supabase
         .from("post")
         .insert(newPostRow)

@@ -92,9 +92,9 @@ const UserInfoContainer = () => {
       setUserBackground(backgroundColor);
       setPhone(phone);
       setGender(gender);
-      setCareer(career);
+      setCareer(career ?? "신입");
       setField(JSON.parse(`${field}`));
-      setBirthYear(birthYear);
+      setBirthYear(birthYear ?? 2000);
       setSkills(skills);
       setPublic(isPublic);
     };

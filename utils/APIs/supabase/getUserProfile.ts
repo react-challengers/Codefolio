@@ -1,11 +1,13 @@
 import supabase from "@/lib/supabase";
-import { PostgrestError } from "@supabase/supabase-js";
+import getUser from "./getUser";
 
-const getUserProfile = async (userId: string): Promise<UserProfileType> => {
+const getUserProfile = async (): Promise<UserProfileType | null> => {
+  const user = await getUser();
+  if (!user) return null;
   const { data } = await supabase
     .from("user_profile")
     .select("*")
-    .eq("user_id", userId)
+    .eq("user_id", user.id)
     .single();
   return data;
 };
