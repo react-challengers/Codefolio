@@ -59,16 +59,16 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   // 포스트 정렬
   const sortPosts = useMemo(() => {
     if (filterPosts.length === 0) return [];
-    if (selectedDropDownItem === "최신순") {
-      return _.orderBy(filterPosts, ["created_at"], ["desc"]);
+    switch (selectedDropDownItem) {
+      case "최신순":
+        return _.orderBy(filterPosts, ["created_at"], ["desc"]);
+      case "댓글순":
+        return _.orderBy(filterPosts, ["comment_count"], ["desc"]);
+      case "추천순":
+        return _.orderBy(filterPosts, ["like_count"], ["desc"]);
+      default:
+        return filterPosts;
     }
-    if (selectedDropDownItem === "댓글순") {
-      return _.orderBy(filterPosts, ["comment_count"], ["desc"]);
-    }
-    if (selectedDropDownItem === "추천순") {
-      return _.orderBy(filterPosts, ["like_count"], ["desc"]);
-    }
-    return filterPosts;
   }, [filterPosts, selectedDropDownItem]);
 
   useEffect(() => {
