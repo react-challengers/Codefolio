@@ -87,11 +87,11 @@ const UserInfoContainer = () => {
       setUserId(userId);
       setUserName(userNameData);
       setContactEmail(contactEmailData);
-      setSelfProfile(selfProfileData);
+      setSelfProfile(selfProfileData ?? "자기소개를 입력해 보세요!");
       setProfileImage(profileImageData);
       setUserBackground(backgroundColor);
-      setPhone(phone);
-      setGender(gender);
+      setPhone(phone ?? "00000000000");
+      setGender(gender ?? "선택안함");
       setCareer(career ?? "신입");
       setField(JSON.parse(`${field}`));
       setBirthYear(birthYear ?? 2000);

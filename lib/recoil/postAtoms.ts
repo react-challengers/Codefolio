@@ -59,7 +59,7 @@ const postPublic = atom<boolean>({
 
 const postContent = atom<string>({
   key: "postContent",
-  default: "",
+  default: "프로젝트 내용을 입력해주세요.",
 });
 
 export {
