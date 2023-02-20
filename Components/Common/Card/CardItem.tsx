@@ -78,9 +78,8 @@ const CardItem = ({
 
       if (error) console.log(error);
 
-      if (data === null) {
-        setUserName("sns계정");
-      } else {
+      if (!data) setUserName("sns계정");
+      else {
         setUserName(data.user_name || null);
         setUserProfileImage(data.profile_image || null);
       }
