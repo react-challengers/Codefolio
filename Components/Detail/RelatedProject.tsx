@@ -48,7 +48,7 @@ const RelatedProject = () => {
         <SwiperWrapper>
           <Swiper
             modules={[Navigation, Scrollbar]}
-            spaceBetween={80}
+            spaceBetween={20}
             slidesPerView={4}
             navigation={{
               prevEl: ".swiper-button-prev",

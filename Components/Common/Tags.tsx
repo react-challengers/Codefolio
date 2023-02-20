@@ -71,6 +71,7 @@ const Tags = ({ tagItems, size = "md" }: TagsProps) => {
 };
 
 const TagsContainer = styled.ul`
+  display: flex;
   gap: 0.25rem;
 `;
 
