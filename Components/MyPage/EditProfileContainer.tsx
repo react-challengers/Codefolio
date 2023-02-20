@@ -64,7 +64,6 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
   const handleSave = async () => {
     setIsEditing(false);
     try {
-      console.log(userProfile);
       await supabase
         .from("user_profile")
         .update(userProfile)
