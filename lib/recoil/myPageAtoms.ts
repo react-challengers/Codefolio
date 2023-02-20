@@ -1,6 +1,8 @@
 import { atom, selector } from "recoil";
 
-const myPagePhonNumber = atom<string>({
+const myPageId = atom({ key: "myPageId", default: "" });
+
+const myPagePhonNumber = atom({
   key: "myPagePhonNumber",
   default: "",
 });
@@ -13,7 +15,7 @@ const myPageContactEmail = atom({
 });
 
 const myPageSelfProfile = atom({
-  key: "myPageselfProfile",
+  key: "myPageSelfProfile",
   default: "",
 });
 
@@ -43,14 +45,23 @@ const myPageSkills = atom<string[]>({
   default: [],
 });
 
-const myPageBirthYear = atom({ key: "myPageBirthYear", default: 0 });
+const myPageBirthYear = atom({
+  key: "myPageBirthYear",
+  default: new Date().getFullYear(),
+});
 
 const myPageCareer = atom({ key: "myPageCareer", default: "신입" });
+
+const myPageBookmarkFolders = atom<string[]>({
+  key: "myPageBookmarkFolders",
+  default: [],
+});
 
 // state 결합
 const myPageUserProfile = selector({
   key: "myPageUserProfile",
   get: ({ get }) => {
+    const id = get(myPageId);
     const phoneNumber = get(myPagePhonNumber);
     const userName = get(myPageUserName);
     const contactEmail = get(myPageContactEmail);
@@ -64,26 +75,33 @@ const myPageUserProfile = selector({
     const skills = get(myPageSkills);
     const birthYear = get(myPageBirthYear);
     const career = get(myPageCareer);
-    return {
-      phoneNumber,
-      userName,
-      contactEmail,
-      selfProfile,
-      userId,
-      backgroundColor,
-      profileImage,
+    const bookmarkFolders = get(myPageBookmarkFolders);
+
+    // schema 유효성 검증
+    const userProfile: UserProfileType = {
+      id,
+      phone: phoneNumber,
+      user_name: userName,
+      contact_email: contactEmail,
+      self_profile: selfProfile,
+      user_id: userId,
+      background_color: backgroundColor,
+      profile_image: profileImage,
       gender,
-      isPublic,
+      is_public: isPublic,
       field,
       skills,
-      birthYear,
+      birth_year: birthYear,
       career,
+      bookmark_folders: bookmarkFolders,
     };
+    return userProfile;
   },
 });
 
 export {
   myPagePhonNumber,
+  myPageId,
   myPageUserName,
   myPageContactEmail,
   myPageSelfProfile,
@@ -97,4 +115,5 @@ export {
   myPageSkills,
   myPageBirthYear,
   myPageCareer,
+  myPageBookmarkFolders,
 };
