@@ -2,7 +2,7 @@ import supabase from "@/lib/supabase";
 
 const patchUserProfile = async (userProfile: UserProfileType) => {
   const { data, error } = await supabase
-    .from("user-profile")
+    .from("user_profile")
     .update(userProfile)
     .eq("user_id", userProfile.user_id)
     .single();

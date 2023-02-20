@@ -61,7 +61,7 @@ const UserInfoContainer = () => {
       if (getUserIdError || !data.user?.email) return;
 
       const { data: userProfileData, error } = await supabase
-        .from("user-profile")
+        .from("user_profile")
         .select("*")
         .eq("user_id", data.user.id)
         .single();
@@ -173,13 +173,13 @@ const UserInfoContainer = () => {
       <Banner userBackground={userBackground} />
       <UserInfoWrapper>
         <ProfileImageWrapper>
-          <label htmlFor="user-profile">
+          <label htmlFor="user_profile">
             <ProfileFileImageInput
               type="file"
               accept="image/*"
               onChange={handleProfileImage}
               multiple={false}
-              id="user-profile"
+              id="user_profile"
             />
             <ProfileImage alt="유저 프로필" page="myPage" src={profileImage} />
           </label>

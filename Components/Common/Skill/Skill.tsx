@@ -20,7 +20,7 @@ const Skill = ({ skill, idx, onDelete, setEditSkills }: SkillProps) => {
 
   return (
     <SkillContainer>
-      <SkillInput value={skill} onChange={onChange} />
+      <SkillInput value={skill} onChange={onChange} maxLength={15} />
       <CancelButton
         onClick={() => onDelete(idx)}
         src="/icons/cancel.svg"

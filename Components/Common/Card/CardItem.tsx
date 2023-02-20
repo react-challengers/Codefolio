@@ -71,7 +71,7 @@ const CardItem = ({
   useMemo(() => {
     const getUserInfo = async () => {
       const { data, error } = await supabase
-        .from("user-profile")
+        .from("user_profile")
         .select("*")
         .eq("user_id", userId)
         .single();
@@ -193,6 +193,8 @@ const CardBottomWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  height: 8.2rem;
+  overflow: hidden;
 `;
 
 const TitleWrapper = styled.div`

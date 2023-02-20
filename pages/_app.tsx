@@ -10,6 +10,7 @@ import GNB from "@/Components/Layouts/GNB";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Footer from "@/Components/Layouts/Footer";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = ({
           <RecoilRoot>
             <GNB />
             <Component {...pageProps} />
+            <Footer />
           </RecoilRoot>
         </ThemeProvider>
       </SessionContextProvider>

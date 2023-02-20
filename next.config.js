@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["xxfgrnzupwpguxifhwsq.supabase.co"],
+    domains: [
+      "xxfgrnzupwpguxifhwsq.supabase.co",
+      "avatars.githubusercontent.com",
+    ],
   },
   reactStrictMode: true,
   compiler: {

@@ -65,7 +65,7 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
     setIsEditing(false);
     try {
       await supabase
-        .from("user-profile")
+        .from("user_profile")
         .update(userProfile)
         .eq("user_id", userProfile.user_id);
     } catch (error) {

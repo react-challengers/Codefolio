@@ -9,7 +9,7 @@ import DetailWith, { DetailWithProps } from "./DetailWith";
 
 interface DetailSideProps {
   progressDate: string[];
-  stack: string[];
+  subCategory: string;
   tag: string[];
   skills: string[];
   members: string[];
@@ -18,7 +18,7 @@ interface DetailSideProps {
 
 const DetailSide = ({
   progressDate,
-  stack,
+  subCategory,
   tag,
   skills,
   members,
@@ -26,7 +26,7 @@ const DetailSide = ({
 }: DetailSideProps) => {
   const getAuthor = async () => {
     const { data, error } = await supabase
-      .from("user-profile")
+      .from("user_profile")
       .select()
       .eq("user_id", userId);
 
@@ -70,9 +70,7 @@ const DetailSide = ({
             <Name>이름</Name>
           </ProfileWrapper>
           <ButtonsWrapper>
-            {skills.map((skill) => (
-              <DefaultBox key={skill}>{skill}</DefaultBox>
-            ))}
+            <DefaultBox>{subCategory}</DefaultBox>
           </ButtonsWrapper>
         </DetailSideWrapper>
 

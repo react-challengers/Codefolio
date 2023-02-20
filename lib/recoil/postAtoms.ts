@@ -54,7 +54,7 @@ const postTags = atom<string[]>({
 
 const postPublic = atom<boolean>({
   key: "postPublic",
-  default: false,
+  default: true,
 });
 
 const postContent = atom<string>({

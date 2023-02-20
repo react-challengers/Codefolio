@@ -40,11 +40,13 @@ const WithPeople = () => {
             placeholder="참여자"
             value={person.name}
             onChange={changePerson(idx, "name")}
+            maxLength={5}
           />
           <Input
             placeholder="개발 스택"
             value={person.field}
             onChange={changePerson(idx, "field")}
+            maxLength={11}
           />
           <Input
             placeholder="참조링크"
