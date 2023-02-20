@@ -25,6 +25,15 @@ const GNB = () => {
     getSessionUser();
   }, [setUserCheck]);
 
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      throw new Error(error.message);
+    }
+    setUserCheck(false);
+    router.push("/");
+  };
+
   if (router.pathname.includes("auth")) return <> </>;
 
   return (
@@ -47,30 +56,40 @@ const GNB = () => {
             height="24"
           />
         </ButtonWrapper> */}
-        <ButtonWrapper
-          onClick={() =>
-            router.push(userCheck ? "/create-post" : "/auth/login")
-          }
-        >
-          <Image
-            src="/icons/post.svg"
-            alt="게시글 등록 아이콘"
-            width="24"
-            height="24"
-          />
-        </ButtonWrapper>
         {userCheck ? (
-          <ButtonWrapper onClick={() => router.push("/profile")}>
-            <Image
-              src="/icons/person.svg"
-              alt="내 프로필 아이콘"
-              width="24"
-              height="24"
-            />
-          </ButtonWrapper>
+          <>
+            <ButtonWrapper
+              onClick={() =>
+                router.push(userCheck ? "/create-post" : "/auth/login")
+              }
+            >
+              <Image
+                src="/icons/post.svg"
+                alt="게시글 등록 아이콘"
+                width="24"
+                height="24"
+              />
+            </ButtonWrapper>
+            <ButtonWrapper onClick={() => router.push("/profile")}>
+              <Image
+                src="/icons/person.svg"
+                alt="내 프로필 아이콘"
+                width="24"
+                height="24"
+              />
+            </ButtonWrapper>
+            <ButtonWrapper onClick={() => handleLogout()}>
+              <Image
+                src="/icons/logout.svg"
+                alt="로그아웃 아이콘"
+                width="24"
+                height="24"
+              />
+            </ButtonWrapper>
+          </>
         ) : (
           <ButtonWrapper onClick={() => router.push("/auth/login")}>
-            <span>로그인</span>
+            <span>LOGIN</span>
           </ButtonWrapper>
         )}
       </ButtonsContainer>

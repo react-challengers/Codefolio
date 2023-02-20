@@ -4,7 +4,6 @@ import {
   myPageSelfProfile,
   myPageUserId,
   myPageUserName,
-  userLoginCheck,
   myPageBackgroundColor,
   myPageProfileImage,
   myPageUserProfile,
@@ -141,19 +140,6 @@ const UserInfoContainer = () => {
     }
   };
 
-  const router = useRouter();
-
-  const setUserLogin = useSetRecoilState(userLoginCheck);
-
-  const onLogoutButtonClick = async () => {
-    const res = await supabase.auth.signOut();
-    setUserLogin(false);
-    if (res.error) {
-      throw new Error(res.error.message);
-    }
-    return router.push("/");
-  };
-
   const uploadImage = async (file: File) => {
     const imgPath = crypto.randomUUID();
     try {
@@ -206,11 +192,6 @@ const UserInfoContainer = () => {
               width="24"
               height="24"
             />
-          </IconBox>
-          <IconBox>
-            <button type="button" onClick={() => onLogoutButtonClick()}>
-              로그아웃
-            </button>
           </IconBox>
         </IconWrapper>
         <TextWrapper>
