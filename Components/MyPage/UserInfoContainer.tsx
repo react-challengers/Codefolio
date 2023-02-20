@@ -67,6 +67,7 @@ const UserInfoContainer = () => {
         .single();
 
       if (error) return;
+      if (userProfile.career) return;
       const {
         contact_email: contactEmailData,
         user_name: userNameData,

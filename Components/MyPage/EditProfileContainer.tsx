@@ -46,13 +46,13 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
   const [isPhoneNumber, setIsPhoneNumber] = useState(false);
 
   const clickField = (field: string) => {
-    if (activeField.includes(field)) {
+    if (activeField?.includes(field)) {
       const newActiveField = activeField.filter(
         (activeFieldItem) => activeFieldItem !== field
       );
       setActiveField(newActiveField);
     } else {
-      setActiveField([...activeField, field]);
+      setActiveField((prev) => (prev ? [...prev, field] : [field]));
     }
   };
 
@@ -64,6 +64,7 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
   const handleSave = async () => {
     setIsEditing(false);
     try {
+      console.log(userProfile);
       await supabase
         .from("user_profile")
         .update(userProfile)
@@ -108,7 +109,7 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
                     <PositionTag
                       onClick={() => clickField(field)}
                       key={field}
-                      active={activeField.includes(field)}
+                      active={activeField?.includes(field)}
                     >
                       {field}
                     </PositionTag>

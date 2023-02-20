@@ -61,7 +61,7 @@ const tagSizeSwitch = (size: TagSizeType) => {
 const Tags = ({ tagItems, size = "md" }: TagsProps) => {
   return (
     <TagsContainer>
-      {tagItems.map((item) => (
+      {tagItems?.map((item) => (
         <TagsItem key={item} size={size}>
           {item}
         </TagsItem>

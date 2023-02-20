@@ -4,6 +4,7 @@ const nextConfig = {
     domains: [
       "xxfgrnzupwpguxifhwsq.supabase.co",
       "avatars.githubusercontent.com",
+      "lh3.googleusercontent.com",
     ],
   },
   reactStrictMode: true,

@@ -10,8 +10,9 @@ interface SkillPickerProps {
 
 const SkillList = ({ text, editSkills, setEditSkills }: SkillPickerProps) => {
   const addSkill = () => {
-    if (editSkills[editSkills.length - 1] !== "")
-      setEditSkills([...editSkills, ""]);
+    if (!editSkills) return setEditSkills([""]);
+    if (!editSkills.includes("")) setEditSkills([...editSkills, ""]);
+    return null;
   };
 
   const onDelete = (idx: number) => {
@@ -21,7 +22,7 @@ const SkillList = ({ text, editSkills, setEditSkills }: SkillPickerProps) => {
 
   return (
     <SkillListContainer>
-      {editSkills.map((skill, idx) => (
+      {editSkills?.map((skill, idx) => (
         <Skill
           key={idx}
           skill={skill}

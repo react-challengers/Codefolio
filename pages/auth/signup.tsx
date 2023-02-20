@@ -9,7 +9,6 @@ import {
   checkEmail,
   checkPassword,
   checkUserName,
-  postUserProfile,
 } from "@/utils/commons/authUtils";
 import { useSetRecoilState } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
@@ -84,17 +83,13 @@ const SignUpPage: NextPage = () => {
       password,
       options: {
         data: {
-          user_name: userName,
+          full_name: userName,
+          email,
         },
       },
     });
 
     if (!error) {
-      const userProfileUserId: string | undefined = data.user?.id;
-      const userProfileEmail: string | undefined = data.user?.email;
-      const userProfileUserName: string | undefined =
-        data.user?.user_metadata.user_name;
-      postUserProfile(userProfileUserId, userProfileEmail, userProfileUserName);
       setIsLogin(true);
       OpenModal("회원가입 완료", null);
       return router.push("/");

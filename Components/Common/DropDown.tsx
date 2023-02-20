@@ -43,7 +43,7 @@ const DropDown = ({ type }: DropDownProps) => {
   }
 
   const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-    if (type === "birth_year") setBirthYear(parseInt(e.target.value, 10));
+    if (type === "birth_year") setBirthYear(+e.target.value);
     if (type === "career") setCareer(e.target.value);
   };
 

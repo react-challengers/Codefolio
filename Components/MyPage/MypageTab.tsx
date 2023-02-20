@@ -8,7 +8,7 @@ interface TabsProps {
 
 const Tabs = ({ tabList, currentTab, onClick }: TabsProps) => {
   return (
-    <TabsContainer>
+    <TabsContainer listLength={tabList.length}>
       {tabList.map((tab, idx) => (
         <TabWrapper
           key={tab}
@@ -22,9 +22,14 @@ const Tabs = ({ tabList, currentTab, onClick }: TabsProps) => {
   );
 };
 
-const TabsContainer = styled.div`
-  display: flex;
-  flex-direction: row;
+interface TabsContainerProps {
+  listLength: number;
+}
+
+const TabsContainer = styled.div<TabsContainerProps>`
+  display: grid;
+  grid-template-columns: repeat(${({ listLength }) => listLength}, 1fr);
+  width: 64rem;
 `;
 
 interface TabWrapperProps {
@@ -32,11 +37,10 @@ interface TabWrapperProps {
 }
 
 const TabWrapper = styled.div<TabWrapperProps>`
-  width: 9.8rem;
+  /* width: 9.8rem; */
   text-align: center;
   padding: 1rem;
-  border-bottom: 0.125rem solid
-    ${({ active }) => (active ? "black" : "lightgrey")};
+  border-top: 1px solid ${({ active }) => (active ? "black" : "lightgrey")};
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 `;
