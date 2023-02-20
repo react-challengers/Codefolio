@@ -1,6 +1,13 @@
+import DetailModal from "@/Components/Detail/DetailModal";
+import MainSection from "@/Components/Main/MainSection";
+import SideBar from "@/Components/Main/SideBar";
 import Head from "next/head";
+import { useState } from "react";
+import styled from "styled-components";
 
 const Home = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <>
       <Head>
@@ -9,8 +16,32 @@ const Home = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>start</div>
+      <HomeContainer>
+        {isModalOpen && (
+          <ModalContainer>
+            <DetailModal setIsModalOpen={setIsModalOpen} />
+          </ModalContainer>
+        )}
+        <SideBar />
+        <MainSection setIsModalOpen={setIsModalOpen} />
+      </HomeContainer>
     </>
   );
 };
+
+const HomeContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+`;
+
+const ModalContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  overflow-y: scroll;
+`;
 export default Home;

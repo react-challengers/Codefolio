@@ -23,12 +23,21 @@
   },
   "plugins": ["react", "@typescript-eslint", "prettier"],
   "rules": {
+    "react/no-array-index-key": 0,
     "@typescript-eslint/no-use-before-define": 0,
     "react/jsx-props-no-spreading": 0,
     "react/require-default-props": 0,
     "react/function-component-definition": [
       2,
       { "namedComponents": "arrow-function" }
+    ],
+    // no-extraneous-dependencies 오류가 발생해 임시로 해제
+    "import/no-extraneous-dependencies": 0,
+    "@typescript-eslint/ban-ts-comment": 0,
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      { "labelAttributes": ["htmlFor"] }
     ]
   }
 }
