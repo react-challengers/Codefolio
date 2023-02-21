@@ -70,10 +70,7 @@ const Tags = ({ tagItems, size = "md" }: TagsProps) => {
   );
 };
 
-const TagsContainer = styled.ul`
-  display: flex;
-  gap: 0.25rem;
-`;
+const TagsContainer = styled.ul``;
 
 type TagsItemType = {
   key: string;
@@ -89,6 +86,7 @@ const TagsItem = styled.li<TagsItemType>`
   border-radius: 0.75rem; */
   ${(props) => tagSizeSwitch(props.size)}
   white-space: nowrap;
+  margin: 1px;
   margin-bottom: 0.25rem;
 `;
 
