@@ -179,7 +179,7 @@ const TEXTBOX = styled.div`
   display: flex;
   align-items: center;
 
-  width: 6.25rem;
+  min-width: 6.25rem;
   margin-left: 3.125rem;
 
   font-size: 0.8125rem;
