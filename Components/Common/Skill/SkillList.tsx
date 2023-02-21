@@ -1,4 +1,4 @@
-import { Dispatch } from "react";
+import { Dispatch, useRef } from "react";
 import styled from "styled-components";
 import Skill, { commonStyle } from "./Skill";
 
@@ -28,8 +28,10 @@ const SkillList = ({ text, editSkills, setEditSkills }: SkillPickerProps) => {
           skill={skill}
           editSkills={editSkills}
           setEditSkills={setEditSkills}
+          addSkill={addSkill}
           idx={idx}
           onDelete={onDelete}
+          isLast={idx === editSkills.length - 1}
         />
       ))}
       <SkillButton onClick={addSkill}>+ {text}</SkillButton>

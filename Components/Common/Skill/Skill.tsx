@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ChangeEvent, Dispatch, useState } from "react";
+import { ChangeEvent, Dispatch, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 interface SkillProps {
@@ -8,6 +8,8 @@ interface SkillProps {
   onDelete: (idx: number) => void;
   editSkills: string[];
   setEditSkills: Dispatch<React.SetStateAction<string[]>>;
+  addSkill: () => void;
+  isLast: boolean;
 }
 
 const Skill = ({
@@ -16,7 +18,10 @@ const Skill = ({
   onDelete,
   setEditSkills,
   editSkills,
+  addSkill,
+  isLast,
 }: SkillProps) => {
+  const lastSkillRef = useRef<HTMLInputElement>(null);
   const [isDuplicate, setIsDuplicate] = useState(false);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,6 +38,18 @@ const Skill = ({
     });
   };
 
+  const handelOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      addSkill();
+    }
+  };
+
+  useEffect(() => {
+    if (isLast && lastSkillRef.current) {
+      lastSkillRef.current.focus();
+    }
+  }, [isLast, lastSkillRef]);
+
   return (
     <SkillContainer>
       <SkillInput
@@ -40,6 +57,8 @@ const Skill = ({
         onChange={onChange}
         maxLength={15}
         isDuplicate={isDuplicate}
+        onKeyDown={handelOnKeyDown}
+        ref={isLast ? lastSkillRef : null}
       />
       <CancelButton
         onClick={() => onDelete(idx)}
