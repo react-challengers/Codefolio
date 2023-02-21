@@ -68,6 +68,7 @@ const ProjectInfoDropDown = () => {
               selectsStart
               startDate={new Date(startDate)}
               endDate={new Date(endDate)}
+              maxDate={new Date(endDate)}
             />
             <SpaceBetweenDatePicker> ~ </SpaceBetweenDatePicker>
             <StyledDatePicker
