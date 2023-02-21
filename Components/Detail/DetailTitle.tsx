@@ -1,3 +1,4 @@
+import { myPageBackgroundColor } from "@/lib/recoil";
 import styled from "styled-components";
 
 interface DetailTitleProps {
@@ -20,7 +21,7 @@ const DetailTitle = ({
       <DetailTitleHeader>
         {field} {">"} {subCategory}
       </DetailTitleHeader>
-      <DetailTitleText>
+      <DetailTitleText backgroundColor={backgroundColor}>
         <h1>{title}</h1>
         <h3>{subtitle}</h3>
       </DetailTitleText>
@@ -42,14 +43,15 @@ const DetailTitleHeader = styled.p`
   color: #b3b3b3;
 `;
 
-const DetailTitleText = styled.div`
+const DetailTitleText = styled.div<{ backgroundColor: string }>`
   display: flex;
   flex-direction: column;
   gap: 1.875rem;
   h1 {
     font-size: 2rem;
     font-weight: 700;
-    color: #262626;
+    color: ${({ backgroundColor }) => backgroundColor};
+    filter: invert(100%);
   }
   h3 {
     font-size: 1.25rem;
