@@ -1,10 +1,15 @@
 import { getUserProfile, patchUserProfile } from "@/utils/APIs/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 const USER_PROFILE = "user_profile";
 
 /**
+ * user_profile 테이블에 관한 query hook입니다.
  * @see https://tanstack.com/query/v4/docs/react/guides/optimistic-updates
+ * @TODO updateCache함수 구현
+ * @TODO 최초 데이터를 유출하지 말고 갱신된 쿼리캐시를 유출하기
+ * @TODO 변수명 변경: const { profileCache, setProfileCache, updateProfileData } = useUserProfile();
  */
 
 const useUserProfile = () => {
@@ -27,14 +32,15 @@ const useUserProfile = () => {
     gender: data?.gender ?? "선택안함",
     is_public: data?.is_public ?? true,
     field: data?.field ?? [],
-    skills: data?.skills ?? [],
+    skills: data?.skills ? data?.skills : [],
     career: data?.career ?? "신입",
     bookmark_folders: data?.bookmark_folders ?? [],
   };
 
-  console.log(data?.field);
-
-  queryClient.setQueryData([USER_PROFILE], profileData);
+  // 무한 리랜더링 버그 해결하기
+  useEffect(() => {
+    queryClient.setQueryData([USER_PROFILE], profileData);
+  }, []);
 
   // patch
   const { mutate: updateProfileData } = useMutation(patchUserProfile, {

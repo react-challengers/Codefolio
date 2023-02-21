@@ -1,6 +1,7 @@
 import { myPageBirthYear, myPageCareer } from "@/lib/recoil";
 import BASE_YEAR from "@/utils/constant";
-import { ChangeEvent, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
@@ -19,9 +20,13 @@ interface DropDownProps {
 
 const DropDown = ({ type }: DropDownProps) => {
   const options: (string | number)[] = [];
+  const queryCache = useQueryClient();
+  const profileData = queryCache.getQueryData<UserProfileType>([
+    "user_profile",
+  ]);
 
-  const [birthYear, setBirthYear] = useRecoilState(myPageBirthYear);
-  const [career, setCareer] = useRecoilState(myPageCareer);
+  const [birthYear, setBirthYear] = useState(profileData?.birth_year);
+  const [career, setCareer] = useState(profileData?.career);
 
   const years = Array.from(
     { length: new Date().getFullYear() - BASE_YEAR + 1 },
@@ -43,8 +48,22 @@ const DropDown = ({ type }: DropDownProps) => {
   }
 
   const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-    if (type === "birth_year") setBirthYear(+e.target.value);
-    if (type === "career") setCareer(e.target.value);
+    if (type === "birth_year") {
+      setBirthYear(+e.target.value);
+      queryCache.setQueriesData<UserProfileType | undefined>(
+        ["user_profile"],
+        (prevProfile) =>
+          prevProfile && { ...prevProfile, birth_year: +e.target.value }
+      );
+    }
+    if (type === "career") {
+      setCareer(e.target.value);
+      queryCache.setQueriesData<UserProfileType | undefined>(
+        ["user_profile"],
+        (prevProfile) =>
+          prevProfile && { ...prevProfile, career: e.target.value }
+      );
+    }
   };
 
   useEffect(() => {

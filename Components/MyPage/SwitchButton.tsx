@@ -1,17 +1,32 @@
-import { myPageGender } from "@/lib/recoil";
-import { useRecoilState } from "recoil";
+import { useUserProfile } from "@/hooks/query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import styled from "styled-components";
 
 const SwitchButton = () => {
-  const [currentItem, setCurrentItem] = useRecoilState(myPageGender);
+  const queryCache = useQueryClient();
+  const { profileData } = useUserProfile();
+  const [currentItem, setCurrentItem] = useState(profileData.gender);
+
+  const handleSetCurrentItem = (item: Gender) => {
+    setCurrentItem(item);
+
+    // 쿼리 캐시 갱신
+    queryCache.setQueriesData<UserProfileType | undefined>(
+      ["user_profile"],
+      (prevProfile) => prevProfile && { ...prevProfile, gender: currentItem }
+    );
+  };
+
   const items: Gender[] = ["남자", "여자", "선택안함"];
+
   return (
     <SwitchButtonContainer>
       {items.map((item: Gender) => (
         <DefaultButton
           key={item}
           active={currentItem === item}
-          onClick={() => setCurrentItem(item)}
+          onClick={() => handleSetCurrentItem(item)}
         >
           {item}
         </DefaultButton>
