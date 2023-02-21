@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
 import { useInput } from "@/hooks/common";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ProfileImage from "../Common/ProfileImage";
 import DefaultButton from "../Common/DefaultButton";
 
@@ -16,7 +16,6 @@ interface CommentInputProps {
 
 const CommentInput = ({ postId, userId }: CommentInputProps) => {
   const queryClient = useQueryClient();
-  const [userName, setUserName] = useState("");
 
   const { inputValues, handleInputChange, resetAllInput } = useInput({
     comment: "",
@@ -30,7 +29,6 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
         id: crypto.randomUUID(),
         post_id: postId,
         user_id: userId,
-        user_name: userName,
         content: inputValues.comment,
       }),
     {
@@ -40,20 +38,6 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
       },
     }
   );
-
-  useEffect(() => {
-    const getUserProfile = async () => {
-      const { data } = await supabase
-        .from("user_profile")
-        .select("*")
-        .eq("user_id", userId)
-        .single();
-
-      setUserName(data.user_name);
-    };
-
-    getUserProfile();
-  }, [userId]);
 
   const handleAddComment = () => {
     if (!inputValues.comment) {
