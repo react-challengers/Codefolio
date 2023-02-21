@@ -1,14 +1,12 @@
 import styled from "styled-components";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
 import { useInput } from "@/hooks/common";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProfileImage from "../Common/ProfileImage";
 import DefaultButton from "../Common/DefaultButton";
 
 /**
- * @todo postComment 구현 필요
- * @todo alert는 임시 입니다. 커스텀 필요
  */
 
 interface CommentInputProps {
@@ -18,6 +16,7 @@ interface CommentInputProps {
 
 const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
   const queryClient = useQueryClient();
+  const [userName, setUserName] = useState("");
 
   const { inputValues, handleInputChange, resetAllInput } = useInput({
     comment: "",
@@ -31,6 +30,7 @@ const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
         id: crypto.randomUUID(),
         post_id: POST_ID,
         user_id: USER_ID,
+        user_name: userName,
         content: inputValues.comment,
       }),
     {
@@ -40,6 +40,20 @@ const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
       },
     }
   );
+
+  useEffect(() => {
+    const getUserProfile = async () => {
+      const { data } = await supabase
+        .from("user_profile")
+        .select("*")
+        .eq("user_id", USER_ID)
+        .single();
+
+      setUserName(data.user_name);
+    };
+
+    getUserProfile();
+  }, [USER_ID]);
 
   const handleAddComment = () => {
     if (!inputValues.comment) {

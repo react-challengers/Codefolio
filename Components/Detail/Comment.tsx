@@ -20,7 +20,7 @@ const Comment = () => {
       } else {
         setCurrentUser(false);
       }
-      setUserId(data.session?.user.email);
+      setUserId(data.session?.user.id);
     };
 
     LoginState();

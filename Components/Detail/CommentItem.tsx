@@ -14,6 +14,7 @@ interface CommentType {
   id: string;
   post_id: string;
   user_id: string;
+  user_name: string;
   content: string;
   created_at: string;
 }
@@ -84,7 +85,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
       <TextBox>
         <CommentTitle>
           <CommentWrapper>
-            <h3> {comment.user_id} </h3>
+            <h3> {comment.user_name} </h3>
             <span> {commentDateView} </span>
           </CommentWrapper>
         </CommentTitle>
