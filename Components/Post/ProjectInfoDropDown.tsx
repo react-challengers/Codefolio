@@ -122,11 +122,13 @@ const ProjectInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  gap: 0.625rem;
 `;
 
 const ProjectInfoWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 4fr;
+  padding: 0.25rem 0;
 `;
 
 const CategoryContainer = styled.div`
