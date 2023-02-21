@@ -122,6 +122,7 @@ const ProjectInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  gap: 0.5rem;
 `;
 
 const ProjectInfoWrapper = styled.div`
