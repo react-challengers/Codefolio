@@ -37,6 +37,11 @@ const SideBar = () => {
     보안: ["보안"],
   };
 
+  const onClickAllCatecory = () => {
+    setSelectedCategory([]);
+    setSelectedSubCategory([]);
+  };
+
   const onClickSubCategory = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
     const subCategory = target.innerText;
@@ -52,7 +57,7 @@ const SideBar = () => {
 
   return (
     <SideBarContainer>
-      <SideBarTitle>전체</SideBarTitle>
+      <SideBarTitle onClick={onClickAllCatecory}>전체</SideBarTitle>
       <SideBarHr />
       <CategoryContainer>
         {largeCategoryItems.map((item: string) => (
@@ -108,6 +113,7 @@ const SideBarContainer = styled.aside`
 
 const SideBarTitle = styled.span`
   font-size: 1.5rem;
+  cursor: pointer;
 `;
 
 const SideBarHr = styled.hr`
