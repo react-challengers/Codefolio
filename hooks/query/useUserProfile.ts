@@ -11,7 +11,30 @@ const useUserProfile = () => {
   const queryClient = useQueryClient();
 
   // get
-  const { data: profileData } = useQuery([USER_PROFILE], getUserProfile, {});
+  const { data } = useQuery([USER_PROFILE], getUserProfile, {});
+
+  // null이면 갱신
+  const profileData: UserProfileType = {
+    id: data?.id ?? "",
+    user_id: data?.user_id ?? "",
+    user_name: data?.user_name ?? "",
+    phone: data?.phone ?? "01000000000",
+    contact_email: data?.contact_email ?? "",
+    profile_image: data?.profile_image ?? "",
+    background_color: data?.background_color ?? "#ffffff",
+    birth_year: data?.birth_year ?? new Date().getFullYear(),
+    self_profile: data?.self_profile ?? "",
+    gender: data?.gender ?? "선택안함",
+    is_public: data?.is_public ?? true,
+    field: data?.field ?? [],
+    skills: data?.skills ?? [],
+    career: data?.career ?? "신입",
+    bookmark_folders: data?.bookmark_folders ?? [],
+  };
+
+  console.log(data?.field);
+
+  queryClient.setQueryData([USER_PROFILE], profileData);
 
   // patch
   const { mutate: updateProfileData } = useMutation(patchUserProfile, {
