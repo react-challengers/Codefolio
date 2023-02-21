@@ -10,11 +10,11 @@ import DefaultButton from "../Common/DefaultButton";
  */
 
 interface CommentInputProps {
-  POST_ID: string | string[] | undefined;
-  USER_ID: string | undefined;
+  postId: string | string[] | undefined;
+  userId: string | undefined;
 }
 
-const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
+const CommentInput = ({ postId, userId }: CommentInputProps) => {
   const queryClient = useQueryClient();
   const [userName, setUserName] = useState("");
 
@@ -28,14 +28,14 @@ const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
     (): any =>
       supabase.from("comment").insert({
         id: crypto.randomUUID(),
-        post_id: POST_ID,
-        user_id: USER_ID,
+        post_id: postId,
+        user_id: userId,
         user_name: userName,
         content: inputValues.comment,
       }),
     {
       onSuccess: async () => {
-        await supabase.rpc("increment_comment", { row_id: POST_ID });
+        await supabase.rpc("increment_comment", { row_id: postId });
         queryClient.invalidateQueries(["getComment"]);
       },
     }
@@ -46,14 +46,14 @@ const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
       const { data } = await supabase
         .from("user_profile")
         .select("*")
-        .eq("user_id", USER_ID)
+        .eq("user_id", userId)
         .single();
 
       setUserName(data.user_name);
     };
 
     getUserProfile();
-  }, [USER_ID]);
+  }, [userId]);
 
   const handleAddComment = () => {
     if (!inputValues.comment) {

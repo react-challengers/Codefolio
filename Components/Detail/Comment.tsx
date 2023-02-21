@@ -28,8 +28,8 @@ const Comment = () => {
 
   return (
     <CommentContainer>
-      {currentUser && <CommentInput POST_ID={postId} USER_ID={userId} />}
-      {postId && <CommentList POST_ID={postId} />}
+      {currentUser && <CommentInput postId={postId} userId={userId} />}
+      {postId && <CommentList postId={postId} />}
     </CommentContainer>
   );
 };
