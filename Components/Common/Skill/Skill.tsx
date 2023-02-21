@@ -1,5 +1,12 @@
 import Image from "next/image";
-import { ChangeEvent, Dispatch, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 
 interface SkillProps {
@@ -24,18 +31,22 @@ const Skill = ({
   const lastSkillRef = useRef<HTMLInputElement>(null);
   const [isDuplicate, setIsDuplicate] = useState(false);
 
+  const checkDuplicate = useCallback(
+    (value: string) => {
+      const checkDuplicateItem =
+        editSkills.filter((skillItem) => skillItem === value).length > 1;
+      setIsDuplicate(checkDuplicateItem);
+    },
+    [editSkills]
+  );
+
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (editSkills.includes(e.target.value)) {
-      setIsDuplicate(true);
-    }
-    if (!editSkills.includes(e.target.value)) {
-      setIsDuplicate(false);
-    }
     setEditSkills((prevSkill) => {
       const newSkill = [...prevSkill];
       newSkill[idx] = e.target.value;
       return newSkill;
     });
+    checkDuplicate(e.target.value);
   };
 
   const handelOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -49,6 +60,10 @@ const Skill = ({
       lastSkillRef.current.focus();
     }
   }, [isLast, lastSkillRef]);
+
+  useEffect(() => {
+    checkDuplicate(skill);
+  }, [skill, editSkills, checkDuplicate]);
 
   return (
     <SkillContainer>
