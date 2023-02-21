@@ -68,6 +68,7 @@ const ProjectInfoDropDown = () => {
               selectsStart
               startDate={new Date(startDate)}
               endDate={new Date(endDate)}
+              maxDate={new Date(endDate)}
             />
             <SpaceBetweenDatePicker> ~ </SpaceBetweenDatePicker>
             <StyledDatePicker
@@ -122,6 +123,7 @@ const ProjectInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  gap: 0.5rem;
 `;
 
 const ProjectInfoWrapper = styled.div`
@@ -179,7 +181,7 @@ const TEXTBOX = styled.div`
   display: flex;
   align-items: center;
 
-  width: 6.25rem;
+  min-width: 6.25rem;
   margin-left: 3.125rem;
 
   font-size: 0.8125rem;

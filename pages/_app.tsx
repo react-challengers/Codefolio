@@ -11,6 +11,7 @@ import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Footer from "@/Components/Layouts/Footer";
+import Head from "next/head";
 
 const queryClient = new QueryClient();
 
@@ -23,21 +24,26 @@ const App = ({
   const [supabase] = useState(() => createBrowserSupabaseClient());
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <SessionContextProvider
-        supabaseClient={supabase}
-        initialSession={pageProps.initialSession}
-      >
-        <ThemeProvider theme={theme}>
-          <RecoilRoot>
-            <GNB />
-            <Component {...pageProps} />
-            <Footer />
-          </RecoilRoot>
-        </ThemeProvider>
-      </SessionContextProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <>
+      <Head>
+        <title>Codefolio</title>
+      </Head>
+      <QueryClientProvider client={queryClient}>
+        <SessionContextProvider
+          supabaseClient={supabase}
+          initialSession={pageProps.initialSession}
+        >
+          <ThemeProvider theme={theme}>
+            <RecoilRoot>
+              <GNB />
+              <Component {...pageProps} />
+              <Footer />
+            </RecoilRoot>
+          </ThemeProvider>
+        </SessionContextProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </>
   );
 };
 export default App;
