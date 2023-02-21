@@ -100,8 +100,37 @@ const DetailHeader = () => {
     getLike();
   }, []);
 
+  const checkBookmark = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("bookmark")
+      .select()
+      .eq("user_id", user?.id)
+      .eq("post_id", postId)
+      .single();
+    setIsBookmark(!!data);
+  };
+
+  const checkLike = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("like")
+      .select()
+      .eq("user_id", user?.id)
+      .eq("post_id", postId)
+      .single();
+
+    setIsLike(!!data);
+  };
+
   useEffect(() => {
-    const checkPostOwner = async () => {
+    const checkPostOwner = (postData: any) => {
+      if (postData?.user_id === user?.id) {
+        setIsOwner(true);
+      }
+    };
+
+    const fetchPostData = async () => {
       if (!router.query?.id) return;
       const { data, error } = await supabase
         .from("post")
@@ -112,12 +141,12 @@ const DetailHeader = () => {
       if (error) {
         return;
       }
-
-      if (data?.user_id === user?.id) {
-        setIsOwner(true);
-      }
+      checkPostOwner(data);
     };
-    checkPostOwner();
+
+    fetchPostData();
+    checkBookmark();
+    checkLike();
   }, [router.query?.id, user?.id]);
 
   const clickBookmarkButton = async () => {
