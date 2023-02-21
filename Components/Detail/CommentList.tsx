@@ -11,16 +11,16 @@ interface CommentType {
 }
 
 interface CommentListProps {
-  POST_ID: string | string[] | undefined;
+  postId: string | string[] | undefined;
 }
 
-const CommentList = ({ POST_ID }: CommentListProps) => {
+const CommentList = ({ postId }: CommentListProps) => {
   const getComments = async () => {
     const res = await supabase
       .from("comment")
       .select("*")
       .order("created_at", { ascending: false })
-      .eq("post_id", POST_ID);
+      .eq("post_id", postId);
     return res;
   };
 

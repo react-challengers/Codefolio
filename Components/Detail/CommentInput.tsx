@@ -7,16 +7,14 @@ import ProfileImage from "../Common/ProfileImage";
 import DefaultButton from "../Common/DefaultButton";
 
 /**
- * @todo postComment 구현 필요
- * @todo alert는 임시 입니다. 커스텀 필요
  */
 
 interface CommentInputProps {
-  POST_ID: string | string[] | undefined;
-  USER_ID: string | undefined;
+  postId: string | string[] | undefined;
+  userId: string | undefined;
 }
 
-const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
+const CommentInput = ({ postId, userId }: CommentInputProps) => {
   const queryClient = useQueryClient();
 
   const { inputValues, handleInputChange, resetAllInput } = useInput({
@@ -29,13 +27,13 @@ const CommentInput = ({ POST_ID, USER_ID }: CommentInputProps) => {
     (): any =>
       supabase.from("comment").insert({
         id: crypto.randomUUID(),
-        post_id: POST_ID,
-        user_id: USER_ID,
+        post_id: postId,
+        user_id: userId,
         content: inputValues.comment,
       }),
     {
       onSuccess: async () => {
-        await supabase.rpc("increment_comment", { row_id: POST_ID });
+        await supabase.rpc("increment_comment", { row_id: postId });
         queryClient.invalidateQueries(["getComment"]);
       },
     }
