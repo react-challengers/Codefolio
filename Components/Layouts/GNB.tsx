@@ -1,14 +1,20 @@
-import { userLoginCheck as recoilUserLoginCheck } from "@/lib/recoil";
+import {
+  largeCategoryState,
+  subCategoryState,
+  userLoginCheck as recoilUserLoginCheck,
+} from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const GNB = () => {
   const router = useRouter();
   const [userCheck, setUserCheck] = useRecoilState(recoilUserLoginCheck);
+  const resetLargeCategoryState = useResetRecoilState(largeCategoryState);
+  const resetSubCategoryState = useResetRecoilState(subCategoryState);
 
   useEffect(() => {
     const getSessionUser = async () => {
@@ -25,6 +31,12 @@ const GNB = () => {
     getSessionUser();
   }, [setUserCheck]);
 
+  const handleClickLogo = () => {
+    resetLargeCategoryState();
+    resetSubCategoryState();
+    router.push("/");
+  };
+
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
@@ -38,7 +50,7 @@ const GNB = () => {
 
   return (
     <GNBContainer>
-      <ButtonWrapper onClick={() => router.push("/")}>Codefolio</ButtonWrapper>
+      <ButtonWrapper onClick={handleClickLogo}>Codefolio</ButtonWrapper>
       <ButtonsContainer>
         {/* <ButtonWrapper onClick={() => null}>
           <Image
