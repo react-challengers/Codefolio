@@ -28,8 +28,10 @@ const SkillList = ({ text, editSkills, setEditSkills }: SkillPickerProps) => {
           skill={skill}
           editSkills={editSkills}
           setEditSkills={setEditSkills}
+          addSkill={addSkill}
           idx={idx}
           onDelete={onDelete}
+          isLast={idx === editSkills.length - 1}
         />
       ))}
       <SkillButton onClick={addSkill}>+ {text}</SkillButton>
