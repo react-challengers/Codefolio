@@ -48,10 +48,10 @@ const DetailTitleText = styled.div<{ backgroundColor: string }>`
   flex-direction: column;
   gap: 1.875rem;
   h1 {
-    font-size: 2rem;
-    font-weight: 700;
     color: ${({ backgroundColor }) => backgroundColor};
     filter: invert(100%);
+    font-size: 2rem;
+    font-weight: 700;
   }
   h3 {
     font-size: 1.25rem;
