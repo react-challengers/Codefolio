@@ -1,4 +1,4 @@
-import { Dispatch, useRef } from "react";
+import { Dispatch } from "react";
 import styled from "styled-components";
 import Skill, { commonStyle } from "./Skill";
 
