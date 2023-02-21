@@ -101,7 +101,6 @@ const PostEditor = ({ editorRef }: PostEditorProps) => {
       ref={editorRef}
       initialValue={postContent ?? null}
       previewStyle="vertical"
-      previewHighlight={false}
       height="600px"
       initialEditType="markdown"
       useCommandShortcut
