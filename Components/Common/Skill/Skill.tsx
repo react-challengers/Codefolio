@@ -49,8 +49,8 @@ const Skill = ({
     checkDuplicate(e.target.value);
   };
 
-  const handelOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && e.nativeEvent.isComposing === false) {
       addSkill();
     }
   };
@@ -72,7 +72,7 @@ const Skill = ({
         onChange={onChange}
         maxLength={15}
         isDuplicate={isDuplicate}
-        onKeyDown={handelOnKeyDown}
+        onKeyPress={handleOnKeyDown}
         ref={isLast ? lastSkillRef : null}
       />
       <CancelButton
