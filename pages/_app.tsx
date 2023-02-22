@@ -6,11 +6,10 @@ import theme from "@/styles/theme";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
-import GNB from "@/Components/Layouts/GNB";
+import { GNB, Footer } from "@/Components/Layouts";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import Footer from "@/Components/Layouts/Footer";
 import Head from "next/head";
 
 const queryClient = new QueryClient();
