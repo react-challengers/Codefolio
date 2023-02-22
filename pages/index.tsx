@@ -1,6 +1,8 @@
-import DetailModal from "@/Components/Main/DetailModal";
-import MainSection from "@/Components/Main/MainSection";
-import SideBar from "@/Components/Main/SideBar";
+// import DetailModal from "@/Components/Main/DetailModal";
+// import MainSection from "@/Components/Main/MainSection";
+// import SideBar from "@/Components/Main/SideBar/SideBar";
+
+import { DetailModal, MainSection, SideBar } from "@/Components/Main";
 import Head from "next/head";
 import { useState } from "react";
 import styled from "styled-components";
