@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { myPageIsEditingProfileContainer } from "@/lib/recoil";
+import { useRecoilValue } from "recoil";
 import EditProfileContainer from "./EditProfileContainer";
 import PrivateProfileContainer from "./PrivateProfileContainer";
 import ShowProfileContainer from "./ShowProfileContainer";
@@ -8,17 +9,17 @@ interface TabProfileProps {
 }
 
 const TabProfile = ({ isPrivate = false }: TabProfileProps) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const isEditing = useRecoilValue(myPageIsEditingProfileContainer);
 
   if (isPrivate) {
     return <PrivateProfileContainer />;
   }
 
   if (isEditing) {
-    return <EditProfileContainer setIsEditing={setIsEditing} />;
+    return <EditProfileContainer />;
   }
 
-  return <ShowProfileContainer setIsEditing={setIsEditing} />;
+  return <ShowProfileContainer />;
 };
 
 export default TabProfile;

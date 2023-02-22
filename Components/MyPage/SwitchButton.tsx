@@ -1,17 +1,31 @@
+import { useUserProfile } from "@/hooks/query";
 import { myPageGender } from "@/lib/recoil";
+import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
 const SwitchButton = () => {
+  const { profileData } = useUserProfile();
   const [currentItem, setCurrentItem] = useRecoilState(myPageGender);
+
+  useEffect(() => {
+    setCurrentItem(profileData?.gender);
+  }, []);
+
+  const handleSetCurrentItem = (item: Gender) => {
+    setCurrentItem(item);
+    // 쿼리 캐시 갱신
+  };
+
   const items: Gender[] = ["남자", "여자", "선택안함"];
+
   return (
     <SwitchButtonContainer>
       {items.map((item: Gender) => (
         <DefaultButton
           key={item}
           active={currentItem === item}
-          onClick={() => setCurrentItem(item)}
+          onClick={() => handleSetCurrentItem(item)}
         >
           {item}
         </DefaultButton>

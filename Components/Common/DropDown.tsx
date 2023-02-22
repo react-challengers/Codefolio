@@ -1,6 +1,8 @@
+import { useUserProfile } from "@/hooks/query";
 import { myPageBirthYear, myPageCareer } from "@/lib/recoil";
 import BASE_YEAR from "@/utils/constant";
-import { ChangeEvent, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
@@ -20,8 +22,15 @@ interface DropDownProps {
 const DropDown = ({ type }: DropDownProps) => {
   const options: (string | number)[] = [];
 
+  const { profileData } = useUserProfile();
+
   const [birthYear, setBirthYear] = useRecoilState(myPageBirthYear);
   const [career, setCareer] = useRecoilState(myPageCareer);
+
+  useEffect(() => {
+    setBirthYear(profileData.birth_year ?? new Date().getFullYear());
+    setCareer(profileData.career ?? "신입");
+  }, [setBirthYear, setCareer, profileData.birth_year, profileData.career]);
 
   const years = Array.from(
     { length: new Date().getFullYear() - BASE_YEAR + 1 },
@@ -43,8 +52,12 @@ const DropDown = ({ type }: DropDownProps) => {
   }
 
   const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-    if (type === "birth_year") setBirthYear(+e.target.value);
-    if (type === "career") setCareer(e.target.value);
+    if (type === "birth_year") {
+      setBirthYear(+e.target.value);
+    }
+    if (type === "career") {
+      setCareer(e.target.value);
+    }
   };
 
   useEffect(() => {

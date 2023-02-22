@@ -57,6 +57,11 @@ const myPageBookmarkFolders = atom<string[]>({
   default: [],
 });
 
+const myPageIsEditingProfileContainer = atom({
+  key: "myPageIsEditingProfileContainer",
+  default: false,
+});
+
 // state 결합
 const myPageUserProfile = selector({
   key: "myPageUserProfile",
@@ -116,4 +121,6 @@ export {
   myPageBirthYear,
   myPageCareer,
   myPageBookmarkFolders,
+  // 순수 클라이언트 state
+  myPageIsEditingProfileContainer,
 };
