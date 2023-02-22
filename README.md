@@ -58,7 +58,7 @@ $ yarn dev
 - 로컬 상태관리를 위해 recoil을 사용합니다.
 - 서버 상태관리를 위해 react-query를 사용합니다.
 - CSS in JS를 사용하기 위해 styled-components를 사용합니다.
-- Text Editor는 toast/ui를 사용합니다.
+- Text Editor는 toast/ui의 Editor를 사용합니다.
 - 유틸리티를 편리하게 사용하기 위해 lodash를 사용합니다.
 
 - Tech Stack 결정 과정
