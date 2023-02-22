@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
 import { useInput } from "@/hooks/common";
+import { useUserProfile } from "@/hooks/query";
 import { useState } from "react";
 import ProfileImage from "../Common/ProfileImage";
 import DefaultButton from "../Common/DefaultButton";
@@ -23,10 +24,13 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
 
   const [isHelperText, setIsHelperText] = useState(false);
 
+  const {
+    profileData: { profile_image: profileImage },
+  } = useUserProfile();
+
   const { mutate: createComment } = useMutation(
     (): any =>
       supabase.from("comment").insert({
-        id: crypto.randomUUID(),
         post_id: postId,
         user_id: userId,
         content: inputValues.comment,
@@ -56,7 +60,11 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
   return (
     <>
       <CommentInputContainer>
-        <ProfileImage alt="dummy" page="detailPage" />
+        <ProfileImage
+          src={profileImage}
+          alt="사용자 프로필 이미지"
+          page="detailPage"
+        />
         <CommentTextarea
           value={inputValues.comment}
           onChange={handleInputChange("comment")}
