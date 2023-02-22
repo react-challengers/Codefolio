@@ -42,13 +42,6 @@ const useUserProfile = () => {
     queryClient.setQueryData([USER_PROFILE], profileData);
   }, []);
 
-  const setProfileClient = ({ ...arg }: Partial<UserProfileType>) => {
-    queryClient.setQueriesData<UserProfileType | undefined>(
-      [USER_PROFILE],
-      (prevProfile) => prevProfile && { ...prevProfile, ...arg }
-    );
-  };
-
   // patch
   const { mutate: updateProfileData } = useMutation(patchUserProfile, {
     onMutate: async (newProfile) => {
@@ -69,7 +62,7 @@ const useUserProfile = () => {
     },
   });
 
-  return { profileData, setProfileClient, updateProfileData };
+  return { profileData, updateProfileData };
 };
 
 export default useUserProfile;

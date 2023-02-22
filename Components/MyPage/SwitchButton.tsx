@@ -14,7 +14,6 @@ const SwitchButton = () => {
 
   const handleSetCurrentItem = (item: Gender) => {
     setCurrentItem(item);
-    // 쿼리 캐시 갱신
   };
 
   const items: Gender[] = ["남자", "여자", "선택안함"];
