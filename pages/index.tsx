@@ -1,4 +1,4 @@
-import DetailModal from "@/Components/Detail/DetailModal";
+import DetailModal from "@/Components/Main/DetailModal";
 import MainSection from "@/Components/Main/MainSection";
 import SideBar from "@/Components/Main/SideBar";
 import Head from "next/head";

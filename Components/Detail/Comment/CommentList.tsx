@@ -1,5 +1,6 @@
 import supabase from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import CommentItem from "./CommentItem";
 
 interface CommentType {
@@ -24,9 +25,13 @@ const CommentList = ({ postId }: CommentListProps) => {
     return res;
   };
 
-  const { data, isError, isLoading } = useQuery(["getComment"], {
+  const { data, isError, isLoading, refetch } = useQuery(["getComment"], {
     queryFn: getComments,
   });
+
+  useEffect(() => {
+    refetch();
+  }, [postId, refetch]);
 
   if (isLoading) return <>loading...</>;
 
