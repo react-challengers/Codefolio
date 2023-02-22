@@ -1,4 +1,4 @@
-import Post from "@/Components/Post/Post";
+import Post from "@/Components/CreatePost/Post/Post";
 import {
   postContent,
   postMembers,
@@ -88,9 +88,12 @@ const EditPostPage: NextPage = () => {
     setPostSubCategory(post.sub_category);
   }, [post]);
 
-  const PostEditor = dynamic(() => import("@/Components/Post/PostEditor"), {
-    ssr: false,
-  });
+  const PostEditor = dynamic(
+    () => import("@/Components/CreatePost/PostEditor"),
+    {
+      ssr: false,
+    }
+  );
 
   return (
     <MainWrapper>

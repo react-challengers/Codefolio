@@ -1,8 +1,8 @@
 import { NextPage } from "next";
 import styled from "styled-components";
 import { DefaultButton, Modal } from "@/Components/Common";
-import PostTitle from "@/Components/Post/PostTitle";
-import ProjectInfo from "@/Components/Post/ProjectInfo";
+import getYYYYMM from "@/utils/commons/getYYYYMM";
+
 import { useRecoilState } from "recoil";
 import {
   postContent,
@@ -20,7 +20,8 @@ import {
 import supabase from "@/lib/supabase";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import getYYYYMM from "@/utils/commons/getYYYYMM";
+import PostTitle from "./PostTitle";
+import ProjectInfo from "./ProjectInfo";
 
 /**
  * @TODO custom hook으로 리팩토링하기
