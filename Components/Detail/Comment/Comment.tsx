@@ -20,7 +20,7 @@ const Comment = () => {
       } else {
         setCurrentUser(false);
       }
-      setUserId(data.session?.user.email);
+      setUserId(data.session?.user.id);
     };
 
     LoginState();
@@ -28,8 +28,8 @@ const Comment = () => {
 
   return (
     <CommentContainer>
-      {currentUser && <CommentInput POST_ID={postId} USER_ID={userId} />}
-      {postId && <CommentList POST_ID={postId} />}
+      {currentUser && <CommentInput postId={postId} userId={userId} />}
+      {postId && <CommentList postId={postId} />}
     </CommentContainer>
   );
 };

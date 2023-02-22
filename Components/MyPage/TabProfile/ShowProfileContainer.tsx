@@ -1,52 +1,43 @@
-import {
-  myPageBirthYear,
-  myPageCareer,
-  myPageField,
-  myPageGender,
-  myPagePhonNumber,
-  myPageSkills,
-} from "@/lib/recoil";
-import { Dispatch } from "react";
-import { useRecoilValue } from "recoil";
+import { useUserProfile } from "@/hooks/query";
+import { myPageIsEditingProfileContainer } from "@/lib/recoil";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import DefaultButton from "../Common/DefaultButton";
-import Tags from "../Common/Tags";
+import { DefaultButton, Tags } from "@/Components/Common";
 import ProfileContainer from "./ProfileContainer";
 
-interface ShowProfileContainerProps {
-  setIsEditing: Dispatch<React.SetStateAction<boolean>>;
-}
+const ShowProfileContainer = () => {
+  const setIsEditing = useSetRecoilState(myPageIsEditingProfileContainer);
 
-const ShowProfileContainer = ({ setIsEditing }: ShowProfileContainerProps) => {
-  const gender = useRecoilValue(myPageGender);
-  const birthYear = useRecoilValue(myPageBirthYear);
-  const phone = useRecoilValue(myPagePhonNumber);
-  const field = useRecoilValue(myPageField);
-  const skills = useRecoilValue(myPageSkills);
-  const career = useRecoilValue(myPageCareer);
+  const { profileData } = useUserProfile();
+
+  if (!profileData) return <div>Error</div>;
 
   return (
     <>
       <TabProfileContainer>
         <ProfileContainer title="기본 정보">
           <>
-            <p>{gender}</p>
-            <p>{`${birthYear} 년생`}</p>
-            <p>{phone}</p>
+            <p>{profileData.gender}</p>
+            {profileData.birth_year !== new Date().getFullYear() && (
+              <p>{`${profileData.birth_year} 년생`}</p>
+            )}
+            {profileData.phone !== "01000000000" && <p>{profileData.phone}</p>}
           </>
         </ProfileContainer>
 
         <ProfileContainer title="경력">
           <ContentContainer>
             <ContentWrapper>
-              <p>포지션</p> <Tags tagItems={field} />
+              <p>포지션</p>
+              <Tags tagItems={profileData?.field} />
             </ContentWrapper>
             <ContentWrapper>
               <p>경력</p>
-              <p>{career}</p>
+              <p>{profileData?.career}</p>
             </ContentWrapper>
             <ContentWrapper>
-              <p>스킬</p> <Tags tagItems={skills} />
+              <p>스킬</p>
+              <Tags tagItems={profileData?.skills} />
             </ContentWrapper>
           </ContentContainer>
         </ProfileContainer>

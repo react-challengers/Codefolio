@@ -1,4 +1,6 @@
+import { myPageBackgroundColor } from "@/lib/recoil";
 import styled from "styled-components";
+import { useEffect, useState } from "react";
 
 interface DetailTitleProps {
   title: string;
@@ -15,12 +17,35 @@ const DetailTitle = ({
   field,
   subCategory,
 }: DetailTitleProps) => {
+  const [titleColor, setTitleColor] = useState("black");
+
+  useEffect(() => {
+    const getTextColorByBackgroundColor = (hexColor: string) => {
+      const colorToNumber = hexColor.substring(1); // 색상 앞의 # 제거
+      const rgb = parseInt(colorToNumber, 16); // rrggbb를 10진수로 변환
+
+      // eslint-disable-next-line no-bitwise
+      const r = (rgb >> 16) & 0xff; // red 추출
+      // eslint-disable-next-line no-bitwise
+      const g = (rgb >> 8) & 0xff; // green 추출
+      // eslint-disable-next-line no-bitwise
+      const b = (rgb >> 0) & 0xff; // blue 추출
+      const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+      // 색상 선택
+
+      if (luma < 127.5) setTitleColor("white");
+      else setTitleColor("black");
+      // http://yoonbumtae.com/?p=2977 참고사이트
+    };
+    getTextColorByBackgroundColor(backgroundColor);
+  }, [backgroundColor]);
+
   return (
     <DetailTitleContainer backgroundColor={backgroundColor}>
       <DetailTitleHeader>
         {field} {">"} {subCategory}
       </DetailTitleHeader>
-      <DetailTitleText>
+      <DetailTitleText titleColor={titleColor}>
         <h1>{title}</h1>
         <h3>{subtitle}</h3>
       </DetailTitleText>
@@ -42,14 +67,14 @@ const DetailTitleHeader = styled.p`
   color: #b3b3b3;
 `;
 
-const DetailTitleText = styled.div`
+const DetailTitleText = styled.div<{ titleColor: string }>`
   display: flex;
   flex-direction: column;
   gap: 1.875rem;
   h1 {
+    color: ${({ titleColor }) => titleColor};
     font-size: 2rem;
     font-weight: 700;
-    color: #262626;
   }
   h3 {
     font-size: 1.25rem;

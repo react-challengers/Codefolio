@@ -32,6 +32,7 @@ import {
   myPageIsPublic,
   myPageSkills,
   myPageBookmarkFolders,
+  myPageIsEditingProfileContainer,
 } from "@/lib/recoil/myPageAtoms";
 
 export {
@@ -67,4 +68,5 @@ export {
   myPageIsPublic,
   myPageSkills,
   myPageBookmarkFolders,
+  myPageIsEditingProfileContainer,
 };

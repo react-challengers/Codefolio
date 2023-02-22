@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
 import viewCreateAt from "@/utils/commons/viewCreateAt";
-import DefaultButton from "../Common/DefaultButton";
-import ProfileImage from "../Common/ProfileImage";
+import { DefaultButton, ProfileImage } from "@/Components/Common";
 
 /**
  * @TODO useInput으로 리팩토링 고민
@@ -28,18 +27,35 @@ const CommentItem = ({ comment }: CommentItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
   const [currentUSERID, setCurrentUSERID] = useState<string | undefined>("");
+  const [userName, setUserName] = useState("");
+  const [userProfileImage, setUserProfileImage] = useState("");
 
   useEffect(() => {
     // 로그인 상태 확인
     const LoginState = async () => {
       const { data } = await supabase.auth.getSession();
       if (data) {
-        setCurrentUSERID(data.session?.user.email);
+        setCurrentUSERID(data.session?.user.id);
       }
     };
 
     LoginState();
   }, []);
+
+  useEffect(() => {
+    const getUserProfile = async () => {
+      const { data } = await supabase
+        .from("user_profile")
+        .select("*")
+        .eq("user_id", comment.user_id)
+        .single();
+
+      setUserName(data.user_name);
+      setUserProfileImage(data.profile_image);
+    };
+
+    getUserProfile();
+  }, [comment.user_id]);
 
   const { mutate: deleteComment } = useMutation(
     (): any => supabase.from("comment").delete().eq("id", comment.id),
@@ -80,11 +96,15 @@ const CommentItem = ({ comment }: CommentItemProps) => {
 
   return (
     <CommentContainer>
-      <ProfileImage alt="프로필이미지" page="detailPage" />
+      <ProfileImage
+        alt="프로필이미지"
+        page="detailPage"
+        src={userProfileImage}
+      />
       <TextBox>
         <CommentTitle>
           <CommentWrapper>
-            <h3> {comment.user_id} </h3>
+            <h3> {userName} </h3>
             <span> {commentDateView} </span>
           </CommentWrapper>
         </CommentTitle>

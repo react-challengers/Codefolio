@@ -1,5 +1,12 @@
 import Image from "next/image";
-import { ChangeEvent, Dispatch, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 
 interface SkillProps {
@@ -8,6 +15,8 @@ interface SkillProps {
   onDelete: (idx: number) => void;
   editSkills: string[];
   setEditSkills: Dispatch<React.SetStateAction<string[]>>;
+  addSkill: () => void;
+  isLast: boolean;
 }
 
 const Skill = ({
@@ -16,22 +25,45 @@ const Skill = ({
   onDelete,
   setEditSkills,
   editSkills,
+  addSkill,
+  isLast,
 }: SkillProps) => {
+  const lastSkillRef = useRef<HTMLInputElement>(null);
   const [isDuplicate, setIsDuplicate] = useState(false);
 
+  const checkDuplicate = useCallback(
+    (value: string) => {
+      const checkDuplicateItem =
+        editSkills.filter((skillItem) => skillItem === value).length > 1;
+      setIsDuplicate(checkDuplicateItem);
+    },
+    [editSkills]
+  );
+
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (editSkills.includes(e.target.value)) {
-      setIsDuplicate(true);
-    }
-    if (!editSkills.includes(e.target.value)) {
-      setIsDuplicate(false);
-    }
     setEditSkills((prevSkill) => {
       const newSkill = [...prevSkill];
       newSkill[idx] = e.target.value;
       return newSkill;
     });
+    checkDuplicate(e.target.value);
   };
+
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && e.nativeEvent.isComposing === false) {
+      addSkill();
+    }
+  };
+
+  useEffect(() => {
+    if (isLast && lastSkillRef.current) {
+      lastSkillRef.current.focus();
+    }
+  }, [isLast, lastSkillRef]);
+
+  useEffect(() => {
+    checkDuplicate(skill);
+  }, [skill, editSkills, checkDuplicate]);
 
   return (
     <SkillContainer>
@@ -40,6 +72,8 @@ const Skill = ({
         onChange={onChange}
         maxLength={15}
         isDuplicate={isDuplicate}
+        onKeyPress={handleOnKeyDown}
+        ref={isLast ? lastSkillRef : null}
       />
       <CancelButton
         onClick={() => onDelete(idx)}

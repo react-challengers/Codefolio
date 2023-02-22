@@ -89,6 +89,7 @@ const AddButton = styled.button`
   width: 6.25rem;
   line-height: 1.875rem;
   border-radius: 1.5625rem;
+  margin-top: 0.25rem;
   border: none;
   background-color: grey;
   color: white;

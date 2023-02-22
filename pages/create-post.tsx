@@ -1,4 +1,4 @@
-import Post from "@/Components/Post/Post";
+import Post from "@/Components/CreatePost/Post/Post";
 import { userLoginCheck } from "@/lib/recoil";
 import { Editor } from "@toast-ui/react-editor";
 import { NextPage, GetServerSideProps } from "next";
@@ -21,9 +21,12 @@ const CreatePostPage: NextPage = () => {
 
   const editorRef = useRef<Editor>(null);
 
-  const PostEditor = dynamic(() => import("@/Components/Post/PostEditor"), {
-    ssr: false,
-  });
+  const PostEditor = dynamic(
+    () => import("@/Components/CreatePost/PostEditor"),
+    {
+      ssr: false,
+    }
+  );
 
   return (
     <MainWrapper>

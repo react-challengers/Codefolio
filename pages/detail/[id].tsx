@@ -86,7 +86,7 @@ const DetailPage: NextPage = () => {
     if (postId) {
       getData();
     }
-  }, []);
+  }, [postId]);
 
   return (
     <DetailPageContainer>

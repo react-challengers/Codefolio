@@ -1,24 +1,27 @@
+import { useUserProfile } from "@/hooks/query";
 import {
+  myPageBirthYear,
+  myPageCareer,
   myPageField,
+  myPageGender,
+  myPageIsEditingProfileContainer,
   myPageIsPublic,
   myPagePhonNumber,
   myPageSkills,
-  myPageUserProfile,
 } from "@/lib/recoil";
-import supabase from "@/lib/supabase";
 import checkIsPhoneNumber from "@/utils/commons/checkIsPhoneNumber";
-import { ChangeEvent, Dispatch, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { DefaultButton, DropDown, SkillList, Toggle } from "../Common";
+import { DefaultButton, SkillList, Toggle } from "@/Components/Common";
 import PositionTag from "./PositionTag";
 import ProfileContainer from "./ProfileContainer";
 import { ContentContainer, ContentWrapper } from "./ShowProfileContainer";
 import SwitchButton from "./SwitchButton";
+import DropDown from "./DropDown";
 
 /**
- * @TODO field, birthYear recoil state 연결
- * @TODO 서버에 데이터 저장
+ * @TODO useInput 정상동작시키기
  */
 
 const fieldList = [
@@ -32,24 +35,53 @@ const fieldList = [
   "IOT/임베디드",
 ];
 
-interface EditProfileContainerProps {
-  setIsEditing: Dispatch<React.SetStateAction<boolean>>;
-}
+const EditProfileContainer = () => {
+  const setIsEditing = useSetRecoilState(myPageIsEditingProfileContainer);
+  const { profileData, updateProfileData } = useUserProfile();
 
-const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
   const [phoneNumber, setPhoneNumber] = useRecoilState(myPagePhonNumber);
   const [isPublic, setIsPublic] = useRecoilState(myPageIsPublic);
   const [activeField, setActiveField] = useRecoilState(myPageField);
   const [editSkills, setEditSkills] = useRecoilState(myPageSkills);
-  const userProfile = useRecoilValue(myPageUserProfile);
+  const [career, setCareer] = useRecoilState(myPageCareer);
+  const [birthYear, setBirthYear] = useRecoilState(myPageBirthYear);
+  const [gender, setGender] = useRecoilState(myPageGender);
+
   // local state로 편집 상태 제어
   const [isPhoneNumber, setIsPhoneNumber] = useState(false);
   const [isEmptyField, setIsEmptyField] = useState(false);
   const [isEmptySkills, setIsEmptySkills] = useState(false);
 
+  const updateProfileLocalState = useCallback(async () => {
+    setPhoneNumber(profileData.phone);
+    setIsPublic(profileData.is_public);
+    setActiveField(profileData.field);
+    setEditSkills(profileData.skills);
+    setCareer(profileData.career);
+    setBirthYear(profileData.birth_year);
+    setGender(profileData.gender);
+  }, [profileData]);
+
+  useEffect(() => {
+    if (!profileData) {
+      setPhoneNumber("01000000000");
+      setIsPublic(true);
+      setActiveField([]);
+      setEditSkills([]);
+      setCareer("신입");
+      setBirthYear(new Date().getFullYear());
+      setGender("선택안함");
+    }
+    updateProfileLocalState();
+    // 의존성 배열은 없는게 맞습니다
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!profileData) return <div>Error</div>;
+
   const clickField = (field: string) => {
     if (activeField?.includes(field)) {
-      const newActiveField = activeField.filter(
+      const newActiveField = activeField?.filter(
         (activeFieldItem) => activeFieldItem !== field
       );
       setActiveField(newActiveField);
@@ -57,6 +89,9 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
       setActiveField((prev) => (prev ? [...prev, field] : [field]));
     }
   };
+
+  // const { inputValues, handleInputChange } = useInput({ phoneNumber: phone });
+  // setIsPhoneNumber(checkIsPhoneNumber(inputValues.phoneNumber));
 
   const handleEditPhoneNumber = (e: ChangeEvent<HTMLInputElement>) => {
     setPhoneNumber(e.target.value);
@@ -71,6 +106,7 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
       }, 2000);
       return;
     }
+
     if (editSkills.length === 0) {
       setIsEmptySkills(true);
       setTimeout(() => {
@@ -79,11 +115,20 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
       return;
     }
     setIsEditing(false);
+
     try {
-      await supabase
-        .from("user_profile")
-        .update(userProfile)
-        .eq("user_id", userProfile.user_id);
+      const newProfileData: UserProfileType = {
+        ...profileData,
+        phone: phoneNumber,
+        is_public: isPublic,
+        field: activeField,
+        skills: editSkills,
+        // 캐시데이터 갱신
+        birth_year: birthYear,
+        career,
+        gender,
+      };
+      updateProfileData(newProfileData);
     } catch (error) {
       console.log(error);
     }
@@ -108,6 +153,8 @@ const EditProfileContainer = ({ setIsEditing }: EditProfileContainerProps) => {
                 type="number"
                 value={phoneNumber}
                 onChange={handleEditPhoneNumber}
+                // value={inputValues.phoneNumber}
+                // onChange={handleInputChange("phoneNumber")}
                 placeholder="01012345678"
               />
               {isPhoneNumber && <span>전화번호 형식이 아닙니다.</span>}

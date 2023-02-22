@@ -3,9 +3,13 @@ import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import "@toast-ui/editor/dist/i18n/ko-kr";
+import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
+import "prismjs/themes/prism.css";
 
 import { Editor } from "@toast-ui/react-editor";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
+import codeSyntaxHighlightPlugin from "@toast-ui/editor-plugin-code-syntax-highlight";
+import Prism from "prismjs";
 import { RefObject, useCallback, useEffect } from "react";
 import supabase from "@/lib/supabase";
 import imageCompression from "browser-image-compression";
@@ -97,13 +101,15 @@ const PostEditor = ({ editorRef }: PostEditorProps) => {
       ref={editorRef}
       initialValue={postContent ?? null}
       previewStyle="vertical"
-      // previewHighlight={false}
       height="600px"
       initialEditType="markdown"
       useCommandShortcut
       toolbarItems={toolbarItems}
       language="ko-KR"
-      plugins={[colorSyntax]}
+      plugins={[
+        colorSyntax,
+        [codeSyntaxHighlightPlugin, { highlighter: Prism }],
+      ]}
       hooks={{
         // @ts-ignore
         addImageBlobHook: addImage,

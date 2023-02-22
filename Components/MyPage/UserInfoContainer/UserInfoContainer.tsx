@@ -1,31 +1,12 @@
-import {
-  myPageContactEmail,
-  myPagePhonNumber,
-  myPageSelfProfile,
-  myPageUserId,
-  myPageUserName,
-  myPageBackgroundColor,
-  myPageProfileImage,
-  myPageUserProfile,
-  myPageId,
-  myPageGender,
-  myPageCareer,
-  myPageField,
-  myPageBirthYear,
-  myPageSkills,
-  myPageIsPublic,
-} from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import Image, { StaticImageData } from "next/image";
-import { ChangeEvent, useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { ChangeEvent, useState } from "react";
 import styled from "styled-components";
 import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import { useUserProfile } from "@/hooks/query";
-import ProfileImage from "../Common/ProfileImage";
+import { useInput } from "@/hooks/common";
+import { ProfileImage } from "@/Components/Common";
 import Banner from "./Banner";
-import color_fill from "../../public/icons/color_fill.svg";
 
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한하기
@@ -33,108 +14,28 @@ import color_fill from "../../public/icons/color_fill.svg";
  */
 
 const UserInfoContainer = () => {
-  const { updateProfileData } = useUserProfile();
-
-  const setUserProfileId = useSetRecoilState(myPageId);
-  const [userName, setUserName] = useRecoilState(myPageUserName);
-  const [contactEmail, setContactEmail] = useRecoilState(myPageContactEmail);
-  const [selfProfile, setSelfProfile] = useRecoilState(myPageSelfProfile);
-  const setPhone = useSetRecoilState(myPagePhonNumber);
-  const setUserId = useSetRecoilState(myPageUserId);
-  const [userBackground, setUserBackground] = useRecoilState(
-    myPageBackgroundColor
-  );
-  const [profileImage, setProfileImage] = useRecoilState(myPageProfileImage);
-  const userProfile = useRecoilValue(myPageUserProfile);
-  const setGender = useSetRecoilState(myPageGender);
-  const setCareer = useSetRecoilState(myPageCareer);
-  const setField = useSetRecoilState(myPageField);
-  const setBirthYear = useSetRecoilState(myPageBirthYear);
-  const setSkills = useSetRecoilState(myPageSkills);
-  const setPublic = useSetRecoilState(myPageIsPublic);
-
+  const { profileData, updateProfileData } = useUserProfile();
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    const getUserProfile = async () => {
-      const { data, error: getUserIdError } = await supabase.auth.getUser();
-      if (getUserIdError || !data.user?.email) return;
-
-      const { data: userProfileData, error } = await supabase
-        .from("user_profile")
-        .select("*")
-        .eq("user_id", data.user.id)
-        .single();
-
-      if (error) return;
-      const {
-        contact_email: contactEmailData,
-        user_name: userNameData,
-        user_id: userId,
-        self_profile: selfProfileData,
-        profile_image: profileImageData,
-        background_color: backgroundColor,
-        id,
-        phone,
-        gender,
-        career,
-        field,
-        birth_year: birthYear,
-        skills,
-        is_public: isPublic,
-      } = userProfileData;
-      setUserProfileId(id);
-      setUserId(userId);
-      setUserName(userNameData);
-      setContactEmail(contactEmailData);
-      setSelfProfile(selfProfileData ?? "자기소개를 입력해 보세요!");
-      setProfileImage(profileImageData);
-      setUserBackground(backgroundColor);
-      setPhone(phone ?? "00000000000");
-      setGender(gender ?? "선택안함");
-      setCareer(career ?? "신입");
-      setField(JSON.parse(`${field}`));
-      setBirthYear(birthYear ?? 2000);
-      setSkills(skills);
-      setPublic(isPublic);
-    };
-    getUserProfile();
-  }, [
-    setUserName,
-    setContactEmail,
-    setSelfProfile,
-    setUserBackground,
-    setUserId,
-    setProfileImage,
-    setUserProfileId,
-    setPhone,
-    setGender,
-    setBirthYear,
-    setCareer,
-    setField,
-    setPublic,
-    setSkills,
-  ]);
-
-  const handleUserName = (e: ChangeEvent<HTMLInputElement>) => {
-    setUserName(e.target.value);
-  };
-  const handleContactEmail = (e: ChangeEvent<HTMLInputElement>) => {
-    setContactEmail(e.target.value);
-  };
-  const handleSelfProfile = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setSelfProfile(e.target.value);
-  };
-
-  const onChangeBackgroundColor = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserBackground(e.target.value);
-  };
+  const { inputValues, handleInputChange } = useInput({
+    userName: profileData.user_name ?? "",
+    contactEmail: profileData.contact_email ?? "",
+    selfProfile: profileData.self_profile ?? "",
+    backgroundColor: profileData.background_color ?? "",
+  });
 
   const handleIsEditing = async () => {
     // 갱신된 데이터 서버에 반영
     if (isEditing) {
       setIsEditing(false);
-      updateProfileData(userProfile);
+      const newProfileData: UserProfileType = {
+        ...profileData,
+        user_name: inputValues.userName,
+        contact_email: inputValues.contactEmail,
+        self_profile: inputValues.selfProfile,
+        background_color: inputValues.backgroundColor,
+      };
+      updateProfileData(newProfileData);
     } else {
       setIsEditing(true);
     }
@@ -154,27 +55,26 @@ const UserInfoContainer = () => {
   };
 
   const handleProfileImage = (e: ChangeEvent<HTMLInputElement>) => {
-    const [file] = e.target.files as FileList;
+    const file = e.target.files;
     if (!file) return;
     const reader = new FileReader();
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(file[0]);
     reader.onload = async (uploadedBlob) => {
-      const imgDataUrl = uploadedBlob.target?.result as string; // input의 파일을 base64로 받습니다.
-      if (!imgDataUrl) return;
+      const imgDataUrl = uploadedBlob.target?.result; // input의 파일을 base64로 받습니다.
+      if (typeof imgDataUrl !== "string") return;
       const imgFile = await convertEase64ToFile(imgDataUrl);
       const publicImageURL = await uploadImage(imgFile);
       if (!publicImageURL) return;
-      setProfileImage(publicImageURL);
       await supabase
         .from("user_profile")
         .update({ profile_image: publicImageURL })
-        .eq("id", userProfile.id);
+        .eq("id", profileData.id);
     };
   };
 
   return (
     <InfoContainer>
-      <Banner userBackground={userBackground} />
+      <Banner userBackground={inputValues?.backgroundColor} />
       <UserInfoWrapper>
         <ProfileImageWrapper>
           <label htmlFor="user_profile">
@@ -185,7 +85,11 @@ const UserInfoContainer = () => {
               multiple={false}
               id="user_profile"
             />
-            <ProfileImage alt="유저 프로필" page="myPage" src={profileImage} />
+            <ProfileImage
+              alt="유저 프로필"
+              page="myPage"
+              src={profileData.profile_image}
+            />
           </label>
         </ProfileImageWrapper>
         <IconWrapper>
@@ -201,16 +105,22 @@ const UserInfoContainer = () => {
         <TextWrapper>
           {isEditing ? (
             <InputWrapper>
-              <UserNameInput value={userName} onChange={handleUserName} />
-              <EmailInput value={contactEmail} onChange={handleContactEmail} />
+              <UserNameInput
+                value={inputValues.userName}
+                onChange={handleInputChange("userName")}
+              />
+              <EmailInput
+                value={inputValues.contactEmail}
+                onChange={handleInputChange("contactEmail")}
+              />
               <SelfProfileInput
-                value={selfProfile}
-                onChange={handleSelfProfile}
+                value={inputValues.selfProfile}
+                onChange={handleInputChange("selfProfile")}
                 rows={3}
               />
               <ImgLabel htmlFor="background-color-picker">
                 <ImgIcon
-                  src={color_fill}
+                  src="/icons/color_fill.svg"
                   alt="배경색 지정 아이콘"
                   width={36}
                   height={36}
@@ -218,15 +128,17 @@ const UserInfoContainer = () => {
                 <UserBackgroundColorPicker
                   id="background-color-picker"
                   type="color"
-                  onChange={onChangeBackgroundColor}
+                  onChange={handleInputChange("backgroundColor")}
                 />
               </ImgLabel>
             </InputWrapper>
           ) : (
             <>
-              <UserNameWrapper>{userName}</UserNameWrapper>
-              <EmailWrapper>{contactEmail}</EmailWrapper>
-              <SelfProfileWrapper>{selfProfile}</SelfProfileWrapper>
+              <UserNameWrapper>{inputValues?.userName}</UserNameWrapper>
+              <EmailWrapper>{inputValues?.contactEmail}</EmailWrapper>
+              <SelfProfileWrapper>
+                {inputValues?.selfProfile}
+              </SelfProfileWrapper>
             </>
           )}
         </TextWrapper>

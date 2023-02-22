@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
-import { AuthButton, AuthInput, ValidateText } from "@/Components/Common/Auth";
+import { AuthInput, ValidateText } from "@/Components/Common/Auth";
+import { LongButton, Modal } from "@/Components/Common";
 import {
   checkEmail,
   checkPassword,
@@ -12,7 +13,6 @@ import {
 } from "@/utils/commons/authUtils";
 import { useSetRecoilState } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
-import Modal from "@/Components/Common/Modal";
 
 /**
  * 현재 가장 기본적 유효성검사, "빈 인풋 체크"와 비밀번호 확인 부분만 추가되어 있습니다.
@@ -199,7 +199,7 @@ const SignupForm = styled.div`
   margin-bottom: 3.5rem;
 `;
 
-const SignupButton = styled(AuthButton)`
+const SignupButton = styled(LongButton)`
   margin-top: 2rem;
 `;
 

@@ -9,8 +9,7 @@ import bottom_arrow from "@/public/icons/bottom_arrow.svg";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import _ from "lodash";
-import Tags from "../Common/Tags";
-import CardItem from "../Common/Card/CardItem";
+import { CardItem, Tags } from "@/Components/Common";
 
 // TODO: Tag 데이터 구조화 고민하기
 
