@@ -4,8 +4,7 @@ import supabase from "@/lib/supabase";
 import { useInput } from "@/hooks/common";
 import { useUserProfile } from "@/hooks/query";
 import { useState } from "react";
-import ProfileImage from "../Common/ProfileImage";
-import DefaultButton from "../Common/DefaultButton";
+import { DefaultButton, ProfileImage } from "@/Components/Common";
 
 /**
  */

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const AuthButton = styled.button`
+const LongButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,4 +23,4 @@ const AuthButton = styled.button`
   }
 `;
 
-export default AuthButton;
+export default LongButton;

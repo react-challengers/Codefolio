@@ -5,10 +5,10 @@ import { useState, useEffect } from "react";
 import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
 import { checkEmail, checkPassword } from "@/utils/commons/authUtils";
-import { ValidateText, AuthButton, AuthInput } from "@/Components/Common/Auth";
+import { ValidateText, AuthInput } from "@/Components/Common/Auth";
 import { useSetRecoilState } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
-import Modal from "@/Components/Common/Modal";
+import { LongButton, Modal } from "@/Components/Common";
 
 // import { kakaoInit } from "@/utils/APIs/socialLogin";
 
@@ -137,8 +137,8 @@ const Login: NextPage = () => {
       <LoginSpace>
         {/* <LoginButton>카카오로 로그인하기</LoginButton>
           <LoginButton>네이버로 로그인하기</LoginButton> */}
-        <AuthButton onClick={signInWithGoogle}>구글로 로그인하기</AuthButton>
-        <AuthButton onClick={signInWithGitHub}>Github로 로그인하기</AuthButton>
+        <LongButton onClick={signInWithGoogle}>구글로 로그인하기</LongButton>
+        <LongButton onClick={signInWithGitHub}>Github로 로그인하기</LongButton>
         <HrContainer>
           <span> 또는 </span>
         </HrContainer>
@@ -164,7 +164,7 @@ const Login: NextPage = () => {
             <ValidateText> 비밀번호를 확인해보세요. </ValidateText>
           )}
         </LoginForm>
-        <AuthButton onClick={signInWithEmail}>로그인</AuthButton>
+        <LongButton onClick={signInWithEmail}>로그인</LongButton>
         <FooterMassage>
           아직 회원이 아니신가요?
           <Link href="./signup">회원가입</Link>

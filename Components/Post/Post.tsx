@@ -1,10 +1,9 @@
 import { NextPage } from "next";
 import styled from "styled-components";
-import DefaultButton from "@/Components/Common/DefaultButton";
+import { DefaultButton, Modal } from "@/Components/Common";
 import PostTitle from "@/Components/Post/PostTitle";
 import ProjectInfo from "@/Components/Post/ProjectInfo";
-import Modal from "@/Components/Common/Modal";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import {
   postContent,
   postLargeCategory as recoilPostLargeCategory,

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import { useUserProfile } from "@/hooks/query";
 import { useInput } from "@/hooks/common";
-import ProfileImage from "../Common/ProfileImage";
+import { ProfileImage } from "@/Components/Common";
 import Banner from "./Banner";
 import color_fill from "../../public/icons/color_fill.svg";
 

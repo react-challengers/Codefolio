@@ -21,13 +21,13 @@ const SwitchButton = () => {
   return (
     <SwitchButtonContainer>
       {items.map((item: Gender) => (
-        <DefaultButton
+        <GenderButton
           key={item}
           active={currentItem === item}
           onClick={() => handleSetCurrentItem(item)}
         >
           {item}
-        </DefaultButton>
+        </GenderButton>
       ))}
     </SwitchButtonContainer>
   );
@@ -45,7 +45,7 @@ interface DefaultButtonProps {
   active: boolean;
 }
 
-const DefaultButton = styled.button<DefaultButtonProps>`
+const GenderButton = styled.button<DefaultButtonProps>`
   border: none;
   cursor: pointer;
   width: 6.25rem;
