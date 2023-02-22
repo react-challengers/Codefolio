@@ -7,7 +7,6 @@ import { useUserProfile } from "@/hooks/query";
 import { useInput } from "@/hooks/common";
 import { ProfileImage } from "@/Components/Common";
 import Banner from "./Banner";
-import color_fill from "../../public/icons/color_fill.svg";
 
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한하기
@@ -121,7 +120,7 @@ const UserInfoContainer = () => {
               />
               <ImgLabel htmlFor="background-color-picker">
                 <ImgIcon
-                  src={color_fill}
+                  src="/icons/color_fill.svg"
                   alt="배경색 지정 아이콘"
                   width={36}
                   height={36}
