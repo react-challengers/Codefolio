@@ -10,7 +10,7 @@ import {
   myPageSkills,
 } from "@/lib/recoil";
 import checkIsPhoneNumber from "@/utils/commons/checkIsPhoneNumber";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { DefaultButton, DropDown, SkillList, Toggle } from "../Common";
@@ -51,30 +51,30 @@ const EditProfileContainer = () => {
   const [isEmptyField, setIsEmptyField] = useState(false);
   const [isEmptySkills, setIsEmptySkills] = useState(false);
 
+  const updateProfileLocalState = useCallback(async () => {
+    setPhoneNumber(profileData.phone);
+    setIsPublic(profileData.is_public);
+    setActiveField(profileData.field);
+    setEditSkills(profileData.skills);
+    setCareer(profileData.career);
+    setBirthYear(profileData.birth_year);
+    setGender(profileData.gender);
+  }, [profileData]);
+
   useEffect(() => {
-    setPhoneNumber(profileData.phone ?? "01000000000");
-    setIsPublic(profileData.is_public ?? true);
-    setActiveField(profileData.field ?? []);
-    setEditSkills(profileData.skills ?? []);
-    setCareer(profileData.career ?? "신입");
-    setBirthYear(profileData.birth_year ?? new Date().getFullYear());
-    setGender(profileData.gender ?? "선택안함");
-  }, [
-    profileData.phone,
-    profileData.is_public,
-    profileData.field,
-    profileData.skills,
-    profileData.career,
-    profileData.birth_year,
-    profileData.gender,
-    setPhoneNumber,
-    setIsPublic,
-    setActiveField,
-    setEditSkills,
-    setCareer,
-    setBirthYear,
-    setGender,
-  ]);
+    if (!profileData) {
+      setPhoneNumber("01000000000");
+      setIsPublic(true);
+      setActiveField([]);
+      setEditSkills([]);
+      setCareer("신입");
+      setBirthYear(new Date().getFullYear());
+      setGender("선택안함");
+    }
+    updateProfileLocalState();
+    // 의존성 배열은 없는게 맞습니다
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!profileData) return <div>Error</div>;
 
