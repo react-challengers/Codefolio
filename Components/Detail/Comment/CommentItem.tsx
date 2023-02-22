@@ -35,7 +35,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
     const LoginState = async () => {
       const { data } = await supabase.auth.getSession();
       if (data) {
-        setCurrentUSERID(data.session?.user.email);
+        setCurrentUSERID(data.session?.user.id);
       }
     };
 
