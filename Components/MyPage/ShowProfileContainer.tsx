@@ -1,6 +1,5 @@
 import { useUserProfile } from "@/hooks/query";
 import { myPageIsEditingProfileContainer } from "@/lib/recoil";
-import { useQueryClient } from "@tanstack/react-query";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import DefaultButton from "../Common/DefaultButton";
@@ -10,11 +9,7 @@ import ProfileContainer from "./ProfileContainer";
 const ShowProfileContainer = () => {
   const setIsEditing = useSetRecoilState(myPageIsEditingProfileContainer);
 
-  // const { profileData } = useUserProfile();
-  const queryCache = useQueryClient();
-  const profileData = queryCache.getQueryData<UserProfileType>([
-    "user_profile",
-  ]);
+  const { profileData } = useUserProfile();
 
   if (!profileData) return <div>Error</div>;
 

@@ -1,9 +1,17 @@
 import { useUserProfile } from "@/hooks/query";
-import { myPageIsEditingProfileContainer } from "@/lib/recoil";
+import {
+  myPageBirthYear,
+  myPageCareer,
+  myPageField,
+  myPageGender,
+  myPageIsEditingProfileContainer,
+  myPageIsPublic,
+  myPagePhonNumber,
+  myPageSkills,
+} from "@/lib/recoil";
 import checkIsPhoneNumber from "@/utils/commons/checkIsPhoneNumber";
-import { useQueryClient } from "@tanstack/react-query";
-import { ChangeEvent, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { DefaultButton, DropDown, SkillList, Toggle } from "../Common";
 import PositionTag from "./PositionTag";
@@ -31,26 +39,37 @@ const EditProfileContainer = () => {
   const { profileData, updateProfileData } = useUserProfile();
   const {
     field: fieldData,
-    skills,
+    skills: skillsData,
     is_public: isPublicData,
-    phone,
+    phone: phoneData,
+    career: careerData,
+    birth_year: birthYearData,
+    gender: genderData,
   } = profileData;
-  const [phoneNumber, setPhoneNumber] = useState(phone);
-  const [isPublic, setIsPublic] = useState(isPublicData);
-  const [activeField, setActiveField] = useState(fieldData);
-  const [editSkills, setEditSkills] = useState(skills);
+  const [phoneNumber, setPhoneNumber] = useRecoilState(myPagePhonNumber);
+  const [isPublic, setIsPublic] = useRecoilState(myPageIsPublic);
+  const [activeField, setActiveField] = useRecoilState(myPageField);
+  const [editSkills, setEditSkills] = useRecoilState(myPageSkills);
+  const [career, setCareer] = useRecoilState(myPageCareer);
+  const [birthYear, setBirthYear] = useRecoilState(myPageBirthYear);
+  const [gender, setGender] = useRecoilState(myPageGender);
 
   // local state로 편집 상태 제어
   const [isPhoneNumber, setIsPhoneNumber] = useState(false);
   const [isEmptyField, setIsEmptyField] = useState(false);
   const [isEmptySkills, setIsEmptySkills] = useState(false);
 
-  const queryCache = useQueryClient();
-  const profileDataCache = queryCache.getQueryData<UserProfileType>([
-    "user_profile",
-  ]);
+  useEffect(() => {
+    setPhoneNumber(phoneData);
+    setIsPublic(isPublicData);
+    setActiveField(fieldData);
+    setEditSkills(skillsData);
+    setCareer(careerData);
+    setBirthYear(birthYearData);
+    setGender(genderData);
+  }, []);
 
-  if (!profileData || !profileDataCache) return <div>Error</div>;
+  if (!profileData) return <div>Error</div>;
 
   const clickField = (field: string) => {
     if (activeField?.includes(field)) {
@@ -97,14 +116,11 @@ const EditProfileContainer = () => {
         field: activeField,
         skills: editSkills,
         // 캐시데이터 갱신
-        birth_year: profileDataCache.birth_year,
-        career: profileDataCache.career,
+        birth_year: birthYear,
+        career,
+        gender,
       };
       updateProfileData(newProfileData);
-      queryCache.setQueriesData<UserProfileType | undefined>(
-        ["user_profile"],
-        (prevProfile) => prevProfile && newProfileData
-      );
     } catch (error) {
       console.log(error);
     }

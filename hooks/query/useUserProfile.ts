@@ -37,17 +37,28 @@ const useUserProfile = () => {
     bookmark_folders: data?.bookmark_folders ?? [],
   };
 
-  // 무한 리랜더링 버그 해결하기
+  // 최초 데이터 갱신
   useEffect(() => {
     queryClient.setQueryData([USER_PROFILE], profileData);
   }, []);
+
+  const setProfileClient = ({ ...arg }: Partial<UserProfileType>) => {
+    queryClient.setQueriesData<UserProfileType | undefined>(
+      [USER_PROFILE],
+      (prevProfile) => prevProfile && { ...prevProfile, ...arg }
+    );
+  };
 
   // patch
   const { mutate: updateProfileData } = useMutation(patchUserProfile, {
     onMutate: async (newProfile) => {
       await queryClient.cancelQueries({ queryKey: [USER_PROFILE] });
       const previousProfile = queryClient.getQueriesData([USER_PROFILE]);
-      queryClient.setQueriesData([USER_PROFILE], newProfile);
+      console.log(newProfile);
+      queryClient.setQueriesData<UserProfileType | undefined>(
+        [USER_PROFILE],
+        newProfile
+      );
 
       return { newProfile, previousProfile };
     },
@@ -59,7 +70,7 @@ const useUserProfile = () => {
     },
   });
 
-  return { profileData, updateProfileData };
+  return { profileData, setProfileClient, updateProfileData };
 };
 
 export default useUserProfile;
