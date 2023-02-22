@@ -37,15 +37,7 @@ const fieldList = [
 const EditProfileContainer = () => {
   const setIsEditing = useSetRecoilState(myPageIsEditingProfileContainer);
   const { profileData, updateProfileData } = useUserProfile();
-  const {
-    field: fieldData,
-    skills: skillsData,
-    is_public: isPublicData,
-    phone: phoneData,
-    career: careerData,
-    birth_year: birthYearData,
-    gender: genderData,
-  } = profileData;
+
   const [phoneNumber, setPhoneNumber] = useRecoilState(myPagePhonNumber);
   const [isPublic, setIsPublic] = useRecoilState(myPageIsPublic);
   const [activeField, setActiveField] = useRecoilState(myPageField);
@@ -60,14 +52,29 @@ const EditProfileContainer = () => {
   const [isEmptySkills, setIsEmptySkills] = useState(false);
 
   useEffect(() => {
-    setPhoneNumber(phoneData);
-    setIsPublic(isPublicData);
-    setActiveField(fieldData);
-    setEditSkills(skillsData);
-    setCareer(careerData);
-    setBirthYear(birthYearData);
-    setGender(genderData);
-  }, []);
+    setPhoneNumber(profileData.phone ?? "01000000000");
+    setIsPublic(profileData.is_public ?? true);
+    setActiveField(profileData.field ?? []);
+    setEditSkills(profileData.skills ?? []);
+    setCareer(profileData.career ?? "신입");
+    setBirthYear(profileData.birth_year ?? new Date().getFullYear());
+    setGender(profileData.gender ?? "선택안함");
+  }, [
+    profileData.phone,
+    profileData.is_public,
+    profileData.field,
+    profileData.skills,
+    profileData.career,
+    profileData.birth_year,
+    profileData.gender,
+    setPhoneNumber,
+    setIsPublic,
+    setActiveField,
+    setEditSkills,
+    setCareer,
+    setBirthYear,
+    setGender,
+  ]);
 
   if (!profileData) return <div>Error</div>;
 

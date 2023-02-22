@@ -9,7 +9,7 @@ const SwitchButton = () => {
   const [currentItem, setCurrentItem] = useRecoilState(myPageGender);
 
   useEffect(() => {
-    setCurrentItem(profileData.gender);
+    setCurrentItem(profileData?.gender);
   }, []);
 
   const handleSetCurrentItem = (item: Gender) => {

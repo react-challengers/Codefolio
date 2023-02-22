@@ -21,10 +21,6 @@ interface DropDownProps {
 
 const DropDown = ({ type }: DropDownProps) => {
   const options: (string | number)[] = [];
-  // const queryCache = useQueryClient();
-  // const profileData = queryCache.getQueryData<UserProfileType>([
-  //   "user_profile",
-  // ]);
 
   const { profileData } = useUserProfile();
 
@@ -32,9 +28,9 @@ const DropDown = ({ type }: DropDownProps) => {
   const [career, setCareer] = useRecoilState(myPageCareer);
 
   useEffect(() => {
-    setBirthYear(profileData.birth_year);
-    setCareer(profileData.career);
-  }, []);
+    setBirthYear(profileData.birth_year ?? new Date().getFullYear());
+    setCareer(profileData.career ?? "신입");
+  }, [setBirthYear, setCareer, profileData.birth_year, profileData.career]);
 
   const years = Array.from(
     { length: new Date().getFullYear() - BASE_YEAR + 1 },

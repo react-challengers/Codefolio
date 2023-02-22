@@ -30,11 +30,11 @@ const ShowProfileContainer = () => {
           <ContentContainer>
             <ContentWrapper>
               <p>포지션</p>
-              <Tags tagItems={profileData.field} />
+              <Tags tagItems={profileData?.field} />
             </ContentWrapper>
             <ContentWrapper>
               <p>경력</p>
-              <p>{profileData.career}</p>
+              <p>{profileData?.career}</p>
             </ContentWrapper>
             <ContentWrapper>
               <p>스킬</p>

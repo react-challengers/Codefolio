@@ -19,10 +19,10 @@ const UserInfoContainer = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const { inputValues, handleInputChange } = useInput({
-    userName: profileData.user_name,
-    contactEmail: profileData.contact_email,
-    selfProfile: profileData.self_profile,
-    backgroundColor: profileData.background_color,
+    userName: profileData.user_name ?? "",
+    contactEmail: profileData.contact_email ?? "",
+    selfProfile: profileData.self_profile ?? "",
+    backgroundColor: profileData.background_color ?? "",
   });
 
   const handleIsEditing = async () => {
@@ -75,7 +75,7 @@ const UserInfoContainer = () => {
 
   return (
     <InfoContainer>
-      <Banner userBackground={inputValues.backgroundColor} />
+      <Banner userBackground={inputValues?.backgroundColor} />
       <UserInfoWrapper>
         <ProfileImageWrapper>
           <label htmlFor="user_profile">
@@ -135,9 +135,11 @@ const UserInfoContainer = () => {
             </InputWrapper>
           ) : (
             <>
-              <UserNameWrapper>{inputValues.userName}</UserNameWrapper>
-              <EmailWrapper>{inputValues.contactEmail}</EmailWrapper>
-              <SelfProfileWrapper>{inputValues.selfProfile}</SelfProfileWrapper>
+              <UserNameWrapper>{inputValues?.userName}</UserNameWrapper>
+              <EmailWrapper>{inputValues?.contactEmail}</EmailWrapper>
+              <SelfProfileWrapper>
+                {inputValues?.selfProfile}
+              </SelfProfileWrapper>
             </>
           )}
         </TextWrapper>
