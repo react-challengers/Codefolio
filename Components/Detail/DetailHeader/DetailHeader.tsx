@@ -1,26 +1,37 @@
 import supabase from "@/lib/supabase";
-import { User } from "@supabase/supabase-js";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import ShowMoreModal from "./ShowMoreModal";
 
-const DetailHeader = () => {
+interface DetailHeaderProps {
+  isOwner: boolean;
+  isBookmark: boolean;
+  isLike: boolean;
+  setIsBookmark: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLike: React.Dispatch<React.SetStateAction<boolean>>;
+  currentUserId: string;
+}
+
+const DetailHeader = ({
+  isOwner,
+  isBookmark,
+  isLike,
+  setIsBookmark,
+  setIsLike,
+  currentUserId,
+}: DetailHeaderProps) => {
   const router = useRouter();
   const {
     query: { id: postId }, // c078f3bf-4e86-44a2-a672-583f36c1aa8f
   } = useRouter();
   const [showMore, setShowMore] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [isBookmark, setIsBookmark] = useState(false);
-  const [isLike, setIsLike] = useState(false);
-  const [isOwner, setIsOwner] = useState(false);
 
   const showMoreModal = () => setShowMore((prev) => !prev);
 
   const isAnonymous = () => {
-    if (!user) {
+    if (!currentUserId) {
       router.push("/auth/login");
     }
   };
@@ -28,7 +39,7 @@ const DetailHeader = () => {
   const addBookmark = async () => {
     const { error } = await supabase
       .from("bookmark")
-      .insert({ post_id: postId, user_id: user?.id });
+      .insert({ post_id: postId, user_id: currentUserId });
     if (!error) {
       setIsBookmark(true);
     }
@@ -38,7 +49,7 @@ const DetailHeader = () => {
     const { error } = await supabase
       .from("bookmark")
       .delete()
-      .eq("user_id", user?.id)
+      .eq("user_id", currentUserId)
       .eq("post_id", postId);
     if (!error) {
       setIsBookmark(false);
@@ -48,7 +59,7 @@ const DetailHeader = () => {
   const addLike = async () => {
     const { error } = await supabase
       .from("like")
-      .insert({ post_id: postId, user_id: user?.id });
+      .insert({ post_id: postId, user_id: currentUserId });
     if (!error) {
       await supabase.rpc("increment_like", { row_id: postId });
       setIsLike(true);
@@ -59,95 +70,13 @@ const DetailHeader = () => {
     const { error } = await supabase
       .from("like")
       .delete()
-      .eq("user_id", user?.id)
+      .eq("user_id", currentUserId)
       .eq("post_id", postId);
     if (!error) {
       await supabase.rpc("decrement_like", { row_id: postId });
       setIsLike(false);
     }
   };
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
-    };
-
-    const getBookmark = async () => {
-      if (!user) return;
-      const { data } = await supabase
-        .from("bookmark")
-        .select()
-        .eq("user_id", user?.id)
-        .eq("post_id", postId)
-        .single();
-      setIsBookmark(!!data?.data);
-    };
-
-    const getLike = async () => {
-      if (!user) return;
-      const { data } = await supabase
-        .from("like")
-        .select()
-        .eq("user_id", user?.id)
-        .eq("post_id", postId)
-        .single();
-      setIsLike(!!data?.data);
-    };
-
-    getUser();
-    getBookmark();
-    getLike();
-  }, []);
-
-  const checkBookmark = async () => {
-    if (!user) return;
-    const { data } = await supabase
-      .from("bookmark")
-      .select()
-      .eq("user_id", user?.id)
-      .eq("post_id", postId)
-      .single();
-    setIsBookmark(!!data);
-  };
-
-  const checkLike = async () => {
-    if (!user) return;
-    const { data } = await supabase
-      .from("like")
-      .select()
-      .eq("user_id", user?.id)
-      .eq("post_id", postId)
-      .single();
-
-    setIsLike(!!data);
-  };
-
-  useEffect(() => {
-    const checkPostOwner = (postData: any) => {
-      if (postData?.user_id === user?.id) {
-        setIsOwner(true);
-      }
-    };
-
-    const fetchPostData = async () => {
-      if (!router.query?.id) return;
-      const { data, error } = await supabase
-        .from("post")
-        .select("user_id")
-        .eq("id", postId)
-        .single();
-
-      if (error) {
-        return;
-      }
-      checkPostOwner(data);
-    };
-
-    fetchPostData();
-    checkBookmark();
-    checkLike();
-  }, [router.query?.id, user?.id]);
 
   const clickBookmarkButton = async () => {
     isAnonymous();
@@ -170,13 +99,30 @@ const DetailHeader = () => {
   return (
     <DetailHeaderContainer>
       <DetailHeaderWrapper>
-        <Image
+        {isLike ? (
+          <Image
+            src="/icons/likeHover.svg"
+            width={36}
+            height={36}
+            alt="좋아요 버튼"
+            onClick={clickLikeButton}
+          />
+        ) : (
+          <Image
+            src="/icons/like.svg"
+            width={36}
+            height={36}
+            alt="좋아요 버튼"
+            onClick={clickLikeButton}
+          />
+        )}
+        {/* <Image
           src={`/icons/like${isLike ? "Hover" : ""}.svg`}
           width={36}
           height={36}
           alt="좋아요 버튼"
           onClick={clickLikeButton}
-        />
+        /> */}
         <Image
           src={`/icons/bookmark${isBookmark ? "Hover" : ""}.svg`}
           width={36}
