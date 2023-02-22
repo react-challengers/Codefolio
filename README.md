@@ -72,11 +72,26 @@ $ yarn dev
 │   │   ├── Auth
 │   │   ├── Card
 │   │   └── Skill
+│   ├── CreatePost
+│   │   └── Post
 │   ├── Detail
+│   │   ├── Comment
+│   │   ├── DetailContent.tsx
+│   │   ├── DetailHeader
+│   │   ├── DetailSide
+│   │   ├── DetailTitle.tsx
+│   │   └── RelatedProject
 │   ├── Layouts
 │   ├── Main
-│   ├── MyPage
-│   └── Post
+│   │   ├── DetailModal.tsx
+│   │   ├── MainSection.tsx
+│   │   └── SideBar
+│   └── MyPage
+│       ├── CardItemContainer.tsx
+│       ├── MyPageContainer.tsx
+│       ├── MypageTab.tsx
+│       ├── TabProfile
+│       └── UserInfoContainer
 ├── README.md
 ├── hooks
 │   ├── common
