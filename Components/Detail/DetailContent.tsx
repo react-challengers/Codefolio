@@ -10,6 +10,7 @@ interface DetailContentProps {
   content: string;
 }
 
+// 다이나믹 임포트 고려
 const DetailContent = ({ content }: DetailContentProps) => {
   return (
     <Viewer

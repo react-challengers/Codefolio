@@ -13,11 +13,12 @@ import checkIsPhoneNumber from "@/utils/commons/checkIsPhoneNumber";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { DefaultButton, DropDown, SkillList, Toggle } from "../Common";
+import { DefaultButton, SkillList, Toggle } from "@/Components/Common";
 import PositionTag from "./PositionTag";
 import ProfileContainer from "./ProfileContainer";
 import { ContentContainer, ContentWrapper } from "./ShowProfileContainer";
 import SwitchButton from "./SwitchButton";
+import DropDown from "./DropDown";
 
 /**
  * @TODO useInput 정상동작시키기

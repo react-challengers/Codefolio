@@ -12,11 +12,9 @@ import {
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import getYYYYMM from "@/utils/commons/getYYYYMM";
+import { SkillList, Tags, Toggle } from "@/Components/Common";
 import FieldDropDown from "./FieldDropDown";
-import SkillList from "../Common/Skill/SkillList";
-import Toggle from "../Common/Toggle";
 import WithPeople from "./WithPeople";
-import Tags from "../Common/Tags";
 
 const ProjectInfoDropDown = () => {
   const [postSkill, setPostSkill] = useRecoilState(postSkills);

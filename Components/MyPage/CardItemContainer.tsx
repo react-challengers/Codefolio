@@ -1,7 +1,7 @@
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import CardItem from "../Common/Card/CardItem";
+import { CardItem } from "@/Components/Common";
 
 interface CardItemContainerProps {
   itemList: PostType[];

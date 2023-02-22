@@ -1,8 +1,7 @@
 import supabase from "@/lib/supabase";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import ProfileImage from "../Common/ProfileImage";
-import Tags from "../Common/Tags";
+import { ProfileImage, Tags } from "@/Components/Common";
 import DefaultBox from "./DetailBox";
 import DetailSideContainer from "./DetailSideContainer";
 import DetailWith from "./DetailWith";

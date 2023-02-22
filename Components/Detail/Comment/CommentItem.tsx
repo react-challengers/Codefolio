@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/lib/supabase";
 import viewCreateAt from "@/utils/commons/viewCreateAt";
-import DefaultButton from "../Common/DefaultButton";
-import ProfileImage from "../Common/ProfileImage";
+import { DefaultButton, ProfileImage } from "@/Components/Common";
 
 /**
  * @TODO useInput으로 리팩토링 고민
@@ -36,7 +35,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
     const LoginState = async () => {
       const { data } = await supabase.auth.getSession();
       if (data) {
-        setCurrentUSERID(data.session?.user.email);
+        setCurrentUSERID(data.session?.user.id);
       }
     };
 

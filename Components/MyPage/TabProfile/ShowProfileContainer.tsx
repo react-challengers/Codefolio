@@ -2,8 +2,7 @@ import { useUserProfile } from "@/hooks/query";
 import { myPageIsEditingProfileContainer } from "@/lib/recoil";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import DefaultButton from "../Common/DefaultButton";
-import Tags from "../Common/Tags";
+import { DefaultButton, Tags } from "@/Components/Common";
 import ProfileContainer from "./ProfileContainer";
 
 const ShowProfileContainer = () => {

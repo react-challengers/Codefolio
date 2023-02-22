@@ -6,7 +6,7 @@ import supabase from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { useRouter } from "next/router";
-import CardItem from "../Common/Card/CardItem";
+import { CardItem } from "@/Components/Common";
 import SwiperPrevButton from "./SwiperPrevButton";
 import SwiperNextButton from "./SwiperNextButton";
 
