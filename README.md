@@ -44,7 +44,7 @@ $ yarn dev
 
 > 부트캠프 수강생들이 작업한 프로젝트를 체계적으로 정리하여 채용과 연계할 수 있는 포트폴리오 공유 서비스
 
-# Tach Stack
+# Tech Stack
 
 <div align="center">
 
