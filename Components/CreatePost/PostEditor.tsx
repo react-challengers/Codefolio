@@ -1,16 +1,17 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import supabase from "@/lib/supabase";
-import imageCompression from "browser-image-compression";
 import { useRecoilState } from "recoil";
-import { postContent as recoilPostContent } from "@/lib/recoil";
+import { postContent as recoilPostContent, postId } from "@/lib/recoil";
 import dynamic from "next/dynamic";
+import imageCompression from "browser-image-compression";
 
 /**
+ * @TODO postId 에러 해결 필요
+ * @TODO 이미지 아이콘 클릭시 이미지 업로드 구현 필요
  * @TODO storage 삭제 구현 필요
- * @TODO uuid flag 꽃아야 함 >> 게시와 임시저장의 용도로 분류
  */
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
@@ -18,40 +19,47 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 });
 
 const PostEditor = () => {
+  const [isPostId] = useRecoilState(postId);
   const [postContent, setPostContent] = useRecoilState(recoilPostContent);
 
-  // 이미지 추가
-  type HookCallback = (url: string, text?: string) => void;
+  const onImagePasted = useCallback(
+    async (
+      dataTransfer: DataTransfer // Drag and Drop API
+    ) => {
+      const files: File[] = []; // 드래그 앤 드랍으로 가져온 파일들
+      for (let index = 0; index < dataTransfer.items.length; index += 1) {
+        const file = dataTransfer.files.item(index);
+        if (file) {
+          const compressedFile = await compressImg(file);
+          if (!compressedFile) return;
+          files.push(compressedFile); // 배열에 파일 추가
+        }
+      }
+      const fileId = crypto.randomUUID(); // 파일 id 생성
+      files.map(async (file) => {
+        const { data: uploadImg } = await supabase.storage
+          .from("post-image")
+          .upload(`${isPostId}/${fileId}`, file);
+        if (!uploadImg) return;
 
-  const addImage = useCallback(async (blob: File, dropImage: HookCallback) => {
-    const img = await compressImg(blob); // 이미지 압축
-    if (!img) return;
-    const url = await uploadImage(img); // 업로드된 이미지 서버 url
-    if (!url) return;
-    dropImage(url, `${blob.name}`); // 에디터에 이미지 추가
-  }, []);
+        const { data: insertedMarkdown } = supabase.storage
+          .from("post-image")
+          .getPublicUrl(`${isPostId}/${fileId}`);
+        if (!insertedMarkdown) return;
 
-  // 이미지 업로드
-  const uploadImage = async (blob: File) => {
-    try {
-      const imgPath = crypto.randomUUID();
-      await supabase.storage.from("post-image").upload(imgPath, blob);
+        const insertString = `![${file.name}](${insertedMarkdown.publicUrl})`;
+        const resultString = insertToTextArea(insertString);
 
-      // 이미지 url 가져오기
-      const urlResult = await supabase.storage
-        .from("post-image")
-        .getPublicUrl(imgPath);
-      return urlResult.data.publicUrl;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  };
+        setPostContent(resultString || "");
+      });
+    },
+    [isPostId, setPostContent]
+  );
 
-  // //이미지 압축
+  // 이미지 압축
   const compressImg = async (blob: File): Promise<File | void> => {
     const options = {
-      maxSize: 1,
+      maxSizeMB: 1,
       initialQuality: 0.55, // initial 0.7
     };
     const result = await imageCompression(blob, options)
@@ -60,18 +68,49 @@ const PostEditor = () => {
     return result;
   };
 
-  // const handleOnEditorChange = () => {
-  //   // 유효성 검사
-  //   const editorText = editorRef.current?.getInstance().getMarkdown();
-  //   if (editorText === " " || editorText === "" || editorText === undefined) {
-  //     return;
-  //   }
-  //   // HTML 대신에 Markdown으로 저장합니다.
-  //   setPostContent(editorText);
-  // };
+  // 에디터에 이미지 추가
+  const insertToTextArea = (intsertString: string) => {
+    const textarea = document.querySelector("textarea");
+    if (!textarea) {
+      return null;
+    }
+    let sentence = textarea.value;
+    const len = sentence.length;
+    const pos = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    const front = sentence.slice(0, pos);
+    const back = sentence.slice(pos, len);
+
+    sentence = front + intsertString + back;
+
+    textarea.value = sentence;
+    textarea.selectionEnd = end + intsertString.length;
+
+    return sentence;
+  };
 
   return (
-    <MDEditor value={postContent} onChange={setPostContent} height={600} />
+    // div에 클래스를 적용하여 다크모드를 수동으로 적용할 수 있습니다.
+    <div>
+      <MDEditor
+        value={postContent}
+        // onChange={setPostContent} // 에러 발생
+        onChange={(value) => {
+          setPostContent(value || "");
+        }}
+        height={600}
+        onPaste={(event) => {
+          onImagePasted(event.clipboardData);
+        }}
+        onDrop={(event) => {
+          onImagePasted(event.dataTransfer);
+        }}
+        textareaProps={{
+          placeholder: "Fill in your markdown for the coolest of the cool.",
+        }}
+      />
+    </div>
   );
 };
 
