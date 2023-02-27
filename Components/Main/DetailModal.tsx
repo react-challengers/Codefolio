@@ -1,7 +1,7 @@
-import DetailPage from "@/pages/detail/[id]";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
+import DetailArticle from "../Detail/DetailArticle";
 
 interface DetailModalProps {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -19,7 +19,7 @@ const DetailModal = ({ setIsModalOpen }: DetailModalProps) => {
     <ModalContainer key={router.asPath}>
       <ModalBackDrop onClick={() => handleOnClose()} />
       <DetailModalContainer>
-        <DetailPage />
+        <DetailArticle />
       </DetailModalContainer>
     </ModalContainer>
   );
