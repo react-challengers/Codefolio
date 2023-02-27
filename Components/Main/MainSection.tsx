@@ -41,24 +41,14 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   // 카테고리 선택 시, 해당 카테고리에 맞는 포스트만 보여주기
   const filterPosts = useMemo(() => {
     if (publicPosts === undefined) return [];
-    if (
-      selectedLargeCategory.length !== 0 &&
-      selectedSubCategory.length === 0
-    ) {
-      return publicPosts.filter((post) =>
-        selectedLargeCategory.includes(post.large_category)
-      );
-    }
-    if (
-      selectedLargeCategory.length !== 0 &&
-      selectedSubCategory.length !== 0
-    ) {
+
+    if (selectedSubCategory.length !== 0) {
       return publicPosts.filter((post) =>
         selectedSubCategory.includes(post.sub_category)
       );
     }
     return publicPosts;
-  }, [publicPosts, selectedLargeCategory, selectedSubCategory]);
+  }, [selectedSubCategory]);
 
   // 포스트 정렬
   const sortPosts = useMemo(() => {
