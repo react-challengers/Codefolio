@@ -1,5 +1,6 @@
+import { useStopScroll } from "@/hooks/common";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import styled from "styled-components";
 import DetailArticle from "../Detail/DetailArticle";
 
@@ -9,6 +10,8 @@ interface DetailModalProps {
 
 const DetailModal = ({ setIsModalOpen }: DetailModalProps) => {
   const router = useRouter();
+
+  useStopScroll();
 
   const handleOnClose = async () => {
     await router.push("/");
