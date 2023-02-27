@@ -6,7 +6,7 @@ import styled from "styled-components";
 import ShowMoreModal from "./ShowMoreModal";
 
 interface DetailHeaderProps {
-  isOwner: boolean;
+  author: string;
   isBookmark: boolean;
   isLike: boolean;
   setIsBookmark: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,7 +15,7 @@ interface DetailHeaderProps {
 }
 
 const DetailHeader = ({
-  isOwner,
+  author,
   isBookmark,
   isLike,
   setIsBookmark,
@@ -130,7 +130,7 @@ const DetailHeader = ({
           alt="북마크 버튼"
           onClick={clickBookmarkButton}
         />
-        {isOwner && (
+        {author === currentUserId && (
           <Image
             src="/icons/more.svg"
             onClick={showMoreModal}

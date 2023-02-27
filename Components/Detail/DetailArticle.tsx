@@ -5,9 +5,16 @@ import {
   DetailTitle,
   RelatedProject,
 } from "@/Components/Detail";
-import supabase from "@/lib/supabase";
+import {
+  getAllPosts,
+  getAuthor,
+  getCurrentUser,
+  getIsBookMark,
+  getIsLike,
+  getOnePost,
+} from "@/utils/APIs/supabase";
 import getTextColorByBackgroundColor from "@/utils/detail/getTextColorByBackgroundColor";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -22,7 +29,6 @@ const DetailArticle = () => {
   const {
     query: { id: postId },
   } = useRouter();
-  const queryClient = useQueryClient();
 
   const [titleData, setTitleData] = useState({
     title: "",
@@ -31,7 +37,6 @@ const DetailArticle = () => {
     field: "",
     subCategory: "",
   });
-
   const [sideData, setSideData] = useState({
     progressDate: ["", ""],
     subCategory: "",
@@ -39,152 +44,142 @@ const DetailArticle = () => {
     tag: [""],
     members: [""],
   });
-
   const [content, setContent] = useState("");
-  const [titleColor, setTitleColor] = useState("black");
   const [author, setAuthor] = useState("");
+  const [titleColor, setTitleColor] = useState("black");
   const [currentUserId, setCurrentUserId] = useState("");
   const [isBookmark, setIsBookmark] = useState(false);
   const [isLike, setIsLike] = useState(false);
-  const [isOwner, setIsOwner] = useState(false);
-  const [isHeaderReady, setIsHeaderReady] = useState(false);
-  const [authorName, setAuthorName] = useState("");
-  const [authorProfileImage, setAuthorProfileImage] = useState("");
 
-  const getAuthor = async () => {
-    const { data, error } = await supabase
-      .from("user_profile")
-      .select()
-      .eq("user_id", author)
-      .single();
-
-    if (error) {
-      console.log(error);
-      return;
+  const { data: allPostsData, isLoading } = useQuery<PostType[]>(
+    ["GET_POSTS"],
+    {
+      queryFn: getAllPosts,
+      enabled: !!postId,
+      onSuccess(data) {
+        if (data) {
+          const currentPost = data.find((post) => post.id === postId);
+          if (currentPost) {
+            setTitleData({
+              title: currentPost.title,
+              subtitle: currentPost.sub_title,
+              backgroundColor: currentPost.title_background_color,
+              field: currentPost.large_category,
+              subCategory: currentPost.sub_category,
+            });
+            setSideData({
+              progressDate: currentPost.progress_date,
+              subCategory: currentPost.sub_category,
+              skills: currentPost.skills,
+              tag: currentPost.tag,
+              members: currentPost.members,
+            });
+            setContent(currentPost.content);
+            setAuthor(currentPost.user_id);
+          }
+        }
+      },
     }
+  );
 
-    setAuthorName(data?.user_name);
-    setAuthorProfileImage(data?.profile_image);
-  };
+  // const { isLoading } = useQuery<PostType>(["getOnePost", postId], {
+  //   queryFn: ({ queryKey }) => getOnePost(queryKey[1] as string),
+  //   onSuccess(data) {
+  //     if (data) {
+  //       setTitleData({
+  //         title: data.title,
+  //         subtitle: data.sub_title,
+  //         backgroundColor: data.title_background_color,
+  //         field: data.large_category,
+  //         subCategory: data.sub_category,
+  //       });
+  //       setSideData({
+  //         progressDate: data.progress_date,
+  //         subCategory: data.sub_category,
+  //         skills: data.skills,
+  //         tag: data.tag,
+  //         members: data.members,
+  //       });
+  //       setContent(data.content);
+  //       setAuthor(data.user_id);
+  //     }
+  //   },
+  //   onError(error) {
+  //     console.log(error);
+  //   },
+  //   enabled: !!postId,
+  // });
 
-  const getCurrentUser = async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error) {
-      return;
+  // TODO: 추후 user_name과 profile_image를 가져오는 API를 만들어서 수정해야함
+  const { data: authorInfo, isLoading: isAuthorLoading } = useQuery(
+    ["getAuthor", author],
+    {
+      queryFn: ({ queryKey }) => getAuthor(queryKey[1] as string),
+      onError(error) {
+        console.log(error);
+      },
+      enabled: !!author,
     }
-    setCurrentUserId(data?.user.id);
-  };
+  );
 
-  useEffect(() => {
-    getCurrentUser();
-  }, []);
+  const { isLoading: currentUserLoading } = useQuery(["currentUser"], {
+    queryFn: getCurrentUser,
+    onSuccess({ data: { user } }) {
+      if (user) {
+        setCurrentUserId(user.id);
+      }
+    },
+  });
 
-  useEffect(() => {
-    if (!postId) return;
-
-    const currentPost = queryClient
-      .getQueryData<PostType[]>(["GET_POSTS"])
-      ?.find((post) => post.id === postId);
-
-    if (currentPost) {
-      const {
-        title,
-        sub_title: subTitle,
-        title_background_color: backgroundColor,
-        large_category: field,
-        sub_category: subCategory,
-        content: postContent,
-        progress_date: progressDate,
-        tag,
-        skills,
-        members,
-        user_id: userId,
-      } = currentPost;
-
-      setTitleData({
-        title,
-        subtitle: subTitle,
-        backgroundColor,
-        field,
-        subCategory,
-      });
-
-      setSideData({
-        progressDate,
-        tag,
-        skills,
-        members,
-        subCategory,
-      });
-
-      setAuthor(userId);
-
-      setContent(postContent);
-    }
-  }, [postId]);
-
+  // 이미지로 변경 후 삭제
   useEffect(() => {
     const luma = getTextColorByBackgroundColor(titleData.backgroundColor);
     if (luma < 127.5) setTitleColor("white");
     else setTitleColor("black");
   }, [titleData.backgroundColor]);
 
-  useEffect(() => {
-    if (!author) return;
-    getAuthor();
-  }, [author]);
-
   // -----------
 
-  useEffect(() => {
-    if (!currentUserId) return setIsHeaderReady(true);
+  const { isLoading: isBookmarkLoading } = useQuery(
+    ["getBookmark", currentUserId, postId],
+    {
+      queryFn: ({ queryKey }) =>
+        getIsBookMark(queryKey as [string, string, string]),
+      onSuccess(data) {
+        if (data) {
+          setIsBookmark(!!data);
+        }
+      },
+      onError(error) {
+        console.log(error);
+      },
+      enabled: !!currentUserId && !!postId,
+    }
+  );
 
-    const getBookmark = async () => {
-      const { data, error } = await supabase
-        .from("bookmark")
-        .select()
-        .eq("user_id", currentUserId)
-        .eq("post_id", postId)
-        .single();
-
-      if (error) {
-        return;
-      }
-
-      setIsBookmark(!!data);
-    };
-
-    const getLike = async () => {
-      const { data, error } = await supabase
-        .from("like")
-        .select()
-        .eq("user_id", currentUserId)
-        .eq("post_id", postId)
-        .single();
-
-      if (error) {
-        return;
-      }
-
-      setIsLike(!!data);
-    };
-
-    setIsOwner(author === currentUserId);
-    getBookmark();
-    getLike();
-    return setIsHeaderReady(true);
-  }, [currentUserId]);
+  const { isLoading: isLikeLoading } = useQuery(
+    ["getLike", currentUserId, postId],
+    {
+      queryFn: ({ queryKey }) =>
+        getIsLike(queryKey as [string, string, string]),
+      onSuccess(data) {
+        if (data) {
+          setIsLike(!!data);
+        }
+      },
+      onError(error) {
+        console.log(error);
+      },
+      enabled: !!currentUserId && !!postId,
+    }
+  );
 
   if (
-    !postId ||
-    !titleData ||
-    !sideData ||
-    !content ||
-    !titleColor ||
-    !author ||
-    !authorName ||
-    !authorProfileImage ||
-    !isHeaderReady
+    isLoading ||
+    isAuthorLoading ||
+    currentUserLoading ||
+    isBookmarkLoading ||
+    isLikeLoading
   )
     return <Loader color="#fff" size={20} speedMultiplier={2} />;
 
@@ -193,7 +188,7 @@ const DetailArticle = () => {
       <DetailHeader
         isBookmark={isBookmark}
         isLike={isLike}
-        isOwner={isOwner}
+        author={author}
         setIsBookmark={setIsBookmark}
         setIsLike={setIsLike}
         currentUserId={currentUserId}
@@ -201,11 +196,7 @@ const DetailArticle = () => {
       <DetailTitle {...titleData} titleColor={titleColor} />
       <DetailContentsContainer>
         <DetailContentsSide>
-          <DetailSide
-            {...sideData}
-            authorName={authorName}
-            authorProfileImage={authorProfileImage}
-          />
+          <DetailSide {...sideData} authorInfo={authorInfo} />
         </DetailContentsSide>
         <DetailContentsMain>
           {content && <Viewer content={content} />}
