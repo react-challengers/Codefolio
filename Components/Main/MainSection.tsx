@@ -109,14 +109,12 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   return (
     <HomeMainContainer>
       <TagContainer>
-        {selectedLargeCategory.length !== 0 &&
-          selectedSubCategory.length !== 0 && (
-            <Tags tagItems={selectedSubCategory} size="md" />
-          )}
-        {selectedLargeCategory.length !== 0 &&
-          selectedSubCategory.length === 0 && (
-            <Tags tagItems={selectedLargeCategory} size="lg" />
-          )}
+        {selectedSubCategory.length !== 0 && (
+          <Tags tagItems={selectedSubCategory} size="md" />
+        )}
+        {selectedSubCategory.length === 0 && (
+          <Tags tagItems={selectedLargeCategory} size="lg" />
+        )}
       </TagContainer>
       <HomeDropDownContainer>
         <HomeDropDownButton
