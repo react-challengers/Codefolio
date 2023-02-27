@@ -17,7 +17,7 @@ const DetailContent = ({ content }: DetailContentProps) => {
 };
 
 const PreviewContent = styled(MarkdownPreview)`
-  width: 100%;
+  width: 60rem;
   padding: 1rem;
 `;
 
