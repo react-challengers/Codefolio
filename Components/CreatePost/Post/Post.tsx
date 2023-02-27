@@ -79,15 +79,15 @@ const Post: NextPage = () => {
     LoginState();
   }, []);
 
-  const [isSaved, setIsSaved] = useState(false);
+  // const [isSaved, setIsSaved] = useState(false);
 
-  const onSave = () => {
-    // 저장 버튼
-    setIsSaved(true);
-    setTimeout(() => {
-      setIsSaved(false);
-    }, 2000);
-  };
+  // const onSave = () => {
+  //   // 저장 버튼
+  //   setIsSaved(true);
+  //   setTimeout(() => {
+  //     setIsSaved(false);
+  //   }, 2000);
+  // };
 
   const validatePost = () => {
     // 유효성 검사
@@ -213,7 +213,7 @@ const Post: NextPage = () => {
       )}
       <section>
         <PostHeader>
-          <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert>
+          {/* <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert> */}
           {/* <DefaultButton text="저장" type="outline" size="s" onClick={onSave} /> */}
           <DefaultButton text="게시" type="full" size="s" onClick={onPost} />
         </PostHeader>
@@ -232,13 +232,13 @@ const PostHeader = styled.div`
   gap: 1.25rem;
 `;
 
-interface SaveAlertProps {
-  isSaved: boolean;
-}
+// interface SaveAlertProps {
+//   isSaved: boolean;
+// }
 
-const SaveAlert = styled.span<SaveAlertProps>`
-  opacity: ${({ isSaved }) => (isSaved ? 1 : 0)};
-  transition: all 0.5s ease-in-out;
-`;
+// const SaveAlert = styled.span<SaveAlertProps>`
+//   opacity: ${({ isSaved }) => (isSaved ? 1 : 0)};
+//   transition: all 0.5s ease-in-out;
+// `;
 
 export default Post;
