@@ -162,7 +162,7 @@ const Post: NextPage = () => {
     setTag([]);
     setIsPublic(true);
     setMembers([]);
-    setContent("프로젝트 내용을 입력해주세요.");
+    setContent("");
     setPostLargeCategory("");
     setPostSubCategory("");
   };
