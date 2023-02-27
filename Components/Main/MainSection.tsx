@@ -221,7 +221,7 @@ const HomeDropDownList = styled.ul`
   border-radius: 0.25rem;
   font-size: 1rem;
   gap: 0.5rem;
-  z-index: 1;
+  z-index: 2;
 `;
 
 const HomeDropDownItemContainer = styled.div`
