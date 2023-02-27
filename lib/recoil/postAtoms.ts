@@ -1,6 +1,11 @@
 import getYYYYMM from "@/utils/commons/getYYYYMM";
 import { atom } from "recoil";
 
+const postId = atom<string>({
+  key: "postId",
+  default: `${crypto.randomUUID()}`,
+});
+
 const postTitle = atom<string>({
   key: "postTitle",
   default: "",
@@ -63,6 +68,7 @@ const postContent = atom<string>({
 });
 
 export {
+  postId,
   postTitle,
   postSubTitle,
   postTitleBackgroundColor,

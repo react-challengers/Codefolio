@@ -16,6 +16,7 @@ import {
   postTags,
   postTitle,
   postTitleBackgroundColor,
+  postId,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import { useState, useEffect } from "react";
@@ -29,6 +30,7 @@ import ProjectInfo from "./ProjectInfo";
  * @TODO user_id 리코일로 관리
  */
 const Post: NextPage = () => {
+  const [isPostId] = useRecoilState(postId);
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
   const [titleBackgroundColor, setTitleBackgroundColor] = useRecoilState(
@@ -54,6 +56,7 @@ const Post: NextPage = () => {
   const router = useRouter();
 
   const newPostRow = {
+    id: isPostId,
     title,
     sub_title: subTitle,
     title_background_color: titleBackgroundColor,
