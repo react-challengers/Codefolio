@@ -60,10 +60,11 @@ const SideBar = () => {
                 selectedSubCategory.includes(subItem) ? (
                   <SubCategoryContainer
                     key={subItem}
-                    onClick={(e) => onClickSubCategory(e)}
                     selected={selectedSubCategory.includes(subItem)}
                   >
-                    <SubCategoryItem>{subItem}</SubCategoryItem>
+                    <SubCategoryItem onClick={(e) => onClickSubCategory(e)}>
+                      {subItem}
+                    </SubCategoryItem>
                     <Image
                       src={check}
                       alt="check"
@@ -73,12 +74,10 @@ const SideBar = () => {
                     />
                   </SubCategoryContainer>
                 ) : (
-                  <SubCategoryContainer
-                    key={subItem}
-                    onClick={(e) => onClickSubCategory(e)}
-                    selected={false}
-                  >
-                    <SubCategoryItem>{subItem}</SubCategoryItem>
+                  <SubCategoryContainer key={subItem} selected={false}>
+                    <SubCategoryItem onClick={(e) => onClickSubCategory(e)}>
+                      {subItem}
+                    </SubCategoryItem>
                   </SubCategoryContainer>
                 )
               )}
@@ -131,9 +130,7 @@ interface SubCategoryItemProps {
 const SubCategoryContainer = styled.div<SubCategoryItemProps>`
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 2.75rem;
-  padding: 0.625rem 0.625rem 0.625rem 1rem;
 
   ${({ selected }) =>
     selected &&
@@ -143,13 +140,22 @@ const SubCategoryContainer = styled.div<SubCategoryItemProps>`
   `}
 
   &:hover {
-    cursor: pointer;
     background-color: #f2f2f2;
   }
 `;
 
-const SubCategoryItem = styled.span`
+const SubCategoryItem = styled.div`
   font-size: 1rem;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+
+  margin: 0.625rem 0.625rem 0.625rem 0;
+  padding-left: 0.625rem;
+
+  cursor: pointer;
 `;
 
 export default SideBar;
