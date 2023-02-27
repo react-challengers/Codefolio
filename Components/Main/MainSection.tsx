@@ -148,7 +148,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
               date={getPostDate(post.created_at)}
               comments={post.comment_count}
               likes={post.like_count}
-              field={`${post.large_category} | ${post.sub_category}`}
+              field={`${post.sub_category}`}
               userId={post.user_id}
             />
           </CardContainer>
