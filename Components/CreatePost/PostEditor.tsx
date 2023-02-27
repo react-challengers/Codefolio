@@ -6,11 +6,16 @@ import supabase from "@/lib/supabase";
 import imageCompression from "browser-image-compression";
 import { useRecoilState } from "recoil";
 import { postContent as recoilPostContent } from "@/lib/recoil";
+import dynamic from "next/dynamic";
 
 /**
  * @TODO storage 삭제 구현 필요
  * @TODO uuid flag 꽃아야 함 >> 게시와 임시저장의 용도로 분류
  */
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
+  ssr: false,
+});
 
 const PostEditor = () => {
   const [postContent, setPostContent] = useRecoilState(recoilPostContent);
@@ -32,7 +37,7 @@ const PostEditor = () => {
       const imgPath = crypto.randomUUID();
       await supabase.storage.from("post-image").upload(imgPath, blob);
 
-      // 이미지 올리기
+      // 이미지 url 가져오기
       const urlResult = await supabase.storage
         .from("post-image")
         .getPublicUrl(imgPath);
@@ -65,7 +70,9 @@ const PostEditor = () => {
   //   setPostContent(editorText);
   // };
 
-  return <div>에디터</div>;
+  return (
+    <MDEditor value={postContent} onChange={setPostContent} height={600} />
+  );
 };
 
 export default PostEditor;
