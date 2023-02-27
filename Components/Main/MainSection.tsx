@@ -48,7 +48,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
       );
     }
     return publicPosts;
-  }, [selectedSubCategory]);
+  }, [publicPosts, selectedSubCategory]);
 
   // 포스트 정렬
   const sortPosts = useMemo(() => {
