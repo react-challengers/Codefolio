@@ -26,7 +26,7 @@ const useUserProfile = () => {
     phone: data?.phone ?? "01000000000",
     contact_email: data?.contact_email ?? "",
     profile_image: data?.profile_image ?? "",
-    background_color: data?.background_color ?? "#ffffff",
+    background_image: data?.background_image ?? "#ffffff",
     birth_year: data?.birth_year ?? new Date().getFullYear(),
     self_profile: data?.self_profile ?? "",
     gender: data?.gender ?? "선택안함",

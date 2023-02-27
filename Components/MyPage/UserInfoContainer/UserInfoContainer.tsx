@@ -21,7 +21,8 @@ const UserInfoContainer = () => {
     userName: profileData.user_name ?? "",
     contactEmail: profileData.contact_email ?? "",
     selfProfile: profileData.self_profile ?? "",
-    backgroundColor: profileData.background_color ?? "",
+    // 여기
+    // backgroundColor: profileData.background_color ?? "",
   });
 
   const handleIsEditing = async () => {
@@ -33,7 +34,8 @@ const UserInfoContainer = () => {
         user_name: inputValues.userName,
         contact_email: inputValues.contactEmail,
         self_profile: inputValues.selfProfile,
-        background_color: inputValues.backgroundColor,
+        // 여기
+        background_image: "",
       };
       updateProfileData(newProfileData);
     } else {
@@ -74,6 +76,7 @@ const UserInfoContainer = () => {
 
   return (
     <InfoContainer>
+      {/* 여기 */}
       <Banner userBackground={inputValues?.backgroundColor} />
       <UserInfoWrapper>
         <ProfileImageWrapper>
@@ -128,6 +131,7 @@ const UserInfoContainer = () => {
                 <UserBackgroundColorPicker
                   id="background-color-picker"
                   type="color"
+                  // 여기
                   onChange={handleInputChange("backgroundColor")}
                 />
               </ImgLabel>
