@@ -63,6 +63,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
       onSuccess: async () => {
         await supabase.rpc("decrement_comment", { row_id: comment.post_id });
         queryClient.invalidateQueries(["getComment"]);
+        queryClient.invalidateQueries(["GET_POSTS"]);
       },
     }
   );
