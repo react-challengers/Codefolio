@@ -1,4 +1,5 @@
 import supabase from "@/lib/supabase";
+import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -23,6 +24,7 @@ const DetailHeader = ({
   currentUserId,
 }: DetailHeaderProps) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const {
     query: { id: postId }, // c078f3bf-4e86-44a2-a672-583f36c1aa8f
   } = useRouter();
@@ -42,6 +44,7 @@ const DetailHeader = ({
       .insert({ post_id: postId, user_id: currentUserId });
     if (!error) {
       setIsBookmark(true);
+      queryClient.invalidateQueries(["GET_POSTS"]);
     }
   };
 
@@ -53,6 +56,7 @@ const DetailHeader = ({
       .eq("post_id", postId);
     if (!error) {
       setIsBookmark(false);
+      queryClient.invalidateQueries(["GET_POSTS"]);
     }
   };
 
@@ -63,6 +67,7 @@ const DetailHeader = ({
     if (!error) {
       await supabase.rpc("increment_like", { row_id: postId });
       setIsLike(true);
+      queryClient.invalidateQueries(["GET_POSTS"]);
     }
   };
 
@@ -75,6 +80,7 @@ const DetailHeader = ({
     if (!error) {
       await supabase.rpc("decrement_like", { row_id: postId });
       setIsLike(false);
+      queryClient.invalidateQueries(["GET_POSTS"]);
     }
   };
 
