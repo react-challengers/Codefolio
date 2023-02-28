@@ -1,28 +1,28 @@
-import supabase from "@/lib/supabase";
 import Image, { StaticImageData } from "next/image";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import { v4 as uuidv4 } from "uuid";
-import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import { useUserProfile } from "@/hooks/query";
 import { useInput } from "@/hooks/common";
 import { ProfileImage } from "@/Components/Common";
 import { ClimbingBoxLoader } from "react-spinners";
 import Banner from "./Banner";
+import useUserImage from "./useUserImage";
 
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한하기
  */
-
 const UserInfoContainer = () => {
   const { profileData, updateProfileData } = useUserProfile();
   const [isEditing, setIsEditing] = useState(false);
+
+  const { handleImage: handleProfileImage } = useUserImage("profile_image");
+  const { handleImage: handleBackgroundImage } =
+    useUserImage("background_image");
 
   const { inputValues, handleInputChange } = useInput({
     userName: profileData.user_name ?? "",
     contactEmail: profileData.contact_email ?? "",
     selfProfile: profileData.self_profile ?? "",
-    backgroundColor: profileData.background_color ?? "",
   });
 
   const handleIsEditing = async () => {
@@ -34,43 +34,11 @@ const UserInfoContainer = () => {
         user_name: inputValues.userName,
         contact_email: inputValues.contactEmail,
         self_profile: inputValues.selfProfile,
-        background_color: inputValues.backgroundColor,
       };
       updateProfileData(newProfileData);
     } else {
       setIsEditing(true);
     }
-  };
-
-  const uploadImage = async (file: File) => {
-    const imgPath = uuidv4();
-    try {
-      await supabase.storage.from("post-image").upload(imgPath, file);
-      const { data } = await supabase.storage
-        .from("post-image")
-        .getPublicUrl(imgPath);
-      return data.publicUrl;
-    } catch (error) {
-      return "";
-    }
-  };
-
-  const handleProfileImage = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files;
-    if (!file) return;
-    const reader = new FileReader();
-    reader.readAsDataURL(file[0]);
-    reader.onload = async (uploadedBlob) => {
-      const imgDataUrl = uploadedBlob.target?.result; // input의 파일을 base64로 받습니다.
-      if (typeof imgDataUrl !== "string") return;
-      const imgFile = await convertEase64ToFile(imgDataUrl);
-      const publicImageURL = await uploadImage(imgFile);
-      if (!publicImageURL) return;
-      await supabase
-        .from("user_profile")
-        .update({ profile_image: publicImageURL })
-        .eq("id", profileData.id);
-    };
   };
 
   if (!profileData.id || !profileData.user_id) {
@@ -83,7 +51,7 @@ const UserInfoContainer = () => {
 
   return (
     <InfoContainer>
-      <Banner userBackground={inputValues?.backgroundColor} />
+      <Banner src={profileData.background_image} />
       <UserInfoWrapper>
         <ProfileImageWrapper>
           <label htmlFor="user_profile">
@@ -134,10 +102,10 @@ const UserInfoContainer = () => {
                   width={36}
                   height={36}
                 />
-                <UserBackgroundColorPicker
+                <UserBackgroundImagePicker
                   id="background-color-picker"
-                  type="color"
-                  onChange={handleInputChange("backgroundColor")}
+                  type="file"
+                  onChange={handleBackgroundImage}
                 />
               </ImgLabel>
             </InputWrapper>
@@ -268,7 +236,7 @@ const ImgIcon = styled(Image)<StaticImageData>`
   cursor: pointer;
 `;
 
-const UserBackgroundColorPicker = styled.input`
+const UserBackgroundImagePicker = styled.input`
   opacity: 0;
   width: 0;
   height: 0;

@@ -11,6 +11,7 @@ import imageCompression from "browser-image-compression";
 import type { MDEditorProps } from "@uiw/react-md-editor";
 import { NextPage } from "next";
 import * as commands from "@uiw/react-md-editor/lib/commands";
+import uploadImage from "@/utils/commons/uploadImage";
 
 /**
  * @TODO supabase api utill함수로 사용하도록 변경 필요
