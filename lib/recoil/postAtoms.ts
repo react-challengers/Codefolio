@@ -1,5 +1,11 @@
 import getYYYYMM from "@/utils/commons/getYYYYMM";
+import { v4 as uuidv4 } from "uuid";
 import { atom } from "recoil";
+
+const postId = atom<string>({
+  key: "postId",
+  default: `${uuidv4()}`,
+});
 
 const postTitle = atom<string>({
   key: "postTitle",
@@ -59,10 +65,11 @@ const postPublic = atom<boolean>({
 
 const postContent = atom<string>({
   key: "postContent",
-  default: "프로젝트 내용을 입력해주세요.",
+  default: "",
 });
 
 export {
+  postId,
   postTitle,
   postSubTitle,
   postTitleBackgroundColor,
