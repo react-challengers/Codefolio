@@ -41,24 +41,14 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   // 카테고리 선택 시, 해당 카테고리에 맞는 포스트만 보여주기
   const filterPosts = useMemo(() => {
     if (publicPosts === undefined) return [];
-    if (
-      selectedLargeCategory.length !== 0 &&
-      selectedSubCategory.length === 0
-    ) {
-      return publicPosts.filter((post) =>
-        selectedLargeCategory.includes(post.large_category)
-      );
-    }
-    if (
-      selectedLargeCategory.length !== 0 &&
-      selectedSubCategory.length !== 0
-    ) {
+
+    if (selectedSubCategory.length !== 0) {
       return publicPosts.filter((post) =>
         selectedSubCategory.includes(post.sub_category)
       );
     }
     return publicPosts;
-  }, [publicPosts, selectedLargeCategory, selectedSubCategory]);
+  }, [publicPosts, selectedSubCategory]);
 
   // 포스트 정렬
   const sortPosts = useMemo(() => {
@@ -109,14 +99,12 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   return (
     <HomeMainContainer>
       <TagContainer>
-        {selectedLargeCategory.length !== 0 &&
-          selectedSubCategory.length !== 0 && (
-            <Tags tagItems={selectedSubCategory} size="md" />
-          )}
-        {selectedLargeCategory.length !== 0 &&
-          selectedSubCategory.length === 0 && (
-            <Tags tagItems={selectedLargeCategory} size="lg" />
-          )}
+        {selectedSubCategory.length !== 0 && (
+          <Tags tagItems={selectedSubCategory} size="md" />
+        )}
+        {selectedSubCategory.length === 0 && (
+          <Tags tagItems={selectedLargeCategory} size="lg" />
+        )}
       </TagContainer>
       <HomeDropDownContainer>
         <HomeDropDownButton
@@ -160,7 +148,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
               date={getPostDate(post.created_at)}
               comments={post.comment_count}
               likes={post.like_count}
-              field={`${post.large_category} | ${post.sub_category}`}
+              field={`${post.sub_category}`}
               userId={post.user_id}
             />
           </CardContainer>

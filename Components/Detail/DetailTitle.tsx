@@ -4,7 +4,6 @@ interface DetailTitleProps {
   title: string;
   subtitle: string;
   backgroundColor: string;
-  field: string;
   subCategory: string;
   titleColor: string;
 }
@@ -13,15 +12,12 @@ const DetailTitle = ({
   title,
   subtitle,
   backgroundColor,
-  field,
   subCategory,
   titleColor,
 }: DetailTitleProps) => {
   return (
     <DetailTitleContainer backgroundColor={backgroundColor}>
-      <DetailTitleHeader>
-        {field} {">"} {subCategory}
-      </DetailTitleHeader>
+      <DetailTitleHeader>{subCategory}</DetailTitleHeader>
       <DetailTitleText titleColor={titleColor}>
         <h1>{title}</h1>
         <h3>{subtitle}</h3>
