@@ -1,15 +1,17 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
-import React, { useCallback } from "react";
+import { useCallback } from "react";
+import dynamic from "next/dynamic";
 import supabase from "@/lib/supabase";
+import { v4 as uuidv4 } from "uuid";
 import { useRecoilState } from "recoil";
 import { postContent as recoilPostContent, postId } from "@/lib/recoil";
-import dynamic from "next/dynamic";
 import imageCompression from "browser-image-compression";
 
 /**
  * @TODO postId 에러 해결 필요
+ * @TODO 이미지 업로드시 링크 열리는 문제 해결 필요
  * @TODO 이미지 아이콘 클릭시 이미지 업로드 구현 필요
  * @TODO storage 삭제 구현 필요
  */
@@ -29,17 +31,19 @@ const PostEditor = () => {
       const files: File[] = []; // 드래그 앤 드랍으로 가져온 파일들
       for (let index = 0; index < dataTransfer.items.length; index += 1) {
         const file = dataTransfer.files.item(index);
-        if (file) {
-          const compressedFile = await compressImg(file);
-          if (!compressedFile) return;
-          files.push(compressedFile); // 배열에 파일 추가
-        }
+        if (!file) return;
+        console.log(file, "파일");
+        files.push(file);
       }
-      const fileId = crypto.randomUUID(); // 파일 id 생성
+      const fileId = uuidv4();
       files.map(async (file) => {
+        const compressedFile = await compressImg(file);
+        if (!compressedFile) return;
+        console.log(compressedFile, "압축된 파일");
+
         const { data: uploadImg } = await supabase.storage
           .from("post-image")
-          .upload(`${isPostId}/${fileId}`, file);
+          .upload(`${isPostId}/${fileId}`, compressedFile);
         if (!uploadImg) return;
 
         const { data: insertedMarkdown } = supabase.storage
@@ -86,7 +90,6 @@ const PostEditor = () => {
 
     textarea.value = sentence;
     textarea.selectionEnd = end + intsertString.length;
-
     return sentence;
   };
 
@@ -95,7 +98,6 @@ const PostEditor = () => {
     <div>
       <MDEditor
         value={postContent}
-        // onChange={setPostContent} // 에러 발생
         onChange={(value) => {
           setPostContent(value || "");
         }}
