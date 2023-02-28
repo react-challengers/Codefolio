@@ -14,16 +14,14 @@ import {
   userLoginCheck,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
-import { Editor } from "@toast-ui/react-editor";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const EditPostPage: NextPage = () => {
-  const editorRef = useRef<Editor>(null);
   const router = useRouter();
   const [post, setPost] = useState<PostType | null>(null);
   const isLogin = useRecoilValue(userLoginCheck);
@@ -98,7 +96,7 @@ const EditPostPage: NextPage = () => {
   return (
     <MainWrapper>
       <Post />
-      <PostEditor editorRef={editorRef} />
+      <PostEditor />
     </MainWrapper>
   );
 };

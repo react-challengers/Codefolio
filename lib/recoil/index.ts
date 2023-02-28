@@ -1,6 +1,7 @@
 import { largeCategoryState, subCategoryState } from "@/lib/recoil/atoms";
 
 import {
+  postId,
   postTitle,
   postSubTitle,
   postTitleBackgroundColor,
@@ -23,7 +24,7 @@ import {
   myPageSelfProfile,
   myPagePhonNumber,
   myPageUserId,
-  myPageBackgroundColor,
+  myPageBackgroundImage,
   myPageProfileImage,
   myPageGender,
   myPageBirthYear,
@@ -40,6 +41,7 @@ export {
   largeCategoryState,
   subCategoryState,
   // post
+  postId,
   postTitle,
   postSubTitle,
   postTitleBackgroundColor,
@@ -59,7 +61,7 @@ export {
   myPageContactEmail,
   myPagePhonNumber,
   myPageUserId,
-  myPageBackgroundColor,
+  myPageBackgroundImage,
   myPageProfileImage,
   myPageGender,
   myPageBirthYear,
