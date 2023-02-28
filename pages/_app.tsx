@@ -11,6 +11,7 @@ import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Head from "next/head";
+// import { init } from "@amplitude/analytics-browser";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,12 @@ const App = ({
   initialSession: Session;
 }>) => {
   const [supabase] = useState(() => createBrowserSupabaseClient());
+
+  // Amplitude 실행 시 주석을 풀고 사용하세요.
+  // useEffect(() => {
+  //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  //   init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!, "user@amplitude.com");
+  // }, []);
 
   return (
     <>
