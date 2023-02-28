@@ -9,6 +9,8 @@ import { ValidateText, AuthInput } from "@/Components/Common/Auth";
 import { useSetRecoilState } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
 import { LongButton, Modal } from "@/Components/Common";
+import { useQuery } from "@tanstack/react-query";
+import { getCurrentUser } from "@/utils/APIs/supabase";
 
 // import { kakaoInit } from "@/utils/APIs/socialLogin";
 
@@ -32,17 +34,14 @@ const Login: NextPage = () => {
 
   const setIsLogin = useSetRecoilState(userLoginCheck);
 
-  useEffect(() => {
-    // 로그인 상태 확인
-    const LoginState = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session !== null) {
+  useQuery(["currentUser"], {
+    queryFn: getCurrentUser,
+    onSuccess({ data: { user } }) {
+      if (user) {
         router.push("/");
       }
-    };
-
-    LoginState();
-  }, [router]);
+    },
+  });
 
   // const kakaoLogin = async () => {
   //   // 카카오 초기화

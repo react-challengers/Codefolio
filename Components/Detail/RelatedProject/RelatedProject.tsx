@@ -2,13 +2,17 @@ import styled from "styled-components";
 import SwiperCore, { Navigation, Scrollbar } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.min.css";
-import supabase from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { useRouter } from "next/router";
+import { getPostsByCategory } from "@/utils/APIs/supabase";
 import { CardItem } from "@/Components/Common";
 import SwiperPrevButton from "./SwiperPrevButton";
 import SwiperNextButton from "./SwiperNextButton";
+
+interface RelatedProjectProps {
+  category: string;
+}
 
 /**
  * @TODO onReachEnd 이벤트를 사용하여
@@ -16,31 +20,23 @@ import SwiperNextButton from "./SwiperNextButton";
  * @TODO 디테일 페이지 서버통신 이후 연관 프로젝트를 불러오는 로직을 구현해야한다.
  */
 
-const RelatedProject = () => {
+const RelatedProject = ({ category }: RelatedProjectProps) => {
   SwiperCore.use([Navigation, Scrollbar]);
 
   const router = useRouter();
 
-  const getRelatedProjects = async () => {
-    const res = await supabase.from("post").select("*");
-
-    if (res.error) {
-      throw new Error(res.error.message);
-    }
-
-    return res.data;
-  };
-
-  const { data: relatedProjectsData } = useQuery<PostType[]>(
-    ["GET_RELATED_PROJECTS"],
+  const { data: relatedProjectsData } = useQuery(
+    ["GET_RELATED_PROJECTS", category],
+    () => getPostsByCategory(category),
     {
-      queryFn: getRelatedProjects,
+      staleTime: 1000 * 60 * 5,
     }
   );
 
   const onClickCardItem = (id: string) => {
     router.push(`/detail/${id}`);
   };
+
   return (
     <RelatedProjectContainer>
       <RelatedProjectTitle>연관 프로젝트</RelatedProjectTitle>
@@ -58,28 +54,29 @@ const RelatedProject = () => {
             // onReachEnd={() => console.log("end")}
           >
             <SwiperPrevButton />
-            {relatedProjectsData?.map((post) => (
-              <SwiperSlide key={post.id}>
-                <CardItemContainer
-                  onClick={() => {
-                    onClickCardItem(post.id);
-                  }}
-                >
-                  <CardItem
-                    imageSrc={findThumbnailInContent(post.content)}
-                    imageAlt={`${post.title}썸네일`}
-                    title={post.title}
-                    subTitle={post.sub_title}
-                    tagItems={post.tag}
-                    date={getPostDate(post.created_at)}
-                    comments={post.comment_count}
-                    likes={post.like_count}
-                    field={`${post.large_category} | ${post.sub_category}`}
-                    userId={post.user_id}
-                  />
-                </CardItemContainer>
-              </SwiperSlide>
-            ))}
+            {relatedProjectsData?.data &&
+              relatedProjectsData.data.map((post) => (
+                <SwiperSlide key={post.id}>
+                  <CardItemContainer
+                    onClick={() => {
+                      onClickCardItem(post.id);
+                    }}
+                  >
+                    <CardItem
+                      imageSrc={findThumbnailInContent(post.content)}
+                      imageAlt={`${post.title}썸네일`}
+                      title={post.title}
+                      subTitle={post.sub_title}
+                      tagItems={post.tag}
+                      date={getPostDate(post.created_at)}
+                      comments={post.comment_count}
+                      likes={post.like_count}
+                      field={`${post.large_category} | ${post.sub_category}`}
+                      userId={post.user_id}
+                    />
+                  </CardItemContainer>
+                </SwiperSlide>
+              ))}
             <SwiperNextButton />
           </Swiper>
         </SwiperWrapper>

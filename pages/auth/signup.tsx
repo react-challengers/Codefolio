@@ -13,6 +13,8 @@ import {
 } from "@/utils/commons/authUtils";
 import { useSetRecoilState } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
+import { useQuery } from "@tanstack/react-query";
+import { getCurrentUser } from "@/utils/APIs/supabase";
 
 /**
  * 현재 가장 기본적 유효성검사, "빈 인풋 체크"와 비밀번호 확인 부분만 추가되어 있습니다.
@@ -38,16 +40,14 @@ const SignUpPage: NextPage = () => {
   const [modalTitle, setModalTitle] = useState<string | null>("");
   const [modalContent, setModalContent] = useState<string | null>("");
 
-  useEffect(() => {
-    // 로그인 상태 확인
-    const LoginState = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session !== null) {
+  useQuery(["currentUser"], {
+    queryFn: getCurrentUser,
+    onSuccess({ data: { user } }) {
+      if (user) {
         router.push("/");
       }
-    };
-    LoginState();
-  }, [router]);
+    },
+  });
 
   const signupWithEmail = async () => {
     if (!userName || !email || !password || !passwordCheck) {
