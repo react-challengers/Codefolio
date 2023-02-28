@@ -41,12 +41,6 @@ const DetailHeader = ({
 
   const showMoreModal = () => setShowMore((prev) => !prev);
 
-  const isAnonymous = () => {
-    if (!currentUserId) {
-      router.push("/auth/login");
-    }
-  };
-
   const { mutate: addBookmarkMutate } = useMutation(addBookmark, {
     onMutate: async (newBookmarkItem) => {
       await queryClient.cancelQueries(["getBookmark", newBookmarkItem.postId]);
@@ -72,8 +66,6 @@ const DetailHeader = ({
     },
     onSuccess: async () => {
       setIsBookmark(true);
-      // 구현 후 주석 해제
-      // await incrementBookmark(postId as string);
     },
   });
 
@@ -105,8 +97,6 @@ const DetailHeader = ({
     },
     onSuccess: async () => {
       setIsBookmark(false);
-      // 구현 후 주석 해제
-      // await decrementBookmark(postId as string);
     },
   });
 
@@ -135,8 +125,6 @@ const DetailHeader = ({
     },
     onSuccess: async () => {
       setIsLike(true);
-      await incrementLike(postId as string);
-      queryClient.invalidateQueries(["GET_POSTS"]);
     },
   });
 
@@ -162,27 +150,37 @@ const DetailHeader = ({
     },
     onSuccess: async () => {
       setIsLike(false);
-      await decrementLike(postId as string);
-      queryClient.invalidateQueries(["GET_POSTS"]);
     },
   });
 
   const clickBookmarkButton = async () => {
-    isAnonymous();
+    if (!currentUserId) {
+      return router.push("/auth/login");
+    }
     if (isBookmark) {
       deleteBookmarkMutate({ postId: postId as string, currentUserId });
+      // 구현 후 주석 해제
+      // await decrementBookmark(postId as string);
     } else {
       addBookmarkMutate({ postId: postId as string, currentUserId });
+      // 구현 후 주석 해제
+      // await incrementBookmark(postId as string);
     }
+    return queryClient.invalidateQueries(["GET_POSTS"]);
   };
 
   const clickLikeButton = async () => {
-    isAnonymous();
+    if (!currentUserId) {
+      return router.push("/auth/login");
+    }
     if (isLike) {
       deleteLikeMutate({ postId: postId as string, currentUserId });
+      await decrementLike(postId as string);
     } else {
       addLikeMutate({ postId: postId as string, currentUserId });
+      await incrementLike(postId as string);
     }
+    return queryClient.invalidateQueries(["GET_POSTS"]);
   };
 
   return (

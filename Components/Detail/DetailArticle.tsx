@@ -131,6 +131,9 @@ const DetailArticle = () => {
         setCurrentUserId(user.id);
       }
     },
+    onError(error) {
+      setCurrentUserId("");
+    },
   });
 
   // 이미지로 변경 후 삭제
@@ -153,7 +156,7 @@ const DetailArticle = () => {
         }
       },
       onError(error) {
-        console.log(error);
+        setIsBookmark(false);
       },
       enabled: !!currentUserId && !!postId,
     }
@@ -170,19 +173,13 @@ const DetailArticle = () => {
         }
       },
       onError(error) {
-        console.log(error);
+        setIsLike(false);
       },
       enabled: !!currentUserId && !!postId,
     }
   );
 
-  if (
-    isLoading ||
-    isAuthorLoading ||
-    currentUserLoading ||
-    isBookmarkLoading ||
-    isLikeLoading
-  )
+  if (isLoading || isAuthorLoading || currentUserLoading)
     return <Loader color="#fff" size={20} speedMultiplier={2} />;
 
   return (
