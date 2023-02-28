@@ -32,14 +32,12 @@ const PostEditor = () => {
       for (let index = 0; index < dataTransfer.items.length; index += 1) {
         const file = dataTransfer.files.item(index);
         if (!file) return;
-        console.log(file, "파일");
         files.push(file);
       }
       const fileId = uuidv4();
       files.map(async (file) => {
         const compressedFile = await compressImg(file);
         if (!compressedFile) return;
-        console.log(compressedFile, "압축된 파일");
 
         const { data: uploadImg } = await supabase.storage
           .from("post-image")
