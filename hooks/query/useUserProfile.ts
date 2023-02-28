@@ -7,9 +7,7 @@ const USER_PROFILE = "user_profile";
 /**
  * user_profile 테이블에 관한 query hook입니다.
  * @see https://tanstack.com/query/v5/docs/react/guides/optimistic-updates
- * @TODO updateCache함수 구현
- * @TODO 최초 데이터를 유출하지 말고 갱신된 쿼리캐시를 유출하기
- * @TODO 변수명 변경: const { profileCache, setProfileCache, updateProfileData } = useUserProfile();
+ * @TODO 최초 데이터를 유출하지 말고 갱신된 쿼리캐시를 리코일로 유출하기
  */
 
 const useUserProfile = () => {

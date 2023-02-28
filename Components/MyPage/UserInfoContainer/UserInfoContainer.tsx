@@ -4,12 +4,12 @@ import styled from "styled-components";
 import { useUserProfile } from "@/hooks/query";
 import { useInput } from "@/hooks/common";
 import { ProfileImage } from "@/Components/Common";
+import { ClimbingBoxLoader } from "react-spinners";
 import Banner from "./Banner";
 import useUserImage from "./useUserImage";
 
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한하기
- * @TODO 프로필 데이터 react-query를 캐싱하기
  */
 const UserInfoContainer = () => {
   const { profileData, updateProfileData } = useUserProfile();
@@ -40,6 +40,14 @@ const UserInfoContainer = () => {
       setIsEditing(true);
     }
   };
+
+  if (!profileData.id || !profileData.user_id) {
+    return (
+      <InfoContainer>
+        <Loader color="#3B89E3" size={20} speedMultiplier={2} />
+      </InfoContainer>
+    );
+  }
 
   return (
     <InfoContainer>
@@ -103,10 +111,10 @@ const UserInfoContainer = () => {
             </InputWrapper>
           ) : (
             <>
-              <UserNameWrapper>{inputValues?.userName}</UserNameWrapper>
-              <EmailWrapper>{inputValues?.contactEmail}</EmailWrapper>
+              <UserNameWrapper>{profileData.user_name}</UserNameWrapper>
+              <EmailWrapper>{profileData.contact_email}</EmailWrapper>
               <SelfProfileWrapper>
-                {inputValues?.selfProfile}
+                {profileData.self_profile}
               </SelfProfileWrapper>
             </>
           )}
@@ -232,6 +240,13 @@ const UserBackgroundImagePicker = styled.input`
   opacity: 0;
   width: 0;
   height: 0;
+`;
+
+const Loader = styled(ClimbingBoxLoader)`
+  width: 7.5rem !important;
+  height: 7.5rem !important;
+  padding: 8.6875rem;
+  margin: 2.5rem 0 5rem;
 `;
 
 export default UserInfoContainer;

@@ -90,6 +90,9 @@ video {
 body {
   overflow-x: hidden;
 }
+html {
+  overflow-y: scroll;
+}
 /* HTML5 display-role reset for older browsers */
 article,
 aside,
