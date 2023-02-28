@@ -5,7 +5,7 @@ import { useCallback } from "react";
 import dynamic from "next/dynamic";
 import supabase from "@/lib/supabase";
 import { v4 as uuidv4 } from "uuid";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { postContent as recoilPostContent, postId } from "@/lib/recoil";
 import imageCompression from "browser-image-compression";
 import type { MDEditorProps } from "@uiw/react-md-editor";
@@ -13,6 +13,7 @@ import { NextPage } from "next";
 import * as commands from "@uiw/react-md-editor/lib/commands";
 
 /**
+ * @TODO supabase api utill함수로 사용하도록 변경 필요
  * @TODO 이미지 업로드시 링크 열리는 문제 해결 필요
  * @TODO storage 삭제 구현 필요
  */
@@ -22,7 +23,7 @@ const MDEditor = dynamic<MDEditorProps>(() => import("@uiw/react-md-editor"), {
 });
 
 const PostEditor: NextPage = () => {
-  const [isPostId] = useRecoilState(postId);
+  const [isPostId] = useRecoilValue(postId);
   const [postContent, setPostContent] = useRecoilState(recoilPostContent);
 
   const onImagePasted = useCallback(
