@@ -1,5 +1,3 @@
-import supabase from "@/lib/supabase";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ProfileImage, Tags } from "@/Components/Common";
 import DefaultBox from "./DetailBox";
@@ -12,7 +10,8 @@ interface DetailSideProps {
   tag: string[];
   skills: string[];
   members: string[];
-  userId: string;
+  authorName: string;
+  authorProfileImage: string;
 }
 
 const DetailSide = ({
@@ -21,32 +20,9 @@ const DetailSide = ({
   tag,
   skills,
   members,
-  userId,
+  authorName,
+  authorProfileImage,
 }: DetailSideProps) => {
-  const [author, setAuthor] = useState("");
-  const [authorProfileImage, setAuthorProfileImage] = useState("");
-
-  const getAuthor = async () => {
-    const { data, error } = await supabase
-      .from("user_profile")
-      .select()
-      .eq("user_id", userId)
-      .single();
-
-    if (error) {
-      console.log(error);
-      return;
-    }
-
-    setAuthor(data?.user_name);
-    setAuthorProfileImage(data?.profile_image);
-  };
-
-  useEffect(() => {
-    if (!userId) return;
-    getAuthor();
-  }, [userId]);
-
   return (
     <SideContainer>
       <DetailSideContainer>
@@ -77,7 +53,7 @@ const DetailSide = ({
               alt="프로필 사진"
               page="detailPage"
             />
-            <Name>{author}</Name>
+            <Name>{authorName}</Name>
           </ProfileWrapper>
           <ButtonsWrapper>
             <DefaultBox>{subCategory}</DefaultBox>

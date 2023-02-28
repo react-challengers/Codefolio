@@ -38,6 +38,7 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
       onSuccess: async () => {
         await supabase.rpc("increment_comment", { row_id: postId });
         queryClient.invalidateQueries(["getComment"]);
+        queryClient.invalidateQueries(["GET_POSTS"]);
       },
     }
   );
