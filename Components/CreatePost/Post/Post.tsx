@@ -16,6 +16,7 @@ import {
   postTags,
   postTitle,
   postTitleBackgroundColor,
+  postId,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import { useState, useEffect } from "react";
@@ -29,6 +30,7 @@ import ProjectInfo from "./ProjectInfo";
  * @TODO user_id 리코일로 관리
  */
 const Post: NextPage = () => {
+  const [isPostId] = useRecoilState(postId);
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
   const [titleBackgroundColor, setTitleBackgroundColor] = useRecoilState(
@@ -54,6 +56,7 @@ const Post: NextPage = () => {
   const router = useRouter();
 
   const newPostRow = {
+    id: isPostId,
     title,
     sub_title: subTitle,
     title_background_color: titleBackgroundColor,
@@ -79,15 +82,15 @@ const Post: NextPage = () => {
     LoginState();
   }, []);
 
-  const [isSaved, setIsSaved] = useState(false);
+  // const [isSaved, setIsSaved] = useState(false);
 
-  const onSave = () => {
-    // 저장 버튼
-    setIsSaved(true);
-    setTimeout(() => {
-      setIsSaved(false);
-    }, 2000);
-  };
+  // const onSave = () => {
+  //   // 저장 버튼
+  //   setIsSaved(true);
+  //   setTimeout(() => {
+  //     setIsSaved(false);
+  //   }, 2000);
+  // };
 
   const validatePost = () => {
     // 유효성 검사
@@ -162,7 +165,7 @@ const Post: NextPage = () => {
     setTag([]);
     setIsPublic(true);
     setMembers([]);
-    setContent("프로젝트 내용을 입력해주세요.");
+    setContent("");
     setPostLargeCategory("");
     setPostSubCategory("");
   };
@@ -213,7 +216,7 @@ const Post: NextPage = () => {
       )}
       <section>
         <PostHeader>
-          <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert>
+          {/* <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert> */}
           {/* <DefaultButton text="저장" type="outline" size="s" onClick={onSave} /> */}
           <DefaultButton text="게시" type="full" size="s" onClick={onPost} />
         </PostHeader>
@@ -232,13 +235,13 @@ const PostHeader = styled.div`
   gap: 1.25rem;
 `;
 
-interface SaveAlertProps {
-  isSaved: boolean;
-}
+// interface SaveAlertProps {
+//   isSaved: boolean;
+// }
 
-const SaveAlert = styled.span<SaveAlertProps>`
-  opacity: ${({ isSaved }) => (isSaved ? 1 : 0)};
-  transition: all 0.5s ease-in-out;
-`;
+// const SaveAlert = styled.span<SaveAlertProps>`
+//   opacity: ${({ isSaved }) => (isSaved ? 1 : 0)};
+//   transition: all 0.5s ease-in-out;
+// `;
 
 export default Post;

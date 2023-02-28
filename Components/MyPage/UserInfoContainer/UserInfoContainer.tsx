@@ -2,15 +2,16 @@ import supabase from "@/lib/supabase";
 import Image, { StaticImageData } from "next/image";
 import { ChangeEvent, useState } from "react";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import { useUserProfile } from "@/hooks/query";
 import { useInput } from "@/hooks/common";
 import { ProfileImage } from "@/Components/Common";
+import { ClimbingBoxLoader } from "react-spinners";
 import Banner from "./Banner";
 
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한하기
- * @TODO 프로필 데이터 react-query를 캐싱하기
  */
 
 const UserInfoContainer = () => {
@@ -42,7 +43,7 @@ const UserInfoContainer = () => {
   };
 
   const uploadImage = async (file: File) => {
-    const imgPath = crypto.randomUUID();
+    const imgPath = uuidv4();
     try {
       await supabase.storage.from("post-image").upload(imgPath, file);
       const { data } = await supabase.storage
@@ -71,6 +72,14 @@ const UserInfoContainer = () => {
         .eq("id", profileData.id);
     };
   };
+
+  if (!profileData.id || !profileData.user_id) {
+    return (
+      <InfoContainer>
+        <Loader color="#3B89E3" size={20} speedMultiplier={2} />
+      </InfoContainer>
+    );
+  }
 
   return (
     <InfoContainer>
@@ -134,10 +143,10 @@ const UserInfoContainer = () => {
             </InputWrapper>
           ) : (
             <>
-              <UserNameWrapper>{inputValues?.userName}</UserNameWrapper>
-              <EmailWrapper>{inputValues?.contactEmail}</EmailWrapper>
+              <UserNameWrapper>{profileData.user_name}</UserNameWrapper>
+              <EmailWrapper>{profileData.contact_email}</EmailWrapper>
               <SelfProfileWrapper>
-                {inputValues?.selfProfile}
+                {profileData.self_profile}
               </SelfProfileWrapper>
             </>
           )}
@@ -263,6 +272,13 @@ const UserBackgroundColorPicker = styled.input`
   opacity: 0;
   width: 0;
   height: 0;
+`;
+
+const Loader = styled(ClimbingBoxLoader)`
+  width: 7.5rem !important;
+  height: 7.5rem !important;
+  padding: 8.6875rem;
+  margin: 2.5rem 0 5rem;
 `;
 
 export default UserInfoContainer;

@@ -1,6 +1,7 @@
 import { largeCategoryState, subCategoryState } from "@/lib/recoil/atoms";
 
 import {
+  postId,
   postTitle,
   postSubTitle,
   postTitleBackgroundColor,
@@ -40,6 +41,7 @@ export {
   largeCategoryState,
   subCategoryState,
   // post
+  postId,
   postTitle,
   postSubTitle,
   postTitleBackgroundColor,
