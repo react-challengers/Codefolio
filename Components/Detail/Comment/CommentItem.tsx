@@ -62,10 +62,8 @@ const CommentItem = ({ comment }: CommentItemProps) => {
     () => deleteComment(comment.id),
     {
       onSuccess: async () => {
-        await Promise.all([
-          decrementComment(comment.post_id),
-          queryClient.invalidateQueries(["getComment"]),
-        ]);
+        await decrementComment(comment.post_id);
+        queryClient.invalidateQueries(["getComment"]);
         queryClient.invalidateQueries(["GET_POSTS"]);
       },
     }
@@ -74,8 +72,8 @@ const CommentItem = ({ comment }: CommentItemProps) => {
   const { mutate: editCommentMutate } = useMutation(
     () => editComment(comment.id, editContent),
     {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(["getComment"]);
+      onSuccess: () => {
+        queryClient.invalidateQueries(["getComment"]);
       },
     }
   );

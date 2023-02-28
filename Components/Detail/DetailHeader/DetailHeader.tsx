@@ -136,7 +136,7 @@ const DetailHeader = ({
     onSuccess: async () => {
       setIsLike(true);
       await incrementLike(postId as string);
-      await queryClient.invalidateQueries(["GET_POSTS"]);
+      queryClient.invalidateQueries(["GET_POSTS"]);
     },
   });
 
@@ -163,7 +163,7 @@ const DetailHeader = ({
     onSuccess: async () => {
       setIsLike(false);
       await decrementLike(postId as string);
-      await queryClient.invalidateQueries(["GET_POSTS"]);
+      queryClient.invalidateQueries(["GET_POSTS"]);
     },
   });
 

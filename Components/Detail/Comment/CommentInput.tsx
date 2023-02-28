@@ -28,10 +28,8 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
     () => postComment(inputValues.comment, postId as string, userId as string),
     {
       onSuccess: async () => {
-        await Promise.all([
-          incrementComment(postId as string),
-          queryClient.invalidateQueries(["getComment"]),
-        ]);
+        await incrementComment(postId as string);
+        queryClient.invalidateQueries(["getComment"]);
         queryClient.invalidateQueries(["GET_POSTS"]);
       },
     }
