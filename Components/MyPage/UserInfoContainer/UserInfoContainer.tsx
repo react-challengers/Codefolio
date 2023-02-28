@@ -1,45 +1,29 @@
-import supabase from "@/lib/supabase";
 import Image, { StaticImageData } from "next/image";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import { useUserProfile } from "@/hooks/query";
 import { useInput } from "@/hooks/common";
 import { ProfileImage } from "@/Components/Common";
-import uploadImage from "@/utils/commons/uploadImage";
-import { useRecoilState } from "recoil";
-import { myPageBackgroundImage, myPageProfileImage } from "@/lib/recoil";
 import Banner from "./Banner";
+import useUserImage from "./useUserImage";
 
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한하기
  * @TODO 프로필 데이터 react-query를 캐싱하기
  */
-
 const UserInfoContainer = () => {
   const { profileData, updateProfileData } = useUserProfile();
   const [isEditing, setIsEditing] = useState(false);
-  const [profileImage, setProfileImage] = useRecoilState(myPageProfileImage);
-  const [profileBackgroundImage, setProfileBackgroundImage] = useRecoilState(
-    myPageBackgroundImage
-  );
+
+  const { handleImage: handleProfileImage } = useUserImage("profile_image");
+  const { handleImage: handleBackgroundImage } =
+    useUserImage("background_image");
 
   const { inputValues, handleInputChange } = useInput({
     userName: profileData.user_name ?? "",
     contactEmail: profileData.contact_email ?? "",
     selfProfile: profileData.self_profile ?? "",
   });
-
-  useEffect(() => {
-    if (!profileData.background_image || !profileData.profile_image) return;
-    setProfileImage(profileData.profile_image);
-    setProfileBackgroundImage(profileData.background_image);
-  }, [
-    profileData.profile_image,
-    profileData.background_image,
-    setProfileImage,
-    setProfileBackgroundImage,
-  ]);
 
   const handleIsEditing = async () => {
     // 갱신된 데이터 서버에 반영
@@ -57,49 +41,9 @@ const UserInfoContainer = () => {
     }
   };
 
-  const handleProfileImage = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files;
-    if (!file) return;
-    const reader = new FileReader();
-    reader.readAsDataURL(file[0]);
-    reader.onload = async (uploadedBlob) => {
-      const imgDataUrl = uploadedBlob.target?.result; // input의 파일을 base64로 받습니다.
-      if (typeof imgDataUrl !== "string") return;
-      const imgFile = await convertEase64ToFile(imgDataUrl);
-      const publicImageURL = await uploadImage(imgFile, "profile-image");
-      if (!publicImageURL) return;
-      // 리코일로 클라이언트 사이드 갱신
-      setProfileImage(publicImageURL);
-      await supabase
-        .from("user_profile")
-        .update({ profile_image: publicImageURL })
-        .eq("id", profileData.id);
-    };
-  };
-
-  const handleBackgroundImage = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files;
-    if (!file) return;
-    const reader = new FileReader();
-    reader.readAsDataURL(file[0]);
-    reader.onload = async (uploadedBlob) => {
-      const imageDataUrl = uploadedBlob.target?.result;
-      if (typeof imageDataUrl !== "string") return;
-      const imgFile = await convertEase64ToFile(imageDataUrl);
-      const publicImageURL = await uploadImage(imgFile, "background-image");
-      if (!publicImageURL) return;
-      // 리코일로 클라이언트 사이드 갱신
-      setProfileBackgroundImage(publicImageURL);
-      await supabase
-        .from("user_profile")
-        .update({ background_image: publicImageURL })
-        .eq("id", profileData.id);
-    };
-  };
-
   return (
     <InfoContainer>
-      <Banner src={profileBackgroundImage} />
+      <Banner src={profileData.background_image} />
       <UserInfoWrapper>
         <ProfileImageWrapper>
           <label htmlFor="user_profile">
@@ -110,7 +54,11 @@ const UserInfoContainer = () => {
               multiple={false}
               id="user_profile"
             />
-            <ProfileImage alt="유저 프로필" page="myPage" src={profileImage} />
+            <ProfileImage
+              alt="유저 프로필"
+              page="myPage"
+              src={profileData.profile_image}
+            />
           </label>
         </ProfileImageWrapper>
         <IconWrapper>
