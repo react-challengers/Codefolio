@@ -1,6 +1,11 @@
 const theme = {
   colors: {
-    primary6: "#3B89E3",
+    primary11: "#262626",
+    primary10: "#333333",
+    primary9: "#404040",
+    primary8: "#4D4D4D",
+    primary7: "#666666",
+    primary6: "#808080",
     primary5: "#5BE1E9",
     primary4: "#79E2E9",
     primary3: "#97E4E9",
