@@ -106,7 +106,7 @@ const SideBar = () => {
 const SideBarContainer = styled.aside`
   display: flex;
   flex-direction: column;
-  width: 18.75rem;
+  min-width: 18.75rem;
   height: auto;
   padding: 3.5rem 2.5rem 3.5rem 1.5rem;
 `;
