@@ -6,8 +6,8 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
  * @param author - author id
  * @returns author data
  * @example
- * const { isLoading: isAuthorLoading } = useQuery(["getAuthor", author], {
- *   queryFn: ({ queryKey }) => getAuthor(queryKey[1] as string),
+ * const { isLoading: isAuthorLoading } = useQuery(["getSingleUser", author], {
+ *   queryFn: ({ queryKey }) => getSingleUser(queryKey[1] as string),
  *   onSuccess(data) {
  *     if (data) {
  *       setAuthorName(data?.user_name);
@@ -20,7 +20,7 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
  *   enabled: !!author,
  * });
  */
-const getAuthor = async (author: string) => {
+const getSingleUser = async (author: string) => {
   const { data }: PostgrestSingleResponse<UserProfileType> = await supabase
     .from("user_profile")
     .select()
@@ -30,4 +30,4 @@ const getAuthor = async (author: string) => {
   return data;
 };
 
-export default getAuthor;
+export default getSingleUser;

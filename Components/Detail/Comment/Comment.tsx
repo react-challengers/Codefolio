@@ -1,34 +1,28 @@
 import styled from "styled-components";
-import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getCurrentUser } from "@/utils/APIs/supabase";
+import { useState } from "react";
 import CommentInput from "./CommentInput";
 import CommentList from "./CommentList";
 
 const Comment = () => {
   const router = useRouter();
   const postId = router.query.id;
-  const [currentUser, setCurrentUser] = useState(false);
   const [userId, setUserId] = useState<string | undefined>("");
 
-  useEffect(() => {
-    // 로그인 상태 확인
-    const LoginState = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        setCurrentUser(true);
-      } else {
-        setCurrentUser(false);
+  useQuery(["currentUser"], {
+    queryFn: getCurrentUser,
+    onSuccess({ data: { user } }) {
+      if (user) {
+        setUserId(user.id);
       }
-      setUserId(data.session?.user.id);
-    };
-
-    LoginState();
-  }, [router]);
+    },
+  });
 
   return (
     <CommentContainer>
-      {currentUser && <CommentInput postId={postId} userId={userId} />}
+      {userId && <CommentInput postId={postId} userId={userId} />}
       {postId && <CommentList postId={postId} />}
     </CommentContainer>
   );

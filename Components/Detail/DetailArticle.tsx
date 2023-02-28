@@ -7,7 +7,7 @@ import {
 } from "@/Components/Detail";
 import {
   getAllPosts,
-  getAuthor,
+  getSingleUser,
   getCurrentUser,
   getIsBookMark,
   getIsLike,
@@ -50,6 +50,7 @@ const DetailArticle = () => {
   const [currentUserId, setCurrentUserId] = useState("");
   const [isBookmark, setIsBookmark] = useState(false);
   const [isLike, setIsLike] = useState(false);
+  const [category, setCategory] = useState("");
 
   const { data: allPostsData, isLoading } = useQuery<PostType[]>(
     ["GET_POSTS"],
@@ -76,6 +77,7 @@ const DetailArticle = () => {
             });
             setContent(currentPost.content);
             setAuthor(currentPost.user_id);
+            setCategory(currentPost.sub_category);
           }
         }
       },
@@ -112,9 +114,9 @@ const DetailArticle = () => {
 
   // TODO: 추후 user_name과 profile_image를 가져오는 API를 만들어서 수정해야함
   const { data: authorInfo, isLoading: isAuthorLoading } = useQuery(
-    ["getAuthor", author],
+    ["getSingleUser", author],
     {
-      queryFn: ({ queryKey }) => getAuthor(queryKey[1] as string),
+      queryFn: ({ queryKey }) => getSingleUser(queryKey[1] as string),
       onError(error) {
         console.log(error);
       },
@@ -202,7 +204,7 @@ const DetailArticle = () => {
           {content && <Viewer content={content} />}
         </DetailContentsMain>
       </DetailContentsContainer>
-      <RelatedProject />
+      <RelatedProject category={category} />
       <Comment />
     </DetailPageContainer>
   );

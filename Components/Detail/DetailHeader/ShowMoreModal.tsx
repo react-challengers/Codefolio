@@ -1,4 +1,5 @@
-import supabase from "@/lib/supabase";
+import { deletePost } from "@/utils/APIs/supabase";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 
@@ -8,24 +9,46 @@ const ShowMoreModal = () => {
     query: { id: postId },
   } = router;
 
+  const queryClient = useQueryClient();
+
   const editPost = async () => {
     router.push(`/edit-post/${postId}`);
   };
 
-  const deletePost = async () => {
-    const { error } = await supabase.from("post").delete().eq("id", postId);
-    if (error) {
-      alert("오류가 발생했습니다. 다시 시도홰주세요.");
-      return;
-    }
-    alert("게시물이 삭제되었습니다.");
-    router.push("/");
-  };
+  const { mutate: deletePostMutate } = useMutation(deletePost, {
+    onMutate: async () => {
+      await queryClient.cancelQueries(["getPost", postId]);
+
+      const previousPost = queryClient.getQueryData<PostType>([
+        "getPost",
+        postId,
+      ]);
+
+      if (previousPost) {
+        queryClient.setQueryData(["getPost", postId], null);
+      }
+
+      return { previousPost };
+    },
+    onError: (error, variables, context) => {
+      if (context?.previousPost) {
+        queryClient.setQueryData(["getPost", postId], {
+          ...context.previousPost,
+        });
+      }
+    },
+    onSuccess: async () => {
+      alert("게시물이 삭제되었습니다.");
+      router.push("/");
+    },
+  });
 
   return (
     <ShowMoreModalContainer>
       <ItemWrapper onClick={editPost}>수정하기</ItemWrapper>
-      <ItemWrapper onClick={deletePost}>삭제하기</ItemWrapper>
+      <ItemWrapper onClick={() => deletePostMutate(postId as string)}>
+        삭제하기
+      </ItemWrapper>
     </ShowMoreModalContainer>
   );
 };
