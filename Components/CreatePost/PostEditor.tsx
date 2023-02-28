@@ -11,10 +11,10 @@ import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import codeSyntaxHighlightPlugin from "@toast-ui/editor-plugin-code-syntax-highlight";
 import Prism from "prismjs";
 import { RefObject, useCallback, useEffect } from "react";
-import supabase from "@/lib/supabase";
 import imageCompression from "browser-image-compression";
 import { useRecoilState } from "recoil";
 import { postContent as recoilPostContent } from "@/lib/recoil";
+import uploadImage from "@/utils/commons/uploadImage";
 
 /**
  * @TODO storage 삭제 구현 필요
@@ -43,7 +43,7 @@ const PostEditor = ({ editorRef }: PostEditorProps) => {
   const addImage = useCallback(async (blob: File, dropImage: HookCallback) => {
     const img = await compressImg(blob); // 이미지 압축
     if (!img) return;
-    const url = await uploadImage(img); // 업로드된 이미지 서버 url
+    const url = await uploadImage(img, "post-image"); // 업로드된 이미지 서버 url
     if (!url) return;
     dropImage(url, `${blob.name}`); // 에디터에 이미지 추가
   }, []);
@@ -56,25 +56,7 @@ const PostEditor = ({ editorRef }: PostEditorProps) => {
     }
   }, [editorRef, addImage]);
 
-  // 이미지 업로드
-
-  const uploadImage = async (blob: File) => {
-    try {
-      const imgPath = crypto.randomUUID();
-      await supabase.storage.from("post-image").upload(imgPath, blob);
-
-      // 이미지 올리기
-      const urlResult = await supabase.storage
-        .from("post-image")
-        .getPublicUrl(imgPath);
-      return urlResult.data.publicUrl;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  };
-
-  // //이미지 압축
+  // 이미지 압축
   const compressImg = async (blob: File): Promise<File | void> => {
     const options = {
       maxSize: 1,

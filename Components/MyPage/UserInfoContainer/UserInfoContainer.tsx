@@ -6,6 +6,7 @@ import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import { useUserProfile } from "@/hooks/query";
 import { useInput } from "@/hooks/common";
 import { ProfileImage } from "@/Components/Common";
+import uploadImage from "@/utils/commons/uploadImage";
 import Banner from "./Banner";
 
 /**
@@ -43,19 +44,6 @@ const UserInfoContainer = () => {
     }
   };
 
-  const uploadImage = async (file: File) => {
-    const imgPath = crypto.randomUUID();
-    try {
-      await supabase.storage.from("post-image").upload(imgPath, file);
-      const { data } = await supabase.storage
-        .from("post-image")
-        .getPublicUrl(imgPath);
-      return data.publicUrl;
-    } catch (error) {
-      return "";
-    }
-  };
-
   const handleProfileImage = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
     if (!file) return;
@@ -65,7 +53,7 @@ const UserInfoContainer = () => {
       const imgDataUrl = uploadedBlob.target?.result; // input의 파일을 base64로 받습니다.
       if (typeof imgDataUrl !== "string") return;
       const imgFile = await convertEase64ToFile(imgDataUrl);
-      const publicImageURL = await uploadImage(imgFile);
+      const publicImageURL = await uploadImage(imgFile, "profile-image");
       if (!publicImageURL) return;
       await supabase
         .from("user_profile")
