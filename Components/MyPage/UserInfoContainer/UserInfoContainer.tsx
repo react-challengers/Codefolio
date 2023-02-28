@@ -1,12 +1,14 @@
 import supabase from "@/lib/supabase";
 import Image, { StaticImageData } from "next/image";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import { useUserProfile } from "@/hooks/query";
 import { useInput } from "@/hooks/common";
 import { ProfileImage } from "@/Components/Common";
 import uploadImage from "@/utils/commons/uploadImage";
+import { useRecoilState } from "recoil";
+import { myPageBackgroundImage, myPageProfileImage } from "@/lib/recoil";
 import Banner from "./Banner";
 
 /**
@@ -17,14 +19,27 @@ import Banner from "./Banner";
 const UserInfoContainer = () => {
   const { profileData, updateProfileData } = useUserProfile();
   const [isEditing, setIsEditing] = useState(false);
+  const [profileImage, setProfileImage] = useRecoilState(myPageProfileImage);
+  const [profileBackgroundImage, setProfileBackgroundImage] = useRecoilState(
+    myPageBackgroundImage
+  );
 
   const { inputValues, handleInputChange } = useInput({
     userName: profileData.user_name ?? "",
     contactEmail: profileData.contact_email ?? "",
     selfProfile: profileData.self_profile ?? "",
-    // 여기
-    // backgroundColor: profileData.background_color ?? "",
   });
+
+  useEffect(() => {
+    if (!profileData.background_image || !profileData.profile_image) return;
+    setProfileImage(profileData.profile_image);
+    setProfileBackgroundImage(profileData.background_image);
+  }, [
+    profileData.profile_image,
+    profileData.background_image,
+    setProfileImage,
+    setProfileBackgroundImage,
+  ]);
 
   const handleIsEditing = async () => {
     // 갱신된 데이터 서버에 반영
@@ -35,8 +50,6 @@ const UserInfoContainer = () => {
         user_name: inputValues.userName,
         contact_email: inputValues.contactEmail,
         self_profile: inputValues.selfProfile,
-        // 여기
-        background_image: "",
       };
       updateProfileData(newProfileData);
     } else {
@@ -55,6 +68,8 @@ const UserInfoContainer = () => {
       const imgFile = await convertEase64ToFile(imgDataUrl);
       const publicImageURL = await uploadImage(imgFile, "profile-image");
       if (!publicImageURL) return;
+      // 리코일로 클라이언트 사이드 갱신
+      setProfileImage(publicImageURL);
       await supabase
         .from("user_profile")
         .update({ profile_image: publicImageURL })
@@ -62,10 +77,29 @@ const UserInfoContainer = () => {
     };
   };
 
+  const handleBackgroundImage = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files;
+    if (!file) return;
+    const reader = new FileReader();
+    reader.readAsDataURL(file[0]);
+    reader.onload = async (uploadedBlob) => {
+      const imageDataUrl = uploadedBlob.target?.result;
+      if (typeof imageDataUrl !== "string") return;
+      const imgFile = await convertEase64ToFile(imageDataUrl);
+      const publicImageURL = await uploadImage(imgFile, "background-image");
+      if (!publicImageURL) return;
+      // 리코일로 클라이언트 사이드 갱신
+      setProfileBackgroundImage(publicImageURL);
+      await supabase
+        .from("user_profile")
+        .update({ background_image: publicImageURL })
+        .eq("id", profileData.id);
+    };
+  };
+
   return (
     <InfoContainer>
-      {/* 여기 */}
-      <Banner userBackground={inputValues?.backgroundColor} />
+      <Banner src={profileBackgroundImage} />
       <UserInfoWrapper>
         <ProfileImageWrapper>
           <label htmlFor="user_profile">
@@ -76,11 +110,7 @@ const UserInfoContainer = () => {
               multiple={false}
               id="user_profile"
             />
-            <ProfileImage
-              alt="유저 프로필"
-              page="myPage"
-              src={profileData.profile_image}
-            />
+            <ProfileImage alt="유저 프로필" page="myPage" src={profileImage} />
           </label>
         </ProfileImageWrapper>
         <IconWrapper>
@@ -116,11 +146,10 @@ const UserInfoContainer = () => {
                   width={36}
                   height={36}
                 />
-                <UserBackgroundColorPicker
+                <UserBackgroundImagePicker
                   id="background-color-picker"
-                  type="color"
-                  // 여기
-                  onChange={handleInputChange("backgroundColor")}
+                  type="file"
+                  onChange={handleBackgroundImage}
                 />
               </ImgLabel>
             </InputWrapper>
@@ -251,7 +280,7 @@ const ImgIcon = styled(Image)<StaticImageData>`
   cursor: pointer;
 `;
 
-const UserBackgroundColorPicker = styled.input`
+const UserBackgroundImagePicker = styled.input`
   opacity: 0;
   width: 0;
   height: 0;
