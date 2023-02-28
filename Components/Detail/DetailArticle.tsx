@@ -15,15 +15,11 @@ import {
 } from "@/utils/APIs/supabase";
 import getTextColorByBackgroundColor from "@/utils/detail/getTextColorByBackgroundColor";
 import { useQuery } from "@tanstack/react-query";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { ClimbingBoxLoader } from "react-spinners";
 import styled from "styled-components";
-
-const Viewer = dynamic(() => import("@/Components/Detail/DetailContent"), {
-  ssr: false,
-});
+import DetailContent from "./DetailContent";
 
 const DetailArticle = () => {
   const {
@@ -198,7 +194,7 @@ const DetailArticle = () => {
           <DetailSide {...sideData} authorInfo={authorInfo} />
         </DetailContentsSide>
         <DetailContentsMain>
-          {content && <Viewer content={content} />}
+          {content && <DetailContent content={content} />}
         </DetailContentsMain>
       </DetailContentsContainer>
       <RelatedProject category={category} />

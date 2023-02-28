@@ -15,12 +15,8 @@ import styled from "styled-components";
 enum Field {
   WEB = "웹",
   APP = "앱",
-  SOFTWARE = "소프트웨어",
   DATA = "데이터",
-  WEB3 = "블록체인",
-  DEVOPS = "데브옵스",
-  IOT_AND_EMBEDDED = "IOT,임베디드",
-  SECURITY = "보안",
+  AI = "인공지능",
 }
 
 const field = Object.values(Field);
@@ -33,21 +29,13 @@ const FieldDropDown = () => {
   const getSubCatories = () => {
     switch (largeCategory) {
       case "웹":
-        return ["프론트엔드", "백엔드", "풀스택"];
+        return ["Full-stack", "Front-end", "Back-end"];
       case "앱":
-        return ["안드로이드", "iOS", "리액트 네이티브", "플러터"];
-      case "소프트웨어":
-        return ["사무자동화", "공장자동화", "ERP", "유니티", "언리얼", "기타"];
+        return ["Android", "iOS", "Flutter", "React Native"];
       case "데이터":
-        return ["데이터 엔지니어링", "머신러닝 엔지니어링", "데이터 사이언스"];
-      case "블록체인":
-        return ["블록체인"];
-      case "데브옵스":
-        return ["데브옵스"];
-      case "IOT,임베디드":
-        return ["IOT,임베디드"];
-      case "보안":
-        return ["보안"];
+        return ["Big data"];
+      case "인공지능":
+        return ["AI"];
       default:
         return ["기타"];
     }
@@ -88,7 +76,7 @@ const FieldDropDown = () => {
 };
 
 const FieldDropDownContainer = styled.div`
-  width: 21.5rem;
+  width: 18rem;
   box-shadow: 0px 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
   border: 1px solid #cccccc;
   display: flex;
