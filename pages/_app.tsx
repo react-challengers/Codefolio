@@ -11,6 +11,7 @@ import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Head from "next/head";
+import { Analytics } from "@vercel/analytics/react";
 // import { init } from "@amplitude/analytics-browser";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = ({
               <GNB />
               <Component {...pageProps} />
               <Footer />
+              <Analytics />
             </RecoilRoot>
           </ThemeProvider>
         </SessionContextProvider>
