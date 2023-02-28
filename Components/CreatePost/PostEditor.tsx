@@ -29,18 +29,18 @@ const PostEditor: NextPage = () => {
 
   const onImagePasted = useCallback(
     async (
-      dataTransfer: DataTransfer | any // Drag and Drop API
+      dataTransfer: DataTransfer | FileList | null // Drag and Drop API
     ) => {
+      if (!dataTransfer) return;
       const files: File[] = []; // 드래그 앤 드랍으로 가져온 파일들
-      if (dataTransfer.items) {
+      if (dataTransfer instanceof DataTransfer) {
         for (let index = 0; index < dataTransfer.items.length; index += 1) {
           const file = dataTransfer.items[index].getAsFile();
           if (!file) return;
           files.push(file);
         }
-      } else {
+      } else if (dataTransfer instanceof FileList) {
         const file = dataTransfer[0];
-
         if (!file) return;
         files.push(file);
       }
@@ -161,6 +161,7 @@ const PostEditor: NextPage = () => {
           ),
           // eslint-disable-next-line react/no-unstable-nested-components
           children: (handle: any) => {
+            // API가 any를 지정합니다.
             return (
               <div style={{ width: 200, padding: 10 }}>
                 <input
