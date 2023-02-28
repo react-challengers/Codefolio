@@ -23,7 +23,7 @@ const MDEditor = dynamic<MDEditorProps>(() => import("@uiw/react-md-editor"), {
 });
 
 const PostEditor: NextPage = () => {
-  const [isPostId] = useRecoilValue(postId);
+  const isPostId = useRecoilValue(postId);
   const [postContent, setPostContent] = useRecoilState(recoilPostContent);
 
   const onImagePasted = useCallback(
