@@ -1,9 +1,10 @@
 import getYYYYMM from "@/utils/commons/getYYYYMM";
+import { v4 as uuidv4 } from "uuid";
 import { atom } from "recoil";
 
 const postId = atom<string>({
   key: "postId",
-  default: `${crypto.randomUUID()}`,
+  default: `${uuidv4()}`,
 });
 
 const postTitle = atom<string>({

@@ -2,6 +2,7 @@ import supabase from "@/lib/supabase";
 import Image, { StaticImageData } from "next/image";
 import { ChangeEvent, useState } from "react";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import { useUserProfile } from "@/hooks/query";
 import { useInput } from "@/hooks/common";
@@ -42,7 +43,7 @@ const UserInfoContainer = () => {
   };
 
   const uploadImage = async (file: File) => {
-    const imgPath = crypto.randomUUID();
+    const imgPath = uuidv4();
     try {
       await supabase.storage.from("post-image").upload(imgPath, file);
       const { data } = await supabase.storage
