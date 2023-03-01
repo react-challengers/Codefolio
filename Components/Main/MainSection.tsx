@@ -20,7 +20,7 @@ interface MainSectionProps {
 
 const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  const homeDropDownItems = ["최신순", "댓글순", "추천순"];
+  const homeDropDownItems = ["최신순", "추천순", "댓글순"];
   const [selectedDropDownItem, setSelectedDropDownItem] = useState(
     homeDropDownItems[0]
   );
@@ -122,7 +122,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
           }}
         >
           {selectedDropDownItem}
-          <Image src={bottom_arrow} alt="bottom_arrow" width={32} height={32} />
+          <Image src={bottom_arrow} alt="bottom_arrow" width={16} height={16} />
         </HomeDropDownButton>
         {isDropDownOpen && (
           <HomeDropDownList>
@@ -200,7 +200,10 @@ const HomeDropDownContainer = styled.div`
 const HomeDropDownButton = styled.div`
   display: flex;
   align-items: center;
-  width: 5rem;
+  width: 4rem;
+
+  ${({ theme }) => theme.fonts.body14}
+  color: ${({ theme }) => theme.colors.gray4};
 
   &:hover {
     cursor: pointer;
@@ -212,25 +215,30 @@ const HomeDropDownList = styled.ul`
   flex-direction: column;
   position: absolute;
   top: 11rem;
-  width: 7rem;
-  background-color: white;
-  border: 1px solid #e1e4e8;
+  width: 11.25rem;
+
+  background-color: ${({ theme }) => theme.colors.gray9};
+  ${({ theme }) => theme.fonts.body14};
+  color: ${({ theme }) => theme.colors.white};
+
   border-radius: 0.25rem;
-  font-size: 1rem;
-  gap: 0.5rem;
+  filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.5));
   z-index: 2;
 `;
 
 const HomeDropDownItemContainer = styled.div`
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  padding: 1.1563rem 0.75rem;
+
   &:hover {
     cursor: pointer;
-    background-color: #f6f8fa;
+    background-color: ${({ theme }) => theme.colors.gray8};
   }
 `;
 
-const HomeDropDownItem = styled.li`
-  margin: 0.5rem;
-`;
+const HomeDropDownItem = styled.li``;
 
 const CardContainer = styled.div`
   cursor: pointer;
