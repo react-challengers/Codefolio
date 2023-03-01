@@ -9,7 +9,8 @@ import bottom_arrow from "@/public/icons/bottom_arrow.svg";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import _ from "lodash";
-import { CardItem, Tags } from "@/Components/Common";
+import { CardItem } from "@/Components/Common";
+import CategoryTag from "./CategoryTag";
 
 // TODO: Tag 데이터 구조화 고민하기
 
@@ -90,6 +91,12 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     setIsModalOpen(true);
   };
 
+  const onClickDeleteCategory = (category: string) => {
+    setSelectedSubCategory(
+      selectedSubCategory.filter((item) => item !== category)
+    );
+  };
+
   // 다른 페이지에 갔다가 다시 돌아왔을 시, 카테고리가 초기화 되도록 설정
   useEffect(() => {
     setSelectedLargeCategory([]);
@@ -99,12 +106,14 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   return (
     <HomeMainContainer>
       <TagContainer>
-        {selectedSubCategory.length !== 0 && (
-          <Tags tagItems={selectedSubCategory} size="md" />
-        )}
-        {selectedSubCategory.length === 0 && (
-          <Tags tagItems={selectedLargeCategory} size="lg" />
-        )}
+        {selectedSubCategory.length !== 0 &&
+          selectedSubCategory.map((category) => (
+            <CategoryTag
+              category={category}
+              key={category}
+              deleteHandler={onClickDeleteCategory}
+            />
+          ))}
       </TagContainer>
       <HomeDropDownContainer>
         <HomeDropDownButton
