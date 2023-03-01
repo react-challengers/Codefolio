@@ -24,7 +24,7 @@ const SideBar = () => {
     데이터: ["Big data"],
   };
 
-  const onClickAllCatecory = () => {
+  const onClickAllCategory = () => {
     setSelectedCategory([]);
     setSelectedSubCategory([]);
   };
@@ -44,7 +44,7 @@ const SideBar = () => {
 
   return (
     <SideBarContainer>
-      <SideBarTitle onClick={onClickAllCatecory}>전체</SideBarTitle>
+      <SideBarTitle onClick={onClickAllCategory}>전체</SideBarTitle>
       <CategoryContainer>
         {largeCategoryItems.map((item: string) => (
           <li key={item}>
