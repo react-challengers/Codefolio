@@ -1,4 +1,4 @@
-import { largeCategoryState, subCategoryState } from "@/lib/recoil";
+import { subCategoryState } from "@/lib/recoil";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -23,8 +23,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   const [selectedDropDownItem, setSelectedDropDownItem] = useState(
     homeDropDownItems[0]
   );
-  const [selectedLargeCategory, setSelectedLargeCategory] =
-    useRecoilState(largeCategoryState);
+
   const [selectedSubCategory, setSelectedSubCategory] =
     useRecoilState(subCategoryState);
   const router = useRouter();
@@ -98,9 +97,8 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
 
   // 다른 페이지에 갔다가 다시 돌아왔을 시, 카테고리가 초기화 되도록 설정
   useEffect(() => {
-    setSelectedLargeCategory([]);
     setSelectedSubCategory([]);
-  }, [setSelectedLargeCategory, setSelectedSubCategory]);
+  }, [setSelectedSubCategory]);
 
   return (
     <HomeMainContainer>
@@ -148,14 +146,16 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
             }}
           >
             <CardItem
+              postId={post.id}
               imageSrc={findThumbnailInContent(post.content)}
               imageAlt={`${post.title}썸네일`}
               title={post.title}
               subTitle={post.sub_title}
-              tagItems={post.tag}
+              skills={post.skills}
               date={getPostDate(post.created_at)}
               comments={post.comment_count}
               likes={post.like_count}
+              bookmarks={post.bookmark_count}
               field={`${post.sub_category}`}
               userId={post.user_id}
             />

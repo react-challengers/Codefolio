@@ -71,6 +71,7 @@ const RelatedProject = ({ category }: RelatedProjectProps) => {
                       date={getPostDate(post.created_at)}
                       comments={post.comment_count}
                       likes={post.like_count}
+                      bookmarks={post.bookmark_count}
                       field={`${post.large_category} | ${post.sub_category}`}
                       userId={post.user_id}
                     />

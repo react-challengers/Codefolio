@@ -104,6 +104,7 @@ interface PostType {
   created_at: string;
   comment_count: number;
   like_count: number;
+  bookmark_count: number;
 }
 
 interface FollowType {
