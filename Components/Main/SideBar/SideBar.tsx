@@ -3,7 +3,6 @@ import check from "@/public/icons/check.svg";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
 import { largeCategoryState, subCategoryState } from "@/lib/recoil";
-import LargeCategory from "./LargeCategory";
 
 interface SubCategoryItemsType {
   [key: string]: string[];
