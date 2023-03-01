@@ -28,7 +28,7 @@ const CardItemContainer = ({ itemList }: CardItemContainerProps) => {
               imageAlt={`${post.title}썸네일`}
               title={post.title}
               subTitle={post.sub_title}
-              tagItems={post.tag}
+              skills={post.skills}
               date={getPostDate(post.created_at)}
               comments={post.comment_count}
               likes={post.like_count}
