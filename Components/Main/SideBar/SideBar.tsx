@@ -99,7 +99,7 @@ const SideBarContainer = styled.aside`
   flex-direction: column;
   min-width: 18.75rem;
   height: auto;
-  padding: 3.5rem 2.5rem 3.5rem 1.5rem;
+  padding: 3.5rem 1.5rem;
 `;
 
 const SideBarTitle = styled.span`
