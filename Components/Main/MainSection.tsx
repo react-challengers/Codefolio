@@ -1,16 +1,15 @@
 import { largeCategoryState, subCategoryState } from "@/lib/recoil";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
-import bottom_arrow from "@/public/icons/bottom_arrow.svg";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import _ from "lodash";
 import { CardItem } from "@/Components/Common";
 import CategoryTag from "./CategoryTag";
+import HomeDropDownIcon from "./HomeDropDownIcon";
 
 // TODO: Tag 데이터 구조화 고민하기
 
@@ -122,7 +121,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
           }}
         >
           {selectedDropDownItem}
-          <Image src={bottom_arrow} alt="bottom_arrow" width={16} height={16} />
+          <HomeDropDownIcon />
         </HomeDropDownButton>
         {isDropDownOpen && (
           <HomeDropDownList>
@@ -207,6 +206,11 @@ const HomeDropDownButton = styled.div`
 
   &:hover {
     cursor: pointer;
+    color: ${({ theme }) => theme.colors.primary6};
+
+    path {
+      fill: ${({ theme }) => theme.colors.primary6};
+    }
   }
 `;
 
