@@ -159,12 +159,10 @@ const DetailHeader = ({
     }
     if (isBookmark) {
       deleteBookmarkMutate({ postId: postId as string, currentUserId });
-      // 구현 후 주석 해제
-      // await decrementBookmark(postId as string);
+      await decrementBookmark(postId as string);
     } else {
       addBookmarkMutate({ postId: postId as string, currentUserId });
-      // 구현 후 주석 해제
-      // await incrementBookmark(postId as string);
+      await incrementBookmark(postId as string);
     }
     return queryClient.invalidateQueries(["GET_POSTS"]);
   };
