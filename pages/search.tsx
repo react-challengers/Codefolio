@@ -1,4 +1,4 @@
-import { CardItem, DropDown } from "@/Components/Common";
+import { CardItem, DropDown, LongButton } from "@/Components/Common";
 import HomeDropDownIcon from "@/Components/Main/HomeDropDownIcon";
 import supabase from "@/lib/supabase";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
@@ -58,6 +58,14 @@ const Search: NextPage = () => {
   if (isLoading)
     return <Loader color="#00BFFF" size={50} loading={isLoading} />;
 
+  if (data?.length === 0)
+    return (
+      <EmptySearchResult>
+        <EmptyText>&lsquo;{query}&rsquo;에 대한 검색결과가 없습니다.</EmptyText>
+        <LongButton>홈으로 가기</LongButton>
+      </EmptySearchResult>
+    );
+
   return (
     <SearchContainer>
       <SearchInfo>
@@ -102,7 +110,6 @@ const Search: NextPage = () => {
             userId={post.user_id}
           />
         ))}
-        {!data?.length && <div>No results found</div>}
       </CardGrid>
     </SearchContainer>
   );
@@ -175,6 +182,19 @@ const CardGrid = styled.div`
   margin-top: 1rem;
 `;
 
+const EmptySearchResult = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3.75rem;
+  margin: 25rem auto;
+  width: fit-content;
+`;
+
+const EmptyText = styled.span`
+  ${({ theme }) => theme.fonts.title24};
+  color: ${({ theme }) => theme.colors.gray2};
+`;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const query = context.query.q;
   const queryClient = new QueryClient();
