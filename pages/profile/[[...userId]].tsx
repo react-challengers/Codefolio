@@ -7,14 +7,13 @@ import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
-
 import {
   CardItemContainer,
   MyPageContainer,
   MyPageTab,
   TabProfile,
   UserInfoContainer,
-} from "@/Components/Mypage";
+} from "../../Components/Mypage";
 
 const tabList = ["프로젝트", "북마크", "좋아요", "프로필"];
 
