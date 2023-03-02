@@ -9,7 +9,8 @@ import {
   postLargeCategory as recoilPostLargeCategory,
   postMembers,
   postProjectDuration,
-  postPublic,
+  postGithubUrl,
+  postDeployedUrl,
   postSkills,
   postSubCategory as recoilPostSubCategory,
   postSubTitle,
@@ -28,6 +29,7 @@ import ProjectInfo from "./ProjectInfo";
  * @TODO custom hook으로 리팩토링하기
  * @TODO 카테고리 중복 선택 , 보여주는 UI
  * @TODO user_id 리코일로 관리
+ * @TODO 유효성 검사 리펙토링
  */
 const Post: NextPage = () => {
   const [isPostId] = useRecoilState(postId);
@@ -40,7 +42,8 @@ const Post: NextPage = () => {
     useRecoilState(postProjectDuration);
   const [skills, setSkills] = useRecoilState(postSkills);
   const [tag, setTag] = useRecoilState(postTags);
-  const [isPublic, setIsPublic] = useRecoilState(postPublic);
+  const [githubUrl, setGithubUrl] = useRecoilState(postGithubUrl);
+  const [deployedUrl, setDeployedUrl] = useRecoilState(postDeployedUrl);
   const [members, setMembers] = useRecoilState(postMembers);
   const [content, setContent] = useRecoilState(postContent);
   const [postLargeCategory, setPostLargeCategory] = useRecoilState(
@@ -66,7 +69,8 @@ const Post: NextPage = () => {
     progress_date: [startDate, endDate],
     members,
     tag,
-    is_public: isPublic,
+    github_url: githubUrl,
+    deployed_url: deployedUrl,
     content,
     user_id: userId,
   };
@@ -163,7 +167,8 @@ const Post: NextPage = () => {
     setProjectDuration([getYYYYMM(), getYYYYMM()]);
     setSkills([]);
     setTag([]);
-    setIsPublic(true);
+    setGithubUrl("");
+    setDeployedUrl("");
     setMembers([]);
     setContent("");
     setPostLargeCategory("");

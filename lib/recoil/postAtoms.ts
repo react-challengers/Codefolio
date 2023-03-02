@@ -58,9 +58,14 @@ const postTags = atom<string[]>({
   default: [],
 });
 
-const postPublic = atom<boolean>({
-  key: "postPublic",
-  default: true,
+const postGithubUrl = atom<string>({
+  key: "postGithubUrl",
+  default: "",
+});
+
+const postDeployedUrl = atom<string>({
+  key: "postDeplyedUrl",
+  default: "",
 });
 
 const postContent = atom<string>({
@@ -79,6 +84,7 @@ export {
   postProjectDuration,
   postMembers,
   postTags,
-  postPublic,
+  postGithubUrl,
+  postDeployedUrl,
   postContent,
 };

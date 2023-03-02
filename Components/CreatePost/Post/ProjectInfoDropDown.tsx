@@ -4,16 +4,16 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   postLargeCategory,
   postProjectDuration,
-  // postPublic,
   postSkills,
   postSubCategory,
+  postGithubUrl,
+  postDeployedUrl,
   postTags,
 } from "@/lib/recoil";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import getYYYYMM from "@/utils/commons/getYYYYMM";
 import { SkillList } from "@/Components/Common";
-// import { SkillList, Toggle } from "@/Components/Common";
 import arrow_down from "@/public/icons/arrow_down.svg";
 import Image from "next/image";
 import FieldDropDown from "./FieldDropDown";
@@ -23,6 +23,8 @@ const ProjectInfoDropDown = () => {
   const [postSkill, setPostSkill] = useRecoilState(postSkills);
   const [[startDate, endDate], setDate] = useRecoilState(postProjectDuration);
   const [tag, setTag] = useRecoilState(postTags);
+  const [githubUrl, setGithubUrl] = useRecoilState(postGithubUrl);
+  const [deployedUrl, setDeployedUrl] = useRecoilState(postDeployedUrl);
   // const [isPublic, setIsPublic] = useRecoilState(postPublic);
   const largeCategory = useRecoilValue(postLargeCategory);
   const subCategory = useRecoilValue(postSubCategory);
@@ -96,12 +98,24 @@ const ProjectInfoDropDown = () => {
 
         <ProjectInfoWrapper>
           <TEXTBOX>깃허브 주소</TEXTBOX>
-          <InputURL placeholder="https://github.com/project" />
+          <InputURL
+            type="url"
+            pattern="https://.*"
+            value={githubUrl}
+            onChange={() => setGithubUrl}
+            placeholder="https://github.com/project"
+          />
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
           <TEXTBOX>배포 주소</TEXTBOX>
-          <InputURL placeholder="https://example.com" />
+          <InputURL
+            type="url"
+            pattern="https://.*"
+            value={deployedUrl}
+            onChange={(e) => setDeployedUrl(e.target.value)}
+            placeholder="https://example.com"
+          />
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
@@ -113,14 +127,6 @@ const ProjectInfoDropDown = () => {
           <TEXTBOX>함께한 사람들</TEXTBOX>
           <WithPeople />
         </ProjectInfoWrapper>
-
-        {/* <ProjectInfoWrapper>
-          <TEXTBOX>게시물 공개</TEXTBOX>
-          <ToggleWrapper>
-            <Toggle flicker={isPublic} setFlicker={setIsPublic} />
-            <p>{isPublic ? "공개" : "비공개"}</p>
-          </ToggleWrapper>
-        </ProjectInfoWrapper> */}
       </ProjectInfoContainer>
     </ProjectInfoDropDownContainer>
   );
@@ -192,6 +198,10 @@ const StyledDatePicker = styled(DatePicker)`
   text-align: center;
 `;
 
+const SpaceBetweenDatePicker = styled.div`
+  margin: 0 15px 0 15px;
+`;
+
 const InputURL = styled.input`
   width: 100%;
   height: 100%;
@@ -218,10 +228,6 @@ const InputURL = styled.input`
 //     font-size: 13px;
 //   }
 // `;
-
-const SpaceBetweenDatePicker = styled.div`
-  margin: 0 15px 0 15px;
-`;
 
 const TEXTBOX = styled.div`
   min-width: 7.5rem;
