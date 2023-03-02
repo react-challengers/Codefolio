@@ -1,11 +1,5 @@
+import { useCheckInteraction } from "@/hooks/query";
 import supabase from "@/lib/supabase";
-import {
-  getCurrentUser,
-  getIsBookMark,
-  getIsComment,
-  getIsLike,
-} from "@/utils/APIs/supabase";
-import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import styled from "styled-components";
@@ -78,60 +72,7 @@ const CardItem = ({
   const [isOverlay, setIsOverlay] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
   const [userProfileImage, setUserProfileImage] = useState<string | null>(null);
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const [isBookmark, setIsBookmark] = useState(false);
-  const [isLike, setIsLike] = useState(false);
-  const [isComment, setIsComment] = useState(false);
-
-  useQuery(["currentUser"], {
-    queryFn: getCurrentUser,
-    onSuccess({ data: { user } }) {
-      if (user) {
-        setCurrentUserId(user.id);
-      }
-    },
-  });
-
-  useQuery(["getBookmark", currentUserId, postId], {
-    queryFn: ({ queryKey }) =>
-      getIsBookMark(queryKey as [string, string, string]),
-    onSuccess(data) {
-      if (data) {
-        setIsBookmark(!!data);
-      }
-    },
-    onError(error) {
-      setIsBookmark(false);
-    },
-    enabled: !!currentUserId && !!postId,
-  });
-
-  useQuery(["getLike", currentUserId, postId], {
-    queryFn: ({ queryKey }) => getIsLike(queryKey as [string, string, string]),
-    onSuccess(data) {
-      if (data) {
-        setIsLike(!!data);
-      }
-    },
-    onError(error) {
-      setIsLike(false);
-    },
-    enabled: !!currentUserId && !!postId,
-  });
-
-  useQuery(["getComment", currentUserId, postId], {
-    queryFn: ({ queryKey }) =>
-      getIsComment(queryKey as [string, string, string]),
-    onSuccess(data) {
-      if (data) {
-        setIsComment(!!data);
-      }
-    },
-    onError(error) {
-      setIsComment(false);
-    },
-    enabled: !!currentUserId && !!postId,
-  });
+  const { isLike, isBookmark, isComment } = useCheckInteraction(postId);
 
   useMemo(() => {
     const getUserInfo = async () => {
@@ -325,7 +266,7 @@ const OverlayCategory = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 4px 8px;
+  padding: 0.25rem 0.5rem;
 
   position: absolute;
   left: 0.625rem;

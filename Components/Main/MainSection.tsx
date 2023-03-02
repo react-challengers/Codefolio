@@ -226,7 +226,7 @@ const HomeDropDownList = styled.ul`
   color: ${({ theme }) => theme.colors.white};
 
   border-radius: 0.25rem;
-  filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0px 0.625rem 0.625rem rgba(0, 0, 0, 0.5));
   z-index: 2;
 `;
 
