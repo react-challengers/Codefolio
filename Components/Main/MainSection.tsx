@@ -32,22 +32,17 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     queryFn: getAllPosts,
   });
 
-  const publicPosts = useMemo(() => {
-    if (allPostsData === undefined) return [];
-    return allPostsData.filter((post) => post.is_public === true);
-  }, [allPostsData]);
-
   // 카테고리 선택 시, 해당 카테고리에 맞는 포스트만 보여주기
   const filterPosts = useMemo(() => {
-    if (publicPosts === undefined) return [];
+    if (allPostsData === undefined) return [];
 
     if (selectedSubCategory.length !== 0) {
-      return publicPosts.filter((post) =>
+      return allPostsData.filter((post) =>
         selectedSubCategory.includes(post.sub_category)
       );
     }
-    return publicPosts;
-  }, [publicPosts, selectedSubCategory]);
+    return allPostsData;
+  }, [allPostsData, selectedSubCategory]);
 
   // 포스트 정렬
   const sortPosts = useMemo(() => {
