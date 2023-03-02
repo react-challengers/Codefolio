@@ -8,7 +8,7 @@ import {
   MyPageTab,
   TabProfile,
   UserInfoContainer,
-} from "@/Components/Mypage";
+} from "@/Components/MyPage";
 import { getAllPosts, getCurrentUser } from "@/utils/APIs/supabase";
 import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
