@@ -199,17 +199,17 @@ const DetailHeader = ({
           onClick={clickBookmarkButton}
         />
       </ButtonWrapper>
-      {/* {author === currentUserId && ( */}
-      <ButtonWrapper>
-        <Image
-          src={`/icons/more${showMore ? "-on" : ""}.svg`}
-          onClick={showMoreModal}
-          width={24}
-          height={24}
-          alt="더보기 버튼"
-        />
-      </ButtonWrapper>
-      {/* )} */}
+      {author === currentUserId && (
+        <ButtonWrapper>
+          <Image
+            src={`/icons/more${showMore ? "-on" : ""}.svg`}
+            onClick={showMoreModal}
+            width={24}
+            height={24}
+            alt="더보기 버튼"
+          />
+        </ButtonWrapper>
+      )}
       {showMore && <ShowMoreModal closeModal={() => setShowMore(false)} />}
     </DetailHeaderContainer>
   );

@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { ClimbingBoxLoader } from "react-spinners";
 import styled from "styled-components";
-import DetailBadges from "./DetailBadges";
+import DetailBadgesContainer from "./DetailBadgesContainer";
 import DetailContent from "./DetailContent";
 
 const DetailArticle = () => {
@@ -197,7 +197,7 @@ const DetailArticle = () => {
           {content && <DetailContent content={content} />}
         </DetailContentsMain>
       </DetailContentsContainer>
-      <DetailBadges />
+      <DetailBadgesContainer />
       <RelatedProject category={category} />
       <Comment />
     </DetailPageContainer>
