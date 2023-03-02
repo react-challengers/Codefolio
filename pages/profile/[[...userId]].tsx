@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import {
   CardItemContainer,
+  GoodJobBadge,
   MyPageContainer,
   MyPageTab,
   TabProfile,
@@ -124,6 +125,8 @@ const ProfilePage: NextPage = () => {
   let Component = null;
   if (currentTab === tabList.length - 1) {
     Component = <TabProfile />;
+  } else if (currentTab === tabList.length - 2) {
+    Component = <GoodJobBadge />;
   } else if (filteredItemList?.length > 0) {
     Component = <CardItemContainer itemList={filteredItemList ?? []} />;
   } else {
