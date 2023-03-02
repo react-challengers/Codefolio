@@ -45,7 +45,7 @@ const SignUpPage: NextPage = () => {
     },
   });
 
-  const validateCheck = async () => {
+  const validateCheck = () => {
     setUserNameHelperText(checkUserName(userName));
     setEmailHelperText(checkEmail(email));
     setPasswordHelperText(checkPassword(password));
