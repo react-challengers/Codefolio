@@ -22,6 +22,7 @@ const theme = {
     gray1: "#F2F2F2",
     white: "#FFFFFF",
     black: "#000000",
+    messageError: "#E22C36",
   },
   fonts: {
     title36: `

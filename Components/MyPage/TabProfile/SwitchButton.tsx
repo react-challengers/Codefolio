@@ -36,9 +36,8 @@ const SwitchButton = () => {
 const SwitchButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
-
-  filter: drop-shadow(0.125rem 0.25rem 0.75rem rgba(0, 0, 0, 0.1))
-    drop-shadow(0rem 0rem 0.25rem rgba(0, 0, 0, 0.1));
+  flex-grow: 1;
+  filter: drop-shadow(0px 0.25rem 0.625rem rgba(0, 0, 0, 0.25));
 `;
 
 interface DefaultButtonProps {
@@ -48,11 +47,13 @@ interface DefaultButtonProps {
 const GenderButton = styled.button<DefaultButtonProps>`
   border: none;
   cursor: pointer;
-  width: 6.25rem;
+  flex-grow: 1;
   height: 2.75rem;
   font-size: 1rem;
-  color: ${({ active }) => (active ? "white" : "black")};
-  background-color: ${({ active }) => (active ? "black" : "white")};
+  color: ${({ active, theme }) =>
+    active ? theme.colors.black : theme.colors.white};
+  background-color: ${({ active, theme }) =>
+    active ? theme.colors.primary6 : theme.colors.gray8};
   :first-child {
     border-top-left-radius: 0.75rem;
     border-bottom-left-radius: 0.75rem;

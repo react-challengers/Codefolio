@@ -41,10 +41,10 @@ const EditProfileContainer = () => {
   const { profileData, updateProfileData } = useUserProfile();
 
   const [phoneNumber, setPhoneNumber] = useRecoilState(myPagePhonNumber);
-  const [isPublic, setIsPublic] = useRecoilState(myPageIsPublic);
+  const setIsPublic = useSetRecoilState(myPageIsPublic);
   const [activeField, setActiveField] = useRecoilState(myPageField);
   const [editSkills, setEditSkills] = useRecoilState(myPageSkills);
-  const [career, setCareer] = useRecoilState(myPageCareer);
+  const setCareer = useSetRecoilState(myPageCareer);
   const [birthYear, setBirthYear] = useRecoilState(myPageBirthYear);
   const [gender, setGender] = useRecoilState(myPageGender);
 
@@ -129,12 +129,11 @@ const EditProfileContainer = () => {
         phone: phoneNumber,
         field: activeField,
         skills: editSkills,
-        // 캐시데이터 갱신
         birth_year: birthYear,
         gender,
         user_name: inputValues.userName,
         contact_email: inputValues.contactEmail,
-        self_profile: inputValues.contactEmail,
+        self_profile: inputValues.selfProfile,
         github: inputValues.github,
       };
       updateProfileData(newProfileData);
@@ -185,7 +184,7 @@ const EditProfileContainer = () => {
               type="number"
               value={phoneNumber}
               onChange={handleEditPhoneNumber}
-              placeholder="01012345678"
+              placeholder="‘-’없이 11자리를 입력하세요"
             />
             {isPhoneNumber && <span>전화번호 형식이 아닙니다.</span>}
           </InfoWrapper>
@@ -305,7 +304,7 @@ const SkillHelpText = styled.span<SkillHelpTextProps>`
 
 const ContentTitle = styled.p`
   ${(props) => props.theme.fonts.body16}
-  width: 11.5rem;
+  min-width: 11.5rem;
   color: ${(props) => props.theme.colors.gray3};
 `;
 
