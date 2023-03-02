@@ -23,14 +23,16 @@ const CardItemContainer = ({ itemList }: CardItemContainerProps) => {
             onClick={() => onClickCardItem(post.id)}
           >
             <CardItem
+              postId={post.id}
               imageSrc={findThumbnailInContent(post.content)}
               imageAlt={`${post.title}썸네일`}
               title={post.title}
               subTitle={post.sub_title}
-              tagItems={post.tag}
+              skills={post.skills}
               date={getPostDate(post.created_at)}
               comments={post.comment_count}
               likes={post.like_count}
+              bookmarks={post.bookmark_count}
               field={`${post.large_category} | ${post.sub_category}`}
               userId={post.user_id}
             />

@@ -3,7 +3,6 @@ import check from "@/public/icons/check.svg";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
 import { largeCategoryState, subCategoryState } from "@/lib/recoil";
-import LargeCategory from "./LargeCategory";
 
 interface SubCategoryItemsType {
   [key: string]: string[];
@@ -24,7 +23,7 @@ const SideBar = () => {
     데이터: ["Big data"],
   };
 
-  const onClickAllCatecory = () => {
+  const onClickAllCategory = () => {
     setSelectedCategory([]);
     setSelectedSubCategory([]);
   };
@@ -44,7 +43,7 @@ const SideBar = () => {
 
   return (
     <SideBarContainer>
-      <SideBarTitle onClick={onClickAllCatecory}>전체</SideBarTitle>
+      <SideBarTitle onClick={onClickAllCategory}>전체</SideBarTitle>
       <CategoryContainer>
         {largeCategoryItems.map((item: string) => (
           <li key={item}>
@@ -62,7 +61,10 @@ const SideBar = () => {
                     key={subItem}
                     selected={selectedSubCategory.includes(subItem)}
                   >
-                    <SubCategoryItem onClick={(e) => onClickSubCategory(e)}>
+                    <SubCategoryItem
+                      onClick={(e) => onClickSubCategory(e)}
+                      selected={selectedSubCategory.includes(subItem)}
+                    >
                       {subItem}
                     </SubCategoryItem>
                     <Image
@@ -75,7 +77,10 @@ const SideBar = () => {
                   </SubCategoryContainer>
                 ) : (
                   <SubCategoryContainer key={subItem} selected={false}>
-                    <SubCategoryItem onClick={(e) => onClickSubCategory(e)}>
+                    <SubCategoryItem
+                      onClick={(e) => onClickSubCategory(e)}
+                      selected={false}
+                    >
                       {subItem}
                     </SubCategoryItem>
                   </SubCategoryContainer>
@@ -94,11 +99,13 @@ const SideBarContainer = styled.aside`
   flex-direction: column;
   min-width: 18.75rem;
   height: auto;
-  padding: 3.5rem 2.5rem 3.5rem 1.5rem;
+  padding: 3.5rem 1.5rem;
 `;
 
 const SideBarTitle = styled.span`
-  font-size: 1.5rem;
+  ${({ theme }) => theme.fonts.title24}
+  color: ${({ theme }) => theme.colors.white};
+  margin-left: 1rem;
   cursor: pointer;
 `;
 
@@ -106,7 +113,7 @@ const SideBarHr = styled.hr`
   width: 100%;
   height: 1px;
   border: none;
-  background-color: #ccc;
+  background-color: ${({ theme }) => theme.colors.gray7};
   margin: 1.5rem 0;
 `;
 
@@ -131,29 +138,36 @@ const SubCategoryContainer = styled.div<SubCategoryItemProps>`
   display: flex;
   align-items: center;
   height: 2.75rem;
+  padding: 0 1rem;
 
-  ${({ selected }) =>
+  ${({ selected, theme }) =>
     selected &&
     `
-    background-color: #f2f2f2;
-    font-weight: 500;
+    background-color: ${theme.colors.gray7};
+    color: ${theme.colors.gray2};
   `}
 
   &:hover {
-    background-color: #f2f2f2;
+    background-color: ${({ theme }) => theme.colors.gray7};
+    color: ${({ theme }) => theme.colors.gray2};
   }
 `;
 
-const SubCategoryItem = styled.div`
-  font-size: 1rem;
+interface SubCategoryItemProps {
+  selected: boolean;
+}
+
+const SubCategoryItem = styled.div<SubCategoryItemProps>`
+  ${({ theme }) => theme.fonts.subtitle18En};
+  color: ${({ selected, theme }) =>
+    selected ? theme.colors.gray2 : theme.colors.gray4};
   width: 100%;
   height: 100%;
 
   display: flex;
   align-items: center;
 
-  margin: 0.625rem 0.625rem 0.625rem 0;
-  padding-left: 0.625rem;
+  margin: 0.625rem 0;
 
   cursor: pointer;
 `;

@@ -11,6 +11,7 @@ import getCurrentUser from "./getCurrentUser";
 
 import getIsBookMark from "./getIsBookmark";
 import getIsLike from "./getIsLike";
+import getIsComment from "./getIsComment";
 
 import postComment from "./postComment";
 import deleteComment from "./deleteComment";
@@ -41,6 +42,7 @@ export {
   getCurrentUser,
   getIsBookMark,
   getIsLike,
+  getIsComment,
   postComment,
   deleteComment,
   editComment,

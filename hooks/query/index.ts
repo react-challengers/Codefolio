@@ -1,3 +1,4 @@
 import useUserProfile from "./useUserProfile";
+import useCheckInteraction from "./useCheckInteraction";
 
-export { useUserProfile };
+export { useUserProfile, useCheckInteraction };

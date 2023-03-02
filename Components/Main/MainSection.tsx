@@ -1,15 +1,15 @@
-import { largeCategoryState, subCategoryState } from "@/lib/recoil";
-import Image from "next/image";
+import { subCategoryState } from "@/lib/recoil";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
-import bottom_arrow from "@/public/icons/bottom_arrow.svg";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import _ from "lodash";
-import { CardItem, Tags } from "@/Components/Common";
+import { CardItem } from "@/Components/Common";
+import CategoryTag from "./CategoryTag";
+import HomeDropDownIcon from "./HomeDropDownIcon";
 
 // TODO: Tag 데이터 구조화 고민하기
 
@@ -19,12 +19,11 @@ interface MainSectionProps {
 
 const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  const homeDropDownItems = ["최신순", "댓글순", "추천순"];
+  const homeDropDownItems = ["최신순", "추천순", "댓글순"];
   const [selectedDropDownItem, setSelectedDropDownItem] = useState(
     homeDropDownItems[0]
   );
-  const [selectedLargeCategory, setSelectedLargeCategory] =
-    useRecoilState(largeCategoryState);
+
   const [selectedSubCategory, setSelectedSubCategory] =
     useRecoilState(subCategoryState);
   const router = useRouter();
@@ -90,21 +89,28 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     setIsModalOpen(true);
   };
 
+  const onClickDeleteCategory = (category: string) => {
+    setSelectedSubCategory(
+      selectedSubCategory.filter((item) => item !== category)
+    );
+  };
+
   // 다른 페이지에 갔다가 다시 돌아왔을 시, 카테고리가 초기화 되도록 설정
   useEffect(() => {
-    setSelectedLargeCategory([]);
     setSelectedSubCategory([]);
-  }, [setSelectedLargeCategory, setSelectedSubCategory]);
+  }, [setSelectedSubCategory]);
 
   return (
     <HomeMainContainer>
       <TagContainer>
-        {selectedSubCategory.length !== 0 && (
-          <Tags tagItems={selectedSubCategory} size="md" />
-        )}
-        {selectedSubCategory.length === 0 && (
-          <Tags tagItems={selectedLargeCategory} size="lg" />
-        )}
+        {selectedSubCategory.length !== 0 &&
+          selectedSubCategory.map((category) => (
+            <CategoryTag
+              category={category}
+              key={category}
+              deleteHandler={onClickDeleteCategory}
+            />
+          ))}
       </TagContainer>
       <HomeDropDownContainer>
         <HomeDropDownButton
@@ -113,7 +119,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
           }}
         >
           {selectedDropDownItem}
-          <Image src={bottom_arrow} alt="bottom_arrow" width={32} height={32} />
+          <HomeDropDownIcon />
         </HomeDropDownButton>
         {isDropDownOpen && (
           <HomeDropDownList>
@@ -140,14 +146,16 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
             }}
           >
             <CardItem
+              postId={post.id}
               imageSrc={findThumbnailInContent(post.content)}
               imageAlt={`${post.title}썸네일`}
               title={post.title}
               subTitle={post.sub_title}
-              tagItems={post.tag}
+              skills={post.skills}
               date={getPostDate(post.created_at)}
               comments={post.comment_count}
               likes={post.like_count}
+              bookmarks={post.bookmark_count}
               field={`${post.sub_category}`}
               userId={post.user_id}
             />
@@ -162,7 +170,7 @@ const HomeMainContainer = styled.main`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 75rem;
+  max-width: 78.75rem;
   margin-left: 1.5rem;
   margin-top: 3rem;
 `;
@@ -191,10 +199,18 @@ const HomeDropDownContainer = styled.div`
 const HomeDropDownButton = styled.div`
   display: flex;
   align-items: center;
-  width: 5rem;
+  width: 4rem;
+
+  ${({ theme }) => theme.fonts.body14}
+  color: ${({ theme }) => theme.colors.gray4};
 
   &:hover {
     cursor: pointer;
+    color: ${({ theme }) => theme.colors.primary6};
+
+    path {
+      fill: ${({ theme }) => theme.colors.primary6};
+    }
   }
 `;
 
@@ -203,25 +219,30 @@ const HomeDropDownList = styled.ul`
   flex-direction: column;
   position: absolute;
   top: 11rem;
-  width: 7rem;
-  background-color: white;
-  border: 1px solid #e1e4e8;
+  width: 11.25rem;
+
+  background-color: ${({ theme }) => theme.colors.gray9};
+  ${({ theme }) => theme.fonts.body14};
+  color: ${({ theme }) => theme.colors.white};
+
   border-radius: 0.25rem;
-  font-size: 1rem;
-  gap: 0.5rem;
+  filter: drop-shadow(0px 0.625rem 0.625rem rgba(0, 0, 0, 0.5));
   z-index: 2;
 `;
 
 const HomeDropDownItemContainer = styled.div`
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  padding: 1.1563rem 0.75rem;
+
   &:hover {
     cursor: pointer;
-    background-color: #f6f8fa;
+    background-color: ${({ theme }) => theme.colors.gray8};
   }
 `;
 
-const HomeDropDownItem = styled.li`
-  margin: 0.5rem;
-`;
+const HomeDropDownItem = styled.li``;
 
 const CardContainer = styled.div`
   cursor: pointer;
