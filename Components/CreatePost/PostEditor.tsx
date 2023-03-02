@@ -1,7 +1,7 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import { v4 as uuidv4 } from "uuid";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -13,6 +13,7 @@ import uploadImage from "@/utils/commons/uploadImage";
 import styled from "styled-components";
 import compressImg from "@/utils/commons/compressImg";
 import validateFile from "@/utils/commons/validationImage";
+import { Modal } from "../Common";
 
 /**
  * @TODO 이미지 확장자 유효성 검사 필요
@@ -26,6 +27,7 @@ const MDEditor = dynamic<MDEditorProps>(() => import("@uiw/react-md-editor"), {
 const PostEditor: NextPage = () => {
   const isPostId = useRecoilValue(postId);
   const [postContent, setPostContent] = useRecoilState(recoilPostContent);
+  const [showModal, setShowModal] = useState(false);
 
   const onImagePasted = useCallback(
     async (
@@ -37,18 +39,18 @@ const PostEditor: NextPage = () => {
         for (let index = 0; index < dataTransfer.items.length; index += 1) {
           const file = dataTransfer.items[index].getAsFile();
 
-          if (!validateFile(file)) {
-            console.log("이미지 파일이 아닙니다.");
+          if (file && !validateFile(file)) {
+            setShowModal(true);
             return;
           }
-          files.push(file);
+          files.push(file as File);
         }
       } else if (dataTransfer instanceof FileList) {
         for (let index = 0; index < dataTransfer.length; index += 1) {
           const file = dataTransfer[index];
 
           if (!validateFile(file)) {
-            console.log("이미지 파일이 아닙니다."); // modal경고창으로 
+            setShowModal(true);
             return;
           }
           files.push(file);
@@ -99,81 +101,92 @@ const PostEditor: NextPage = () => {
   };
 
   return (
-    <MDEditor
-      value={postContent}
-      onChange={(value) => {
-        setPostContent(value || "");
-      }}
-      height={600}
-      onPaste={(event) => {
-        event.preventDefault();
-        onImagePasted(event.clipboardData);
-      }}
-      onDrop={(event) => {
-        event.preventDefault();
-        onImagePasted(event.dataTransfer);
-      }}
-      textareaProps={{
-        placeholder: "Fill in your markdown for the coolest of the cool.",
-      }}
-      commands={[
-        commands.bold,
-        commands.italic,
-        commands.strikethrough,
-        commands.hr,
-        commands.title,
-        commands.divider,
+    <div>
+      {showModal && (
+        <Modal
+          onClose={() => setShowModal(false)}
+          title="이미지 파일이 아닙니다."
+        >
+          jpeg, jpg, png, svg 등 이미지 파일을 넣어주세요.
+        </Modal>
+      )}
 
-        commands.link,
-        commands.quote,
-        commands.code,
-        commands.divider,
+      <MDEditor
+        value={postContent}
+        onChange={(value) => {
+          setPostContent(value || "");
+        }}
+        height={600}
+        onPaste={(event) => {
+          event.preventDefault();
+          onImagePasted(event.clipboardData);
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          onImagePasted(event.dataTransfer);
+        }}
+        textareaProps={{
+          placeholder: "Fill in your markdown for the coolest of the cool.",
+        }}
+        commands={[
+          commands.bold,
+          commands.italic,
+          commands.strikethrough,
+          commands.hr,
+          commands.title,
+          commands.divider,
 
-        commands.unorderedListCommand,
-        commands.orderedListCommand,
-        commands.checkedListCommand,
-        commands.divider,
+          commands.link,
+          commands.quote,
+          commands.code,
+          commands.divider,
 
-        commands.group([], {
-          name: "image",
-          groupName: "image",
-          icon: (
-            <svg width="12" height="12" viewBox="0 0 20 20">
-              <path
-                fill="currentColor"
-                d="M15 9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4-7H1c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 13l-6-5-2 2-4-5-4 8V4h16v11z"
-              />
-            </svg>
-          ),
-          // eslint-disable-next-line react/no-unstable-nested-components
-          children: (handle: any) => {
-            // API가 any를 지정합니다.
-            return (
-              <CustomImageContainer>
-                <label htmlFor="file">
-                  <ImageUploadButton>이미지 업로드하기</ImageUploadButton>
-                </label>
-                <ImageInput
-                  type="file"
-                  id="file"
-                  value=""
-                  multiple
-                  accept="image/*"
-                  onChange={(e) => {
-                    onImagePasted(e.target.files);
-                    handle.close();
-                  }}
+          commands.unorderedListCommand,
+          commands.orderedListCommand,
+          commands.checkedListCommand,
+          commands.divider,
+
+          commands.group([], {
+            name: "image",
+            groupName: "image",
+            icon: (
+              <svg width="12" height="12" viewBox="0 0 20 20">
+                <path
+                  fill="currentColor"
+                  d="M15 9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4-7H1c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 13l-6-5-2 2-4-5-4 8V4h16v11z"
                 />
-                <CloseButton type="button" onClick={() => handle.close()}>
-                  close
-                </CloseButton>
-              </CustomImageContainer>
-            );
-          },
-          buttonProps: { "aria-label": "Insert image" },
-        }),
-      ]}
-    />
+              </svg>
+            ),
+            // eslint-disable-next-line react/no-unstable-nested-components
+            children: (handle: any) => {
+              // API가 any를 지정합니다.
+              return (
+                <CustomImageContainer>
+                  <label htmlFor="file">
+                    <ImageUploadButton>이미지 업로드하기</ImageUploadButton>
+                  </label>
+                  <ImageInput
+                    type="file"
+                    id="file"
+                    value=""
+                    multiple
+                    accept="image/*"
+                    onChange={(e) => {
+                      onImagePasted(e.target.files);
+                      handle.close();
+                    }}
+                  />
+                  <CloseButton type="button" onClick={() => handle.close()}>
+                    close
+                  </CloseButton>
+                </CustomImageContainer>
+              );
+            },
+            buttonProps: { "aria-label": "Insert image" },
+          }),
+        ]}
+      />
+    </div>
   );
 };
 
