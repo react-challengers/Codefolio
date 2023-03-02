@@ -13,35 +13,52 @@ const ShowProfileContainer = () => {
   if (!profileData) return <div>Error</div>;
 
   return (
-    <>
-      <TabProfileContainer>
-        <ProfileContainer title="기본 정보">
-          <>
-            <p>{profileData.gender}</p>
-            {profileData.birth_year !== new Date().getFullYear() && (
-              <p>{`${profileData.birth_year} 년생`}</p>
-            )}
-            {profileData.phone !== "01000000000" && <p>{profileData.phone}</p>}
-          </>
-        </ProfileContainer>
+    <TabProfileContainer>
+      <ProfileContainer title="자기소개">
+        <SelfProfileContainer>{profileData.self_profile}</SelfProfileContainer>
+      </ProfileContainer>
 
-        <ProfileContainer title="경력">
-          <ContentContainer>
-            <ContentWrapper>
-              <p>포지션</p>
-              <Tags tagItems={profileData?.field} />
-            </ContentWrapper>
-            <ContentWrapper>
-              <p>경력</p>
-              <p>{profileData?.career}</p>
-            </ContentWrapper>
-            <ContentWrapper>
-              <p>스킬</p>
-              <Tags tagItems={profileData?.skills} />
-            </ContentWrapper>
-          </ContentContainer>
-        </ProfileContainer>
-      </TabProfileContainer>
+      <ProfileContainer title="기본정보">
+        <ContentContainer>
+          <ContentWrapper>
+            <ContentTitle>이름*</ContentTitle>
+            <ContentItem>{profileData.user_name}</ContentItem>
+          </ContentWrapper>
+          <ContentWrapper>
+            <ContentTitle>이메일*</ContentTitle>
+            <p>{profileData.contact_email}</p>
+          </ContentWrapper>
+          <ContentWrapper>
+            <ContentTitle>성별</ContentTitle>
+            <ContentItem>{profileData.gender}</ContentItem>
+          </ContentWrapper>
+          <ContentWrapper>
+            <ContentTitle>출생년도</ContentTitle>
+            <ContentItem>{profileData.birth_year}</ContentItem>
+          </ContentWrapper>
+          <ContentWrapper>
+            <ContentTitle>휴대폰번호</ContentTitle>
+            <ContentItem>{profileData.phone}</ContentItem>
+          </ContentWrapper>
+        </ContentContainer>
+      </ProfileContainer>
+
+      <ProfileContainer title="개발자 정보">
+        <ContentContainer>
+          <ContentWrapper>
+            <ContentTitle>포지션</ContentTitle>
+            <Tags tagItems={profileData?.field} />
+          </ContentWrapper>
+          <ContentWrapper>
+            <ContentTitle>기술스택</ContentTitle>
+            <Tags tagItems={profileData?.skills} />
+          </ContentWrapper>
+          <ContentWrapper>
+            <ContentTitle>깃허브 주소</ContentTitle>
+            <ContentItem>{profileData.github}</ContentItem>
+          </ContentWrapper>
+        </ContentContainer>
+      </ProfileContainer>
 
       <ButtonWrapper>
         <DefaultButton
@@ -51,31 +68,41 @@ const ShowProfileContainer = () => {
           onClick={() => setIsEditing(true)}
         />
       </ButtonWrapper>
-    </>
+    </TabProfileContainer>
   );
 };
 
 const TabProfileContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  grid-column-gap: 0.75rem;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
 
-  p {
-    color: grey;
-  }
+const SelfProfileContainer = styled.div`
+  ${(props) => props.theme.fonts.body16}
+  color: ${(props) => props.theme.colors.white};
 `;
 
 export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 2rem;
 `;
 
 export const ContentWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 3fr;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const ContentTitle = styled.p`
+  ${(props) => props.theme.fonts.body16}
+  width: 11.5rem;
+  color: ${(props) => props.theme.colors.gray3};
+`;
+
+const ContentItem = styled.div`
+  color: ${(props) => props.theme.colors.white};
 `;
 
 const ButtonWrapper = styled.div`
