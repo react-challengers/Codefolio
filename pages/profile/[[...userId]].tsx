@@ -2,18 +2,18 @@ import { NextPage } from "next";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
-import { getAllPosts, getCurrentUser } from "@/utils/APIs/supabase";
-import supabase from "@/lib/supabase";
-import { useRouter } from "next/router";
-import { useRecoilValue } from "recoil";
-import { userLoginCheck } from "@/lib/recoil";
 import {
   CardItemContainer,
   MyPageContainer,
   MyPageTab,
   TabProfile,
   UserInfoContainer,
-} from "../../Components/Mypage";
+} from "@/Components/Mypage";
+import { getAllPosts, getCurrentUser } from "@/utils/APIs/supabase";
+import supabase from "@/lib/supabase";
+import { useRouter } from "next/router";
+import { useRecoilValue } from "recoil";
+import { userLoginCheck } from "@/lib/recoil";
 
 const tabList = ["프로젝트", "북마크", "좋아요", "프로필"];
 
