@@ -54,9 +54,11 @@ enum SoftWareCategory {
 }
 
 enum NotificationKind {
-  COMMENT = "댓글",
-  LIKE = "좋아요",
-  FOLLOW = "팔로우",
+  COMMENT = "comment",
+  LIKE = "like",
+  BOOKMARK = "bookmark",
+  POST_BADGE = "badge",
+  PROFILE_BADGE = "profileBadge",
 }
 
 interface UserProfileType {
@@ -79,12 +81,13 @@ interface UserProfileType {
 
 interface NotificationType {
   id: string;
-  user_id: string;
-  context: string;
   created_at: Date;
-  is_checked: boolean;
-  notificationKind: NotificationKind;
+  user_id: string;
   target_id: string;
+  post_id?: string;
+  content: string;
+  type: NotificationKind;
+  is_read: boolean;
 }
 
 interface PostType {

@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { DropDown, ProfileImage } from "../Common";
+import Notification from "./Notification";
 import SearchBar from "./SearchBar";
 
 const GNB = () => {
@@ -20,6 +21,8 @@ const GNB = () => {
   const [currentUserProfileImage, setCurrentUserProfileImage] =
     useState<string>("");
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
+    useState(false);
 
   useQuery(["currentUser"], {
     queryFn: getCurrentUser,
@@ -49,6 +52,10 @@ const GNB = () => {
 
   const handleProfileDropdown = () => {
     setIsProfileDropdownOpen((prev) => !prev);
+  };
+
+  const handleNotificationDropdown = () => {
+    setIsNotificationDropdownOpen((prev) => !prev);
   };
 
   const handleLogout = async () => {
@@ -83,7 +90,7 @@ const GNB = () => {
       <ButtonsContainer>
         {userCheck ? (
           <>
-            <ButtonWrapper onClick={() => null}>
+            <ButtonWrapper onClick={handleNotificationDropdown}>
               <Image
                 src="/icons/notification.svg"
                 alt="알림 아이콘"
@@ -91,6 +98,7 @@ const GNB = () => {
                 height="24"
               />
             </ButtonWrapper>
+            {isNotificationDropdownOpen && <Notification />}
             <ButtonWrapper
               onClick={() =>
                 router.push(userCheck ? "/create-post" : "/auth/login")
@@ -135,7 +143,6 @@ const GNBContainer = styled.div`
   width: 100vw;
   height: 3.5rem;
   background-color: ${({ theme }) => theme.colors.gray10};
-  position: sticky;
   display: flex;
   flex-direction: row;
   align-items: center;

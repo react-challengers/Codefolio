@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -10,13 +10,15 @@ import {
   decrementLike,
   deleteBookmark,
   deleteLike,
+  getOnePost,
   incrementBookmark,
   incrementLike,
 } from "@/utils/APIs/supabase";
+import supabase from "@/lib/supabase";
+import createNotificationContent from "@/utils/notification/createNotificationContent";
 import ShowMoreModal from "./ShowMoreModal";
 
 interface DetailHeaderProps {
-  author: string;
   isBookmark: boolean;
   isLike: boolean;
   setIsBookmark: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,7 +27,6 @@ interface DetailHeaderProps {
 }
 
 const DetailHeader = ({
-  author,
   isBookmark,
   isLike,
   setIsBookmark,
@@ -38,8 +39,52 @@ const DetailHeader = ({
     query: { id: postId }, // c078f3bf-4e86-44a2-a672-583f36c1aa8f
   } = useRouter();
   const [showMore, setShowMore] = useState(false);
+  const [postTitle, setPostTitle] = useState("");
+  const [author, setAuthor] = useState("");
+
+  const { data: currentPost } = useQuery<PostType>(["getOnePost", postId], {
+    queryFn: ({ queryKey }) => getOnePost(queryKey[1] as string),
+    onSuccess: (data) => {
+      if (data) {
+        setPostTitle(data.title);
+        setAuthor(data.user_id);
+      }
+    },
+  });
 
   const showMoreModal = () => setShowMore((prev) => !prev);
+
+  // 추후 리팩토링 대상(결합도가 높음)
+  const { mutate: addNotificationMutate } = useMutation(
+    async (type: string) => {
+      await supabase
+        .from("notification")
+        .insert({
+          user_id: currentUserId,
+          target_id: author,
+          post_id: postId as string,
+          content: createNotificationContent(type, postTitle),
+          is_read: false,
+          type,
+        })
+        .single();
+    }
+  );
+
+  // 추후 리팩토링 대상(결합도가 높음)
+  const { mutate: deleteNotificationMutate } = useMutation(
+    async (type: string) => {
+      await supabase
+        .from("notification")
+        .delete()
+        .match({
+          user_id: currentUserId,
+          target_id: author,
+          post_id: postId as string,
+          type,
+        });
+    }
+  );
 
   const { mutate: addBookmarkMutate } = useMutation(addBookmark, {
     onMutate: async (newBookmarkItem) => {
@@ -65,6 +110,7 @@ const DetailHeader = ({
       }
     },
     onSuccess: async () => {
+      addNotificationMutate("bookmark");
       setIsBookmark(true);
     },
   });
@@ -96,6 +142,7 @@ const DetailHeader = ({
       }
     },
     onSuccess: async () => {
+      deleteNotificationMutate("bookmark");
       setIsBookmark(false);
     },
   });
@@ -124,6 +171,7 @@ const DetailHeader = ({
       }
     },
     onSuccess: async () => {
+      addNotificationMutate("like");
       setIsLike(true);
     },
   });
@@ -149,6 +197,7 @@ const DetailHeader = ({
       }
     },
     onSuccess: async () => {
+      deleteNotificationMutate("like");
       setIsLike(false);
     },
   });
@@ -201,13 +250,6 @@ const DetailHeader = ({
             onClick={clickLikeButton}
           />
         )}
-        {/* <Image
-          src={`/icons/like${isLike ? "Hover" : ""}.svg`}
-          width={36}
-          height={36}
-          alt="좋아요 버튼"
-          onClick={clickLikeButton}
-        /> */}
         <Image
           src={`/icons/bookmark${isBookmark ? "Hover" : ""}.svg`}
           width={36}
