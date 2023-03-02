@@ -11,7 +11,6 @@ import {
   getCurrentUser,
   getIsBookMark,
   getIsLike,
-  getOnePost,
 } from "@/utils/APIs/supabase";
 import getTextColorByBackgroundColor from "@/utils/detail/getTextColorByBackgroundColor";
 import { useQuery } from "@tanstack/react-query";
@@ -209,7 +208,7 @@ const DetailPageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
-  background-color: white;
+  background-color: #1c1c1c;
   border-radius: 0.5rem;
   padding-bottom: 3.125rem;
 
