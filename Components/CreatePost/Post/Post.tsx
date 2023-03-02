@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import styled from "styled-components";
-import { DefaultButton, Modal } from "@/Components/Common";
+import { Modal } from "@/Components/Common";
 import getYYYYMM from "@/utils/commons/getYYYYMM";
 
 import { useRecoilState } from "recoil";
@@ -218,7 +218,7 @@ const Post: NextPage = () => {
         <PostHeader>
           {/* <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert> */}
           {/* <DefaultButton text="저장" type="outline" size="s" onClick={onSave} /> */}
-          <DefaultButton text="게시" type="full" size="s" onClick={onPost} />
+          <CreateButton onClick={onPost}>게시</CreateButton>
         </PostHeader>
         <PostTitle />
         <ProjectInfo />
@@ -231,8 +231,25 @@ const PostHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 2.8125rem 0;
-  gap: 1.25rem;
+
+  padding: 1.875rem 0;
+`;
+
+const CreateButton = styled.button`
+  all: unset;
+  cursor: pointer;
+
+  width: 8.125rem;
+  height: 3.75rem;
+  border-radius: 0.25rem;
+
+  background-color: ${({ theme }) => theme.colors.gray8};
+  text-align: center;
+  color: ${({ theme }) => theme.colors.primary6};
+  ${({ theme }) => theme.fonts.subtitle18Bold};
+  :hover {
+    background-color: ${({ theme }) => theme.colors.gray7};
+  }
 `;
 
 // interface SaveAlertProps {

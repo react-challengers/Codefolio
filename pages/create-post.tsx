@@ -27,7 +27,7 @@ const CreatePostPage = () => {
 };
 
 const MainWrapper = styled.main`
-  max-width: 98.75rem;
+  max-width: 87.5rem;
   margin: 0 auto;
   margin-bottom: 2.5rem;
 `;

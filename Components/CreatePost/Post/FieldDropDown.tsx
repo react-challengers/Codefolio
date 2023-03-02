@@ -81,8 +81,8 @@ const FieldDropDownContainer = styled.div`
   border: 1px solid #cccccc;
   display: flex;
   border-radius: 0.2rem;
-  gap: 0;
   position: absolute;
+  top: 2.5rem;
   background-color: #fff;
   z-index: 21;
 `;

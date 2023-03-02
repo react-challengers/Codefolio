@@ -17,6 +17,7 @@ const PostTitle = () => {
   const [backgroundColor, setBackgroundColor] = useRecoilState(
     postTitleBackgroundColor
   );
+  // common input 으로 변경
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
 
@@ -35,14 +36,14 @@ const PostTitle = () => {
         <SubTitleInput
           value={subTitle}
           onChange={(e) => setSubTitle(e.target.value)}
-          placeholder="소제목을 입력하세요"
+          placeholder="‘SA’, ‘프로젝트 회고’ 등 글의 종류를 입력하세요"
         />
         <ImgLabel htmlFor="background-color-picker">
           <ImgIcon
             src={color_fill}
             alt="배경색 지정 아이콘"
-            width={36}
-            height={36}
+            width={24}
+            height={24}
           />
         </ImgLabel>
         <TitleBackgroundColorPicker
@@ -60,35 +61,41 @@ export default PostTitle;
 const TitleContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 3rem;
-  gap: 1.375rem;
+  padding: 8rem 4.5rem 2.5rem;
+  gap: 1rem;
   position: relative;
   background-color: ${(props) => props.color};
 `;
 const TitleInput = styled.input`
   display: inline-block;
   width: 100%;
-  height: 3.625rem;
-  font-size: 2.5rem;
-  font-weight: 700;
+  height: 2.875rem;
+  ${({ theme }) => theme.fonts.title36};
+  color: ${({ theme }) => theme.colors.white};
+  ::placeholder {
+    color: ${({ theme }) => theme.colors.gray6};
+  }
   border: none;
   background-color: transparent;
 `;
 const SubTitleWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
-  width: 100%;
   background-color: transparent;
 `;
 const SubTitleInput = styled.input`
-  width: 90%;
-  height: 2rem;
-  font-size: 1.375rem;
-  font-weight: 400;
+  width: 100%;
+  height: 1.75rem;
+  margin-right: 1rem;
+  ${({ theme }) => theme.fonts.subtitle18};
+  color: ${({ theme }) => theme.colors.gray2};
+  ::placeholder {
+    color: ${({ theme }) => theme.colors.gray7};
+  }
   border: none;
   background-color: transparent;
 `;
 const ImgLabel = styled.label``;
+
 const ImgIcon = styled(Image)<StaticImageData>`
   cursor: pointer;
 `;
