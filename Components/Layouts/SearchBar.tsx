@@ -1,17 +1,21 @@
 import { searchValueState } from "@/lib/recoil";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
 const SearchBar = () => {
+  const router = useRouter();
   const [searchValue, setSearchValue] = useRecoilState(searchValueState);
 
   const handleSearchKeyDown = (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Enter" && event.nativeEvent.isComposing === false) {
-      event.preventDefault();
-      // 검색 시 해당 검색어로 검색 결과 페이지로 이동
+      router.push(`/search`, {
+        pathname: "/search",
+        query: { q: searchValue },
+      });
     }
   };
 

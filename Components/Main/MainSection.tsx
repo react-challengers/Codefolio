@@ -134,15 +134,6 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
                 key={item}
                 onClickHandler={onClickDropDownHandler}
               />
-              // <HomeDropDownItemContainer
-              //   key={item}
-              //   onClick={() => {
-              //     setSelectedDropDownItem(item);
-              //     setIsDropDownOpen(false);
-              //   }}
-              // >
-              //   <HomeDropDownItem>{item}</HomeDropDownItem>
-              // </HomeDropDownItemContainer>
             ))}
           </HomeDropDownList>
         )}
