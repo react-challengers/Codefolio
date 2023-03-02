@@ -9,15 +9,16 @@ import Banner from "./Banner";
 import useUserImage from "./useUserImage";
 
 /**
- * @TODO SelfProfileWrapper 최대 3줄로 제한하기
+ * @TODO SelfProfileWrapper 최대 3줄로 제한
+ * @TODO 깃헙 링크 아이콘 추가
+ * @TODO 활동분야, 기술 스택 tags추가
  */
+
 const UserInfoContainer = () => {
   const { profileData, updateProfileData } = useUserProfile();
   const [isEditing, setIsEditing] = useState(false);
 
   const { handleImage: handleProfileImage } = useUserImage("profile_image");
-  const { handleImage: handleBackgroundImage } =
-    useUserImage("background_image");
 
   const { inputValues, handleInputChange } = useInput({
     userName: profileData.user_name ?? "",
