@@ -29,11 +29,11 @@ const PostEditor: NextPage = () => {
 
   const onImagePasted = useCallback(
     async (
-      dataTransfer: DataTransfer | any // Drag and Drop API
+      dataTransfer: DataTransfer | FileList | null // Drag and Drop API
     ) => {
-      const files: File[] = [];
-
-      if (dataTransfer.items) {
+      if (!dataTransfer) return;
+      const files: File[] = []; // 드래그 앤 드랍으로 가져온 파일들
+      if (dataTransfer instanceof DataTransfer) {
         for (let index = 0; index < dataTransfer.items.length; index += 1) {
           const file = dataTransfer.items[index].getAsFile();
 
@@ -43,12 +43,12 @@ const PostEditor: NextPage = () => {
           }
           files.push(file);
         }
-      } else {
+      } else if (dataTransfer instanceof FileList) {
         for (let index = 0; index < dataTransfer.length; index += 1) {
           const file = dataTransfer[index];
 
           if (!validateFile(file)) {
-            console.log("이미지 파일이 아닙니다.");
+            console.log("이미지 파일이 아닙니다."); // modal경고창으로 
             return;
           }
           files.push(file);
@@ -146,7 +146,8 @@ const PostEditor: NextPage = () => {
             </svg>
           ),
           // eslint-disable-next-line react/no-unstable-nested-components
-          children: (handle) => {
+          children: (handle: any) => {
+            // API가 any를 지정합니다.
             return (
               <CustomImageContainer>
                 <label htmlFor="file">

@@ -1,6 +1,6 @@
 const theme = {
   colors: {
-    primary6: "#3B89E3",
+    primary6: "#3DDFE9",
     primary5: "#5BE1E9",
     primary4: "#79E2E9",
     primary3: "#97E4E9",
@@ -29,7 +29,7 @@ const theme = {
       font-style: normal;
       font-weight: 700;
       font-size: 36px;
-      line-height: 52px;
+      line-height: 46px;
       letter-spacing: -0.02em;
     `,
     title24: `
@@ -37,56 +37,56 @@ const theme = {
       font-style: normal;
       font-weight: 500;
       font-size: 24px;
-      line-height: 35px;
+      line-height: 34px;
     `,
     subtitle18: `
       font-family: 'Noto Sans KR';
       font-style: normal;
       font-weight: 400;
       font-size: 18px;
-      line-height: 26px;
+      line-height: 27px;
     `,
     subtitle18Bold: `
       font-family: 'Noto Sans KR';
       font-style: normal;
       font-weight: 700;
       font-size: 18px;
-      line-height: 26px;
+      line-height: 27px;
     `,
     subtitle18En: `
       font-family: 'Lato';
       font-style: normal;
       font-weight: 400;
       font-size: 18px;
-      line-height: 27px;
+      line-height: 22px;
     `,
     subtitle16: `
       font-family: 'Noto Sans KR';
       font-style: normal;
       font-weight: 700;
       font-size: 16px;
-      line-height: 23px;
+      line-height: 24px;
     `,
     body16: `
       font-family: 'Noto Sans KR';
       font-style: normal;
       font-weight: 400;
       font-size: 16px;
-      line-height: 25px;
+      line-height: 24px;
     `,
     body14: `
       font-family: 'Noto Sans KR';
       font-style: normal;
       font-weight: 400;
       font-size: 14px;
-      line-height: 21px;
+      line-height: 19px;
     `,
     body14Medium: `
       font-family: 'Noto Sans KR';
       font-style: normal;
       font-weight: 500;
       font-size: 14px;
-      line-height: 20px;
+      line-height: 19px;
     `,
     body14En: `
       font-family: 'Lato';
@@ -100,7 +100,7 @@ const theme = {
       font-style: normal;
       font-weight: 400;
       font-size: 13px;
-      line-height: 16px;
+      line-height: 18px;
     `,
     body13En: `
       font-family: 'Lato';
