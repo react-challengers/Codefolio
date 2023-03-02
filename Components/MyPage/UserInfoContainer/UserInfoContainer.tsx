@@ -68,17 +68,16 @@ const UserInfoContainer = () => {
               src={profileData.profile_image}
             />
           </label>
-        </ProfileImageWrapper>
-        <IconWrapper>
           <IconBox onClick={() => handleIsEditing()}>
             <Image
-              src="/icons/edit.svg"
+              src="/icons/ico-edit.svg"
               alt="편집 아이콘"
-              width="24"
-              height="24"
+              width="36"
+              height="36"
             />
           </IconBox>
-        </IconWrapper>
+        </ProfileImageWrapper>
+        {/* <IconWrapper></IconWrapper> */}
         <TextWrapper>
           {isEditing ? (
             <InputWrapper>
@@ -95,24 +94,13 @@ const UserInfoContainer = () => {
                 onChange={handleInputChange("selfProfile")}
                 rows={3}
               />
-              <ImgLabel htmlFor="background-color-picker">
-                <ImgIcon
-                  src="/icons/color_fill.svg"
-                  alt="배경색 지정 아이콘"
-                  width={36}
-                  height={36}
-                />
-                <UserBackgroundImagePicker
-                  id="background-color-picker"
-                  type="file"
-                  onChange={handleBackgroundImage}
-                />
-              </ImgLabel>
             </InputWrapper>
           ) : (
             <>
-              <UserNameWrapper>{profileData.user_name}</UserNameWrapper>
-              <EmailWrapper>{profileData.contact_email}</EmailWrapper>
+              <ProfileInfoWrapper>
+                <UserNameWrapper>{profileData.user_name}</UserNameWrapper>
+                <EmailWrapper>{profileData.contact_email}</EmailWrapper>
+              </ProfileInfoWrapper>
               <SelfProfileWrapper>
                 {profileData.self_profile}
               </SelfProfileWrapper>
@@ -138,9 +126,7 @@ const UserInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   position: relative;
-  text-align: center;
 `;
 
 const ProfileImageWrapper = styled.div`
@@ -152,39 +138,49 @@ const ProfileFileImageInput = styled.input`
   display: none;
 `;
 
-const IconWrapper = styled.div`
-  display: flex;
-  gap: 0.75rem;
-  position: absolute;
-  right: 0rem;
-`;
-
 const IconBox = styled.div`
   cursor: pointer;
+  position: absolute;
+  right: -0.375rem;
+  bottom: -0.375rem;
+  z-index: 1;
 `;
 
 const TextWrapper = styled.div`
-  margin-top: 5rem;
+  margin: 4rem 0 0;
   display: flex;
   flex-direction: column;
 `;
 
 // isEditing false
+const ProfileInfoWrapper = styled.div`
+  display: flex;
+  padding: 0 1.5rem;
+  gap: 0.75rem;
+  align-items: center;
+  height: 2.25rem;
+  margin: 0 0 2.5rem;
+`;
+
 const UserNameWrapper = styled.p`
   font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  color: ${(prop) => prop.theme.colors.white};
 `;
 
 const EmailWrapper = styled.p`
-  color: grey;
-  margin-bottom: 1.5rem;
+  color: ${(props) => props.theme.colors.gray4};
+  ${(props) => props.theme.fonts.body16}
 `;
 
 const SelfProfileWrapper = styled.div`
-  padding: 1.25rem;
-  border: 1px solid lightgrey;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid ${(props) => props.theme.colors.gray7};
   line-height: 1.5rem;
   width: 64rem;
+  color: ${(props) => props.theme.colors.white};
+  ${(props) => props.theme.fonts.body16}
+  text-align: justify;
 `;
 
 // isEditing true
@@ -224,22 +220,6 @@ const SelfProfileInput = styled.textarea`
   width: 64rem;
   border: 1px solid lightgrey;
   resize: none;
-`;
-
-const ImgLabel = styled.label`
-  position: absolute;
-  right: 0;
-  top: 0;
-`;
-
-const ImgIcon = styled(Image)<StaticImageData>`
-  cursor: pointer;
-`;
-
-const UserBackgroundImagePicker = styled.input`
-  opacity: 0;
-  width: 0;
-  height: 0;
 `;
 
 const Loader = styled(ClimbingBoxLoader)`

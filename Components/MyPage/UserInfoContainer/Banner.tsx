@@ -1,5 +1,6 @@
 import Image, { StaticImageData } from "next/image";
 import styled from "styled-components";
+import useUserImage from "./useUserImage";
 
 interface BannerProps {
   src?: string;
@@ -15,14 +16,52 @@ interface BannerProps {
  */
 
 const Banner = ({ src = "", alt = "프로필 배경이미지" }: BannerProps) => {
+  const { handleImage: handleBackgroundImage } =
+    useUserImage("background_image");
+
   if (!src) {
-    return <BannerColor />;
+    return (
+      <BannerColor>
+        <ImgLabel htmlFor="background-color-picker">
+          <ImgIcon
+            src="/icons/ico-photo.svg"
+            alt="배경색 지정 아이콘"
+            width={36}
+            height={36}
+          />
+          <UserBackgroundImagePicker
+            id="background-color-picker"
+            type="file"
+            onChange={handleBackgroundImage}
+          />
+        </ImgLabel>
+      </BannerColor>
+    );
   }
 
   return (
-    <BannerImage src={src} alt={alt} sizes="100vw" width={100} height={180} />
+    <BannerContainer>
+      <BannerImage src={src} alt={alt} sizes="100vw" width={100} height={180} />
+      <ImgLabel htmlFor="background-color-picker">
+        <ImgIcon
+          src="/icons/ico-photo.svg"
+          alt="배경색 지정 아이콘"
+          width={36}
+          height={36}
+        />
+        <UserBackgroundImagePicker
+          id="background-color-picker"
+          type="file"
+          onChange={handleBackgroundImage}
+        />
+      </ImgLabel>
+    </BannerContainer>
   );
 };
+
+const BannerContainer = styled.div`
+  position: relative;
+`;
 
 const BannerColor = styled.div`
   width: 100vw;
@@ -34,6 +73,23 @@ const BannerImage = styled(Image)`
   width: 100vw;
   height: 11.25rem;
   object-fit: cover;
+`;
+
+const ImgLabel = styled.label`
+  position: absolute;
+  right: 2.5rem;
+  bottom: 1.25rem;
+  z-index: 1;
+`;
+
+const ImgIcon = styled(Image)<StaticImageData>`
+  cursor: pointer;
+`;
+
+const UserBackgroundImagePicker = styled.input`
+  opacity: 0;
+  width: 0;
+  height: 0;
 `;
 
 export default Banner;
