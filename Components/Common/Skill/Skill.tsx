@@ -68,9 +68,10 @@ const Skill = ({
   return (
     <SkillContainer>
       <SkillInput
+        size={skill ? skill.length : 1}
         value={skill}
         onChange={onChange}
-        maxLength={15}
+        maxLength={20}
         isDuplicate={isDuplicate}
         onKeyPress={handleOnKeyDown}
         ref={isLast ? lastSkillRef : null}
@@ -98,7 +99,6 @@ const SkillContainer = styled.label`
   display:flex;
   align-items: center;
   box-sizing: border-box;
-  max-width: 8.75rem;
 
   gap: 0.625rem;
   padding: 0.5rem 1rem;
@@ -110,8 +110,6 @@ interface SkillInputProps {
 }
 
 const SkillInput = styled.input`
-  all: unset;
-  width: 100%;
   box-sizing: border-box;
   ${commonStyle}
   box-sizing: border-box;
