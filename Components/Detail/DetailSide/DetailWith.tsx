@@ -1,21 +1,33 @@
+import { ProfileImage } from "@/Components/Common";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import styled from "styled-components";
-import DetailBox from "./DetailBox";
 
 export interface DetailWithProps {
+  profileImage?: string;
   name: string;
   field: string;
   github: string;
 }
 
-const DetailWith = ({ name, field, github }: DetailWithProps) => {
+const DetailWith = ({
+  profileImage = "",
+  name,
+  field,
+  github,
+}: DetailWithProps) => {
   return (
-    <DetailWithContainer>
-      <p>{name}</p>
-      <DetailBox>{field}</DetailBox>
-      <Link href={github || ""}>
+    <ProfileWrapper>
+      <UserInfoWrapper>
+        <ProfileImage src={profileImage} alt="프로필 사진" page="detailPage" />
+        <UserInfo>
+          <h2>{name}</h2>
+          <p>{field}</p>
+        </UserInfo>
+      </UserInfoWrapper>
+
+      <Link href={github}>
         <GithubImage
           src="/icons/github.svg"
           width={20}
@@ -23,18 +35,36 @@ const DetailWith = ({ name, field, github }: DetailWithProps) => {
           alt="깃허브 주소"
         />
       </Link>
-    </DetailWithContainer>
+    </ProfileWrapper>
   );
 };
 
-const DetailWithContainer = styled.div`
-  color: #666;
-  font-size: 0.8125rem;
-  text-align: center;
-
-  display: grid;
+const ProfileWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
   align-items: center;
-  grid-template-columns: 1fr 1.2fr 1fr;
+  justify-content: space-between;
+  gap: 1.25rem;
+`;
+
+const UserInfoWrapper = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
+
+const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  h2 {
+    font-size: 1rem;
+    color: ${({ theme }) => theme.colors.gray2};
+  }
+  p {
+    font-size: 0.875rem;
+    color: ${({ theme }) => theme.colors.gray4};
+  }
 `;
 
 const GithubImage = styled(Image)`
