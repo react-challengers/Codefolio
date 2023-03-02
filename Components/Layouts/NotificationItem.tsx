@@ -1,6 +1,9 @@
-import { getSingleUser, getUserProfile } from "@/utils/APIs/supabase";
-import { useQuery } from "@tanstack/react-query";
+import { isNotificationState } from "@/lib/recoil";
+import { getSingleUser, postNotificationRead } from "@/utils/APIs/supabase";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { ProfileImage } from "../Common";
 import NotificationBookmarkIcon from "./NotificationBookmarkIcon";
@@ -12,10 +15,13 @@ interface NotificationItemProps {
 }
 
 const NotificationItem = ({ notification }: NotificationItemProps) => {
+  const router = useRouter();
   const [notificationUserProfileImage, setNotificationUserProfileImage] =
     useState<string>("");
 
   const [notificationUserName, setNotificationUserName] = useState<string>("");
+
+  const setIsNotificationDropdownOpen = useSetRecoilState(isNotificationState);
 
   useQuery(["notificationUser", notification.user_id], {
     queryFn: () => getSingleUser(notification.user_id),
@@ -29,8 +35,35 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
     },
   });
 
+  const { mutate: notificationMutate } = useMutation(
+    ["notification", notification.id],
+    postNotificationRead
+  );
+
+  const onClickNotificationHandler = () => {
+    notificationMutate(notification.id);
+    switch (notification.type) {
+      case "like":
+        router.push(`/detail/${notification.post_id}`);
+        break;
+      case "comment":
+        router.push(`/detail/${notification.post_id}`);
+        break;
+      case "bookmark":
+        router.push(`/detail/${notification.post_id}`);
+        break;
+      // case "badge", "profile_badge" 추가
+      default:
+        break;
+    }
+    setIsNotificationDropdownOpen(false);
+  };
+
   return (
-    <NotificationItemContainer isRead={notification.is_read}>
+    <NotificationItemContainer
+      isRead={notification.is_read}
+      onClick={onClickNotificationHandler}
+    >
       <NotificationProfileImageContainer>
         <ProfileImage
           src={notificationUserProfileImage}

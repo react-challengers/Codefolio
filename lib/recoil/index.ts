@@ -38,6 +38,8 @@ import {
 
 import searchValueState from "@/lib/recoil/searchValue";
 
+import isNotificationState from "@/lib/recoil/notificationAtoms";
+
 export {
   userLoginCheck,
   largeCategoryState,
@@ -75,4 +77,6 @@ export {
   myPageIsEditingProfileContainer,
   // search
   searchValueState,
+  // notification
+  isNotificationState,
 };

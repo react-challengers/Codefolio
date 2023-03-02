@@ -24,6 +24,7 @@ import addLike from "./addLike";
 import deleteLike from "./deleteLike";
 
 import getNotification from "./getNotification";
+import postNotificationRead from "./postNotificationRead";
 
 import incrementComment from "./incrementComment";
 import decrementComment from "./decrementComment";
@@ -53,6 +54,7 @@ export {
   addLike,
   deleteLike,
   getNotification,
+  postNotificationRead,
   incrementComment,
   decrementComment,
   incrementBookmark,

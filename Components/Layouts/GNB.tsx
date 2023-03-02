@@ -1,4 +1,5 @@
 import {
+  isNotificationState,
   subCategoryState,
   userLoginCheck as recoilUserLoginCheck,
 } from "@/lib/recoil";
@@ -22,7 +23,7 @@ const GNB = () => {
     useState<string>("");
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
-    useState(false);
+    useRecoilState(isNotificationState);
 
   useQuery(["currentUser"], {
     queryFn: getCurrentUser,
