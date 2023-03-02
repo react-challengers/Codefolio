@@ -46,6 +46,7 @@ const TabWrapper = styled.div<TabWrapperProps>`
   color: ${({ active, theme }) =>
     active ? theme.colors.white : theme.colors.gray5};
   margin: 0 0 2.25rem;
+  height: 3.5rem;
 `;
 
 export default Tabs;
