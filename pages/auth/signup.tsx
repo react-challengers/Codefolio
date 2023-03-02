@@ -17,6 +17,9 @@ import { userLoginCheck } from "@/lib/recoil";
 import { useQuery } from "@tanstack/react-query";
 import { getCurrentUser } from "@/utils/APIs/supabase";
 
+import Image from "next/dist/client/image";
+import ico_close_16 from "@/public/icons/ico_close_16.svg";
+
 /**
  * @TODO custom hooks 을 사용해서 리팩토링
  */
@@ -81,44 +84,112 @@ const SignUpPage: NextPage = () => {
       router.push("/");
     }
   };
+
+  const resetInput = (key: string) => {
+    switch (key) {
+      case "userName":
+        setUserName("");
+        setUserNameHelperText("");
+        break;
+      case "email":
+        setEmail("");
+        setEmailHelperText("");
+        break;
+      case "password":
+        setPassword("");
+        setPasswordHelperText("");
+        break;
+      case "passwordCheck":
+        setPasswordCheck("");
+        setPasswordCheckHelperText("");
+        break;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <SignupPageContainer>
       <EmptyContainer />
       <SignupSpace>
         <SignupForm>
-          <AuthInput
-            value={userName}
-            placeholder="이름(닉네임)"
-            onChange={(e) => setUserName(e.target.value)}
-            validate={userNameHelperText}
-          />
-          <HelperTextBox text={userNameHelperText} />
+          <div>
+            {userNameHelperText && (
+              <CloseSvg
+                src={ico_close_16}
+                alt="ico_close_16"
+                width={25}
+                height={24}
+                onClick={() => resetInput("userName")}
+              />
+            )}
+            <AuthInput
+              value={userName}
+              placeholder="이름(닉네임)"
+              onChange={(e) => setUserName(e.target.value)}
+              validate={userNameHelperText}
+            />
+          </div>
+          <div>
+            <HelperTextBox text={userNameHelperText} />
+            {emailHelperText && (
+              <CloseSvg
+                src={ico_close_16}
+                alt="ico_close_16"
+                width={25}
+                height={24}
+                onClick={() => resetInput("email")}
+              />
+            )}
+            <AuthInput
+              type={email}
+              value={email}
+              placeholder="이메일"
+              onChange={(e) => setEmail(e.target.value)}
+              validate={emailHelperText}
+            />
+          </div>
+          <div>
+            <HelperTextBox text={emailHelperText} />
+            {passwordHelperText && (
+              <CloseSvg
+                src={ico_close_16}
+                alt="ico_close_16"
+                width={25}
+                height={24}
+                onClick={() => resetInput("password")}
+              />
+            )}
+            <AuthInput
+              type="password"
+              value={password}
+              placeholder="비밀번호"
+              onChange={(e) => setPassword(e.target.value)}
+              validate={passwordHelperText}
+            />
+          </div>
 
-          <AuthInput
-            type={email}
-            value={email}
-            placeholder="이메일"
-            onChange={(e) => setEmail(e.target.value)}
-            validate={emailHelperText}
-          />
-          <HelperTextBox text={emailHelperText} />
+          <div>
+            <HelperTextBox text={passwordHelperText} />
+            {passwordCheckHelperText && (
+              <CloseSvg
+                src={ico_close_16}
+                alt="ico_close_16"
+                width={25}
+                height={24}
+                onClick={() => resetInput("passwordCheck")}
+              />
+            )}
+            <AuthInput
+              type="password"
+              value={passwordCheck}
+              placeholder="비밀번호 확인"
+              onChange={(e) => setPasswordCheck(e.target.value)}
+              validate={passwordCheckHelperText}
+            />
+          </div>
 
-          <AuthInput
-            type="password"
-            value={password}
-            placeholder="비밀번호"
-            onChange={(e) => setPassword(e.target.value)}
-            validate={passwordHelperText}
-          />
-          <HelperTextBox text={passwordHelperText} />
-
-          <AuthInput
-            type="password"
-            value={passwordCheck}
-            placeholder="비밀번호 확인"
-            onChange={(e) => setPasswordCheck(e.target.value)}
-            validate={passwordCheckHelperText}
-          />
           <HelperTextBox text={passwordCheckHelperText} />
         </SignupForm>
         <AuthButton buttonType="outLine" onclick={signupWithEmail}>
@@ -166,8 +237,19 @@ const SignupForm = styled.div`
   align-items: center;
 `;
 
+const CloseSvg = styled(Image)`
+  position: absolute;
+  float: left;
+
+  color: ${({ theme }) => theme.colors.gray4};
+
+  cursor: pointer;
+
+  margin-left: 25rem;
+`;
+
 const FooterMassage = styled.div`
-  margin-top: 12px;
+  margin-top: 0.75rem;
 
   display: flex;
   justify-content: center;

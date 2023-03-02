@@ -1,30 +1,30 @@
-import styled from "styled-components";
+import styled, { DefaultTheme } from "styled-components";
 import { MouseEventHandler } from "react";
 
 type AuthButtonType = "outLine" | "socialLogin";
 
-const getTypeAuthButton = (buttonType: AuthButtonType) => {
+const getTypeAuthButton = (buttonType: AuthButtonType, theme: DefaultTheme) => {
   if (buttonType === "outLine") {
     return `
-    background-color: #262626;
-    color: #5BE1E9;
-    border: .0625rem solid #5BE1E9;
-    border-radius: 4px;
+    background-color: ${theme.colors.gray11};
+    color: ${theme.colors.primary6};
+    border: 1px solid ${theme.colors.primary6};
     `;
   }
   if (buttonType === "socialLogin") {
     return `
-    background-color: #4C4C4C;
-    color: #5BE1E9;
-    border: .0625rem solid #5BE1E9;
-    font-weight : 700;
+    background-color: ${theme.colors.gray8};
+    border: none;
+    color : ${theme.colors.primary6};
+    ${theme.fonts.subtitle18Bold}
+
     `;
   }
   return "";
 };
 
 interface AuthButtonProps {
-  children: string;
+  children: string | React.ReactNode;
   buttonType: AuthButtonType;
   onclick: MouseEventHandler<HTMLButtonElement>;
 }
@@ -49,10 +49,10 @@ const AuthButtonContainer = styled.button<AuthButtonContainerProps>`
   width: 27.25rem;
   height: 3.75rem;
 
+  border-radius: 0.25rem;
   box-sizing: border-box;
 
-  ${({ buttonType }: Pick<AuthButtonContainerProps, "buttonType">) =>
-    getTypeAuthButton(buttonType)};
+  ${({ buttonType, theme }) => getTypeAuthButton(buttonType, theme)};
 
   cursor: pointer;
 `;
