@@ -1,12 +1,23 @@
 import { postMembers } from "@/lib/recoil";
 import Image from "next/image";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import trash_can from "@/public/icons/trash_can.svg";
+import { useUserProfile } from "@/hooks/query";
 
 const WithPeople = () => {
   const [people, setPeople] = useRecoilState(postMembers);
+
+  // github 추가해야 함
+  const {
+    profileData: { user_name: userName, field: userField },
+  } = useUserProfile();
+
+  useEffect(() => {
+    setPeople([{ name: userName, field: userField, github: "" }]);
+  }, [setPeople, userField, userName]);
+
   const addPerson = () => {
     if (people.length === 0) {
       setPeople([...people, { name: "", field: "", github: "" }]);
@@ -37,19 +48,33 @@ const WithPeople = () => {
     <WithPeopleContainer>
       {people.map((person, idx) => (
         <InputWrapper key={idx}>
-          <NameInput
+          <InputStyle
             placeholder="참여자"
             value={person.name}
             onChange={changePerson(idx, "name")}
             maxLength={5}
           />
-          <StackInput
+          <InputStyle
             placeholder="개발 스택"
             value={person.field}
             onChange={changePerson(idx, "field")}
             maxLength={11}
           />
-          <Input
+          {/* <CategoryPicker onClick={handleShowCategory}>
+            {largeCategory && subCategory ? (
+              <span>{subCategory}</span>
+            ) : (
+              <span>카테고리를 선택해주세요.</span>
+            )}
+            <DropdownImage
+              src={arrow_down}
+              alt="category selete icon"
+              width={16}
+              height={16}
+            />
+            {categoryVisible && <FieldDropDown />}
+          </CategoryPicker> */}
+          <InputStyle
             placeholder="참조링크"
             value={person.github}
             onChange={changePerson(idx, "github")}
@@ -58,12 +83,12 @@ const WithPeople = () => {
             onClick={onDelete(idx)}
             src={trash_can}
             alt="취소 버튼"
-            width="10"
-            height="10"
+            width="24"
+            height="24"
           />
         </InputWrapper>
       ))}
-      <AddButton onClick={addPerson}>+ 참여자 추가</AddButton>
+      <AddButton onClick={addPerson}>+ 추가</AddButton>
     </WithPeopleContainer>
   );
 };
@@ -81,45 +106,45 @@ const InputWrapper = styled.div`
   position: relative;
   gap: 1rem;
   padding-bottom: 1.5rem;
+  &:first-child {
+    & > input:first-child {
+      border-radius: 0.25rem;
+      color: ${({ theme }) => theme.colors.gray3};
+      background-color: ${({ theme }) => theme.colors.gray5};
+    }
+    & > img {
+      display: none;
+    }
+  }
 `;
 
-const NameInput = styled.input`
+const InputStyle = styled.input`
+  width: 100%;
   border: none;
+  outline: none;
   border-bottom: 0.0625rem solid grey;
   padding: 0.625rem 1.25rem;
-  outline: none;
-  max-width: 12rem;
-`;
-
-const StackInput = styled.input`
-  border: none;
-  border-bottom: 0.0625rem solid grey;
-  padding: 0.625rem 1.25rem;
-  outline: none;
-  max-width: 15.25rem;
-`;
-
-const Input = styled.input`
-  border: none;
-  border-bottom: 0.0625rem solid grey;
-  padding: 0.625rem 1.25rem;
-  outline: none;
+  background-color: transparent;
+  ${({ theme }) => theme.fonts.body14Medium}
+  color: ${({ theme }) => theme.colors.white};
+  ::placeholder {
+    ${({ theme }) => theme.fonts.body14}
+    color: ${({ theme }) => theme.colors.gray6};
+  }
 `;
 
 const AddButton = styled.button`
-  width: 6.25rem;
-  line-height: 1.875rem;
-  border-radius: 1.5625rem;
-  margin-top: 0.25rem;
-  border: none;
-  background-color: grey;
-  color: white;
+  all: unset;
   cursor: pointer;
+  width: 3.75rem;
+  display: inline-block;
+  ${({ theme }) => theme.fonts.body14}
+  color: ${({ theme }) => theme.colors.gray4};
 `;
 
 const CancelButton = styled(Image)`
   position: absolute;
-  right: -1.5rem;
+  right: -2.25rem;
   padding: 0.125rem;
   cursor: pointer;
 `;

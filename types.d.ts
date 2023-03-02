@@ -67,7 +67,7 @@ interface UserProfileType {
   gender: Gender;
   bookmark_folders: string[];
   phone: string;
-  field: string[];
+  field: string[] | string;
   skills: string[];
   career: string;
   is_public: boolean;

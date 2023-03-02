@@ -46,7 +46,6 @@ const ProjectInfoDropDown = () => {
       setDate((prev) => [prev[0], getYYYYMM(new Date())]);
     }
   };
-  console.log("👉👉  [startDate, endDate]:", [startDate, endDate]);
 
   return (
     <ProjectInfoDropDownContainer>
@@ -98,7 +97,7 @@ const ProjectInfoDropDown = () => {
               />
               <SpaceBetweenDatePicker> ~ </SpaceBetweenDatePicker>
               {inProgress ? (
-                <div>작성중</div>
+                <InDateProgress>진행중</InDateProgress>
               ) : (
                 <StyledDatePicker
                   showMonthYearPicker
@@ -129,7 +128,7 @@ const ProjectInfoDropDown = () => {
                     alt="Unchecked"
                   />
                 )}
-                <CheckLabel>작성중</CheckLabel>
+                <CheckLabel>진행중</CheckLabel>
               </InProgress>
             </DateSelectBox>
           </DatePickerContainer>
@@ -141,7 +140,7 @@ const ProjectInfoDropDown = () => {
             type="url"
             pattern="https://.*"
             value={githubUrl}
-            onChange={() => setGithubUrl}
+            onChange={(e) => setGithubUrl(e.target.value)}
             placeholder="https://github.com/project"
           />
         </ProjectInfoWrapper>
@@ -169,7 +168,7 @@ const ProjectInfoDropDown = () => {
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
-          <TEXTBOX>함께한 사람들</TEXTBOX>
+          <TEXTBOX>함께한 사람들*</TEXTBOX>
           <WithPeople />
         </ProjectInfoWrapper>
       </ProjectInfoContainer>
@@ -245,18 +244,27 @@ const DateSelectBox = styled.div`
 const StyledDatePicker = styled(DatePicker)`
   all: unset;
 
-  display: flex;
-  justify-content: center;
-
-  max-width: 20.625rem;
+  min-width: 18rem;
   padding: 0.625rem 1rem;
+  padding-right: 3.75rem;
 
   border-bottom: 1px solid;
   border-color: ${({ theme }) => theme.colors.gray7};
 
   ${({ theme }) => theme.fonts.body14};
+  box-sizing: border-box;
 `;
 
+const InDateProgress = styled.div`
+  min-width: 18rem;
+  border-radius: 0.25rem;
+  padding: 0.625rem 1rem;
+  padding-right: 3.75rem;
+
+  background-color: ${({ theme }) => theme.colors.gray5};
+  color: ${({ theme }) => theme.colors.gray3};
+  ${({ theme }) => theme.fonts.body14};
+`;
 const SpaceBetweenDatePicker = styled.div`
   padding: 0.75rem 1rem;
   ${({ theme }) => theme.fonts.subtitle18En};

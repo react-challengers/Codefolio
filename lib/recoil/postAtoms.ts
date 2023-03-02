@@ -44,7 +44,7 @@ const postProjectDuration = atom<[string, string]>({
 
 interface MembersType {
   name: string;
-  field: string;
+  field: string[] | string;
   github: string;
 }
 
