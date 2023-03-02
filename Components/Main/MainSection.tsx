@@ -169,7 +169,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
 const HomeMainContainer = styled.main`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 1260px;
   max-width: 78.75rem;
   margin-left: 1.5rem;
   margin-top: 3rem;
@@ -186,7 +186,7 @@ const HomeCardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 1rem;
-  width: 100%;
+  width: 1260px;
   margin-top: 1rem;
 `;
 
