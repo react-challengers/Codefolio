@@ -5,12 +5,13 @@ import { useUserProfile } from "@/hooks/query";
 import { useInput } from "@/hooks/common";
 import { ProfileImage } from "@/Components/Common";
 import { ClimbingBoxLoader } from "react-spinners";
+import Link from "next/link";
 import Banner from "./Banner";
 import useUserImage from "./useUserImage";
 
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한
- * @TODO 깃헙 링크 아이콘 추가
+ * @TODO 깃헙 아이콘 white로 변경
  * @TODO 활동분야, 기술 스택 tags추가
  */
 
@@ -78,7 +79,6 @@ const UserInfoContainer = () => {
             />
           </IconBox>
         </ProfileImageWrapper>
-        {/* <IconWrapper></IconWrapper> */}
         <TextWrapper>
           {isEditing ? (
             <InputWrapper>
@@ -98,10 +98,22 @@ const UserInfoContainer = () => {
             </InputWrapper>
           ) : (
             <>
-              <ProfileInfoWrapper>
-                <UserNameWrapper>{profileData.user_name}</UserNameWrapper>
-                <EmailWrapper>{profileData.contact_email}</EmailWrapper>
-              </ProfileInfoWrapper>
+              <ProfileInfoContainer>
+                <ProfileInfoWrapper>
+                  <UserNameWrapper>{profileData.user_name}</UserNameWrapper>
+                  <EmailWrapper>{profileData.contact_email}</EmailWrapper>
+                </ProfileInfoWrapper>
+                {/* TODO 조건부 랜더링으로 기술스택 & 포지션 넣기 */}
+                {/* github */}
+                <Link href={profileData.github || ""}>
+                  <GithubImage
+                    src="/icons/github.svg"
+                    width={36}
+                    height={36}
+                    alt="깃허브 주소"
+                  />
+                </Link>
+              </ProfileInfoContainer>
               <SelfProfileWrapper>
                 {profileData.self_profile}
               </SelfProfileWrapper>
@@ -153,14 +165,26 @@ const TextWrapper = styled.div`
   flex-direction: column;
 `;
 
+const GithubImage = styled(Image)`
+  width: 2.25rem;
+  height: 2.25rem;
+  cursor: pointer;
+  fill: ${(props) => props.theme.colors.white} !important;
+`;
+
 // isEditing false
-const ProfileInfoWrapper = styled.div`
+const ProfileInfoContainer = styled.div`
   display: flex;
-  padding: 0 1.5rem;
-  gap: 0.75rem;
   align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
   height: 2.25rem;
   margin: 0 0 2.5rem;
+`;
+
+const ProfileInfoWrapper = styled.div`
+  display: flex;
+  gap: 0.75rem;
 `;
 
 const UserNameWrapper = styled.p`
