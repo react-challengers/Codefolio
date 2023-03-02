@@ -68,7 +68,7 @@ const DetailBadgesContainer = styled.div`
 const BadgeWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 1px;
+  gap: 0.125rem;
 `;
 
 export default DetailSideBadges;
