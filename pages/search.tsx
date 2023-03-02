@@ -55,6 +55,10 @@ const Search: NextPage = () => {
     setIsDropDownOpen(false);
   };
 
+  const goToHome = () => {
+    router.push("/");
+  };
+
   if (isLoading)
     return <Loader color="#00BFFF" size={50} loading={isLoading} />;
 
@@ -62,7 +66,7 @@ const Search: NextPage = () => {
     return (
       <EmptySearchResult>
         <EmptyText>&lsquo;{query}&rsquo;에 대한 검색결과가 없습니다.</EmptyText>
-        <LongButton>홈으로 가기</LongButton>
+        <LongButton onClick={goToHome}>홈으로 가기</LongButton>
       </EmptySearchResult>
     );
 
