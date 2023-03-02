@@ -4,13 +4,18 @@ import styled from "styled-components";
 interface ProfileContainerProps {
   title?: string;
   children: ReactElement;
+  rowGap?: number;
 }
 
-const ProfileContainer = ({ title, children }: ProfileContainerProps) => {
+const ProfileContainer = ({
+  title,
+  children,
+  rowGap = 32,
+}: ProfileContainerProps) => {
   return (
     <ProfileContainerWrapper>
       {title && <Title>{title}</Title>}
-      <ContentWrapper>{children}</ContentWrapper>
+      <ContentWrapper rowGap={rowGap}>{children}</ContentWrapper>
     </ProfileContainerWrapper>
   );
 };
@@ -33,10 +38,10 @@ const Title = styled.div`
   color: ${(props) => props.theme.colors.gray5};
 `;
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled.div<{ rowGap: number }>`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: ${(props) => props.rowGap / 16}rem;
   padding: 0 1.5rem;
 `;
 

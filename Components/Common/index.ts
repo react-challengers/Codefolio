@@ -6,6 +6,7 @@ import CardItem from "./Card/CardItem";
 import Modal from "./Modal";
 import ProfileImage from "./ProfileImage";
 import Tags from "./Tags";
+import Input from "./Input";
 
 export {
   DefaultButton,
@@ -16,4 +17,5 @@ export {
   Modal,
   ProfileImage,
   Tags,
+  Input,
 };

@@ -13,7 +13,8 @@ import checkIsPhoneNumber from "@/utils/commons/checkIsPhoneNumber";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { DefaultButton, SkillList, Toggle } from "@/Components/Common";
+import { DefaultButton, Input, SkillList, Toggle } from "@/Components/Common";
+import { useInput } from "@/hooks/common";
 import PositionTag from "./PositionTag";
 import ProfileContainer from "./ProfileContainer";
 import { ContentContainer, ContentWrapper } from "./ShowProfileContainer";
@@ -77,6 +78,13 @@ const EditProfileContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const { inputValues, handleInputChange } = useInput({
+    userName: profileData.user_name ?? "",
+    contactEmail: profileData.contact_email ?? "",
+    selfProfile: profileData.self_profile ?? "",
+    github: profileData.github ?? "",
+  });
+
   if (!profileData) return <div>Error</div>;
 
   const clickField = (field: string) => {
@@ -90,10 +98,9 @@ const EditProfileContainer = () => {
     }
   };
 
-  // const { inputValues, handleInputChange } = useInput({ phoneNumber: phone });
-  // setIsPhoneNumber(checkIsPhoneNumber(inputValues.phoneNumber));
-
-  const handleEditPhoneNumber = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleEditPhoneNumber = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setPhoneNumber(e.target.value);
     setIsPhoneNumber(checkIsPhoneNumber(e.target.value));
   };
@@ -120,13 +127,15 @@ const EditProfileContainer = () => {
       const newProfileData: UserProfileType = {
         ...profileData,
         phone: phoneNumber,
-        is_public: isPublic,
         field: activeField,
         skills: editSkills,
         // 캐시데이터 갱신
         birth_year: birthYear,
-        career,
         gender,
+        user_name: inputValues.userName,
+        contact_email: inputValues.contactEmail,
+        self_profile: inputValues.contactEmail,
+        github: inputValues.github,
       };
       updateProfileData(newProfileData);
     } catch (error) {
@@ -135,81 +144,96 @@ const EditProfileContainer = () => {
   };
 
   return (
-    <>
-      <TabProfileContainer>
-        <ProfileContainer title="기본 정보">
-          <>
-            <InfoWrapper>
-              <p>성별</p>
-              <SwitchButton />
-            </InfoWrapper>
-            <InfoWrapper>
-              <p>출생년도</p>
-              <DropDown type="birth_year" />
-            </InfoWrapper>
-            <InfoWrapper>
-              <p>휴대전화</p>
-              <PhoneInput
-                type="number"
-                value={phoneNumber}
-                onChange={handleEditPhoneNumber}
-                // value={inputValues.phoneNumber}
-                // onChange={handleInputChange("phoneNumber")}
-                placeholder="01012345678"
-              />
-              {isPhoneNumber && <span>전화번호 형식이 아닙니다.</span>}
-            </InfoWrapper>
-          </>
-        </ProfileContainer>
-        <RightContainer>
-          <ProfileContainer title="경력">
-            <ContentContainer>
-              <ContentWrapper>
-                <p>포지션</p>
-                <FieldWrapper>
-                  {fieldList.map((field) => (
-                    <PositionTag
-                      onClick={() => clickField(field)}
-                      key={field}
-                      active={activeField?.includes(field)}
-                    >
-                      {field}
-                    </PositionTag>
-                  ))}
-                  <FieldHelpText isEmptyField={isEmptyField}>
-                    필드를 선택해주세요.
-                  </FieldHelpText>
-                </FieldWrapper>
-              </ContentWrapper>
-              <ContentWrapper>
-                <p>경력</p>
-                <DropDown type="career" />
-              </ContentWrapper>
-              <ContentWrapper>
-                <p>스킬</p>
-                <SkillList
-                  text="스킬 입력"
-                  editSkills={editSkills}
-                  setEditSkills={setEditSkills}
-                />
-              </ContentWrapper>
-              <SkillHelpText isEmptySkills={isEmptySkills}>
-                스킬을 입력해주세요. (예: React, Node.js, Python)
-              </SkillHelpText>
-            </ContentContainer>
-          </ProfileContainer>
+    <TabProfileContainer>
+      <ProfileContainer title="자기소개" rowGap={24}>
+        <Input
+          value={inputValues.selfProfile}
+          onChange={handleInputChange("selfProfile")}
+        />
+      </ProfileContainer>
+      <ProfileContainer title="기본 정보" rowGap={24}>
+        <>
+          <InfoWrapper>
+            <ContentTitle>이름*</ContentTitle>
+            <Input
+              value={inputValues.userName}
+              onChange={handleInputChange("userName")}
+            />
+          </InfoWrapper>
 
-          <ProfileContainer>
-            <ContentWrapper>
-              <p>프로필 공개여부</p>
-              <ToggleWrapper>
-                <Toggle flicker={isPublic} setFlicker={setIsPublic} />
-                <p>{isPublic ? "공개" : "비공개"}</p>
-              </ToggleWrapper>
-            </ContentWrapper>
-          </ProfileContainer>
-        </RightContainer>
-      </TabProfileContainer>
+          <InfoWrapper>
+            <ContentTitle>이메일*</ContentTitle>
+            <Input
+              value={inputValues.contactEmail}
+              onChange={handleInputChange("contactEmail")}
+            />
+          </InfoWrapper>
+
+          <InfoWrapper>
+            <ContentTitle>성별</ContentTitle>
+            <SwitchButton />
+          </InfoWrapper>
+
+          <InfoWrapper>
+            <ContentTitle>출생년도</ContentTitle>
+            <DropDown type="birth_year" />
+          </InfoWrapper>
+
+          <InfoWrapper>
+            <ContentTitle>휴대전화</ContentTitle>
+            <Input
+              type="number"
+              value={phoneNumber}
+              onChange={handleEditPhoneNumber}
+              placeholder="01012345678"
+            />
+            {isPhoneNumber && <span>전화번호 형식이 아닙니다.</span>}
+          </InfoWrapper>
+        </>
+      </ProfileContainer>
+
+      <ProfileContainer title="개발자 정보" rowGap={24}>
+        <>
+          <ContentWrapper>
+            <ContentTitle>포지션</ContentTitle>
+            <FieldWrapper>
+              {fieldList.map((field) => (
+                <PositionTag
+                  onClick={() => clickField(field)}
+                  key={field}
+                  active={activeField?.includes(field)}
+                >
+                  {field}
+                </PositionTag>
+              ))}
+              <FieldHelpText isEmptyField={isEmptyField}>
+                필드를 선택해주세요.
+              </FieldHelpText>
+            </FieldWrapper>
+          </ContentWrapper>
+          <ContentWrapper>
+            <ContentTitle>스킬</ContentTitle>
+            <SkillList
+              text="스킬 입력"
+              editSkills={editSkills}
+              setEditSkills={setEditSkills}
+            />
+          </ContentWrapper>
+          <SkillHelpText isEmptySkills={isEmptySkills}>
+            스킬을 입력해주세요. (예: React, Node.js, Python)
+          </SkillHelpText>
+
+          <InfoWrapper>
+            <ContentTitle>깃허브 주소</ContentTitle>
+            <Input
+              value={inputValues.github}
+              onChange={handleInputChange("github")}
+              placeholder="https://github.com/user"
+            />
+          </InfoWrapper>
+        </>
+      </ProfileContainer>
+
       <ButtonWrapper>
         <DefaultButton
           text="취소"
@@ -224,26 +248,14 @@ const EditProfileContainer = () => {
           onClick={() => handleSave()}
         />
       </ButtonWrapper>
-    </>
+    </TabProfileContainer>
   );
 };
 
 const TabProfileContainer = styled.div`
-  width: 64rem;
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  grid-column-gap: 0.75rem;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-
-  p {
-    color: grey;
-  }
-`;
-
-const RightContainer = styled.div`
-  display: grid;
-  grid-row-gap: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 `;
 
 const FieldWrapper = styled.div`
@@ -251,33 +263,21 @@ const FieldWrapper = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   gap: 0.5rem;
+  align-items: center;
 `;
 
 const InfoWrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.75rem;
-  margin: 1rem 0;
+  align-items: center;
+  height: 3.75rem;
 `;
 
 const ButtonWrapper = styled.div`
   display: flex;
-  gap: 0.5rem;
-  justify-content: right;
-`;
-
-const ToggleWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   gap: 1rem;
-`;
-
-const PhoneInput = styled.input`
-  background-color: transparent;
-  height: 3rem;
-  border: 1px solid lightgrey;
-  padding: 0 0.75rem;
+  justify-content: right;
 `;
 
 interface FieldHelpTextProps {
@@ -302,4 +302,11 @@ const SkillHelpText = styled.span<SkillHelpTextProps>`
   opacity: ${({ isEmptySkills }) => (isEmptySkills ? 1 : 0)};
   transition: opacity 0.5s;
 `;
+
+const ContentTitle = styled.p`
+  ${(props) => props.theme.fonts.body16}
+  width: 11.5rem;
+  color: ${(props) => props.theme.colors.gray3};
+`;
+
 export default EditProfileContainer;
