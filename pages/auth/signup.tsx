@@ -45,20 +45,26 @@ const SignUpPage: NextPage = () => {
     },
   });
 
-  const signupWithEmail = async () => {
+  const validateCheck = async () => {
     setUserNameHelperText(checkUserName(userName));
     setEmailHelperText(checkEmail(email));
     setPasswordHelperText(checkPassword(password));
     setPasswordCheckHelperText(checkSamePassword(password, passwordCheck));
+  };
 
-    // helper text 있을 때 -> 에러 -> 회원가입 시도 안함
+  const signupWithEmail = async () => {
+    validateCheck();
+
+    // 유효성 검사 결과 fail일 경우, supabase에 요청 안함
     if (
-      userNameHelperText ||
-      emailHelperText ||
-      passwordHelperText ||
-      passwordCheckHelperText
-    )
+      checkUserName(userName) ||
+      checkEmail(email) ||
+      checkPassword(password) ||
+      checkSamePassword(password, passwordCheck)
+    ) {
       return;
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
