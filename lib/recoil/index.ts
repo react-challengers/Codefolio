@@ -36,6 +36,8 @@ import {
   myPageIsEditingProfileContainer,
 } from "@/lib/recoil/myPageAtoms";
 
+import searchValueState from "@/lib/recoil/searchValue";
+
 export {
   userLoginCheck,
   largeCategoryState,
@@ -71,4 +73,6 @@ export {
   myPageSkills,
   myPageBookmarkFolders,
   myPageIsEditingProfileContainer,
+  // search
+  searchValueState,
 };

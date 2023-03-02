@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import _ from "lodash";
-import { CardItem } from "@/Components/Common";
+import { CardItem, DropDown } from "@/Components/Common";
 import CategoryTag from "./CategoryTag";
 import HomeDropDownIcon from "./HomeDropDownIcon";
 
@@ -95,6 +95,11 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     );
   };
 
+  const onClickDropDownHandler = (item: string) => {
+    setSelectedDropDownItem(item);
+    setIsDropDownOpen(false);
+  };
+
   // 다른 페이지에 갔다가 다시 돌아왔을 시, 카테고리가 초기화 되도록 설정
   useEffect(() => {
     setSelectedSubCategory([]);
@@ -124,15 +129,20 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         {isDropDownOpen && (
           <HomeDropDownList>
             {homeDropDownItems.map((item) => (
-              <HomeDropDownItemContainer
+              <DropDown
+                item={item}
                 key={item}
-                onClick={() => {
-                  setSelectedDropDownItem(item);
-                  setIsDropDownOpen(false);
-                }}
-              >
-                <HomeDropDownItem>{item}</HomeDropDownItem>
-              </HomeDropDownItemContainer>
+                onClickHandler={onClickDropDownHandler}
+              />
+              // <HomeDropDownItemContainer
+              //   key={item}
+              //   onClick={() => {
+              //     setSelectedDropDownItem(item);
+              //     setIsDropDownOpen(false);
+              //   }}
+              // >
+              //   <HomeDropDownItem>{item}</HomeDropDownItem>
+              // </HomeDropDownItemContainer>
             ))}
           </HomeDropDownList>
         )}
@@ -229,20 +239,6 @@ const HomeDropDownList = styled.ul`
   filter: drop-shadow(0px 0.625rem 0.625rem rgba(0, 0, 0, 0.5));
   z-index: 2;
 `;
-
-const HomeDropDownItemContainer = styled.div`
-  height: 3.5rem;
-  display: flex;
-  align-items: center;
-  padding: 1.1563rem 0.75rem;
-
-  &:hover {
-    cursor: pointer;
-    background-color: ${({ theme }) => theme.colors.gray8};
-  }
-`;
-
-const HomeDropDownItem = styled.li``;
 
 const CardContainer = styled.div`
   cursor: pointer;
