@@ -1,83 +1,79 @@
-import "@toast-ui/editor/dist/toastui-editor.css";
-import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
-import "tui-color-picker/dist/tui-color-picker.css";
-import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
-import "@toast-ui/editor/dist/i18n/ko-kr";
-import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
-import "prismjs/themes/prism.css";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
 
-import { Editor } from "@toast-ui/react-editor";
-import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import codeSyntaxHighlightPlugin from "@toast-ui/editor-plugin-code-syntax-highlight";
-import Prism from "prismjs";
-import { RefObject, useCallback, useEffect } from "react";
+import { useCallback } from "react";
+import dynamic from "next/dynamic";
 import supabase from "@/lib/supabase";
+import { v4 as uuidv4 } from "uuid";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { postContent as recoilPostContent, postId } from "@/lib/recoil";
 import imageCompression from "browser-image-compression";
-import { useRecoilState } from "recoil";
-import { postContent as recoilPostContent } from "@/lib/recoil";
+import type { MDEditorProps } from "@uiw/react-md-editor";
+import { NextPage } from "next";
+import * as commands from "@uiw/react-md-editor/lib/commands";
+import uploadImage from "@/utils/commons/uploadImage";
 
 /**
+ * @TODO supabase api utill함수로 사용하도록 변경 필요
+ * @TODO 이미지 업로드시 링크 열리는 문제 해결 필요
  * @TODO storage 삭제 구현 필요
- * @TODO uuid flag 꽃아야 함 >> 게시와 임시저장의 용도로 분류
  */
 
-interface PostEditorProps {
-  editorRef: RefObject<Editor>;
-}
+const MDEditor = dynamic<MDEditorProps>(() => import("@uiw/react-md-editor"), {
+  ssr: false,
+});
 
-const PostEditor = ({ editorRef }: PostEditorProps) => {
+const PostEditor: NextPage = () => {
+  const isPostId = useRecoilValue(postId);
   const [postContent, setPostContent] = useRecoilState(recoilPostContent);
-  const toolbarItems = [
-    ["heading", "bold", "italic", "strike"],
-    ["hr"],
-    ["ul", "ol", "task"],
-    ["table", "link"],
-    ["image"], // <-- 이미지 추가 툴바
-    ["code"],
-    ["scrollSync"],
-  ];
 
-  // 이미지 추가
-  type HookCallback = (url: string, text?: string) => void;
+  const onImagePasted = useCallback(
+    async (
+      dataTransfer: DataTransfer | FileList | null // Drag and Drop API
+    ) => {
+      if (!dataTransfer) return;
+      const files: File[] = []; // 드래그 앤 드랍으로 가져온 파일들
+      if (dataTransfer instanceof DataTransfer) {
+        for (let index = 0; index < dataTransfer.items.length; index += 1) {
+          const file = dataTransfer.items[index].getAsFile();
+          if (!file) return;
+          files.push(file);
+        }
+      } else if (dataTransfer instanceof FileList) {
+        const file = dataTransfer[0];
+        if (!file) return;
+        files.push(file);
+      }
 
-  const addImage = useCallback(async (blob: File, dropImage: HookCallback) => {
-    const img = await compressImg(blob); // 이미지 압축
-    if (!img) return;
-    const url = await uploadImage(img); // 업로드된 이미지 서버 url
-    if (!url) return;
-    dropImage(url, `${blob.name}`); // 에디터에 이미지 추가
-  }, []);
+      const fileId = uuidv4();
+      files.map(async (file) => {
+        const compressedFile = await compressImg(file);
 
-  useEffect(() => {
-    if (editorRef.current) {
-      const editorIns = editorRef.current.getInstance();
-      editorIns.removeHook("addImageBlobHook");
-      editorIns.addHook("addImageBlobHook", addImage);
-    }
-  }, [editorRef, addImage]);
+        if (!compressedFile) return;
 
-  // 이미지 업로드
+        const { data: uploadImg } = await supabase.storage
+          .from("post-image")
+          .upload(`${isPostId}/${fileId}`, compressedFile);
+        if (!uploadImg) return;
 
-  const uploadImage = async (blob: File) => {
-    try {
-      const imgPath = crypto.randomUUID();
-      await supabase.storage.from("post-image").upload(imgPath, blob);
+        const { data: insertedMarkdown } = supabase.storage
+          .from("post-image")
+          .getPublicUrl(`${isPostId}/${fileId}`);
+        if (!insertedMarkdown) return;
 
-      // 이미지 올리기
-      const urlResult = await supabase.storage
-        .from("post-image")
-        .getPublicUrl(imgPath);
-      return urlResult.data.publicUrl;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  };
+        const insertString = `![${file.name}](${insertedMarkdown.publicUrl})`;
+        const resultString = insertToTextArea(insertString);
 
-  // //이미지 압축
+        setPostContent(resultString || "");
+      });
+    },
+    [isPostId, setPostContent]
+  );
+
+  // 이미지 압축
   const compressImg = async (blob: File): Promise<File | void> => {
     const options = {
-      maxSize: 1,
+      maxSizeMB: 1,
       initialQuality: 0.55, // initial 0.7
     };
     const result = await imageCompression(blob, options)
@@ -86,35 +82,110 @@ const PostEditor = ({ editorRef }: PostEditorProps) => {
     return result;
   };
 
-  const handleOnEditorChange = () => {
-    // 유효성 검사
-    const editorText = editorRef.current?.getInstance().getMarkdown();
-    if (editorText === " " || editorText === "" || editorText === undefined) {
-      return;
+  // 에디터에 이미지 추가
+  const insertToTextArea = (intsertString: string) => {
+    const textarea = document.querySelector("textarea");
+    if (!textarea) {
+      return null;
     }
-    // HTML 대신에 Markdown으로 저장합니다.
-    setPostContent(editorText);
+    let sentence = textarea.value;
+    const len = sentence.length;
+    const pos = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    const front = sentence.slice(0, pos);
+    const back = sentence.slice(pos, len);
+
+    sentence = front + intsertString + back;
+
+    textarea.value = sentence;
+    textarea.selectionEnd = end + intsertString.length;
+    return sentence;
   };
 
   return (
-    <Editor
-      ref={editorRef}
-      initialValue={postContent ?? null}
-      previewStyle="vertical"
-      height="600px"
-      initialEditType="markdown"
-      useCommandShortcut
-      toolbarItems={toolbarItems}
-      language="ko-KR"
-      plugins={[
-        colorSyntax,
-        [codeSyntaxHighlightPlugin, { highlighter: Prism }],
-      ]}
-      hooks={{
-        // @ts-ignore
-        addImageBlobHook: addImage,
+    // div에 클래스를 적용하여 다크모드를 수동으로 적용할 수 있습니다.
+    <MDEditor
+      value={postContent}
+      onChange={(value) => {
+        setPostContent(value || "");
       }}
-      onChange={() => handleOnEditorChange()}
+      height={600}
+      onPaste={(event) => {
+        onImagePasted(event.clipboardData);
+      }}
+      onDrop={(event) => {
+        onImagePasted(event.dataTransfer);
+      }}
+      textareaProps={{
+        placeholder: "Fill in your markdown for the coolest of the cool.",
+      }}
+      commands={[
+        commands.bold,
+        commands.italic,
+        commands.strikethrough,
+        commands.hr,
+        commands.title,
+        commands.divider,
+
+        commands.link,
+        commands.group([], {
+          name: "image",
+          groupName: "image",
+          icon: (
+            <svg
+              fill="#444541"
+              height="12"
+              width="12"
+              version="1.1"
+              id="Capa_1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 489.4 489.4"
+            >
+              <g>
+                <g>
+                  <path
+                    d="M0,437.8c0,28.5,23.2,51.6,51.6,51.6h386.2c28.5,0,51.6-23.2,51.6-51.6V51.6c0-28.5-23.2-51.6-51.6-51.6H51.6
+			C23.1,0,0,23.2,0,51.6C0,51.6,0,437.8,0,437.8z M437.8,464.9H51.6c-14.9,0-27.1-12.2-27.1-27.1v-64.5l92.8-92.8l79.3,79.3
+			c4.8,4.8,12.5,4.8,17.3,0l143.2-143.2l107.8,107.8v113.4C464.9,452.7,452.7,464.9,437.8,464.9z M51.6,24.5h386.2
+			c14.9,0,27.1,12.2,27.1,27.1v238.1l-99.2-99.1c-4.8-4.8-12.5-4.8-17.3,0L205.2,333.8l-79.3-79.3c-4.8-4.8-12.5-4.8-17.3,0
+			l-84.1,84.1v-287C24.5,36.7,36.7,24.5,51.6,24.5z"
+                  />
+                  <path
+                    d="M151.7,196.1c34.4,0,62.3-28,62.3-62.3s-28-62.3-62.3-62.3s-62.3,28-62.3,62.3S117.3,196.1,151.7,196.1z M151.7,96
+			c20.9,0,37.8,17,37.8,37.8s-17,37.8-37.8,37.8s-37.8-17-37.8-37.8S130.8,96,151.7,96z"
+                  />
+                </g>
+              </g>
+            </svg>
+          ),
+          // eslint-disable-next-line react/no-unstable-nested-components
+          children: (handle: any) => {
+            // API가 any를 지정합니다.
+            return (
+              <div style={{ width: 200, padding: 10 }}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => onImagePasted(e.target.files)}
+                />
+                <button type="button" onClick={() => handle.close()}>
+                  close
+                </button>
+              </div>
+            );
+          },
+          buttonProps: { "aria-label": "Insert image" },
+        }),
+        commands.quote,
+        commands.code,
+        commands.divider,
+
+        commands.unorderedListCommand,
+        commands.orderedListCommand,
+        commands.checkedListCommand,
+        commands.divider,
+      ]}
     />
   );
 };

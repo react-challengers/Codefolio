@@ -4,9 +4,10 @@ import {
   userLoginCheck as recoilUserLoginCheck,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
+import { getCurrentUser } from "@/utils/APIs/supabase";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 
@@ -16,20 +17,16 @@ const GNB = () => {
   const resetLargeCategoryState = useResetRecoilState(largeCategoryState);
   const resetSubCategoryState = useResetRecoilState(subCategoryState);
 
-  useEffect(() => {
-    const getSessionUser = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        throw new Error(error.message);
-      }
-      if (data.session) {
+  useQuery(["currentUser"], {
+    queryFn: getCurrentUser,
+    onSuccess({ data: { user } }) {
+      if (user) {
         setUserCheck(true);
       } else {
         setUserCheck(false);
       }
-    };
-    getSessionUser();
-  }, [setUserCheck]);
+    },
+  });
 
   const handleClickLogo = () => {
     resetLargeCategoryState();

@@ -1,13 +1,22 @@
-import supabase from "@/lib/supabase";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import styled from "styled-components";
+import {
+  addBookmark,
+  addLike,
+  decrementBookmark,
+  decrementLike,
+  deleteBookmark,
+  deleteLike,
+  incrementBookmark,
+  incrementLike,
+} from "@/utils/APIs/supabase";
 import ShowMoreModal from "./ShowMoreModal";
 
 interface DetailHeaderProps {
-  isOwner: boolean;
+  author: string;
   isBookmark: boolean;
   isLike: boolean;
   setIsBookmark: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,7 +25,7 @@ interface DetailHeaderProps {
 }
 
 const DetailHeader = ({
-  isOwner,
+  author,
   isBookmark,
   isLike,
   setIsBookmark,
@@ -32,74 +41,146 @@ const DetailHeader = ({
 
   const showMoreModal = () => setShowMore((prev) => !prev);
 
-  const isAnonymous = () => {
-    if (!currentUserId) {
-      router.push("/auth/login");
-    }
-  };
+  const { mutate: addBookmarkMutate } = useMutation(addBookmark, {
+    onMutate: async (newBookmarkItem) => {
+      await queryClient.cancelQueries(["getBookmark", newBookmarkItem.postId]);
+      const previousBookmark = queryClient.getQueryData<BookmarkType>([
+        "getBookmark",
+        newBookmarkItem.postId,
+      ]);
 
-  const addBookmark = async () => {
-    const { error } = await supabase
-      .from("bookmark")
-      .insert({ post_id: postId, user_id: currentUserId });
-    if (!error) {
+      if (previousBookmark) {
+        queryClient.setQueryData(["getBookmark", newBookmarkItem.postId], {
+          ...previousBookmark,
+          newBookmarkItem,
+        });
+      }
+      return { previousBookmark };
+    },
+    onError: (err, newBookmarkItem, context) => {
+      if (context?.previousBookmark) {
+        queryClient.setQueryData(["getBookmark", newBookmarkItem.postId], {
+          ...context.previousBookmark,
+        });
+      }
+    },
+    onSuccess: async () => {
       setIsBookmark(true);
-      queryClient.invalidateQueries(["GET_POSTS"]);
-    }
-  };
+    },
+  });
 
-  const deleteBookmark = async () => {
-    const { error } = await supabase
-      .from("bookmark")
-      .delete()
-      .eq("user_id", currentUserId)
-      .eq("post_id", postId);
-    if (!error) {
+  const { mutate: deleteBookmarkMutate } = useMutation(deleteBookmark, {
+    onMutate: async (deleteBookmarkItem) => {
+      await queryClient.cancelQueries([
+        "getBookmark",
+        deleteBookmarkItem.postId,
+      ]);
+      const previousBookmark = queryClient.getQueryData<BookmarkType>([
+        "getBookmark",
+        deleteBookmarkItem.postId,
+      ]);
+
+      if (previousBookmark) {
+        queryClient.setQueryData(
+          ["getBookmark", deleteBookmarkItem.postId],
+          null
+        );
+      }
+      return { previousBookmark };
+    },
+    onError: (err, deleteBookmarkItem, context) => {
+      if (context?.previousBookmark) {
+        queryClient.setQueryData(["getBookmark", deleteBookmarkItem.postId], {
+          ...context.previousBookmark,
+        });
+      }
+    },
+    onSuccess: async () => {
       setIsBookmark(false);
-      queryClient.invalidateQueries(["GET_POSTS"]);
-    }
-  };
+    },
+  });
 
-  const addLike = async () => {
-    const { error } = await supabase
-      .from("like")
-      .insert({ post_id: postId, user_id: currentUserId });
-    if (!error) {
-      await supabase.rpc("increment_like", { row_id: postId });
+  const { mutate: addLikeMutate } = useMutation(addLike, {
+    onMutate: async (newLikeItem) => {
+      await queryClient.cancelQueries(["getLike", newLikeItem.postId]);
+      const previousLike = queryClient.getQueryData<LikeType>([
+        "getLike",
+        newLikeItem.postId,
+      ]);
+
+      if (previousLike) {
+        queryClient.setQueryData(["getLike", newLikeItem.postId], {
+          ...previousLike,
+          newLikeItem,
+        });
+      }
+      return { previousLike };
+    },
+    onError: (err, newLikeItem, context) => {
+      if (context?.previousLike) {
+        queryClient.setQueryData(["getLike", newLikeItem.postId], {
+          ...context.previousLike,
+        });
+      }
+    },
+    onSuccess: async () => {
       setIsLike(true);
-      queryClient.invalidateQueries(["GET_POSTS"]);
-    }
-  };
+    },
+  });
 
-  const deleteLike = async () => {
-    const { error } = await supabase
-      .from("like")
-      .delete()
-      .eq("user_id", currentUserId)
-      .eq("post_id", postId);
-    if (!error) {
-      await supabase.rpc("decrement_like", { row_id: postId });
+  const { mutate: deleteLikeMutate } = useMutation(deleteLike, {
+    onMutate: async (deleteLikeItem) => {
+      await queryClient.cancelQueries(["getLike", deleteLikeItem.postId]);
+      const previousLike = queryClient.getQueryData<LikeType>([
+        "getLike",
+        deleteLikeItem.postId,
+      ]);
+
+      if (previousLike) {
+        queryClient.setQueryData(["getLike", deleteLikeItem.postId], null);
+      }
+      return { previousLike };
+    },
+    onError: (err, deleteLikeItem, context) => {
+      if (context?.previousLike) {
+        queryClient.setQueryData(["getLike", deleteLikeItem.postId], {
+          ...context.previousLike,
+        });
+      }
+    },
+    onSuccess: async () => {
       setIsLike(false);
-      queryClient.invalidateQueries(["GET_POSTS"]);
-    }
-  };
+    },
+  });
 
   const clickBookmarkButton = async () => {
-    isAnonymous();
-    if (isBookmark) {
-      deleteBookmark();
-    } else {
-      addBookmark();
+    if (!currentUserId) {
+      return router.push("/auth/login");
     }
+    if (isBookmark) {
+      deleteBookmarkMutate({ postId: postId as string, currentUserId });
+      // 구현 후 주석 해제
+      // await decrementBookmark(postId as string);
+    } else {
+      addBookmarkMutate({ postId: postId as string, currentUserId });
+      // 구현 후 주석 해제
+      // await incrementBookmark(postId as string);
+    }
+    return queryClient.invalidateQueries(["GET_POSTS"]);
   };
 
   const clickLikeButton = async () => {
-    isAnonymous();
-    if (isLike) {
-      deleteLike();
-    } else {
-      addLike();
+    if (!currentUserId) {
+      return router.push("/auth/login");
     }
+    if (isLike) {
+      deleteLikeMutate({ postId: postId as string, currentUserId });
+      await decrementLike(postId as string);
+    } else {
+      addLikeMutate({ postId: postId as string, currentUserId });
+      await incrementLike(postId as string);
+    }
+    return queryClient.invalidateQueries(["GET_POSTS"]);
   };
 
   return (
@@ -136,7 +217,7 @@ const DetailHeader = ({
           alt="북마크 버튼"
           onClick={clickBookmarkButton}
         />
-        {isOwner && (
+        {author === currentUserId && (
           <Image
             src="/icons/more.svg"
             onClick={showMoreModal}

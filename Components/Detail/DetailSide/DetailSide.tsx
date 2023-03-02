@@ -10,8 +10,7 @@ interface DetailSideProps {
   tag: string[];
   skills: string[];
   members: string[];
-  authorName: string;
-  authorProfileImage: string;
+  authorInfo: UserProfileType | null | undefined;
 }
 
 const DetailSide = ({
@@ -20,8 +19,7 @@ const DetailSide = ({
   tag,
   skills,
   members,
-  authorName,
-  authorProfileImage,
+  authorInfo,
 }: DetailSideProps) => {
   return (
     <SideContainer>
@@ -49,11 +47,11 @@ const DetailSide = ({
           <Title>작성자</Title>
           <ProfileWrapper>
             <ProfileImage
-              src={authorProfileImage}
+              src={authorInfo?.profile_image}
               alt="프로필 사진"
               page="detailPage"
             />
-            <Name>{authorName}</Name>
+            <Name>{authorInfo?.user_name}</Name>
           </ProfileWrapper>
           <ButtonsWrapper>
             <DefaultBox>{subCategory}</DefaultBox>

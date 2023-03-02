@@ -1,14 +1,13 @@
 import Post from "@/Components/CreatePost/Post/Post";
+import PostEditor from "@/Components/CreatePost/PostEditor";
 import { userLoginCheck } from "@/lib/recoil";
-import { Editor } from "@toast-ui/react-editor";
-import { NextPage, GetServerSideProps } from "next";
-import dynamic from "next/dynamic";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 
-const CreatePostPage: NextPage = () => {
+const CreatePostPage = () => {
   const isLogin = useRecoilValue(userLoginCheck);
 
   const router = useRouter();
@@ -19,19 +18,10 @@ const CreatePostPage: NextPage = () => {
     }
   }, []);
 
-  const editorRef = useRef<Editor>(null);
-
-  const PostEditor = dynamic(
-    () => import("@/Components/CreatePost/PostEditor"),
-    {
-      ssr: false,
-    }
-  );
-
   return (
     <MainWrapper>
       <Post />
-      <PostEditor editorRef={editorRef} />
+      <PostEditor />
     </MainWrapper>
   );
 };

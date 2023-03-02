@@ -8,8 +8,8 @@ import {
   TabProfile,
   UserInfoContainer,
 } from "@/Components/MyPage";
-import { useQueryClient } from "@tanstack/react-query";
-import { getAllPosts } from "@/utils/APIs/supabase";
+import { useQuery } from "@tanstack/react-query";
+import { getAllPosts, getCurrentUser } from "@/utils/APIs/supabase";
 import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
@@ -20,23 +20,25 @@ const tabList = ["프로젝트", "북마크", "좋아요", "프로필"];
 const ProfilePage: NextPage = () => {
   const [currentTab, setCurrentTab] = useState(0);
   const [userId, setUserId] = useState("");
-  const [itemList, setItemList] = useState<PostType[]>([]);
   const [likeIds, setLikeIds] = useState<string[]>([]);
   const [bookmarkIds, setBookmarkIds] = useState<string[]>([]);
   const isLogin = useRecoilValue(userLoginCheck);
 
   const router = useRouter();
-  const queryClient = useQueryClient();
+
+  useQuery(["currentUser"], {
+    queryFn: getCurrentUser,
+    onSuccess({ data: { user } }) {
+      if (user) {
+        setUserId(user.id);
+      }
+    },
+  });
+
+  const { data: itemList } = useQuery<PostType[]>(["GET_POSTS"], getAllPosts);
 
   const handleClick = (idx: number) => {
     setCurrentTab(idx);
-  };
-
-  const handleUserId = async () => {
-    const { data } = await supabase.auth.getSession();
-    if (data.session?.user) {
-      setUserId(data.session?.user.id);
-    }
   };
 
   useEffect(() => {
@@ -45,35 +47,9 @@ const ProfilePage: NextPage = () => {
     }
   }, []);
 
-  useEffect(() => {
-    handleUserId();
-  }, []);
-
-  useEffect(() => {
-    const fetchAllPosts = async () => {
-      const newQueryData = await queryClient.fetchQuery<PostType[]>(
-        ["GET_POSTS"],
-        getAllPosts
-      );
-      return newQueryData;
-    };
-
-    const queryData: PostType[] | undefined = queryClient.getQueryData([
-      "GET_POSTS",
-    ]);
-    if (queryData) {
-      setItemList(queryData);
-    } else {
-      fetchAllPosts().then((res) => {
-        if (res) {
-          setItemList(res);
-        }
-      });
-    }
-  }, [queryClient]);
-
   // 내가 작성한 아이템 리스트
   const myItemList = useMemo(() => {
+    if (!itemList) return [];
     return itemList.filter((item) => item.user_id === userId);
   }, [itemList, userId]);
 
@@ -94,6 +70,7 @@ const ProfilePage: NextPage = () => {
 
   const bookmarkList = useMemo(() => {
     if (bookmarkIds) {
+      if (!itemList) return [];
       return itemList.filter((item) => bookmarkIds.includes(item.id));
     }
     return itemList;
@@ -116,6 +93,7 @@ const ProfilePage: NextPage = () => {
 
   const likeList = useMemo(() => {
     if (likeIds) {
+      if (!itemList) return [];
       return itemList.filter((item) => likeIds.includes(item.id));
     }
     return itemList;
@@ -140,7 +118,6 @@ const ProfilePage: NextPage = () => {
     }
   }, [currentTab, myItemList, bookmarkList, likeList]);
 
-  // TODO: itemList 이용해서 필터링된 카드 아이템 리스트 만들기
   return (
     <MyPageContainer>
       <UserInfoContainer />
@@ -153,7 +130,7 @@ const ProfilePage: NextPage = () => {
         {currentTab === tabList.length - 1 ? (
           <TabProfile />
         ) : (
-          <CardItemContainer itemList={filteredItemList} />
+          filteredItemList && <CardItemContainer itemList={filteredItemList} />
         )}
       </ContentContainer>
     </MyPageContainer>

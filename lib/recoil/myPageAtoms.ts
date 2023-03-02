@@ -24,9 +24,9 @@ const myPageUserId = atom({
   default: "",
 });
 
-const myPageBackgroundColor = atom({
-  key: "myPageBackgroundColor",
-  default: "#ffffff",
+const myPageBackgroundImage = atom({
+  key: "myPageBackgroundImage",
+  default: "",
 });
 
 const myPageProfileImage = atom({
@@ -72,7 +72,7 @@ const myPageUserProfile = selector({
     const contactEmail = get(myPageContactEmail);
     const selfProfile = get(myPageSelfProfile);
     const userId = get(myPageUserId);
-    const backgroundColor = get(myPageBackgroundColor);
+    const backgroundImage = get(myPageBackgroundImage);
     const profileImage = get(myPageProfileImage);
     const gender = get(myPageGender);
     const isPublic = get(myPageIsPublic);
@@ -90,7 +90,7 @@ const myPageUserProfile = selector({
       contact_email: contactEmail,
       self_profile: selfProfile,
       user_id: userId,
-      background_color: backgroundColor,
+      background_image: backgroundImage,
       profile_image: profileImage,
       gender,
       is_public: isPublic,
@@ -110,7 +110,7 @@ export {
   myPageUserName,
   myPageContactEmail,
   myPageSelfProfile,
-  myPageBackgroundColor,
+  myPageBackgroundImage,
   myPageUserId,
   myPageProfileImage,
   myPageUserProfile,

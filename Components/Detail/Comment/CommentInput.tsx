@@ -1,13 +1,10 @@
 import styled from "styled-components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import supabase from "@/lib/supabase";
 import { useInput } from "@/hooks/common";
 import { useUserProfile } from "@/hooks/query";
 import { useState } from "react";
 import { DefaultButton, ProfileImage } from "@/Components/Common";
-
-/**
- */
+import { postComment, incrementComment } from "@/utils/APIs/supabase";
 
 interface CommentInputProps {
   postId: string | string[] | undefined;
@@ -28,15 +25,10 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
   } = useUserProfile();
 
   const { mutate: createComment } = useMutation(
-    (): any =>
-      supabase.from("comment").insert({
-        post_id: postId,
-        user_id: userId,
-        content: inputValues.comment,
-      }),
+    () => postComment(inputValues.comment, postId as string, userId as string),
     {
       onSuccess: async () => {
-        await supabase.rpc("increment_comment", { row_id: postId });
+        await incrementComment(postId as string);
         queryClient.invalidateQueries(["getComment"]);
         queryClient.invalidateQueries(["GET_POSTS"]);
       },
