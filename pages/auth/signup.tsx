@@ -115,7 +115,7 @@ const SignUpPage: NextPage = () => {
         <SignupForm>
           <AuthInput
             value={userName}
-            placeholder="이름(닉네임) 2글자 이상"
+            placeholder="이름(닉네임)"
             onChange={(e) => setUserName(e.target.value)}
           />
           {userNameValidate ? (
@@ -137,7 +137,7 @@ const SignUpPage: NextPage = () => {
           <AuthInput
             type="password"
             value={password}
-            placeholder="비밀번호 8글자 이상"
+            placeholder="비밀번호"
             onChange={(e) => setPassword(e.target.value)}
           />
           {passwordValidate ? (
