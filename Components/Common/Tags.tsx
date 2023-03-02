@@ -18,7 +18,7 @@ import styled from "styled-components";
 
 interface TagsProps {
   tagItems: string[];
-  color?: string;
+  color?: "primary6" | "white";
 }
 
 const Tags = ({ tagItems, color = "primary6" }: TagsProps) => {
@@ -40,7 +40,11 @@ const TagsContainer = styled.ul`
   gap: 0.5rem;
 `;
 
-const TagsItem = styled.li<{ color: string }>`
+interface TagsItemProps {
+  color: "primary6" | "white";
+}
+
+const TagsItem = styled.li<TagsItemProps>`
   ${({ theme }) => theme.fonts.body13En};
   color: ${({ theme, color }) => theme.colors[color]};
   background-color: ${({ theme }) => theme.colors.gray8};
