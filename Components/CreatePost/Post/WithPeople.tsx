@@ -1,8 +1,9 @@
 import { postMembers } from "@/lib/recoil";
 import Image from "next/image";
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import trash_can from "@/public/icons/trash_can.svg";
 
 const WithPeople = () => {
   const [people, setPeople] = useRecoilState(postMembers);
@@ -36,13 +37,13 @@ const WithPeople = () => {
     <WithPeopleContainer>
       {people.map((person, idx) => (
         <InputWrapper key={idx}>
-          <Input
+          <NameInput
             placeholder="참여자"
             value={person.name}
             onChange={changePerson(idx, "name")}
             maxLength={5}
           />
-          <Input
+          <StackInput
             placeholder="개발 스택"
             value={person.field}
             onChange={changePerson(idx, "field")}
@@ -55,7 +56,7 @@ const WithPeople = () => {
           />
           <CancelButton
             onClick={onDelete(idx)}
-            src="/icons/close.png"
+            src={trash_can}
             alt="취소 버튼"
             width="10"
             height="10"
@@ -70,12 +71,32 @@ const WithPeople = () => {
 const WithPeopleContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  padding: 0.625rem 0;
 `;
 
 const InputWrapper = styled.div`
   display: flex;
-  gap: 1.25rem;
   align-items: center;
+  position: relative;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+`;
+
+const NameInput = styled.input`
+  border: none;
+  border-bottom: 0.0625rem solid grey;
+  padding: 0.625rem 1.25rem;
+  outline: none;
+  max-width: 12rem;
+`;
+
+const StackInput = styled.input`
+  border: none;
+  border-bottom: 0.0625rem solid grey;
+  padding: 0.625rem 1.25rem;
+  outline: none;
+  max-width: 15.25rem;
 `;
 
 const Input = styled.input`
@@ -97,8 +118,10 @@ const AddButton = styled.button`
 `;
 
 const CancelButton = styled(Image)`
-  cursor: pointer;
+  position: absolute;
+  right: -1.5rem;
   padding: 0.125rem;
+  cursor: pointer;
 `;
 
 export default WithPeople;

@@ -41,14 +41,23 @@ const SkillList = ({ text, editSkills, setEditSkills }: SkillPickerProps) => {
 
 const SkillListContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   gap: 0.5rem;
-  flex-wrap: wrap;
+  width: 100%;
+  padding: 0.5rem;
+
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.colors.gray7};
+  border-radius: 0.25rem;
 `;
 
 const SkillButton = styled.button`
   ${commonStyle}
   cursor: pointer;
+  background: transparent;
+  color: ${({ theme }) => theme.colors.gray6};
+  ${({ theme }) => theme.fonts.body14};
 `;
 
 export default SkillList;

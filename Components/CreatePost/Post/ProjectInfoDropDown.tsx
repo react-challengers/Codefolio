@@ -15,6 +15,8 @@ import DatePicker from "react-datepicker";
 import getYYYYMM from "@/utils/commons/getYYYYMM";
 import { SkillList } from "@/Components/Common";
 import arrow_down from "@/public/icons/arrow_down.svg";
+import disable_check from "@/public/icons/disable_check.svg";
+import enable_check from "@/public/icons/enable_check.svg";
 import Image from "next/image";
 import FieldDropDown from "./FieldDropDown";
 import WithPeople from "./WithPeople";
@@ -22,18 +24,29 @@ import WithPeople from "./WithPeople";
 const ProjectInfoDropDown = () => {
   const [postSkill, setPostSkill] = useRecoilState(postSkills);
   const [[startDate, endDate], setDate] = useRecoilState(postProjectDuration);
+
   const [tag, setTag] = useRecoilState(postTags);
   const [githubUrl, setGithubUrl] = useRecoilState(postGithubUrl);
   const [deployedUrl, setDeployedUrl] = useRecoilState(postDeployedUrl);
-  // const [isPublic, setIsPublic] = useRecoilState(postPublic);
   const largeCategory = useRecoilValue(postLargeCategory);
   const subCategory = useRecoilValue(postSubCategory);
 
   const [categoryVisible, setCategoryVisible] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
 
   const handleShowCategory = () => {
     setCategoryVisible((prev) => !prev);
   };
+
+  const handleProgress = () => {
+    setInProgress((prev) => !prev);
+    if (!inProgress) {
+      setDate((prev) => [prev[0], "진행중"]);
+    } else {
+      setDate((prev) => [prev[0], getYYYYMM(new Date())]);
+    }
+  };
+  console.log("👉👉  [startDate, endDate]:", [startDate, endDate]);
 
   return (
     <ProjectInfoDropDownContainer>
@@ -58,41 +71,67 @@ const ProjectInfoDropDown = () => {
 
         <ProjectInfoWrapper>
           <TEXTBOX>프로젝트 스택*</TEXTBOX>
-          <SkillList
-            text="개발 스택 추가"
-            editSkills={postSkill}
-            setEditSkills={setPostSkill}
-          />
+          <SkillListWrapper>
+            <SkillList
+              text="개발 스택 추가"
+              editSkills={postSkill}
+              setEditSkills={setPostSkill}
+            />
+          </SkillListWrapper>
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
           <TEXTBOX>프로젝트 기간*</TEXTBOX>
           <DatePickerContainer>
-            <StyledDatePicker
-              showMonthYearPicker
-              selected={new Date(startDate)}
-              dateFormat="yyyy-MM"
-              onChange={(date: Date) =>
-                setDate((prev) => [getYYYYMM(date), prev[1]])
-              }
-              selectsStart
-              startDate={new Date(startDate)}
-              endDate={new Date(endDate)}
-              maxDate={new Date(endDate)}
-            />
-            <SpaceBetweenDatePicker> ~ </SpaceBetweenDatePicker>
-            <StyledDatePicker
-              showMonthYearPicker
-              selected={new Date(endDate)}
-              dateFormat="yyyy-MM"
-              onChange={(date: Date) =>
-                setDate((prev) => [prev[0], getYYYYMM(date)])
-              }
-              selectsEnd
-              startDate={new Date(startDate)}
-              endDate={new Date(endDate)}
-              minDate={new Date(startDate)}
-            />
+            <DateSelectBox>
+              <StyledDatePicker
+                showMonthYearPicker
+                selected={new Date(startDate)}
+                dateFormat="yyyy-MM"
+                onChange={(date: Date) =>
+                  setDate((prev) => [getYYYYMM(date), prev[1]])
+                }
+                selectsStart
+                startDate={new Date(startDate)}
+                endDate={new Date(endDate)}
+                maxDate={new Date(endDate)}
+              />
+              <SpaceBetweenDatePicker> ~ </SpaceBetweenDatePicker>
+              {inProgress ? (
+                <div>작성중</div>
+              ) : (
+                <StyledDatePicker
+                  showMonthYearPicker
+                  selected={new Date(endDate)}
+                  dateFormat="yyyy-MM"
+                  onChange={(date: Date) =>
+                    setDate((prev) => [prev[0], getYYYYMM(date)])
+                  }
+                  selectsEnd
+                  startDate={new Date(startDate)}
+                  endDate={new Date(endDate)}
+                  minDate={new Date(startDate)}
+                />
+              )}
+              <InProgress onClick={handleProgress}>
+                {inProgress ? (
+                  <CheckInput
+                    src={enable_check}
+                    width={24}
+                    height={24}
+                    alt="checked"
+                  />
+                ) : (
+                  <CheckInput
+                    src={disable_check}
+                    width={24}
+                    height={24}
+                    alt="Unchecked"
+                  />
+                )}
+                <CheckLabel>작성중</CheckLabel>
+              </InProgress>
+            </DateSelectBox>
           </DatePickerContainer>
         </ProjectInfoWrapper>
 
@@ -120,7 +159,13 @@ const ProjectInfoDropDown = () => {
 
         <ProjectInfoWrapper>
           <TEXTBOX>키워드 태그</TEXTBOX>
-          <SkillList text="태그 추가" editSkills={tag} setEditSkills={setTag} />
+          <TagList>
+            <SkillList
+              text="태그 추가"
+              editSkills={tag}
+              setEditSkills={setTag}
+            />
+          </TagList>
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
@@ -148,12 +193,14 @@ const ProjectInfoContainer = styled.div`
   flex-direction: column;
   justify-content: space-around;
 
-  width: 990px;
+  max-width: 990px;
 `;
 
 const ProjectInfoWrapper = styled.div`
   display: flex;
   gap: 60px;
+
+  width: 100%;
 `;
 
 const CategoryPicker = styled.div`
@@ -187,19 +234,53 @@ const DatePickerContainer = styled.div`
   height: 80px;
 `;
 
-const StyledDatePicker = styled(DatePicker)`
-  width: 125px;
+const DateSelectBox = styled.div`
+  display: flex;
+  justify-content: space-between;
 
-  border: none;
-  border-bottom: 0.0625rem solid;
+  height: 2.75rem;
+  color: ${({ theme }) => theme.colors.gray6};
+`;
+
+const StyledDatePicker = styled(DatePicker)`
+  all: unset;
 
   display: flex;
   justify-content: center;
-  text-align: center;
+
+  max-width: 20.625rem;
+  padding: 0.625rem 1rem;
+
+  border-bottom: 1px solid;
+  border-color: ${({ theme }) => theme.colors.gray7};
+
+  ${({ theme }) => theme.fonts.body14};
 `;
 
 const SpaceBetweenDatePicker = styled.div`
-  margin: 0 15px 0 15px;
+  padding: 0.75rem 1rem;
+  ${({ theme }) => theme.fonts.subtitle18En};
+  color: ${({ theme }) => theme.colors.gray4};
+`;
+
+const InProgress = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  & > * {
+    cursor: pointer;
+  }
+`;
+
+const CheckLabel = styled.span`
+  width: 2.5rem;
+  height: 1.25rem;
+  ${({ theme }) => theme.fonts.body14};
+  color: ${({ theme }) => theme.colors.gray5};
+`;
+
+const CheckInput = styled(Image)`
+  margin: 0 0.5rem;
 `;
 
 const InputURL = styled.input`
@@ -216,6 +297,17 @@ const InputURL = styled.input`
   color: ${({ theme }) => theme.colors.white};
   ::placeholder {
     color: ${({ theme }) => theme.colors.gray6};
+  }
+`;
+
+const SkillListWrapper = styled.div`
+  width: 100%;
+`;
+
+const TagList = styled.div`
+  width: 100%;
+  input {
+    color: ${({ theme }) => theme.colors.white};
   }
 `;
 
