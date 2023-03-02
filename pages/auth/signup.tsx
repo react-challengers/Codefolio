@@ -1,15 +1,16 @@
 import { NextPage, GetStaticProps } from "next";
 import styled from "styled-components";
 import Link from "next/link";
-import { useState, useEffect } from "react";
 import supabase from "@/lib/supabase";
+
+import { useState } from "react";
 import { useRouter } from "next/router";
-import { AuthInput, ValidateText } from "@/Components/Common/Auth";
-import { LongButton, Modal } from "@/Components/Common";
+import { AuthInput, AuthButton, HelperTextBox } from "@/Components/Common/Auth";
 import {
   checkEmail,
   checkPassword,
   checkUserName,
+  checkSamePassword,
 } from "@/utils/commons/authUtils";
 import { useSetRecoilState } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
@@ -17,8 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getCurrentUser } from "@/utils/APIs/supabase";
 
 /**
- * 현재 가장 기본적 유효성검사, "빈 인풋 체크"와 비밀번호 확인 부분만 추가되어 있습니다.
- * @TODO custom hooks (made by nne3enn) 을 사용해서 리팩토링
+ * @TODO custom hooks 을 사용해서 리팩토링
  */
 
 const SignUpPage: NextPage = () => {
@@ -29,16 +29,12 @@ const SignUpPage: NextPage = () => {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
-  const [userNameValidate, setUserNameValidate] = useState(true);
-  const [emailValidate, setEmailValidate] = useState(true);
-  const [passwordValidate, setPasswordValidate] = useState(true);
-  const [passwordCheckValidate, setPasswordCheckValidate] = useState(true);
+  const [userNameHelperText, setUserNameHelperText] = useState("");
+  const [emailHelperText, setEmailHelperText] = useState("");
+  const [passwordHelperText, setPasswordHelperText] = useState("");
+  const [passwordCheckHelperText, setPasswordCheckHelperText] = useState("");
 
   const setIsLogin = useSetRecoilState(userLoginCheck);
-
-  const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState<string | null>("");
-  const [modalContent, setModalContent] = useState<string | null>("");
 
   useQuery(["currentUser"], {
     queryFn: getCurrentUser,
@@ -50,34 +46,19 @@ const SignUpPage: NextPage = () => {
   });
 
   const signupWithEmail = async () => {
-    if (!userName || !email || !password || !passwordCheck) {
-      return OpenModal("모든 데이터를 입력해주세요.", null);
-    }
+    setUserNameHelperText(checkUserName(userName));
+    setEmailHelperText(checkEmail(email));
+    setPasswordHelperText(checkPassword(password));
+    setPasswordCheckHelperText(checkSamePassword(password, passwordCheck));
 
-    if (!checkUserName(userName)) {
-      setUserNameValidate(false);
-      return OpenModal("이름(닉네임)은 2글자 이상입니다.", null);
-    }
-    setUserNameValidate(true);
-
-    if (!checkEmail(email)) {
-      setEmailValidate(false);
-      return OpenModal("이메일의 형식을 확인해주세요.", null);
-    }
-    setEmailValidate(true);
-
-    if (!checkPassword(password)) {
-      setPasswordValidate(false);
-      return OpenModal("비밀번호는 8자리 이상 입니다. ", null);
-    }
-    setPasswordValidate(true);
-
-    if (!(password === passwordCheck)) {
-      setPasswordCheckValidate(false);
-      return OpenModal("비밀번호가 일치하지 않습니다.", null);
-    }
-    setPasswordCheckValidate(true);
-
+    // helper text 있을 때 -> 에러 -> 회원가입 시도 안함
+    if (
+      userNameHelperText ||
+      emailHelperText ||
+      passwordHelperText ||
+      passwordCheckHelperText
+    )
+      return;
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -91,25 +72,11 @@ const SignUpPage: NextPage = () => {
 
     if (!error) {
       setIsLogin(true);
-      OpenModal("회원가입 완료", null);
-      return router.push("/");
+      router.push("/");
     }
-    return OpenModal("회원가입 실패", null);
   };
-
-  const OpenModal = (title: string | null, content: string | null) => {
-    setModalTitle(title);
-    setModalContent(content);
-    setShowModal(true);
-  };
-
   return (
     <SignupPageContainer>
-      {showModal && (
-        <Modal onClose={() => setShowModal(false)} title={modalTitle}>
-          {modalContent}
-        </Modal>
-      )}
       <EmptyContainer />
       <SignupSpace>
         <SignupForm>
@@ -117,50 +84,43 @@ const SignUpPage: NextPage = () => {
             value={userName}
             placeholder="이름(닉네임)"
             onChange={(e) => setUserName(e.target.value)}
+            validate={userNameHelperText}
           />
-          {userNameValidate ? (
-            <ValidateText />
-          ) : (
-            <ValidateText> 닉네임을 확인해주세요. </ValidateText>
-          )}
+          <HelperTextBox text={userNameHelperText} />
+
           <AuthInput
             type={email}
             value={email}
             placeholder="이메일"
             onChange={(e) => setEmail(e.target.value)}
+            validate={emailHelperText}
           />
-          {emailValidate ? (
-            <ValidateText />
-          ) : (
-            <ValidateText> 이메일을 형식을 확인해주세요. </ValidateText>
-          )}
+          <HelperTextBox text={emailHelperText} />
+
           <AuthInput
             type="password"
             value={password}
             placeholder="비밀번호"
             onChange={(e) => setPassword(e.target.value)}
+            validate={passwordHelperText}
           />
-          {passwordValidate ? (
-            <ValidateText />
-          ) : (
-            <ValidateText> 비밀번호 8자리 이상 입니다. </ValidateText>
-          )}
+          <HelperTextBox text={passwordHelperText} />
+
           <AuthInput
             type="password"
             value={passwordCheck}
             placeholder="비밀번호 확인"
             onChange={(e) => setPasswordCheck(e.target.value)}
+            validate={passwordCheckHelperText}
           />
-          {passwordCheckValidate ? (
-            <ValidateText />
-          ) : (
-            <ValidateText> 비밀번호가 일치하지 않습니다. </ValidateText>
-          )}
-          <SignupButton onClick={signupWithEmail}>회원가입</SignupButton>
-          <FooterMassage>
-            <CustomLink href="./login">로그인하러가기</CustomLink>
-          </FooterMassage>
+          <HelperTextBox text={passwordCheckHelperText} />
         </SignupForm>
+        <AuthButton buttonType="outLine" onclick={signupWithEmail}>
+          회원가입
+        </AuthButton>
+        <FooterMassage>
+          <CustomLink href="./login">로그인하러</CustomLink>
+        </FooterMassage>
       </SignupSpace>
     </SignupPageContainer>
   );
@@ -177,7 +137,6 @@ const SignupPageContainer = styled.div`
 `;
 
 const EmptyContainer = styled.div`
-  background-color: lightgray;
   width: 50%;
   height: 100vh;
 
@@ -189,6 +148,8 @@ const EmptyContainer = styled.div`
 const SignupSpace = styled.div`
   flex-grow: 1;
   display: flex;
+  flex-direction: column;
+
   justify-content: center;
   align-items: center;
 `;
@@ -196,29 +157,23 @@ const SignupSpace = styled.div`
 const SignupForm = styled.div`
   display: flex;
   flex-direction: column;
-
-  justify-content: space-between;
   align-items: center;
-
-  margin-bottom: 3.5rem;
-`;
-
-const SignupButton = styled(LongButton)`
-  margin-top: 2rem;
 `;
 
 const FooterMassage = styled.div`
-  margin-top: 0.5rem;
+  margin-top: 12px;
 
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.8125rem;
 `;
 
 const CustomLink = styled(Link)`
-  text-decoration: none;
-  color: black;
+  width: 3.75rem;
+  height: 1.125rem;
+  ${({ theme }) => theme.fonts.body13};
+
+  color: ${({ theme }) => theme.colors.gray6};
 `;
 
 export default SignUpPage;

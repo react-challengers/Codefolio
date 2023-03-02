@@ -1,4 +1,5 @@
 import AuthInput from "./AuthInput";
-import ValidateText from "./ValidateText";
+import AuthButton from "./AuthButton";
+import HelperTextBox from "./HelperTextBox";
 
-export { AuthInput, ValidateText };
+export { AuthInput, AuthButton, HelperTextBox };
