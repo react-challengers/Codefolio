@@ -57,6 +57,8 @@ const myPageBookmarkFolders = atom<string[]>({
   default: [],
 });
 
+const myPageGitHub = atom({ key: "myPageGitHub", default: "" });
+
 const myPageIsEditingProfileContainer = atom({
   key: "myPageIsEditingProfileContainer",
   default: false,
@@ -81,6 +83,7 @@ const myPageUserProfile = selector({
     const birthYear = get(myPageBirthYear);
     const career = get(myPageCareer);
     const bookmarkFolders = get(myPageBookmarkFolders);
+    const github = get(myPageGitHub);
 
     // schema 유효성 검증
     const userProfile: UserProfileType = {
@@ -99,6 +102,7 @@ const myPageUserProfile = selector({
       birth_year: birthYear,
       career,
       bookmark_folders: bookmarkFolders,
+      github,
     };
     return userProfile;
   },

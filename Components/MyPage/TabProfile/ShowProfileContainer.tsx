@@ -26,19 +26,31 @@ const ShowProfileContainer = () => {
           </ContentWrapper>
           <ContentWrapper>
             <ContentTitle>이메일*</ContentTitle>
-            <p>{profileData.contact_email}</p>
+            <ContentItem>{profileData.contact_email}</ContentItem>
           </ContentWrapper>
           <ContentWrapper>
             <ContentTitle>성별</ContentTitle>
-            <ContentItem>{profileData.gender}</ContentItem>
+            {profileData.gender === "선택안함" ? (
+              <ContentEmpty>선택안함</ContentEmpty>
+            ) : (
+              <ContentItem>{profileData.gender}</ContentItem>
+            )}
           </ContentWrapper>
           <ContentWrapper>
             <ContentTitle>출생년도</ContentTitle>
-            <ContentItem>{profileData.birth_year}</ContentItem>
+            {profileData.birth_year === new Date().getFullYear() ? (
+              <ContentEmpty>선택안함</ContentEmpty>
+            ) : (
+              <ContentItem>{profileData.birth_year}</ContentItem>
+            )}
           </ContentWrapper>
           <ContentWrapper>
             <ContentTitle>휴대폰번호</ContentTitle>
-            <ContentItem>{profileData.phone}</ContentItem>
+            {profileData.phone === "01000000000" ? (
+              <ContentEmpty>비어있음</ContentEmpty>
+            ) : (
+              <ContentItem>{profileData.phone}</ContentItem>
+            )}
           </ContentWrapper>
         </ContentContainer>
       </ProfileContainer>
@@ -55,7 +67,11 @@ const ShowProfileContainer = () => {
           </ContentWrapper>
           <ContentWrapper>
             <ContentTitle>깃허브 주소</ContentTitle>
-            <ContentItem>{profileData.github}</ContentItem>
+            {profileData.github === "" ? (
+              <ContentEmpty>비어있음</ContentEmpty>
+            ) : (
+              <ContentItem>{profileData.github}</ContentItem>
+            )}
           </ContentWrapper>
         </ContentContainer>
       </ProfileContainer>
@@ -102,7 +118,13 @@ const ContentTitle = styled.p`
 `;
 
 const ContentItem = styled.div`
+  ${(props) => props.theme.fonts.subtitle16}
   color: ${(props) => props.theme.colors.white};
+`;
+
+const ContentEmpty = styled.div`
+  ${(props) => props.theme.fonts.subtitle16}
+  color: ${(props) => props.theme.colors.gray5};
 `;
 
 const ButtonWrapper = styled.div`
