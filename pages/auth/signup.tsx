@@ -180,6 +180,10 @@ const EmptyContainer = styled.div`
   background-color: lightgray;
   width: 50%;
   height: 100vh;
+
+  background-image: url("/images/signup_background.png");
+  background-size: cover;
+  background-position: center;
 `;
 
 const SignupSpace = styled.div`
