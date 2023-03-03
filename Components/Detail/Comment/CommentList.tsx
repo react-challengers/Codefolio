@@ -16,7 +16,7 @@ interface CommentListProps {
 }
 
 const CommentList = ({ postId }: CommentListProps) => {
-  const getComments = async () => {
+  const getComments: () => Promise<CommentType[]> = async () => {
     const { data, error } = await supabase
       .from("comment")
       .select("*")
@@ -45,7 +45,7 @@ const CommentList = ({ postId }: CommentListProps) => {
   return (
     <div>
       {data &&
-        data?.map((comment: CommentType) => (
+        data?.map((comment) => (
           <CommentItem key={comment.id} comment={comment} />
         ))}
     </div>
