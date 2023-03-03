@@ -221,7 +221,7 @@ const SignUpPage: NextPage = () => {
           회원가입
         </AuthButton>
         <FooterMassage>
-          <CustomLink href="./login">로그인하러</CustomLink>
+          <CustomLink href="./login">로그인하기</CustomLink>
         </FooterMassage>
       </SignupSpace>
     </SignupPageContainer>

@@ -125,8 +125,8 @@ const Login: NextPage = () => {
         <SocialLoginButtonContainer>
           <AuthButton buttonType="socialLogin" onclick={signInWithGoogle}>
             <SocialIcon
-              src={ico_github}
-              alt="github 아이콘"
+              src={ico_google}
+              alt="google 아이콘"
               width={24}
               height={24}
             />
@@ -134,8 +134,8 @@ const Login: NextPage = () => {
           </AuthButton>
           <AuthButton buttonType="socialLogin" onclick={signInWithGitHub}>
             <SocialIcon
-              src={ico_google}
-              alt="google 아이콘"
+              src={ico_github}
+              alt="github 아이콘"
               width={24}
               height={24}
             />
