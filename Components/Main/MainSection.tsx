@@ -222,6 +222,10 @@ const HomeDropDownButton = styled.div`
   ${({ theme }) => theme.fonts.body14}
   color: ${({ theme }) => theme.colors.gray4};
 
+  svg {
+    margin-left: 0.5rem;
+  }
+
   &:hover {
     cursor: pointer;
     color: ${({ theme }) => theme.colors.primary6};
