@@ -4,15 +4,20 @@ import {
   userLoginCheck as recoilUserLoginCheck,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
-import { getCurrentUser, getUserProfile } from "@/utils/APIs/supabase";
+import {
+  getCurrentUser,
+  getNotification,
+  getUserProfile,
+} from "@/utils/APIs/supabase";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { DropDown, ProfileImage } from "../Common";
+import CreatePostIcon from "./CreatePostIcon";
 import Notification from "./Notification";
+import NotificationIcons from "./NotificationIcons";
 import SearchBar from "./SearchBar";
 
 const GNB = () => {
@@ -24,12 +29,17 @@ const GNB = () => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
     useRecoilState(isNotificationState);
+  const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [notificationType, setNotificationType] = useState<"new" | "default">(
+    "default"
+  );
 
   useQuery(["currentUser"], {
     queryFn: getCurrentUser,
     onSuccess({ data: { user } }) {
       if (user) {
         setUserCheck(true);
+        setCurrentUserId(user.id);
       } else {
         setUserCheck(false);
       }
@@ -43,6 +53,22 @@ const GNB = () => {
       }
     },
   });
+
+  const { data: notifications } = useQuery<NotificationType[]>(
+    ["notification", currentUserId],
+    {
+      queryFn: ({ queryKey }) => getNotification(queryKey[1] as string),
+      enabled: !!currentUserId,
+    }
+  );
+
+  useEffect(() => {
+    if (notifications?.some((notification) => !notification.is_read)) {
+      setNotificationType("new");
+    } else {
+      setNotificationType("default");
+    }
+  }, [notifications]);
 
   const handleClickLogo = () => {
     resetSubCategoryState();
@@ -91,13 +117,11 @@ const GNB = () => {
       <ButtonsContainer>
         {userCheck ? (
           <>
-            <ButtonWrapper onClick={handleNotificationDropdown}>
-              <Image
-                src="/icons/notification.svg"
-                alt="알림 아이콘"
-                width="24"
-                height="24"
-              />
+            <ButtonWrapper
+              onClick={handleNotificationDropdown}
+              isOpen={isNotificationDropdownOpen}
+            >
+              <NotificationIcon type={notificationType} />
             </ButtonWrapper>
             {isNotificationDropdownOpen && <Notification />}
             <ButtonWrapper
@@ -105,12 +129,7 @@ const GNB = () => {
                 router.push(userCheck ? "/create-post" : "/auth/login")
               }
             >
-              <Image
-                src="/icons/post.svg"
-                alt="게시글 등록 아이콘"
-                width="24"
-                height="24"
-              />
+              <CreatePostIcon />
             </ButtonWrapper>
             <ButtonWrapper onClick={handleProfileDropdown}>
               <ProfileImage
@@ -132,7 +151,7 @@ const GNB = () => {
           </>
         ) : (
           <ButtonWrapper onClick={() => router.push("/auth/login")}>
-            <span>LOGIN</span>
+            <LoginButton>로그인</LoginButton>
           </ButtonWrapper>
         )}
       </ButtonsContainer>
@@ -165,9 +184,36 @@ const ButtonsContainer = styled.div`
   gap: 1rem;
 `;
 
-const ButtonWrapper = styled.div`
+interface ButtonWrapperProps {
+  isOpen?: boolean;
+}
+
+const ButtonWrapper = styled.div<ButtonWrapperProps>`
   cursor: pointer;
   padding: 0.5rem;
+
+  path,
+  circle {
+    transition: all 0.2s ease-in-out;
+  }
+
+  ${({ isOpen, theme }) =>
+    isOpen &&
+    `path {
+      fill: ${theme.colors.primary6};
+    }
+    circle {
+      fill: ${theme.colors.primary6};
+    }`}
+
+  &:hover {
+    path {
+      fill: ${({ theme }) => theme.colors.primary6};
+    }
+    circle {
+      fill: ${({ theme }) => theme.colors.primary6};
+    }
+  }
 `;
 
 const GNBLogo = styled.div`
@@ -189,6 +235,29 @@ const ProfileDropDownList = styled.ul`
   border-radius: 0.25rem;
   filter: drop-shadow(0px 0.625rem 0.625rem rgba(0, 0, 0, 0.5));
   z-index: 2;
+`;
+
+const LoginButton = styled.button`
+  ${({ theme }) => theme.fonts.body16};
+  color: ${({ theme }) => theme.colors.gray4};
+  height: 2.25rem;
+  width: 5.875rem;
+  background: none;
+  cursor: pointer;
+
+  border: 1px solid ${({ theme }) => theme.colors.gray2};
+  border-radius: 0.25rem;
+
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border: 1px solid ${({ theme }) => theme.colors.primary6};
+    color: ${({ theme }) => theme.colors.primary6};
+  }
+`;
+
+const NotificationIcon = styled(NotificationIcons)`
+  cursor: pointer;
 `;
 
 export default GNB;
