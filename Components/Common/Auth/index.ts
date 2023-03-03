@@ -1,6 +1,6 @@
 import AuthInput from "./AuthInput";
 import AuthButton from "./AuthButton";
 import HelperTextBox from "./HelperTextBox";
-import ErrorMassageBox from "./ErrorMassageBox";
+import ErrorMessageBox from "./ErrorMessageBox";
 
-export { AuthInput, AuthButton, HelperTextBox, ErrorMassageBox };
+export { AuthInput, AuthButton, HelperTextBox, ErrorMessageBox };

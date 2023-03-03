@@ -19,6 +19,7 @@ const DetailContent = ({ content }: DetailContentProps) => {
 const PreviewContent = styled(MarkdownPreview)`
   width: 60rem;
   padding: 1rem;
+  background-color: ${({ theme }) => theme.colors.gray11};
 `;
 
 export default DetailContent;

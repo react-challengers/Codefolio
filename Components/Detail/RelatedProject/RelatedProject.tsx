@@ -90,13 +90,12 @@ const RelatedProject = ({ category }: RelatedProjectProps) => {
 const RelatedProjectContainer = styled.section`
   width: 87.5rem;
   height: 30rem;
-  border-top: 1px solid #e6e6e6;
-  border-bottom: 1px solid #e6e6e6;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray7};
 `;
 
 const RelatedProjectTitle = styled.h2`
   font-size: 1.5rem;
-  color: #333;
+  color: ${({ theme }) => theme.colors.gray2};
   margin: 2rem 0 3.125rem 7.5rem;
 `;
 
