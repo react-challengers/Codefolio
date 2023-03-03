@@ -54,7 +54,6 @@ const SkillListContainer = styled.div`
   gap: 0.5rem;
   width: 100%;
   padding: 0.5rem;
-  margin-bottom: 1.75rem;
 
   border: 1px solid ${({ theme }) => theme.colors.gray7};
   border-radius: 0.25rem;

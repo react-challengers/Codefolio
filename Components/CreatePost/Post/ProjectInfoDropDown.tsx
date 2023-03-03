@@ -186,7 +186,7 @@ const ProjectInfoDropDown = () => {
 
         <ProjectInfoWrapper>
           <TEXTBOX>
-            <span>키워드태그</span>
+            <span>키워드 태그</span>
             <CountState>{tag.length}/5</CountState>
           </TEXTBOX>
           <HelperTextContainer>
@@ -249,9 +249,7 @@ const CategoryPicker = styled.div`
   height: 100%;
   cursor: pointer;
 
-  border-bottom: 1px solid;
-  border-color: ${({ theme }) => theme.colors.gray7};
-
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray7};
   ${({ theme }) => theme.fonts.body14Medium};
 
   span {
@@ -347,10 +345,12 @@ const InputURL = styled.input`
 
 const SkillListWrapper = styled.div`
   width: 100%;
+  padding-top: 0.625rem;
 `;
 
 const TagList = styled.div`
   width: 100%;
+  padding-top: 0.625rem;
   input {
     color: ${({ theme }) => theme.colors.white};
   }
