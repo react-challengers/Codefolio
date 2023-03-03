@@ -8,8 +8,10 @@ import {
   deleteComment,
   editComment,
   getCurrentUser,
+  getOnePost,
   getSingleUser,
 } from "@/utils/APIs/supabase";
+import supabase from "@/lib/supabase";
 
 /**
  * @TODO useInput으로 리팩토링 고민
@@ -35,12 +37,22 @@ const CommentItem = ({ comment }: CommentItemProps) => {
   const [userId, setUserId] = useState<string | undefined>("");
   const [userName, setUserName] = useState("");
   const [userProfileImage, setUserProfileImage] = useState("");
+  const [author, setAuthor] = useState("");
 
   useQuery(["currentUser"], {
     queryFn: getCurrentUser,
     onSuccess({ data: { user } }) {
       if (user) {
         setUserId(user.id);
+      }
+    },
+  });
+
+  useQuery(["getOnePost", comment.post_id], {
+    queryFn: ({ queryKey }) => getOnePost(queryKey[1] as string),
+    onSuccess: (data) => {
+      if (data) {
+        setAuthor(data.user_id);
       }
     },
   });
@@ -58,10 +70,26 @@ const CommentItem = ({ comment }: CommentItemProps) => {
     enabled: !!comment.user_id,
   });
 
+  // 추후 리팩토링 대상(결합도가 높음)
+  const { mutate: deleteNotificationMutate } = useMutation(
+    async (type: string) => {
+      await supabase
+        .from("notification")
+        .delete()
+        .match({
+          user_id: userId,
+          target_id: author,
+          post_id: comment.post_id as string,
+          type,
+        });
+    }
+  );
+
   const { mutate: deleteCommentMutate } = useMutation(
     () => deleteComment(comment.id),
     {
       onSuccess: async () => {
+        deleteNotificationMutate("comment");
         await decrementComment(comment.post_id);
         queryClient.invalidateQueries(["getComment"]);
         queryClient.invalidateQueries(["GET_POSTS"]);
