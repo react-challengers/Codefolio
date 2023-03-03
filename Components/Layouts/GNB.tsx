@@ -10,6 +10,7 @@ import {
   getUserProfile,
 } from "@/utils/APIs/supabase";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
@@ -110,7 +111,13 @@ const GNB = () => {
     <GNBContainer>
       <GNBLeftSideContainer>
         <ButtonWrapper onClick={handleClickLogo}>
-          <GNBLogo>Codefolio</GNBLogo>
+          {/* <GNBLogo>Codefolio</GNBLogo> */}
+          <Image
+            src="/logos/mainLogo.svg"
+            width={24}
+            height={24}
+            alt="코드폴리오 로고"
+          />
         </ButtonWrapper>
         <SearchBar />
       </GNBLeftSideContainer>
