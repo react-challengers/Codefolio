@@ -4,12 +4,14 @@ import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import _ from "lodash";
 import { CardItem } from "@/Components/Common";
 import CategoryTag from "./CategoryTag";
 import HomeDropDownIcon from "./HomeDropDownIcon";
+import "react-loading-skeleton/dist/skeleton.css";
 
 // TODO: Tag 데이터 구조화 고민하기
 
@@ -28,9 +30,12 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     useRecoilState(subCategoryState);
   const router = useRouter();
 
-  const { data: allPostsData } = useQuery<PostType[]>(["GET_POSTS"], {
-    queryFn: getAllPosts,
-  });
+  const { data: allPostsData, isLoading } = useQuery<PostType[]>(
+    ["GET_POSTS"],
+    {
+      queryFn: getAllPosts,
+    }
+  );
 
   const publicPosts = useMemo(() => {
     if (allPostsData === undefined) return [];
@@ -138,6 +143,23 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         )}
       </HomeDropDownContainer>
       <HomeCardGrid>
+        {isLoading &&
+          new Array(12).fill(null).map((v, index) => (
+            <SkeletonTheme key={index} baseColor="#333" highlightColor="#555">
+              <div>
+                <Skeleton width={300} height={180} />
+                <Skeleton width={50} height={18} style={{ marginTop: 10 }} />
+                <Skeleton width="100%" height={24} style={{ marginTop: 10 }} />
+                <Skeleton width="100%" height={24} style={{ marginTop: 10 }} />
+                <Tags>
+                  <Skeleton width={60} height={22} style={{ marginTop: 10 }} />
+                  <Skeleton width={60} height={22} style={{ marginTop: 10 }} />
+                  <Skeleton width={60} height={22} style={{ marginTop: 10 }} />
+                  <Skeleton width={60} height={22} style={{ marginTop: 10 }} />
+                </Tags>
+              </div>
+            </SkeletonTheme>
+          ))}
         {sortPosts?.map((post: PostType) => (
           <CardContainer
             key={post.id}
@@ -246,6 +268,12 @@ const HomeDropDownItem = styled.li``;
 
 const CardContainer = styled.div`
   cursor: pointer;
+`;
+
+const Tags = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 `;
 
 export default MainSection;
