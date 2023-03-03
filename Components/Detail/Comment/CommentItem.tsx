@@ -18,14 +18,6 @@ import supabase from "@/lib/supabase";
  * @TODO useInput으로 리팩토링 고민
  */
 
-interface CommentType {
-  id: string;
-  post_id: string;
-  user_id: string;
-  content: string;
-  created_at: string;
-}
-
 interface CommentItemProps {
   comment: CommentType;
 }
