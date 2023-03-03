@@ -104,7 +104,7 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
         <DefaultButton
           color="primary6"
           text="작성하기"
-          buttonType="full"
+          type="full"
           size="s"
           onClick={handleAddComment}
         />

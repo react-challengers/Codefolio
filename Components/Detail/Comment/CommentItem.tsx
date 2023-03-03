@@ -144,13 +144,13 @@ const CommentItem = ({ comment }: CommentItemProps) => {
             <>
               <DefaultButton
                 text="완료"
-                buttonType="outline"
+                type="outline"
                 size="s"
                 onClick={handleEditClick}
               />
               <DefaultButton
                 text="취소"
-                buttonType="outline"
+                type="outline"
                 size="s"
                 onClick={handleCanceled}
               />
@@ -159,13 +159,13 @@ const CommentItem = ({ comment }: CommentItemProps) => {
             <>
               <DefaultButton
                 text="수정"
-                buttonType="outline"
+                type="outline"
                 size="s"
                 onClick={handleEditClick}
               />
               <DefaultButton
                 text="삭제"
-                buttonType="outline"
+                type="outline"
                 size="s"
                 onClick={() => deleteCommentMutate()}
               />
