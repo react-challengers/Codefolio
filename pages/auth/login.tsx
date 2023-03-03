@@ -139,7 +139,7 @@ const Login: NextPage = () => {
               width={24}
               height={24}
             />
-            Github로 로그인하기
+            깃허브로 로그인하기
           </AuthButton>
         </SocialLoginButtonContainer>
         <HrContainer>
