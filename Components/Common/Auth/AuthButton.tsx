@@ -9,15 +9,20 @@ const getTypeAuthButton = (buttonType: AuthButtonType, theme: DefaultTheme) => {
     background-color: ${theme.colors.gray11};
     color: ${theme.colors.primary6};
     border: 1px solid ${theme.colors.primary6};
+    :hover {
+      background-color: ${theme.colors.gray8};
+    }
     `;
   }
   if (buttonType === "socialLogin") {
     return `
+    ${theme.fonts.subtitle18Bold}
     background-color: ${theme.colors.gray8};
     border: none;
     color : ${theme.colors.primary6};
-    ${theme.fonts.subtitle18Bold}
-
+    :hover {
+      background-color: ${theme.colors.gray7};
+    }
     `;
   }
   return "";
