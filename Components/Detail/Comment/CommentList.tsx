@@ -16,7 +16,7 @@ interface CommentListProps {
 }
 
 const CommentList = ({ postId }: CommentListProps) => {
-  const getComments: () => Promise<CommentType[]> = async () => {
+  const getComments = async () => {
     const { data, error } = await supabase
       .from("comment")
       .select("*")
@@ -30,9 +30,12 @@ const CommentList = ({ postId }: CommentListProps) => {
     return data;
   };
 
-  const { data, isError, isLoading, refetch } = useQuery(["getComment"], {
-    queryFn: getComments,
-  });
+  const { data, isError, isLoading, refetch } = useQuery<CommentType[]>(
+    ["getComment"],
+    {
+      queryFn: getComments,
+    }
+  );
 
   useEffect(() => {
     refetch();
