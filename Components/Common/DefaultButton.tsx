@@ -9,52 +9,44 @@ interface DefaultButtonProps {
   text: string;
   type: DefaultButtonType;
   size: DefaultButtonSize;
+  color?: string;
   onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
-const getDefaultButtonType = (type: DefaultButtonType) => {
-  if (type === "full") {
-    return `background-color: grey;
-            color: white;`;
-  }
-
-  return `background-color: transparent;
-         color: grey;
-         border: 1px solid grey;
-        `;
-};
-
-const getDefaultButtonSize = (size: DefaultButtonSize) => {
-  if (size === "m") {
-    return `width: 8rem; 
-            height:2.5rem;`;
-  }
-  return `width: 5.625rem; 
-          height: 2.5rem;`;
-};
-
-const DefaultButton = ({ text, type, size, onClick }: DefaultButtonProps) => {
+const DefaultButton = ({
+  text,
+  type,
+  size,
+  color = "white",
+  onClick,
+}: DefaultButtonProps) => {
   return (
-    <DefaultButtonContainer type={type} size={size} onClick={onClick}>
+    <DefaultButtonContainer
+      type={type}
+      color={color}
+      size={size}
+      onClick={onClick}
+    >
       {text}
     </DefaultButtonContainer>
   );
 };
 
 interface DefaultButtonContainerProps {
+  color: string;
   type: DefaultButtonType;
   size: DefaultButtonSize;
-  children: string;
 }
 
-const DefaultButtonContainer = styled.button<DefaultButtonProps>`
+const DefaultButtonContainer = styled.button<any>`
   border-radius: 0.3125rem;
   border: none;
   cursor: pointer;
-  ${({ type }: Pick<DefaultButtonContainerProps, "type">) =>
-    getDefaultButtonType(type)};
-  ${({ size }: Pick<DefaultButtonContainerProps, "size">) =>
-    getDefaultButtonSize(size)};
-` as any;
+  width: ${({ size }) => (size === "m" ? 8 : 5.625)}rem;
+  height: 2.5rem;
+  background-color: ${({ theme, type }) =>
+    type === "full" ? theme.colors.gray8 : "transparent"};
+  color: ${({ theme, color }) => theme.colors[color]};
+`;
 
 export default DefaultButton;

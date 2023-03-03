@@ -1,15 +1,7 @@
 import supabase from "@/lib/supabase";
-import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import CommentItem from "./CommentItem";
-
-interface CommentType {
-  id: string;
-  post_id: string;
-  user_id: string;
-  content: string;
-  created_at: string;
-}
 
 interface CommentListProps {
   postId: string | string[] | undefined;
