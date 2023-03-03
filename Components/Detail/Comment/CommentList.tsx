@@ -11,7 +11,7 @@ const CommentList = ({ postId }: CommentListProps) => {
   const getComments = async () => {
     const res = await supabase
       .from("comment")
-      .select("*")
+      .select<string, CommentType>("*")
       .order("created_at", { ascending: false })
       .eq("post_id", postId);
     return res;

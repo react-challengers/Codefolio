@@ -80,14 +80,24 @@ const DropDown = ({ type }: DropDownProps) => {
 };
 
 const Select = styled.select`
-  height: 3.5rem;
-  width: 19.0625rem;
-  padding: 0.75rem;
+  ${(props) => props.theme.fonts.body14Medium}
+  all: unset;
+  height: 2.5rem;
+  flex-grow: 1;
+  padding: 0 1rem;
+  color: ${(props) => props.theme.colors.white};
 
-  color: inherit;
-  &:focus {
-    background-color: #eee;
+  align-items: center;
+  box-sizing: border-box;
+
+  ::placeholder {
+    color: ${(props) => props.theme.colors.gray6};
   }
+
+  :focus {
+    border-bottom: 1px solid ${(prop) => prop.theme.colors.white};
+  }
+  border-bottom: 1px solid ${(prop) => prop.theme.colors.gray7};
 `;
 
 export default DropDown;

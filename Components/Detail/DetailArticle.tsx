@@ -50,8 +50,9 @@ const DetailArticle = () => {
 
   const { data: currentPost, isLoading } = useQuery<PostType>(
     ["getOnePost", postId],
+    () => getOnePost(postId as string),
     {
-      queryFn: ({ queryKey }) => getOnePost(queryKey[1] as string),
+      // queryFn: ({ queryKey }) => getOnePost(queryKey[1] as string),
       onSuccess(data) {
         if (data) {
           setTitleData({

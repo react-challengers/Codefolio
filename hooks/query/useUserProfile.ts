@@ -33,6 +33,7 @@ const useUserProfile = () => {
     skills: data?.skills ? data?.skills : [],
     career: data?.career ?? "신입",
     bookmark_folders: data?.bookmark_folders ?? [],
+    github: data?.github ?? "",
   };
 
   // 최초 데이터 갱신

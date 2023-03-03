@@ -79,6 +79,7 @@ interface UserProfileType {
   self_profile: string;
   profile_image: string;
   background_image: string;
+  github: string;
 }
 
 interface NotificationType {
@@ -142,4 +143,17 @@ interface CommentLikeType {
   id: string;
   comment_id: string;
   user_id: string;
+}
+
+interface ProfileBadgeType {
+  id: string;
+  created_at: Date;
+  user_id: string;
+  profile_id: string;
+  BadgeKind:
+    | "communication"
+    | "implementation"
+    | "initiative"
+    | "pencil"
+    | "puzzle";
 }
