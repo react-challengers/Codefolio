@@ -6,11 +6,11 @@ import {
   RelatedProject,
 } from "@/Components/Detail";
 import {
-  getAllPosts,
   getSingleUser,
   getCurrentUser,
   getIsBookMark,
   getIsLike,
+  getOnePost,
 } from "@/utils/APIs/supabase";
 import getTextColorByBackgroundColor from "@/utils/detail/getTextColorByBackgroundColor";
 import { useQuery } from "@tanstack/react-query";

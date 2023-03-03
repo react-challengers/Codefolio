@@ -1,4 +1,5 @@
 import supabase from "@/lib/supabase";
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import CommentItem from "./CommentItem";
@@ -16,7 +17,9 @@ interface CommentListProps {
 }
 
 const CommentList = ({ postId }: CommentListProps) => {
-  const getComments = async () => {
+  const getComments = async (): Promise<
+    PostgrestSingleResponse<CommentType[]>
+  > => {
     const res = await supabase
       .from("comment")
       .select("*")
