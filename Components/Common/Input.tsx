@@ -23,9 +23,9 @@ const Input = ({
         onChange={onChange}
         type={type}
         placeholder={placeholder}
-        errorMessage={!!errorMessage}
+        error={!!errorMessage}
       />
-      <ErrorMessage errorMessage={!!errorMessage}>{errorMessage}</ErrorMessage>
+      <ErrorMessage error={!!errorMessage}>{errorMessage}</ErrorMessage>
     </InputContainer>
   );
 };
@@ -37,7 +37,7 @@ const InputContainer = styled.div`
   flex-direction: column;
 `;
 
-const InputWrapper = styled.input<{ errorMessage: boolean }>`
+const InputWrapper = styled.input<{ error: boolean }>`
   ${(props) => props.theme.fonts.body14Medium}
   all: unset;
   height: 2.5rem;
@@ -58,14 +58,14 @@ const InputWrapper = styled.input<{ errorMessage: boolean }>`
     border-bottom: 1px solid ${(prop) => prop.theme.colors.white};
   }
   border-bottom: 1px solid
-    ${({ theme, errorMessage }) =>
-      errorMessage ? "#E22C36" : theme.colors.gray7};
+    ${({ theme, error }) =>
+      error ? theme.colors.errorMessage : theme.colors.gray7};
 `;
 
-const ErrorMessage = styled.span<{ errorMessage: boolean }>`
+const ErrorMessage = styled.span<{ error: boolean }>`
   ${(prop) => prop.theme.fonts.body14}
-  color: #E22C36;
-  display: ${(props) => (props.errorMessage ? "block" : "none")};
+  color: ${(props) => props.theme.colors.errorMessage};
+  display: ${(props) => (props.error ? "block" : "none")};
 `;
 
 export default Input;
