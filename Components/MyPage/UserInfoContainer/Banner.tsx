@@ -74,6 +74,7 @@ const BannerImage = styled(Image)`
   width: 100vw;
   height: 11.25rem;
   object-fit: cover;
+  opacity: 80%;
 `;
 
 const ImgLabel = styled.label`

@@ -29,7 +29,7 @@ interface TabsContainerProps {
 const TabsContainer = styled.div<TabsContainerProps>`
   display: grid;
   grid-template-columns: repeat(${({ listLength }) => listLength}, 1fr);
-  width: 64rem;
+  width: 58.75rem;
 `;
 
 interface TabWrapperProps {

@@ -117,67 +117,60 @@ const EditProfileContainer = () => {
   };
 
   const handleSave = async () => {
-    if (!inputValues.selfProfile) {
-      setSelfProfileHelperText("자기소개가 비어있어요.");
-      setTimeout(() => {
+    if (
+      !inputValues.selfProfile ||
+      !inputValues.userName ||
+      !checkEmail(inputValues.contactEmail) ||
+      !checkIsPhoneNumber(inputValues.phoneNumber) ||
+      activeField.length === 0 ||
+      editSkills.length === 0
+    ) {
+      if (!inputValues.selfProfile) {
+        setSelfProfileHelperText("자기소개가 비어있어요.");
+      } else {
         setSelfProfileHelperText("");
-      }, 2000);
-      return;
-    }
+      }
 
-    if (!inputValues.userName) {
-      setUserNameHelperText("이름이 비어있어요.");
-      setTimeout(() => {
+      if (!inputValues.userName) {
+        setUserNameHelperText("이름이 비어있어요.");
+      } else {
         setUserNameHelperText("");
-      }, 2000);
-      return;
-    }
+      }
 
-    if (!checkEmail(inputValues.contactEmail)) {
-      setEmailHelperText("이메일의 형식을 확인해주세요.");
-      setTimeout(() => {
+      if (!checkEmail(inputValues.contactEmail)) {
+        setEmailHelperText("이메일의 형식을 확인해주세요.");
+      } else {
         setEmailHelperText("");
-      }, 2000);
-      return;
-    }
+      }
 
-    if (!checkIsPhoneNumber(inputValues.phoneNumber)) {
-      setPhoneNumberHelperText("전화번호 형식이 아니에요.");
-      setTimeout(() => {
+      if (!checkIsPhoneNumber(inputValues.phoneNumber)) {
+        setPhoneNumberHelperText("전화번호 형식이 아니에요.");
+      } else {
         setPhoneNumberHelperText("");
-      }, 2000);
-      return;
-    }
+      }
 
-    if (!inputValues.github) {
-      setGithubHelperText("깃허브 url이 비어있어요.");
-      setTimeout(() => {
-        setGithubHelperText("");
-      }, 2000);
-      return;
-    }
-
-    if (activeField.length === 0) {
-      setIsEmptyField(true);
-      setTimeout(() => {
+      if (activeField.length === 0) {
+        setIsEmptyField(true);
+      } else {
         setIsEmptyField(false);
-      }, 2000);
+      }
+
+      if (editSkills.length === 0) {
+        setIsEmptySkills(true);
+      } else {
+        setIsEmptySkills(false);
+      }
+
       return;
     }
 
-    if (editSkills.length === 0) {
-      setIsEmptySkills(true);
-      setTimeout(() => {
-        setIsEmptySkills(false);
-      }, 2000);
-      return;
-    }
     setIsEditing(false);
 
     try {
+      console.log(inputValues.phoneNumber);
       const newProfileData: UserProfileType = {
         ...profileData,
-        phone: phoneNumber,
+        phone: inputValues.phoneNumber,
         field: activeField,
         skills: editSkills,
         birth_year: birthYear,

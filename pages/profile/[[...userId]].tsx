@@ -147,7 +147,7 @@ const ProfilePage: NextPage = () => {
 };
 
 const ContentContainer = styled.section`
-  width: 64rem;
+  width: 58.75rem;
 `;
 
 const EmptyPost = styled.div`

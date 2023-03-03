@@ -104,15 +104,18 @@ const UserInfoContainer = () => {
                   <EmailWrapper>{profileData.contact_email}</EmailWrapper>
                 </ProfileInfoWrapper>
                 {/* TODO 조건부 랜더링으로 기술스택 & 포지션 넣기 */}
-                {/* github */}
-                <Link href={profileData.github || ""}>
-                  <GithubImage
-                    src="/icons/github.svg"
-                    width={36}
-                    height={36}
-                    alt="깃허브 주소"
-                  />
-                </Link>
+                {profileData.github ? (
+                  <Link href={profileData.github || ""}>
+                    <GithubImage
+                      src="/icons/github.svg"
+                      width={36}
+                      height={36}
+                      alt="깃허브 주소"
+                    />
+                  </Link>
+                ) : (
+                  <div> </div>
+                )}
               </ProfileInfoContainer>
               <SelfProfileWrapper>
                 {profileData.self_profile}
@@ -135,7 +138,7 @@ const InfoContainer = styled.div`
 `;
 
 const UserInfoWrapper = styled.div`
-  max-width: 64rem;
+  max-width: 58.75rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -202,7 +205,7 @@ const SelfProfileWrapper = styled.div`
   border-radius: 0.5rem;
   border: 1px solid ${(props) => props.theme.colors.gray7};
   line-height: 1.5rem;
-  width: 64rem;
+  width: 58.75rem;
   color: ${(props) => props.theme.colors.white};
   ${(props) => props.theme.fonts.body16}
   text-align: justify;
@@ -242,7 +245,7 @@ const SelfProfileInput = styled.textarea`
   font-size: 1rem;
   text-align: center;
   height: calc(4.125rem - 2.5rem);
-  width: 64rem;
+  width: 58.75rem;
   border: 1px solid lightgrey;
   resize: none;
 `;
