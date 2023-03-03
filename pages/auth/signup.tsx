@@ -9,7 +9,7 @@ import {
   AuthInput,
   AuthButton,
   HelperTextBox,
-  ErrorMassageBox,
+  ErrorMessageBox,
 } from "@/Components/Common/Auth";
 import {
   checkEmail,
@@ -128,7 +128,7 @@ const SignUpPage: NextPage = () => {
         <SignupForm>
           <div>
             {isError ? (
-              <ErrorMassageBox background="#E22C35">
+              <ErrorMessageBox background="#E22C35">
                 <SocialIcon
                   src={ico_ExclamationMark}
                   alt="에러 느낌표"
@@ -136,9 +136,9 @@ const SignUpPage: NextPage = () => {
                   height={20}
                 />
                 이미 등록된 아이디 입니다.
-              </ErrorMassageBox>
+              </ErrorMessageBox>
             ) : (
-              <ErrorMassageBox background={null} />
+              <ErrorMessageBox background={null} />
             )}
             {userNameHelperText && (
               <CloseSvg
@@ -220,9 +220,9 @@ const SignUpPage: NextPage = () => {
         <AuthButton buttonType="outLine" onclick={signupWithEmail}>
           회원가입
         </AuthButton>
-        <FooterMassage>
+        <FooterMessage>
           <CustomLink href="./login">로그인하기</CustomLink>
-        </FooterMassage>
+        </FooterMessage>
       </SignupSpace>
     </SignupPageContainer>
   );
@@ -277,7 +277,7 @@ const CloseSvg = styled(Image)`
   margin-left: 25rem;
 `;
 
-const FooterMassage = styled.div`
+const FooterMessage = styled.div`
   margin-top: 0.75rem;
 
   display: flex;
