@@ -16,7 +16,6 @@ import validateFile from "@/utils/commons/validationImage";
 import { Modal } from "../Common";
 
 /**
- * @TODO 이미지 확장자 유효성 검사 필요
  * @TODO storage 삭제 구현 필요
  */
 
@@ -111,7 +110,7 @@ const PostEditor: NextPage = () => {
         </Modal>
       )}
 
-      <MDEditor
+      <MDEditorStyled
         value={postContent}
         onChange={(value) => {
           setPostContent(value || "");
@@ -157,7 +156,7 @@ const PostEditor: NextPage = () => {
                 />
               </svg>
             ),
-            // eslint-disable-next-line react/no-unstable-nested-components
+            // eslint-disable-next-line react/no-unstable-nested-components, @typescript-eslint/no-explicit-any
             children: (handle: any) => {
               // API가 any를 지정합니다.
               return (
@@ -190,7 +189,49 @@ const PostEditor: NextPage = () => {
   );
 };
 
-export default PostEditor;
+const MDEditorStyled = styled(MDEditor)`
+  -webkit-text-fill-color: ${(props) => props.theme.colors.white};
+  & > div {
+  }
+  .w-md-editor {
+    background-color: ${(props) => props.theme.colors.gray7}!important;
+  }
+  .w-md-editor-toolbar {
+    color: ${(props) => props.theme.colors.black};
+    border-color: ${(props) => props.theme.colors.gray7};
+    background-color: #0d1118;
+    & li > button {
+      color: ${(props) => props.theme.colors.gray2};
+    }
+    & li > button:hover {
+      background-color: #343942;
+    }
+    & li.active > button {
+      background-color: #343942;
+    }
+  }
+  .w-md-editor-toolbar-divider {
+    background-color: ${(props) => props.theme.colors.gray7};
+  }
+  .w-md-editor-content {
+    background-color: ${(props) => props.theme.colors.gray7};
+    border: 1px solid ${(props) => props.theme.colors.gray7};
+    border-top: none;
+  }
+  .w-md-editor-input {
+    background-color: ${(props) => props.theme.colors.gray11};
+    border-right: 1px solid ${(props) => props.theme.colors.gray7};
+    ::-webkit-scrollbar {
+      background-color: ${(props) => props.theme.colors.gray11};
+    }
+  }
+  .wmde-markdown {
+    background-color: ${(props) => props.theme.colors.gray11};
+  }
+  .w-md-editor-preview {
+    box-shadow: none;
+  }
+`;
 
 const CustomImageContainer = styled.div`
   width: 15rem;
@@ -229,3 +270,5 @@ const CloseButton = styled.button`
     text-decoration: underline;
   }
 `;
+
+export default PostEditor;

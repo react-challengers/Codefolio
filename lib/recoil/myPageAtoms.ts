@@ -65,6 +65,11 @@ const myPageIsEditingProfileContainer = atom({
   default: false,
 });
 
+const myPageGithub = atom({
+  key: "myPageGithub",
+  default: "https://github.com",
+});
+
 const myPageCurrentTab = atom({
   key: "myPageCurrentTab",
   default: 0,
@@ -131,6 +136,7 @@ export {
   myPageBirthYear,
   myPageCareer,
   myPageBookmarkFolders,
+  myPageGithub,
   // 순수 클라이언트 state
   myPageIsEditingProfileContainer,
   myPageCurrentTab,

@@ -96,14 +96,15 @@ interface NotificationType {
 interface PostType {
   title: string;
   sub_title: string;
-  title_background_color: string;
+  title_background_image: string;
   large_category: string;
   sub_category: string;
   skills: string[];
   progress_date: [string, string];
   members: MembersType[];
   tag: string[];
-  is_public: boolean;
+  github_url: string;
+  deployed_url: string;
   content: string;
   id: string;
   user_id: string;

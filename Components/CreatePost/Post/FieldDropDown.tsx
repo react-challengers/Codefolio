@@ -60,7 +60,7 @@ const FieldDropDown = () => {
         ))}
       </ul>
       <Divider />
-      <ul>
+      <SubUlWrapper>
         {getSubCatories().map((item) => (
           <FiledItemContainer
             key={item.toString()}
@@ -70,20 +70,22 @@ const FieldDropDown = () => {
             {item}
           </FiledItemContainer>
         ))}
-      </ul>
+      </SubUlWrapper>
     </FieldDropDownContainer>
   );
 };
 
 const FieldDropDownContainer = styled.div`
-  width: 18rem;
-  box-shadow: 0px 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
-  border: 1px solid #cccccc;
   display: flex;
-  border-radius: 0.2rem;
-  gap: 0;
   position: absolute;
-  background-color: #fff;
+  top: 2.75rem;
+
+  width: 100%;
+
+  color: ${(props) => props.theme.colors.white};
+  filter: drop-shadow(0px 0.625rem 0.625rem rgba(0, 0, 0, 0.5));
+  border-radius: 0.25rem;
+  background-color: ${(props) => props.theme.colors.gray9};
   z-index: 21;
 `;
 
@@ -93,18 +95,26 @@ const FiledItemContainer = styled.li<{
   onClick?: () => void;
   dataCursor?: boolean;
 }>`
-  padding: 0.75rem;
   width: 8.75rem;
+  min-width: 100%;
+  padding: 0.75rem;
+
   ${(props) => props.dataCursor && "cursor: pointer;"};
+  ${({ theme }) => theme.fonts.body14};
   :hover {
-    background: #e6e6e6;
+    ${({ theme }) => theme.fonts.body14Medium};
+    background-color: ${({ theme }) => theme.colors.gray8};
   }
+`;
+
+const SubUlWrapper = styled.ul`
+  width: 100%;
 `;
 
 const Divider = styled.hr`
   padding: 0;
   margin: 0;
-  border: 1px solid #cccccc;
+  border-color: ${({ theme }) => theme.colors.gray7};
 `;
 
 export default FieldDropDown;
