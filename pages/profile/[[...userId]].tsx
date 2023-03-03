@@ -13,13 +13,13 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllPosts, getCurrentUser } from "@/utils/APIs/supabase";
 import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
-import { useRecoilValue } from "recoil";
-import { userLoginCheck } from "@/lib/recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { myPageCurrentTab, userLoginCheck } from "@/lib/recoil";
 
 const tabList = ["프로젝트", "북마크", "좋아요", "칭찬배지", "프로필"];
 
 const ProfilePage: NextPage = () => {
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentTab, setCurrentTab] = useRecoilState(myPageCurrentTab);
   const [userId, setUserId] = useState("");
   const [likeIds, setLikeIds] = useState<string[]>([]);
   const [bookmarkIds, setBookmarkIds] = useState<string[]>([]);

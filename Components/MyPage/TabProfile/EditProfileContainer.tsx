@@ -66,9 +66,6 @@ const EditProfileContainer = () => {
   const [phoneNumberHelperText, setPhoneNumberHelperText] = useState<
     "" | "전화번호 형식이 아니에요."
   >("");
-  const [githubHelperText, setGithubHelperText] = useState<
-    "" | "깃허브 url이 비어있어요."
-  >("");
 
   const updateProfileLocalState = useCallback(async () => {
     setPhoneNumber(profileData.phone);
@@ -275,7 +272,6 @@ const EditProfileContainer = () => {
               value={inputValues.github}
               onChange={handleInputChange("github")}
               placeholder="https://github.com/user"
-              errorMessage={githubHelperText}
             />
           </InfoWrapper>
         </>
