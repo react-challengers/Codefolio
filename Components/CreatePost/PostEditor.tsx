@@ -215,8 +215,7 @@ const MDEditorStyled = styled(MDEditor)`
   }
   .w-md-editor-content {
     background-color: ${(props) => props.theme.colors.gray7};
-    border: 1px solid;
-    border-color: ${(props) => props.theme.colors.gray7};
+    border: 1px solid ${(props) => props.theme.colors.gray7};
     border-top: none;
   }
   .w-md-editor-input {

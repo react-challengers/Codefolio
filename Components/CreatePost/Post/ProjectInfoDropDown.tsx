@@ -285,8 +285,7 @@ const StyledDatePicker = styled(DatePicker)`
   padding: 0.625rem 1rem;
   padding-right: 3.75rem;
 
-  border-bottom: 1px solid;
-  border-color: ${({ theme }) => theme.colors.gray7};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray7};
 
   ${({ theme }) => theme.fonts.body14};
   box-sizing: border-box;

@@ -55,10 +55,6 @@ const Skill = ({
     }
   };
 
-  // const handleOnBlur = () => {
-  //   addSkill();
-  // };
-
   useEffect(() => {
     if (isLast && lastSkillRef.current) {
       lastSkillRef.current.focus();
@@ -116,7 +112,6 @@ interface SkillInputProps {
 }
 
 const SkillInput = styled.input`
-  box-sizing: border-box;
   ${commonStyle}
   box-sizing: border-box;
   background-color: transparent;
