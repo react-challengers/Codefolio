@@ -79,7 +79,7 @@ const ShowProfileContainer = () => {
       <ButtonWrapper>
         <PrimaryButton
           text="수정하기"
-          buttonType="default"
+          type="full"
           size="m"
           onClick={() => setIsEditing(true)}
         />
