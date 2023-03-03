@@ -190,24 +190,47 @@ const PostEditor: NextPage = () => {
 };
 
 const MDEditorStyled = styled(MDEditor)`
-  color: #fff;
-  border: 1px solid;
-  border-color: ${(props) => props.theme.colors.gray7};
-  background-color: transparent;
-  .w-md-editor-toolbar {
-    color: #000;
-    border-color: ${(props) => props.theme.colors.gray7};
-    background-color: transparent;
+  -webkit-text-fill-color: ${(props) => props.theme.colors.white};
+  & > div {
   }
-  .w-md-editor-text-input {
-    color: #fff;
-    -webkit-text-fill-color: #fff;
+  .w-md-editor {
+    background-color: ${(props) => props.theme.colors.gray7}!important;
+  }
+  .w-md-editor-toolbar {
+    color: ${(props) => props.theme.colors.black};
     border-color: ${(props) => props.theme.colors.gray7};
-    background-color: transparent;
+    background-color: #0d1118;
+    & li > button {
+      color: ${(props) => props.theme.colors.gray2};
+    }
+    & li > button:hover {
+      background-color: #343942;
+    }
+    & li.active > button {
+      background-color: #343942;
+    }
+  }
+  .w-md-editor-toolbar-divider {
+    background-color: ${(props) => props.theme.colors.gray7};
+  }
+  .w-md-editor-content {
+    background-color: ${(props) => props.theme.colors.gray7};
+    border: 1px solid;
+    border-color: ${(props) => props.theme.colors.gray7};
+    border-top: none;
+  }
+  .w-md-editor-input {
+    background-color: ${(props) => props.theme.colors.gray11};
+    border-right: 1px solid ${(props) => props.theme.colors.gray7};
+    ::-webkit-scrollbar {
+      background-color: ${(props) => props.theme.colors.gray11};
+    }
   }
   .wmde-markdown {
-    color: #fff !important ;
-    background-color: transparent;
+    background-color: ${(props) => props.theme.colors.gray11};
+  }
+  .w-md-editor-preview {
+    box-shadow: none;
   }
 `;
 
