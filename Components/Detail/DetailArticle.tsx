@@ -57,7 +57,7 @@ const DetailArticle = () => {
           setTitleData({
             title: data.title,
             subtitle: data.sub_title,
-            backgroundColor: data.title_background_color,
+            backgroundColor: data.title_background_image,
             field: data.large_category,
             subCategory: data.sub_category,
           });
