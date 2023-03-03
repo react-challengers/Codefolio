@@ -7,7 +7,7 @@ const findThumbnailInContent = (content: string) => {
   if (result) {
     return result[0];
   }
-  return "/images/anonImage.png";
+  return "/images/anonImage.webp";
 };
 
 export default findThumbnailInContent;

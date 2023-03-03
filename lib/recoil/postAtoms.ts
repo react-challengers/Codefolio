@@ -1,10 +1,9 @@
 import getYYYYMM from "@/utils/commons/getYYYYMM";
-import { v4 as uuidv4 } from "uuid";
 import { atom } from "recoil";
 
 const postId = atom<string>({
   key: "postId",
-  default: `${uuidv4()}`,
+  default: "",
 });
 
 const postTitle = atom<string>({
@@ -17,9 +16,9 @@ const postSubTitle = atom<string>({
   default: "",
 });
 
-const postTitleBackgroundColor = atom<string>({
-  key: "postTitleBackgroundColor",
-  default: "#fff",
+const postCoverImage = atom<string>({
+  key: "postCoverImage",
+  default: "",
 });
 
 const postLargeCategory = atom<string>({
@@ -44,7 +43,7 @@ const postProjectDuration = atom<[string, string]>({
 
 interface MembersType {
   name: string;
-  field: string;
+  field: string[] | string;
   github: string;
 }
 
@@ -58,9 +57,14 @@ const postTags = atom<string[]>({
   default: [],
 });
 
-const postPublic = atom<boolean>({
-  key: "postPublic",
-  default: true,
+const postGithubUrl = atom<string>({
+  key: "postGithubUrl",
+  default: "",
+});
+
+const postDeployedUrl = atom<string>({
+  key: "postDeplyedUrl",
+  default: "",
 });
 
 const postContent = atom<string>({
@@ -72,13 +76,14 @@ export {
   postId,
   postTitle,
   postSubTitle,
-  postTitleBackgroundColor,
+  postCoverImage,
   postLargeCategory,
   postSubCategory,
   postSkills,
   postProjectDuration,
   postMembers,
   postTags,
-  postPublic,
+  postGithubUrl,
+  postDeployedUrl,
   postContent,
 };

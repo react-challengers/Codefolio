@@ -68,31 +68,31 @@ const Skill = ({
   return (
     <SkillContainer>
       <SkillInput
+        size={skill ? skill.length + 3 : 3}
         value={skill}
         onChange={onChange}
-        maxLength={15}
+        maxLength={20}
         isDuplicate={isDuplicate}
         onKeyPress={handleOnKeyDown}
         ref={isLast ? lastSkillRef : null}
+        // onBlur={handleOnBlur}
       />
       <CancelButton
         onClick={() => onDelete(idx)}
         src="/icons/cancel.svg"
         alt="취소 버튼"
-        width="12"
-        height="12"
+        width="16"
+        height="16"
       />
     </SkillContainer>
   );
 };
 
 export const commonStyle = {
-  "background-color": "grey",
-  color: "white",
-  height: "2.125rem",
   border: "none",
-  padding: "0 0.75rem",
   outline: "none",
+  borderRadius: "0.25rem",
+  height: "2rem",
 };
 
 const SkillContainer = styled.label`
@@ -100,12 +100,18 @@ const SkillContainer = styled.label`
   display:flex;
   align-items: center;
   border-radius: 0.25rem;
-  background-color: ${(props) => props.theme.colors.gray8};
+  box-sizing: border-box;
+  width: fit-content;
+
+  gap: 0.625rem;
+  padding: 0.5rem 1rem;
+  background-color: ${({ theme }) => theme.colors.gray7};
 `;
 
 interface SkillInputProps {
   isDuplicate?: boolean;
 }
+
 
 const SkillInput = styled.input<SkillInputProps>`
   /* ${commonStyle} */
@@ -114,10 +120,11 @@ const SkillInput = styled.input<SkillInputProps>`
   width:5rem;
   ${({ isDuplicate, theme }) => ({
     color: isDuplicate ? theme.colors.messageError : theme.colors.primary6,
+  box-sizing: border-box;
+  background-color: transparent;
     textDecoration: isDuplicate ? "line-through" : "none",
     fontWeight: isDuplicate ? "bold" : "normal",
   })}
-  padding: 0 0.5rem;
 `;
 
 const CancelButton = styled(Image)`

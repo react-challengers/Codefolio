@@ -3,12 +3,13 @@ import {
   postContent,
   postMembers,
   postProjectDuration,
-  postPublic,
+  postGithubUrl,
+  postDeployedUrl,
   postSkills,
   postSubTitle,
   postTags,
   postTitle,
-  postTitleBackgroundColor,
+  postCoverImage,
   postSubCategory as recoilPostSubCategory,
   postLargeCategory as recoilPostLargeCategory,
   userLoginCheck,
@@ -34,11 +35,12 @@ const EditPostPage: NextPage = () => {
 
   const setTitle = useSetRecoilState(postTitle);
   const setSubTitle = useSetRecoilState(postSubTitle);
-  const setTitleBackgroundColor = useSetRecoilState(postTitleBackgroundColor);
+  const setTitleBackgroundColor = useSetRecoilState(postCoverImage);
   const setProjectDuration = useSetRecoilState(postProjectDuration);
   const setSkills = useSetRecoilState(postSkills);
   const setTag = useSetRecoilState(postTags);
-  const setIsPublic = useSetRecoilState(postPublic);
+  const setGithubUrl = useSetRecoilState(postGithubUrl);
+  const setDeployedUrl = useSetRecoilState(postDeployedUrl);
   const setMembers = useSetRecoilState(postMembers);
   const setContent = useSetRecoilState(postContent);
   const setPostLargeCategory = useSetRecoilState(recoilPostLargeCategory);
@@ -75,11 +77,12 @@ const EditPostPage: NextPage = () => {
     if (!post) return;
     setTitle(post.title);
     setSubTitle(post.sub_title);
-    setTitleBackgroundColor(post.title_background_color);
+    setTitleBackgroundColor(post.title_background_image);
     setProjectDuration(post.progress_date);
     setSkills(post.skills);
     setTag(post.tag);
-    setIsPublic(post.is_public);
+    setGithubUrl(post.github_url);
+    setDeployedUrl(post.deployed_url);
     setMembers(post.members);
     setContent(post.content);
     setPostLargeCategory(post.large_category);
