@@ -50,7 +50,6 @@ import PostErrorMessage from "./PostErrorMessage";
  */
 const Post: NextPage = () => {
   const [isPostId, setIsPostId] = useRecoilState(postId);
-  console.log("👉👉  isPostId:", isPostId);
 
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
