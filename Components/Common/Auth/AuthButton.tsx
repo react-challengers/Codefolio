@@ -12,6 +12,8 @@ const getTypeAuthButton = (buttonType: AuthButtonType, theme: DefaultTheme) => {
     :hover {
       background-color: ${theme.colors.gray8};
     }
+    ${theme.fonts.subtitle18}
+   
     `;
   }
   if (buttonType === "socialLogin") {
