@@ -73,6 +73,7 @@ const TitleWrapper = styled.div`
 `;
 
 const UrLWrapper = styled.div`
+  ${({ theme }) => theme.fonts.subtitle16}
   p {
     color: ${({ theme }) => theme.colors.gray2};
     white-space: nowrap;
@@ -84,6 +85,7 @@ const UrLWrapper = styled.div`
 `;
 
 const Description = styled.span`
+  ${({ theme }) => theme.fonts.subtitle16}
   font-size: 0.8125rem;
   color: ${({ theme }) => theme.colors.gray2};
 `;

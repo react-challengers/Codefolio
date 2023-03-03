@@ -213,6 +213,12 @@ const EditInput = styled.input`
 const CommentWrapper = styled.div`
   display: flex;
   gap: 1rem;
+  h3 {
+    ${({ theme }) => theme.fonts.subtitle16}
+  }
+  span {
+    ${({ theme }) => theme.fonts.body14}
+  }
 `;
 
 const CommentContent = styled.div`

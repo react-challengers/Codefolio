@@ -20,7 +20,6 @@ const DetailSideBadges = () => {
   useQuery(["getPostBadge", { postId }], getPostBadges, {
     onSuccess: (data) => {
       if (!data) return;
-      console.log(data);
       let idea = 0;
       let complete = 0;
       let code = 0;
@@ -92,6 +91,7 @@ const DetailSideBadges = () => {
 };
 
 export const Title = styled.div`
+  ${({ theme }) => theme.fonts.body14}
   font-size: 0.8125rem;
   color: ${({ theme }) => theme.colors.gray5};
 `;

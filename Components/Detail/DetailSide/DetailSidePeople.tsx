@@ -86,13 +86,14 @@ const UserInfoWrapper = styled.div`
 const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 
   h2 {
+    ${({ theme }) => theme.fonts.subtitle16};
     font-size: 1rem;
     color: ${({ theme }) => theme.colors.gray2};
   }
   p {
+    ${({ theme }) => theme.fonts.body14};
     font-size: 0.875rem;
     color: ${({ theme }) => theme.colors.gray4};
   }
