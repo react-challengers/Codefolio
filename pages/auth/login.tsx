@@ -9,7 +9,7 @@ import {
   HelperTextBox,
   AuthInput,
   AuthButton,
-  ErrorMassageBox,
+  ErrorMessageBox,
 } from "@/Components/Common/Auth";
 import { useSetRecoilState } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
@@ -65,6 +65,7 @@ const Login: NextPage = () => {
     if (!error) {
       setIsLogin(true);
       router.push("/");
+      return;
     }
     setIsError(true);
   };
@@ -110,7 +111,7 @@ const Login: NextPage = () => {
       <EmptyContainer />
       <LoginSpace>
         {isError ? (
-          <ErrorMassageBox background="#E22C35">
+          <ErrorMessageBox background="#E22C35">
             <SocialIcon
               src={ico_ExclamationMark}
               alt="에러 느낌표"
@@ -118,15 +119,15 @@ const Login: NextPage = () => {
               height={20}
             />
             등록 안 된 이메일이거나 비밀번호를 잘못 입력했습니다.
-          </ErrorMassageBox>
+          </ErrorMessageBox>
         ) : (
-          <ErrorMassageBox background={null} />
+          <ErrorMessageBox background={null} />
         )}
         <SocialLoginButtonContainer>
           <AuthButton buttonType="socialLogin" onclick={signInWithGoogle}>
             <SocialIcon
-              src={ico_github}
-              alt="github 아이콘"
+              src={ico_google}
+              alt="google 아이콘"
               width={24}
               height={24}
             />
@@ -134,12 +135,12 @@ const Login: NextPage = () => {
           </AuthButton>
           <AuthButton buttonType="socialLogin" onclick={signInWithGitHub}>
             <SocialIcon
-              src={ico_google}
-              alt="google 아이콘"
+              src={ico_github}
+              alt="github 아이콘"
               width={24}
               height={24}
             />
-            Github로 로그인하기
+            깃허브로 로그인하기
           </AuthButton>
         </SocialLoginButtonContainer>
         <HrContainer>
@@ -191,10 +192,10 @@ const Login: NextPage = () => {
         <AuthButton buttonType="outLine" onclick={signInWithEmail}>
           로그인
         </AuthButton>
-        <FooterMassage>
+        <FooterMessage>
           아직 회원이 아니신가요?
           <CustomLink href="./signup">회원가입</CustomLink>
-        </FooterMassage>
+        </FooterMessage>
       </LoginSpace>
     </LoginPageContainer>
   );
@@ -288,7 +289,7 @@ const SocialIcon = styled(Image)`
   margin-right: 0.5rem;
 `;
 
-const FooterMassage = styled.div`
+const FooterMessage = styled.div`
   ${({ theme }) => theme.fonts.body13};
 
   margin-top: 0.75rem;

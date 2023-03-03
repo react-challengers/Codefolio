@@ -36,7 +36,7 @@ const ProjectInfoDropDown = () => {
         <CategoryContainer>
           <TEXTBOX>카테고리</TEXTBOX>
           {largeCategory && subCategory && (
-            <Tags tagItems={[`${subCategory}`]} size="md" />
+            <Tags tagItems={[`${subCategory}`]} />
           )}
           <CategoryPicker onClick={handleShowCategory}>
             {largeCategory && subCategory ? (
