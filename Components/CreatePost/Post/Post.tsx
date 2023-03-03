@@ -1,6 +1,5 @@
 import { NextPage } from "next";
 import styled from "styled-components";
-import { Modal } from "@/Components/Common";
 import getYYYYMM from "@/utils/commons/getYYYYMM";
 
 import { useRecoilState } from "recoil";
@@ -18,13 +17,25 @@ import {
   postTitle,
   postTitleBackgroundColor,
   postId,
+  postErrorBoxText,
+  postSubCategoryVaildate,
+  postSkillsVaildate,
+  postProjectDurationVaildate,
+  postMembersVaildate,
+  postGithubUrlVaildate,
+  postDeployedUrlVaildate,
+  postContentVaildate,
+  postTagsVaildate,
 } from "@/lib/recoil";
+
 import supabase from "@/lib/supabase";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import checkUrl from "@/utils/commons/checkUrl";
+
 import PostTitle from "./PostTitle";
 import ProjectInfo from "./ProjectInfo";
-import PostErrorMassage from "./PostErrorMassage";
+import PostErrorMessage from "./PostErrorMessage";
 
 /**
  * @TODO custom hook으로 리팩토링하기
@@ -55,10 +66,29 @@ const Post: NextPage = () => {
   );
   const [userId, setUserId] = useState<string | null>(null);
 
-  const [isError, setIsError] = useState(false);
-  const [errorMassage, setErrorMassage] = useState("에러");
-
   const router = useRouter();
+
+  // validate - 카테고리, 스택, 기간, 키워드태그, 함께한 사람, 깃허브주소, 배포주소, 함께한사람 깃헙레포
+  const [errorMessage, setErrorMessage] = useRecoilState(postErrorBoxText);
+  const [subCategoryVaildate, setSubCategoryVaildate] = useRecoilState(
+    postSubCategoryVaildate
+  );
+  const [skillsVaildate, setSkillsVaildate] =
+    useRecoilState(postSkillsVaildate);
+  const [projectDurationVaildate, setProjectDurationVaildate] = useRecoilState(
+    postProjectDurationVaildate
+  );
+  const [membersVaildate, setMembersVaildate] =
+    useRecoilState(postMembersVaildate);
+  const [tagsVaildate, setTagsVaildate] = useRecoilState(postTagsVaildate);
+  const [githubUrlVaildate, setGithubUrlVaildate] = useRecoilState(
+    postGithubUrlVaildate
+  );
+  const [deployedUrlVaildate, setDeployedUrlVaildate] = useRecoilState(
+    postDeployedUrlVaildate
+  );
+  const [contentVaildate, setContentVaildate] =
+    useRecoilState(postContentVaildate);
 
   const newPostRow = {
     id: isPostId,
@@ -84,6 +114,7 @@ const Post: NextPage = () => {
         setUserId(data.session?.user.id);
       }
     };
+    setErrorMessage("");
 
     LoginState();
   }, []);
@@ -98,45 +129,79 @@ const Post: NextPage = () => {
   //   }, 2000);
   // };
 
+  const postErrorReset = () => {
+    setErrorMessage("");
+    setSubCategoryVaildate("");
+    setSkillsVaildate("");
+    setProjectDurationVaildate("");
+    setMembersVaildate("");
+    setGithubUrlVaildate("");
+    setDeployedUrlVaildate("");
+    setContentVaildate("");
+    setTagsVaildate("");
+  };
+
   const validatePost = () => {
+    postErrorReset();
     // 유효성 검사
-    if (!title) {
-      return false;
-    }
-    if (!subTitle) {
-      return false;
-    }
     if (!postSubCategory) {
-      return false;
+      setErrorMessage("필수 입력 항목을 확인해 주세요.");
+      setSubCategoryVaildate("필수 입력 항목입니다.");
     }
     if (skills.length === 0) {
-      return false;
+      setErrorMessage("필수 입력 항목을 확인해 주세요.");
+      setSkillsVaildate("필수 입력 항목입니다.");
     }
     if (skills.length !== new Set(skills).size) {
-      return false;
+      setErrorMessage("필수 입력 항목을 확인해 주세요.");
+      setSkillsVaildate("중복되는 스택을 확인해 주세요.");
     }
     if (skills.some((skill) => skill === "")) {
-      return false;
-    }
-    if (tag.length !== new Set(tag).size) {
-      return false;
-    }
-    if (tag.some((item) => item === "")) {
-      return false;
-    }
-    if (tag.length === 0) {
-      return false;
+      setErrorMessage("필수 입력 항목을 확인해 주세요.");
+      setSkillsVaildate("필수 입력 항목입니다.");
     }
     if (!content) {
-      return false;
+      setErrorMessage("글의 내용을 입력해주세요.");
+    }
+    if (tag.length !== new Set(tag).size) {
+      setErrorMessage("필수 입력 항목을 확인해 주세요.");
+      setTagsVaildate("중복되는 태그를 확인해 주세요.");
     }
     if (
       members
         .map((member) => Object.values(member))
         .some((item) => item.some((value) => value === ""))
     ) {
+      setErrorMessage("필수 입력 항목을 확인해 주세요.");
+      setMembersVaildate("필수 입력 항목 입니다.");
+    }
+    if (!title || !subTitle) {
+      setErrorMessage("프로젝트 제목 또는 소제목을 입력해주세요");
+    }
+
+    if (githubUrl && !checkUrl(githubUrl)) {
+      setGithubUrlVaildate("깃허브 주소 형식에 맞지 않습니다.");
+    }
+
+    if (deployedUrl && !checkUrl(deployedUrl)) {
+      setDeployedUrlVaildate("사이트 주소 형식에 맞지 않습니다.");
+    }
+
+    if (
+      !title ||
+      !subTitle ||
+      members
+        .map((member) => Object.values(member))
+        .some((item) => item.some((value) => value === "")) ||
+      !content ||
+      skills.some((skill) => skill === "") ||
+      tag.length !== new Set(tag).size ||
+      skills.length === 0 ||
+      !postSubCategory
+    ) {
       return false;
     }
+
     return true;
   };
 
@@ -158,7 +223,9 @@ const Post: NextPage = () => {
   const onPost = async () => {
     // 게시 버튼
     // 유효성 검사
-    if (!validatePost()) return;
+    if (!validatePost()) {
+      return;
+    }
     // 게시
     if (router.asPath === "/create-post") {
       const { data, error } = await supabase
@@ -199,7 +266,7 @@ const Post: NextPage = () => {
       <PostHeader>
         {/* <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert> */}
         {/* <DefaultButton text="저장" type="outline" size="s" onClick={onSave} /> */}
-        {isError && <PostErrorMassage>{errorMassage}</PostErrorMassage>}
+        {errorMessage && <PostErrorMessage>{errorMessage}</PostErrorMessage>}
         <CreateButton onClick={onPost}>게시</CreateButton>
       </PostHeader>
       <PostTitle />

@@ -1,13 +1,21 @@
-import { postMembers } from "@/lib/recoil";
+import { postMembers, postMembersVaildate } from "@/lib/recoil";
 import Image from "next/image";
 import { ChangeEvent, useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import trash_can from "@/public/icons/trash_can.svg";
 import { useUserProfile } from "@/hooks/query";
+import { HelperTextBox } from "@/Components/Common";
+
+/**
+ * @TODO withPeople logic 확정 후에 유효성 검사 추가 확인 필요
+ */
 
 const WithPeople = () => {
   const [people, setPeople] = useRecoilState(postMembers);
+
+  // recoil validate state
+  const membersVaildate = useRecoilValue(postMembersVaildate);
 
   // github 추가해야 함
   const {
@@ -48,18 +56,25 @@ const WithPeople = () => {
     <WithPeopleContainer>
       {people.map((person, idx) => (
         <InputWrapper key={idx}>
-          <InputStyle
-            placeholder="참여자"
-            value={person.name}
-            onChange={changePerson(idx, "name")}
-            maxLength={5}
-          />
-          <InputStyle
-            placeholder="개발 스택"
-            value={person.field}
-            onChange={changePerson(idx, "field")}
-            maxLength={11}
-          />
+          <HelperTextContainer>
+            <InputStyle
+              placeholder="참여자"
+              value={person.name}
+              onChange={changePerson(idx, "name")}
+              maxLength={5}
+            />
+            <HelperTextBox text={membersVaildate} />
+          </HelperTextContainer>
+
+          <HelperTextContainer>
+            <InputStyle
+              placeholder="개발 스택"
+              value={person.field}
+              onChange={changePerson(idx, "field")}
+              maxLength={11}
+            />
+            <HelperTextBox text={membersVaildate} />
+          </HelperTextContainer>
           {/* <CategoryPicker onClick={handleShowCategory}>
             {largeCategory && subCategory ? (
               <span>{subCategory}</span>
@@ -74,11 +89,14 @@ const WithPeople = () => {
             />
             {categoryVisible && <FieldDropDown />}
           </CategoryPicker> */}
-          <InputStyle
-            placeholder="참조링크"
-            value={person.github}
-            onChange={changePerson(idx, "github")}
-          />
+          <HelperTextContainer>
+            <InputStyle
+              placeholder="참조링크"
+              value={person.github}
+              onChange={changePerson(idx, "github")}
+            />
+            <HelperTextBox text={membersVaildate} />
+          </HelperTextContainer>
           <CancelButton
             onClick={onDelete(idx)}
             src={trash_can}
@@ -147,6 +165,11 @@ const CancelButton = styled(Image)`
   right: -2.25rem;
   padding: 0.125rem;
   cursor: pointer;
+`;
+
+const HelperTextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 export default WithPeople;

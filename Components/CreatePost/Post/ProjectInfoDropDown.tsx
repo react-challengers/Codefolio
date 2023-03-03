@@ -9,11 +9,16 @@ import {
   postGithubUrl,
   postDeployedUrl,
   postTags,
+  postSubCategoryVaildate,
+  postSkillsVaildate,
+  postGithubUrlVaildate,
+  postDeployedUrlVaildate,
+  postTagsVaildate,
 } from "@/lib/recoil";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import getYYYYMM from "@/utils/commons/getYYYYMM";
-import { SkillList } from "@/Components/Common";
+import { HelperTextBox, SkillList } from "@/Components/Common";
 import arrow_down from "@/public/icons/arrow_down.svg";
 import disable_check from "@/public/icons/disable_check.svg";
 import enable_check from "@/public/icons/enable_check.svg";
@@ -34,6 +39,13 @@ const ProjectInfoDropDown = () => {
   const [categoryVisible, setCategoryVisible] = useState(false);
   const [inProgress, setInProgress] = useState(false);
 
+  // helperText state
+  const subCategoryVaildate = useRecoilValue(postSubCategoryVaildate);
+  const skillsVaildate = useRecoilValue(postSkillsVaildate);
+  const tagsVaildate = useRecoilValue(postTagsVaildate);
+  const githubUrlVaildate = useRecoilValue(postGithubUrlVaildate);
+  const deployedUrlVaildate = useRecoilValue(postDeployedUrlVaildate);
+
   const handleShowCategory = () => {
     setCategoryVisible((prev) => !prev);
   };
@@ -52,31 +64,37 @@ const ProjectInfoDropDown = () => {
       <ProjectInfoContainer>
         <ProjectInfoWrapper>
           <TEXTBOX>카테고리*</TEXTBOX>
-          <CategoryPicker onClick={handleShowCategory}>
-            {largeCategory && subCategory ? (
-              <span>{subCategory}</span>
-            ) : (
-              <span>카테고리를 선택해주세요.</span>
-            )}
-            <DropdownImage
-              src={arrow_down}
-              alt="category selete icon"
-              width={16}
-              height={16}
-            />
-            {categoryVisible && <FieldDropDown />}
-          </CategoryPicker>
+          <HelperTextContainer>
+            <CategoryPicker onClick={handleShowCategory}>
+              {largeCategory && subCategory ? (
+                <span>{subCategory}</span>
+              ) : (
+                <span>카테고리를 선택해주세요.</span>
+              )}
+              <DropdownImage
+                src={arrow_down}
+                alt="category selete icon"
+                width={16}
+                height={16}
+              />
+              {categoryVisible && <FieldDropDown />}
+            </CategoryPicker>
+            <HelperTextBox text={subCategoryVaildate} />
+          </HelperTextContainer>
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
           <TEXTBOX>프로젝트 스택*</TEXTBOX>
-          <SkillListWrapper>
-            <SkillList
-              text="개발 스택 추가"
-              editSkills={postSkill}
-              setEditSkills={setPostSkill}
-            />
-          </SkillListWrapper>
+          <HelperTextContainer>
+            <SkillListWrapper>
+              <SkillList
+                text="개발 스택 추가"
+                editSkills={postSkill}
+                setEditSkills={setPostSkill}
+              />
+            </SkillListWrapper>
+            <HelperTextBox text={skillsVaildate} />
+          </HelperTextContainer>
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
@@ -136,40 +154,51 @@ const ProjectInfoDropDown = () => {
 
         <ProjectInfoWrapper>
           <TEXTBOX>깃허브 주소</TEXTBOX>
-          <InputURL
-            type="url"
-            pattern="https://.*"
-            value={githubUrl}
-            onChange={(e) => setGithubUrl(e.target.value)}
-            placeholder="https://github.com/project"
-          />
+          <HelperTextContainer>
+            <InputURL
+              type="url"
+              pattern="https://.*"
+              value={githubUrl}
+              onChange={(e) => setGithubUrl(e.target.value)}
+              placeholder="https://github.com/project"
+            />
+            <HelperTextBox text={githubUrlVaildate} />
+          </HelperTextContainer>
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
           <TEXTBOX>배포 주소</TEXTBOX>
-          <InputURL
-            type="url"
-            pattern="https://.*"
-            value={deployedUrl}
-            onChange={(e) => setDeployedUrl(e.target.value)}
-            placeholder="https://example.com"
-          />
+          <HelperTextContainer>
+            <InputURL
+              type="url"
+              pattern="https://.*"
+              value={deployedUrl}
+              onChange={(e) => setDeployedUrl(e.target.value)}
+              placeholder="https://example.com"
+            />
+            <HelperTextBox text={deployedUrlVaildate} />
+          </HelperTextContainer>
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
           <TEXTBOX>키워드 태그</TEXTBOX>
-          <TagList>
-            <SkillList
-              text="태그 추가"
-              editSkills={tag}
-              setEditSkills={setTag}
-            />
-          </TagList>
+          <HelperTextContainer>
+            <TagList>
+              <SkillList
+                text="태그 추가"
+                editSkills={tag}
+                setEditSkills={setTag}
+              />
+            </TagList>
+            <HelperTextBox text={tagsVaildate} />
+          </HelperTextContainer>
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
           <TEXTBOX>함께한 사람들*</TEXTBOX>
-          <WithPeople />
+          <HelperTextContainer>
+            <WithPeople />
+          </HelperTextContainer>
         </ProjectInfoWrapper>
       </ProjectInfoContainer>
     </ProjectInfoDropDownContainer>
@@ -178,13 +207,13 @@ const ProjectInfoDropDown = () => {
 
 const ProjectInfoDropDownContainer = styled.div`
   height: auto;
-  min-height: 200px;
+  min-height: 12.5rem;
 
   border: 1px solid;
   border-color: ${({ theme }) => theme.colors.gray7};
   border-top: none;
 
-  padding: 40px 72px;
+  padding: 2.5rem 4.5rem;
 `;
 
 const ProjectInfoContainer = styled.div`
@@ -192,12 +221,12 @@ const ProjectInfoContainer = styled.div`
   flex-direction: column;
   justify-content: space-around;
 
-  max-width: 990px;
+  max-width: 61.875rem;
 `;
 
 const ProjectInfoWrapper = styled.div`
   display: flex;
-  gap: 60px;
+  gap: 3.75rem;
 
   width: 100%;
 `;
@@ -212,7 +241,7 @@ const CategoryPicker = styled.div`
   height: 100%;
   cursor: pointer;
 
-  border-bottom: 0.0625rem solid;
+  border-bottom: 1px solid;
   border-color: ${({ theme }) => theme.colors.gray7};
 
   ${({ theme }) => theme.fonts.body14Medium};
@@ -230,7 +259,7 @@ const DropdownImage = styled(Image)`
 
 const DatePickerContainer = styled.div`
   display: flex;
-  height: 80px;
+  height: 5rem;
 `;
 
 const DateSelectBox = styled.div`
@@ -317,6 +346,13 @@ const TagList = styled.div`
   input {
     color: ${({ theme }) => theme.colors.white};
   }
+`;
+
+const HelperTextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
 `;
 
 // const ToggleWrapper = styled.div`

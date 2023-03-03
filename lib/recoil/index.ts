@@ -15,6 +15,21 @@ import {
   postDeployedUrl,
   postContent,
 } from "@/lib/recoil/postAtoms";
+
+import {
+  postTitleVaildate,
+  postSubTitleVaildate,
+  postSubCategoryVaildate,
+  postSkillsVaildate,
+  postProjectDurationVaildate,
+  postMembersVaildate,
+  postTagsVaildate,
+  postGithubUrlVaildate,
+  postDeployedUrlVaildate,
+  postContentVaildate,
+  postErrorBoxText,
+} from "@/lib/recoil/postValidateAtoms";
+
 import userLoginCheck from "@/lib/recoil/userLoginCheck";
 
 import {
@@ -55,6 +70,18 @@ export {
   postGithubUrl,
   postDeployedUrl,
   postContent,
+  // post validate
+  postTitleVaildate,
+  postSubTitleVaildate,
+  postSubCategoryVaildate,
+  postSkillsVaildate,
+  postProjectDurationVaildate,
+  postMembersVaildate,
+  postTagsVaildate,
+  postGithubUrlVaildate,
+  postDeployedUrlVaildate,
+  postContentVaildate,
+  postErrorBoxText,
   // myPage
   myPageId,
   myPageUserProfile,
