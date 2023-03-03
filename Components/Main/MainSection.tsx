@@ -138,7 +138,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         )}
       </HomeDropDownContainer>
       <HomeCardGrid>
-        {allPostsData?.map((post: PostType) => (
+        {sortPosts?.map((post: PostType) => (
           <CardContainer
             key={post.id}
             onClick={() => {
