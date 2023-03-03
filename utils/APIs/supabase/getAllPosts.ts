@@ -1,5 +1,4 @@
 import supabase from "@/lib/supabase";
-import { PostgrestSingleResponse } from "@supabase/supabase-js";
 
 // TODO: Add pagination
 // TODO: 필요한 데이터만 가져오도록 수정
