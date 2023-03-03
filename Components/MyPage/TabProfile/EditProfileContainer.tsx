@@ -10,14 +10,15 @@ import {
   myPageSkills,
 } from "@/lib/recoil";
 import checkIsPhoneNumber from "@/utils/commons/checkIsPhoneNumber";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { DefaultButton, Input, SkillList, Toggle } from "@/Components/Common";
+import { checkEmail } from "@/utils/commons/authUtils";
+import { DefaultButton, Input, SkillList } from "@/Components/Common";
 import { useInput } from "@/hooks/common";
 import PositionTag from "./PositionTag";
 import ProfileContainer from "./ProfileContainer";
-import { ContentContainer, ContentWrapper } from "./ShowProfileContainer";
+import { ContentWrapper } from "./ShowProfileContainer";
 import SwitchButton from "./SwitchButton";
 import DropDown from "./DropDown";
 
@@ -49,9 +50,25 @@ const EditProfileContainer = () => {
   const [gender, setGender] = useRecoilState(myPageGender);
 
   // local state로 편집 상태 제어
-  const [isPhoneNumber, setIsPhoneNumber] = useState(false);
   const [isEmptyField, setIsEmptyField] = useState(false);
   const [isEmptySkills, setIsEmptySkills] = useState(false);
+
+  // 에러 피드백
+  const [selfProfileHelperText, setSelfProfileHelperText] = useState<
+    "" | "자기소개가 비어있어요."
+  >("");
+  const [userNameHelperText, setUserNameHelperText] = useState<
+    "" | "이름이 비어있어요."
+  >("");
+  const [emailHelperText, setEmailHelperText] = useState<
+    "" | "이메일의 형식을 확인해주세요."
+  >("");
+  const [phoneNumberHelperText, setPhoneNumberHelperText] = useState<
+    "" | "전화번호 형식이 아니에요."
+  >("");
+  const [githubHelperText, setGithubHelperText] = useState<
+    "" | "깃허브 url이 비어있어요."
+  >("");
 
   const updateProfileLocalState = useCallback(async () => {
     setPhoneNumber(profileData.phone);
@@ -82,6 +99,7 @@ const EditProfileContainer = () => {
     userName: profileData.user_name ?? "",
     contactEmail: profileData.contact_email ?? "",
     selfProfile: profileData.self_profile ?? "",
+    phoneNumber: profileData.phone ?? "",
     github: profileData.github ?? "",
   });
 
@@ -98,14 +116,47 @@ const EditProfileContainer = () => {
     }
   };
 
-  const handleEditPhoneNumber = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setPhoneNumber(e.target.value);
-    setIsPhoneNumber(checkIsPhoneNumber(e.target.value));
-  };
-
   const handleSave = async () => {
+    if (!inputValues.selfProfile) {
+      setSelfProfileHelperText("자기소개가 비어있어요.");
+      setTimeout(() => {
+        setSelfProfileHelperText("");
+      }, 2000);
+      return;
+    }
+
+    if (!inputValues.userName) {
+      setUserNameHelperText("이름이 비어있어요.");
+      setTimeout(() => {
+        setUserNameHelperText("");
+      }, 2000);
+      return;
+    }
+
+    if (!checkEmail(inputValues.contactEmail)) {
+      setEmailHelperText("이메일의 형식을 확인해주세요.");
+      setTimeout(() => {
+        setEmailHelperText("");
+      }, 2000);
+      return;
+    }
+
+    if (!checkIsPhoneNumber(inputValues.phoneNumber)) {
+      setPhoneNumberHelperText("전화번호 형식이 아니에요.");
+      setTimeout(() => {
+        setPhoneNumberHelperText("");
+      }, 2000);
+      return;
+    }
+
+    if (!inputValues.github) {
+      setGithubHelperText("깃허브 url이 비어있어요.");
+      setTimeout(() => {
+        setGithubHelperText("");
+      }, 2000);
+      return;
+    }
+
     if (activeField.length === 0) {
       setIsEmptyField(true);
       setTimeout(() => {
@@ -148,6 +199,7 @@ const EditProfileContainer = () => {
         <Input
           value={inputValues.selfProfile}
           onChange={handleInputChange("selfProfile")}
+          errorMessage={selfProfileHelperText}
         />
       </ProfileContainer>
       <ProfileContainer title="기본 정보" rowGap={24}>
@@ -157,6 +209,7 @@ const EditProfileContainer = () => {
             <Input
               value={inputValues.userName}
               onChange={handleInputChange("userName")}
+              errorMessage={userNameHelperText}
             />
           </InfoWrapper>
 
@@ -165,6 +218,7 @@ const EditProfileContainer = () => {
             <Input
               value={inputValues.contactEmail}
               onChange={handleInputChange("contactEmail")}
+              errorMessage={emailHelperText}
             />
           </InfoWrapper>
 
@@ -182,11 +236,11 @@ const EditProfileContainer = () => {
             <ContentTitle>휴대전화</ContentTitle>
             <Input
               type="number"
-              value={phoneNumber}
-              onChange={handleEditPhoneNumber}
+              value={inputValues.phoneNumber}
+              onChange={handleInputChange("phoneNumber")}
               placeholder="‘-’없이 11자리를 입력하세요"
+              errorMessage={phoneNumberHelperText}
             />
-            {isPhoneNumber && <span>전화번호 형식이 아닙니다.</span>}
           </InfoWrapper>
         </>
       </ProfileContainer>
@@ -228,6 +282,7 @@ const EditProfileContainer = () => {
               value={inputValues.github}
               onChange={handleInputChange("github")}
               placeholder="https://github.com/user"
+              errorMessage={githubHelperText}
             />
           </InfoWrapper>
         </>
