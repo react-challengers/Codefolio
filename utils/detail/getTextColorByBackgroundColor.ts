@@ -6,7 +6,7 @@
  */
 
 const getTextColorByBackgroundColor = (hexColor: string) => {
-  console.log(hexColor);
+  if (!hexColor) return 0;
   const colorToNumber = hexColor.substring(1); // 색상 앞의 # 제거
   const rgb = parseInt(colorToNumber, 16); // hexColor를 10진수로 변환
 

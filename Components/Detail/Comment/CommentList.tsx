@@ -32,9 +32,7 @@ const CommentList = ({ postId }: CommentListProps) => {
 
   const { data, isError, isLoading, refetch } = useQuery<CommentType[]>(
     ["getComment"],
-    {
-      queryFn: getComments,
-    }
+    getComments
   );
 
   useEffect(() => {
