@@ -38,7 +38,7 @@ interface CardProps {
  * @param {string} likes - 좋아요 수
  * @param {string} comments - 댓글 수
  * @param {string} bookmarks - 북마크 수
- * @param {string} filed - 분야
+ * @param {string} field - 분야
  * @param {string} user_id - 작성자 id
  * @constructor
  * @example

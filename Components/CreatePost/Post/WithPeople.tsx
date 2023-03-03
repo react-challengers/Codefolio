@@ -22,9 +22,15 @@ const WithPeople = () => {
     profileData: { user_name: userName, field: userField, github: userGithub },
   } = useUserProfile();
 
-  // useEffect(() => {
-  //   setPeople([{ name: userName, field: userField, github: userGithub }]);
-  // }, [setPeople, userField, userGithub, userName]);
+  useEffect(() => {
+    if (!userField || userField.length === 0) {
+      setPeople([{ name: userName, field: "", github: userGithub }]);
+      return;
+    }
+    setPeople([
+      { name: userName, field: userField.join(), github: userGithub },
+    ]);
+  }, []);
 
   const addPerson = () => {
     if (people.length === 0) {
@@ -123,7 +129,6 @@ const InputWrapper = styled.div`
   align-items: center;
   position: relative;
   gap: 1rem;
-  padding-bottom: 1.5rem;
   &:first-child {
     & > input:first-child {
       border-radius: 0.25rem;
@@ -165,6 +170,7 @@ const CancelButton = styled(Image)`
   position: absolute;
   right: -2.25rem;
   padding: 0.125rem;
+  margin-bottom: 2.5rem;
   cursor: pointer;
 `;
 
