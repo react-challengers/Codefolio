@@ -59,12 +59,12 @@ const InputWrapper = styled.input<{ error: boolean }>`
   }
   border-bottom: 1px solid
     ${({ theme, error }) =>
-      error ? theme.colors.errorMessage : theme.colors.gray7};
+      error ? theme.colors.messageError : theme.colors.gray7};
 `;
 
 const ErrorMessage = styled.span<{ error: boolean }>`
   ${(prop) => prop.theme.fonts.body14}
-  color: ${(props) => props.theme.colors.errorMessage};
+  color: ${(props) => props.theme.colors.messageError};
   display: ${(props) => (props.error ? "block" : "none")};
 `;
 
