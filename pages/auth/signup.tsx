@@ -5,7 +5,12 @@ import supabase from "@/lib/supabase";
 
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { AuthInput, AuthButton, HelperTextBox } from "@/Components/Common/Auth";
+import {
+  AuthInput,
+  AuthButton,
+  HelperTextBox,
+  ErrorMassageBox,
+} from "@/Components/Common/Auth";
 import {
   checkEmail,
   checkPassword,
@@ -19,6 +24,7 @@ import { getCurrentUser } from "@/utils/APIs/supabase";
 
 import Image from "next/dist/client/image";
 import ico_close_16 from "@/public/icons/ico_close_16.svg";
+import ico_ExclamationMark from "@/public/icons/ico_ExclamationMark.svg";
 
 /**
  * @TODO custom hooks 을 사용해서 리팩토링
@@ -36,6 +42,8 @@ const SignUpPage: NextPage = () => {
   const [emailHelperText, setEmailHelperText] = useState("");
   const [passwordHelperText, setPasswordHelperText] = useState("");
   const [passwordCheckHelperText, setPasswordCheckHelperText] = useState("");
+
+  const [isError, setIsError] = useState(false);
 
   const setIsLogin = useSetRecoilState(userLoginCheck);
 
@@ -57,6 +65,7 @@ const SignUpPage: NextPage = () => {
 
   const signupWithEmail = async () => {
     validateCheck();
+    setIsError(false);
 
     // 유효성 검사 결과 fail일 경우, supabase에 요청 안함
     if (
@@ -78,6 +87,9 @@ const SignUpPage: NextPage = () => {
         },
       },
     });
+    if (error?.stack?.includes("User already registered")) {
+      setIsError(true);
+    }
 
     if (!error) {
       setIsLogin(true);
@@ -115,12 +127,25 @@ const SignUpPage: NextPage = () => {
       <SignupSpace>
         <SignupForm>
           <div>
+            {isError ? (
+              <ErrorMassageBox background="#E22C35">
+                <SocialIcon
+                  src={ico_ExclamationMark}
+                  alt="에러 느낌표"
+                  width={20}
+                  height={20}
+                />
+                이미 등록된 아이디 입니다.
+              </ErrorMassageBox>
+            ) : (
+              <ErrorMassageBox background={null} />
+            )}
             {userNameHelperText && (
               <CloseSvg
                 src={ico_close_16}
-                alt="ico_close_16"
+                alt="user name reset button"
                 width={25}
-                height={24}
+                height={25}
                 onClick={() => resetInput("userName")}
               />
             )}
@@ -136,9 +161,9 @@ const SignUpPage: NextPage = () => {
             {emailHelperText && (
               <CloseSvg
                 src={ico_close_16}
-                alt="ico_close_16"
+                alt="email reset button"
                 width={25}
-                height={24}
+                height={25}
                 onClick={() => resetInput("email")}
               />
             )}
@@ -155,9 +180,9 @@ const SignUpPage: NextPage = () => {
             {passwordHelperText && (
               <CloseSvg
                 src={ico_close_16}
-                alt="ico_close_16"
+                alt="password reset button"
                 width={25}
-                height={24}
+                height={25}
                 onClick={() => resetInput("password")}
               />
             )}
@@ -175,9 +200,9 @@ const SignUpPage: NextPage = () => {
             {passwordCheckHelperText && (
               <CloseSvg
                 src={ico_close_16}
-                alt="ico_close_16"
+                alt="paspasswordChecksword reset button"
                 width={25}
-                height={24}
+                height={25}
                 onClick={() => resetInput("passwordCheck")}
               />
             )}
@@ -211,6 +236,10 @@ export const getStaticProps: GetStaticProps = async () => {
 
 const SignupPageContainer = styled.div`
   display: flex;
+`;
+
+const SocialIcon = styled(Image)`
+  margin-right: 0.5rem;
 `;
 
 const EmptyContainer = styled.div`

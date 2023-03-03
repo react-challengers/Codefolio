@@ -5,7 +5,12 @@ import { useState } from "react";
 import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
 import { checkEmail, checkPassword } from "@/utils/commons/authUtils";
-import { HelperTextBox, AuthInput, AuthButton } from "@/Components/Common/Auth";
+import {
+  HelperTextBox,
+  AuthInput,
+  AuthButton,
+  ErrorMassageBox,
+} from "@/Components/Common/Auth";
 import { useSetRecoilState } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
 import { useQuery } from "@tanstack/react-query";
@@ -108,9 +113,9 @@ const Login: NextPage = () => {
           <ErrorMassageBox background="#E22C35">
             <SocialIcon
               src={ico_ExclamationMark}
-              alt="ico_ExclamationMark"
-              width={25}
-              height={24}
+              alt="에러 느낌표"
+              width={20}
+              height={20}
             />
             등록 안 된 이메일이거나 비밀번호를 잘못 입력했습니다.
           </ErrorMassageBox>
@@ -122,7 +127,7 @@ const Login: NextPage = () => {
             <SocialIcon
               src={ico_github}
               alt="ico_github"
-              width={25}
+              width={24}
               height={24}
             />
             구글로 로그인하기
@@ -131,7 +136,7 @@ const Login: NextPage = () => {
             <SocialIcon
               src={ico_google}
               alt="ico_github"
-              width={25}
+              width={24}
               height={24}
             />
             Github로 로그인하기
@@ -147,9 +152,9 @@ const Login: NextPage = () => {
             {emailHelperText && (
               <CloseSvg
                 src={ico_close_16}
-                alt="ico_close_16"
+                alt="email reset button"
                 width={25}
-                height={24}
+                height={25}
                 onClick={() => resetInput("email")}
               />
             )}
@@ -167,9 +172,9 @@ const Login: NextPage = () => {
             {passwordHelperText && (
               <CloseSvg
                 src={ico_close_16}
-                alt="ico_close_16"
+                alt="password reset button"
                 width={25}
-                height={24}
+                height={25}
                 onClick={() => resetInput("password")}
               />
             )}
@@ -270,29 +275,6 @@ const CloseSvg = styled(Image)`
   cursor: pointer;
 
   margin-left: 25rem;
-`;
-
-interface ErrorMassageBoxProps {
-  background: string | null;
-}
-
-const ErrorMassageBox = styled.div<ErrorMassageBoxProps>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  ${({ theme }) => theme.fonts.subtitle16}
-  color: ${({ theme }) => theme.colors.white};
-  background: ${(props) => props.background};
-
-  width: 27.25rem;
-  height: 3.5rem;
-
-  background: ${(props) =>
-    props.background ? "red" : props.theme.colors.gray11};
-
-  margin-bottom: 1.75rem;
-  border-radius: 0.5rem;
 `;
 
 const SocialLoginButtonContainer = styled.div`
