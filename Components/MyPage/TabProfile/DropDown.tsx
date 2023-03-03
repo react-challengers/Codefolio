@@ -1,6 +1,6 @@
 import { useUserProfile } from "@/hooks/query";
 import { myPageBirthYear, myPageCareer } from "@/lib/recoil";
-import BASE_YEAR from "@/utils/constant";
+import { BASE_YEAR } from "@/utils/constant";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
