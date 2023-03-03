@@ -91,7 +91,10 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
   });
 
   const clickBadge = (badgeType: PostBadge) => {
-    if (!userId || !postId) return setShowLoginModal(true);
+    if (!userId || !postId) {
+      setShowLoginModal(true);
+      return;
+    }
 
     if (badgeCheck.includes(badgeType)) {
       const newBadgeCheck = badgeCheck.filter((badge) => badge !== badgeType);
