@@ -13,7 +13,7 @@ import {
   MyPageTab,
   TabProfile,
   UserInfoContainer,
-} from "@/Components/Mypage";
+} from "@/Components/MyPage";
 
 const tabList = ["프로젝트", "북마크", "좋아요", "프로필"];
 
