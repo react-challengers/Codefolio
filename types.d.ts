@@ -1,5 +1,7 @@
 type Gender = "남자" | "여자" | "선택안함";
 
+type PostBadge = "idea" | "complete" | "code" | "function";
+
 declare enum Field {
   WEB = "웹",
   APP = "앱",
@@ -134,6 +136,7 @@ interface CommentType {
   post_id: string;
   user_id: string;
   content: string;
+  created_at: string;
 }
 
 interface CommentLikeType {
