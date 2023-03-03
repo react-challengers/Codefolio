@@ -23,6 +23,9 @@ import deleteBookmark from "./deleteBookmark";
 import addLike from "./addLike";
 import deleteLike from "./deleteLike";
 
+import getNotification from "./getNotification";
+import postNotificationRead from "./postNotificationRead";
+
 import incrementComment from "./incrementComment";
 import decrementComment from "./decrementComment";
 import incrementBookmark from "./incrementBookmark";
@@ -50,6 +53,8 @@ export {
   deleteBookmark,
   addLike,
   deleteLike,
+  getNotification,
+  postNotificationRead,
   incrementComment,
   decrementComment,
   incrementBookmark,

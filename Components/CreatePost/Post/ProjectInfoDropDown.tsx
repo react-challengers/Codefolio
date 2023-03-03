@@ -84,13 +84,17 @@ const ProjectInfoDropDown = () => {
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
-          <TEXTBOX>프로젝트 스택*</TEXTBOX>
+          <TEXTBOX>
+            <span>프로젝트 스택*</span>
+            <CountState>{postSkill.length}/10</CountState>
+          </TEXTBOX>
           <HelperTextContainer>
             <SkillListWrapper>
               <SkillList
                 text="개발 스택 추가"
                 editSkills={postSkill}
                 setEditSkills={setPostSkill}
+                maxLangth={10}
               />
             </SkillListWrapper>
             <HelperTextBox text={skillsVaildate} />
@@ -181,13 +185,17 @@ const ProjectInfoDropDown = () => {
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
-          <TEXTBOX>키워드 태그</TEXTBOX>
+          <TEXTBOX>
+            <span>키워드태그</span>
+            <CountState>{tag.length}/5</CountState>
+          </TEXTBOX>
           <HelperTextContainer>
             <TagList>
               <SkillList
                 text="태그 추가"
                 editSkills={tag}
                 setEditSkills={setTag}
+                maxLangth={5}
               />
             </TagList>
             <HelperTextBox text={tagsVaildate} />
@@ -323,8 +331,9 @@ const CheckInput = styled(Image)`
 const InputURL = styled.input`
   width: 100%;
   height: 100%;
-  padding: 0.625rem 1rem;
+  padding-left: 0.625rem 1rem;
 
+  box-sizing: border-box;
   background-color: transparent;
   border: none;
   border-bottom: 0.0625rem solid;
@@ -366,12 +375,20 @@ const HelperTextContainer = styled.div`
 // `;
 
 const TEXTBOX = styled.div`
+  display: flex;
+  flex-direction: column;
+
   min-width: 7.5rem;
   min-height: 5rem;
   padding: 0.625rem 0;
 
   color: ${({ theme }) => theme.colors.gray3};
   ${({ theme }) => theme.fonts.body16};
+`;
+
+const CountState = styled.span`
+  color: ${({ theme }) => theme.colors.gray5};
+  ${({ theme }) => theme.fonts.body14};
 `;
 
 export default ProjectInfoDropDown;

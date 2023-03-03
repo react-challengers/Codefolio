@@ -17,9 +17,9 @@ const postSubTitle = atom<string>({
   default: "",
 });
 
-const postTitleBackgroundColor = atom<string>({
-  key: "postTitleBackgroundColor",
-  default: "#fff",
+const postCoverImage = atom<string>({
+  key: "postCoverImage",
+  default: "",
 });
 
 const postLargeCategory = atom<string>({
@@ -77,7 +77,7 @@ export {
   postId,
   postTitle,
   postSubTitle,
-  postTitleBackgroundColor,
+  postCoverImage,
   postLargeCategory,
   postSubCategory,
   postSkills,

@@ -4,7 +4,7 @@ import {
   postId,
   postTitle,
   postSubTitle,
-  postTitleBackgroundColor,
+  postCoverImage,
   postLargeCategory,
   postSubCategory,
   postSkills,
@@ -52,6 +52,10 @@ import {
   myPageIsEditingProfileContainer,
 } from "@/lib/recoil/myPageAtoms";
 
+import searchValueState from "@/lib/recoil/searchValue";
+
+import isNotificationState from "@/lib/recoil/notificationAtoms";
+
 export {
   userLoginCheck,
   largeCategoryState,
@@ -60,7 +64,7 @@ export {
   postId,
   postTitle,
   postSubTitle,
-  postTitleBackgroundColor,
+  postCoverImage,
   postLargeCategory,
   postSubCategory,
   postSkills,
@@ -100,4 +104,8 @@ export {
   myPageSkills,
   myPageBookmarkFolders,
   myPageIsEditingProfileContainer,
+  // search
+  searchValueState,
+  // notification
+  isNotificationState,
 };

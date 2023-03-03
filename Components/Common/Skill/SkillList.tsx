@@ -6,10 +6,17 @@ interface SkillPickerProps {
   text: string;
   editSkills: string[];
   setEditSkills: Dispatch<React.SetStateAction<string[]>>;
+  maxLangth?: number;
 }
 
-const SkillList = ({ text, editSkills, setEditSkills }: SkillPickerProps) => {
+const SkillList = ({
+  text,
+  editSkills,
+  setEditSkills,
+  maxLangth,
+}: SkillPickerProps) => {
   const addSkill = () => {
+    if (maxLangth && editSkills.length >= maxLangth) return null;
     if (!editSkills) return setEditSkills([""]);
     if (!editSkills.includes("")) setEditSkills([...editSkills, ""]);
     return null;
@@ -46,6 +53,7 @@ const SkillListContainer = styled.div`
   gap: 0.5rem;
   width: 100%;
   padding: 0.5rem;
+  margin-bottom: 1.75rem;
 
   border: 1px solid;
   border-color: ${({ theme }) => theme.colors.gray7};

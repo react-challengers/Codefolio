@@ -48,67 +48,38 @@ const DetailArticle = () => {
   const [isLike, setIsLike] = useState(false);
   const [category, setCategory] = useState("");
 
-  const { data: allPostsData, isLoading } = useQuery<PostType[]>(
-    ["GET_POSTS"],
+  const { data: currentPost, isLoading } = useQuery<PostType>(
+    ["getOnePost", postId],
     {
-      queryFn: getAllPosts,
-      enabled: !!postId,
+      queryFn: ({ queryKey }) => getOnePost(queryKey[1] as string),
       onSuccess(data) {
         if (data) {
-          const currentPost = data.find((post) => post.id === postId);
-          if (currentPost) {
-            setTitleData({
-              title: currentPost.title,
-              subtitle: currentPost.sub_title,
-              backgroundColor: currentPost.title_background_color,
-              field: currentPost.large_category,
-              subCategory: currentPost.sub_category,
-            });
-            setSideData({
-              progressDate: currentPost.progress_date,
-              subCategory: currentPost.sub_category,
-              skills: currentPost.skills,
-              tag: currentPost.tag,
-              members: currentPost.members,
-            });
-            setContent(currentPost.content);
-            setAuthor(currentPost.user_id);
-            setCategory(currentPost.sub_category);
-          }
+          setTitleData({
+            title: data.title,
+            subtitle: data.sub_title,
+            backgroundColor: data.title_background_image,
+            field: data.large_category,
+            subCategory: data.sub_category,
+          });
+          setSideData({
+            progressDate: data.progress_date,
+            subCategory: data.sub_category,
+            skills: data.skills,
+            tag: data.tag,
+            members: data.members,
+          });
+          setContent(data.content);
+          setAuthor(data.user_id);
+          setCategory(data.sub_category);
         }
       },
+      onError(error) {
+        console.log(error);
+      },
+      enabled: !!postId,
     }
   );
 
-  // const { isLoading } = useQuery<PostType>(["getOnePost", postId], {
-  //   queryFn: ({ queryKey }) => getOnePost(queryKey[1] as string),
-  //   onSuccess(data) {
-  //     if (data) {
-  //       setTitleData({
-  //         title: data.title,
-  //         subtitle: data.sub_title,
-  //         backgroundColor: data.title_background_color,
-  //         field: data.large_category,
-  //         subCategory: data.sub_category,
-  //       });
-  //       setSideData({
-  //         progressDate: data.progress_date,
-  //         subCategory: data.sub_category,
-  //         skills: data.skills,
-  //         tag: data.tag,
-  //         members: data.members,
-  //       });
-  //       setContent(data.content);
-  //       setAuthor(data.user_id);
-  //     }
-  //   },
-  //   onError(error) {
-  //     console.log(error);
-  //   },
-  //   enabled: !!postId,
-  // });
-
-  // TODO: 추후 user_name과 profile_image를 가져오는 API를 만들어서 수정해야함
   const { data: authorInfo, isLoading: isAuthorLoading } = useQuery(
     ["getSingleUser", author],
     {
@@ -183,7 +154,6 @@ const DetailArticle = () => {
       <DetailHeader
         isBookmark={isBookmark}
         isLike={isLike}
-        author={author}
         setIsBookmark={setIsBookmark}
         setIsLike={setIsLike}
         currentUserId={currentUserId}

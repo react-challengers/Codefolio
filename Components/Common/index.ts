@@ -7,6 +7,7 @@ import Modal from "./Modal";
 import ProfileImage from "./ProfileImage";
 import Tags from "./Tags";
 import HelperTextBox from "./HelperTextBox";
+import DropDown from "./DropDown";
 
 export {
   DefaultButton,
@@ -18,4 +19,5 @@ export {
   ProfileImage,
   Tags,
   HelperTextBox,
+  DropDown,
 };

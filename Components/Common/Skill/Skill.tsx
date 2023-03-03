@@ -55,6 +55,10 @@ const Skill = ({
     }
   };
 
+  // const handleOnBlur = () => {
+  //   addSkill();
+  // };
+
   useEffect(() => {
     if (isLast && lastSkillRef.current) {
       lastSkillRef.current.focus();
@@ -68,13 +72,14 @@ const Skill = ({
   return (
     <SkillContainer>
       <SkillInput
-        size={skill ? skill.length : 1}
+        size={skill ? skill.length + 3 : 3}
         value={skill}
         onChange={onChange}
         maxLength={20}
         isDuplicate={isDuplicate}
         onKeyPress={handleOnKeyDown}
         ref={isLast ? lastSkillRef : null}
+        // onBlur={handleOnBlur}
       />
       <CancelButton
         onClick={() => onDelete(idx)}
@@ -99,6 +104,7 @@ const SkillContainer = styled.label`
   display:flex;
   align-items: center;
   box-sizing: border-box;
+  width: fit-content;
 
   gap: 0.625rem;
   padding: 0.5rem 1rem;

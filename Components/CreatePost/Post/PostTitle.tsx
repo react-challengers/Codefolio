@@ -1,62 +1,90 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import styled from "styled-components";
 import Image, { StaticImageData } from "next/image";
-import color_fill from "@/public/icons/color_fill.svg";
+import image_upload from "@/public/icons/image_upload.svg";
 import { useRecoilState } from "recoil";
-import {
-  postSubTitle,
-  postTitle,
-  postTitleBackgroundColor,
-} from "@/lib/recoil";
+import { postId, postSubTitle, postTitle, postCoverImage } from "@/lib/recoil";
+import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
+import uploadImage from "@/utils/commons/uploadImage";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * @TODO  input을 커스텀 훅으로 만들기.
  */
 
 const PostTitle = () => {
-  const [backgroundColor, setBackgroundColor] = useRecoilState(
-    postTitleBackgroundColor
-  );
+  const [isPostId] = useRecoilState(postId);
+  const [coverImage, setCoverImage] = useRecoilState(postCoverImage);
   // common input 으로 변경
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
 
-  const onChangeColor = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBackgroundColor(e.target.value);
+  const onChangeBackgroundImage = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files;
+    if (file?.length === 0) return;
+    if (file !== null) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file[0]);
+      reader.onload = async (uploadedImg) => {
+        const base64 = uploadedImg.target?.result;
+        if (typeof base64 !== "string") return;
+        const fileId = uuidv4() + file[0].name;
+
+        const imgFile = await convertEase64ToFile(base64);
+        const publicImageUrl = await uploadImage(
+          imgFile,
+          "post-image",
+          `${isPostId}/${fileId}`
+        );
+        if (!publicImageUrl) return;
+
+        setCoverImage(publicImageUrl);
+      };
+    }
   };
 
   return (
-    <TitleContainer color={backgroundColor ?? "#fff"}>
+    <TitleContainer>
+      {coverImage && (
+        <CoverImageBackground
+          src={coverImage}
+          width={1400}
+          height={262}
+          alt="커버 이미지"
+        />
+      )}
       <TitleInput
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="프로젝트 제목을 입력하세요"
+        maxLength={30}
       />
       <SubTitleWrapper>
         <SubTitleInput
           value={subTitle}
           onChange={(e) => setSubTitle(e.target.value)}
           placeholder="‘SA’, ‘프로젝트 회고’ 등 글의 종류를 입력하세요"
+          maxLength={40}
         />
-        <ImgLabel htmlFor="background-color-picker">
+        <ImgLabel htmlFor="background-image">
           <ImgIcon
-            src={color_fill}
+            src={image_upload}
             alt="배경색 지정 아이콘"
             width={24}
             height={24}
           />
         </ImgLabel>
-        <TitleBackgroundColorPicker
-          id="background-color-picker"
-          type="color"
-          onChange={onChangeColor}
+        <TitleBackgroundInput
+          id="background-image"
+          type="file"
+          accept="image/jpg,image/png,image/jpeg,image/gif"
+          multiple={false}
+          onChange={onChangeBackgroundImage}
         />
       </SubTitleWrapper>
     </TitleContainer>
   );
 };
-
-export default PostTitle;
 
 const TitleContainer = styled.div`
   display: flex;
@@ -64,8 +92,20 @@ const TitleContainer = styled.div`
   padding: 8rem 4.5rem 2.5rem;
   gap: 1rem;
   position: relative;
-  background-color: ${(props) => props.color};
+  overflow: hidden;
 `;
+
+const CoverImageBackground = styled(Image)`
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: auto;
+  z-index: -1;
+  opacity: 0.8;
+`;
+
 const TitleInput = styled.input`
   display: inline-block;
   width: 100%;
@@ -99,8 +139,10 @@ const ImgLabel = styled.label``;
 const ImgIcon = styled(Image)<StaticImageData>`
   cursor: pointer;
 `;
-const TitleBackgroundColorPicker = styled.input`
+const TitleBackgroundInput = styled.input`
   opacity: 0;
   width: 0;
   height: 0;
 `;
+
+export default PostTitle;

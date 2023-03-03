@@ -1,10 +1,16 @@
 import styled from "styled-components";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useInput } from "@/hooks/common";
 import { useUserProfile } from "@/hooks/query";
 import { useState } from "react";
 import { DefaultButton, ProfileImage } from "@/Components/Common";
-import { postComment, incrementComment } from "@/utils/APIs/supabase";
+import {
+  postComment,
+  incrementComment,
+  getOnePost,
+} from "@/utils/APIs/supabase";
+import supabase from "@/lib/supabase";
+import createNotificationContent from "@/utils/notification/createNotificationContent";
 
 interface CommentInputProps {
   postId: string | string[] | undefined;
@@ -14,20 +20,50 @@ interface CommentInputProps {
 const CommentInput = ({ postId, userId }: CommentInputProps) => {
   const queryClient = useQueryClient();
 
+  const [isHelperText, setIsHelperText] = useState(false);
+  const [postTitle, setPostTitle] = useState("");
+  const [author, setAuthor] = useState("");
+
   const { inputValues, handleInputChange, resetAllInput } = useInput({
     comment: "",
   });
-
-  const [isHelperText, setIsHelperText] = useState(false);
 
   const {
     profileData: { profile_image: profileImage },
   } = useUserProfile();
 
+  useQuery(["getOnePost", postId], {
+    queryFn: ({ queryKey }) => getOnePost(queryKey[1] as string),
+    onSuccess: (data) => {
+      if (data) {
+        setPostTitle(data.title);
+        setAuthor(data.user_id);
+      }
+    },
+  });
+
+  // 추후 리팩토링 대상(결합도가 높음)
+  const { mutate: addNotificationMutate } = useMutation(
+    async (type: string) => {
+      await supabase
+        .from("notification")
+        .insert({
+          user_id: userId,
+          target_id: author,
+          post_id: postId as string,
+          content: createNotificationContent(type, postTitle),
+          is_read: false,
+          type,
+        })
+        .single();
+    }
+  );
+
   const { mutate: createComment } = useMutation(
     () => postComment(inputValues.comment, postId as string, userId as string),
     {
       onSuccess: async () => {
+        addNotificationMutate("comment");
         await incrementComment(postId as string);
         queryClient.invalidateQueries(["getComment"]);
         queryClient.invalidateQueries(["GET_POSTS"]);
