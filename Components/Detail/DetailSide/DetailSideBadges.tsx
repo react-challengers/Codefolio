@@ -8,9 +8,11 @@ const DetailSideBadges = () => {
   const [showBadgeModal, setShowBadgeModal] = useState(false);
   return (
     <>
-      <DetailSideContainer onClick={() => setShowBadgeModal((prev) => !prev)}>
+      <DetailSideContainer>
         <Title>추천 배지</Title>
-        <DetailBadgesContainer>
+        <DetailBadgesContainer
+          onClick={() => setShowBadgeModal((prev) => !prev)}
+        >
           <BadgeWrapper>
             <Image
               src="/icons/badge-light.svg"
@@ -71,6 +73,9 @@ const DetailBadgesContainer = styled.div`
   justify-content: center;
 
   cursor: pointer;
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray8};
+  }
 `;
 
 const BadgeWrapper = styled.div`
