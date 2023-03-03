@@ -15,14 +15,14 @@ const DetailBadgeModal = ({ closeModal }: DetailBadgeModalProps) => {
 
 const DetailBadgeModalContainer = styled.div`
   position: absolute;
-  top: 480px;
-  left: 140px;
+  top: 30rem;
+  left: 8.75rem;
   background-color: ${({ theme }) => theme.colors.gray8};
 
   padding: 32px;
 
-  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.5);
-  border-radius: 8px;
+  box-shadow: 0rem 0.625rem 0.625rem rgba(0, 0, 0, 0.5);
+  border-radius: 0.5rem;
 `;
 
 export default DetailBadgeModal;

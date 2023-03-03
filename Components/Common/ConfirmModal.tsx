@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-interface SimpleModalProps {
+interface ConfirmModalProps {
   bodyText: string;
   leftText: string;
   rightText: string;
@@ -9,15 +9,15 @@ interface SimpleModalProps {
   onClickRight: () => void;
 }
 
-const SimpleModal = ({
+const ConfirmModal = ({
   bodyText,
   leftText,
   rightText,
   onClickLeft,
   onClickRight,
-}: SimpleModalProps) => {
+}: ConfirmModalProps) => {
   return (
-    <SimpleModalContainer>
+    <ConfirmModalContainer>
       <ModalContainer>
         <ModalBody>{bodyText}</ModalBody>
         <ModalFooter>
@@ -25,11 +25,11 @@ const SimpleModal = ({
           <RightButton onClick={onClickRight}>{rightText}</RightButton>
         </ModalFooter>
       </ModalContainer>
-    </SimpleModalContainer>
+    </ConfirmModalContainer>
   );
 };
 
-const SimpleModalContainer = styled.div`
+const ConfirmModalContainer = styled.div`
   position: fixed;
   z-index: 2;
   top: 0;
@@ -87,4 +87,4 @@ const RightButton = styled(Button)`
   border-bottom-right-radius: 4px;
 `;
 
-export default SimpleModal;
+export default ConfirmModal;

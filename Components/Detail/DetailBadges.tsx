@@ -7,7 +7,7 @@ import addPostBadge from "@/utils/APIs/supabase/addPostBadge";
 import deletePostBadge from "@/utils/APIs/supabase/deletePostBadge";
 import getPostBadges from "@/utils/APIs/supabase/getPostBadges";
 import getBadgeByUid from "@/utils/APIs/supabase/getBadgeByUid";
-import SimpleModal from "../Common/SimpleModal";
+import ConfirmModal from "../Common/ConfirmModal";
 
 interface DetailBadgesProps {
   closeModal?: () => void;
@@ -57,7 +57,7 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
       },
     }
   );
-  // console.log(data);
+
   const { refetch: refetchPostBadgeByUserId } = useQuery(
     ["getPostBadgeByUserId", { userId, postId }],
     getBadgeByUid,
@@ -206,7 +206,7 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
         </BadgeWrapper>
       </BadgesWrapper>
       {showLoginModal && (
-        <SimpleModal
+        <ConfirmModal
           bodyText="로그인하시겠습니까?"
           leftText="취소"
           rightText="로그인"

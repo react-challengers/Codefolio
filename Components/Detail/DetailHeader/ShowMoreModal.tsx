@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePost } from "@/utils/APIs/supabase";
-import SimpleModal from "@/Components/Common/SimpleModal";
+import ConfirmModal from "@/Components/Common/ConfirmModal";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import styled from "styled-components";
@@ -60,7 +60,7 @@ const ShowMoreModal = ({ closeModal }: ShowMoreModalProps) => {
         <ItemWrapper onClick={onClickDeleteButton}>삭제하기</ItemWrapper>
       </ShowMoreModalContainer>
       {showDeleteModal && (
-        <SimpleModal
+        <ConfirmModal
           bodyText="글을 삭제하시겠습니까?"
           leftText="취소"
           rightText="삭제"
