@@ -112,19 +112,18 @@ interface SkillInputProps {
   isDuplicate?: boolean;
 }
 
-
 const SkillInput = styled.input<SkillInputProps>`
   /* ${commonStyle} */
   all: unset;
   ${(props) => props.theme.fonts.body14En}
   width:5rem;
-  ${({ isDuplicate, theme }) => ({
-    color: isDuplicate ? theme.colors.messageError : theme.colors.primary6,
   box-sizing: border-box;
   background-color: transparent;
+  ${({ isDuplicate, theme }) => ({
+    color: isDuplicate ? theme.colors.messageError : theme.colors.primary6,
     textDecoration: isDuplicate ? "line-through" : "none",
     fontWeight: isDuplicate ? "bold" : "normal",
-  })}
+  })};
 `;
 
 const CancelButton = styled(Image)`
