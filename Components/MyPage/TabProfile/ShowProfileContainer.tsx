@@ -2,7 +2,7 @@ import { useUserProfile } from "@/hooks/query";
 import { myPageIsEditingProfileContainer } from "@/lib/recoil";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { DefaultButton, Tags } from "@/Components/Common";
+import { DefaultButton, PrimaryButton, Tags } from "@/Components/Common";
 import ProfileContainer from "./ProfileContainer";
 
 const ShowProfileContainer = () => {
@@ -77,9 +77,9 @@ const ShowProfileContainer = () => {
       </ProfileContainer>
 
       <ButtonWrapper>
-        <DefaultButton
+        <PrimaryButton
           text="수정하기"
-          buttonType="full"
+          buttonType="default"
           size="m"
           onClick={() => setIsEditing(true)}
         />

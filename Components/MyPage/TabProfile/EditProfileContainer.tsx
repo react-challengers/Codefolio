@@ -14,7 +14,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { checkEmail } from "@/utils/commons/authUtils";
-import { DefaultButton, Input, SkillList } from "@/Components/Common";
+import { Input, PrimaryButton, SkillList } from "@/Components/Common";
 import { useInput } from "@/hooks/common";
 import PositionTag from "./PositionTag";
 import ProfileContainer from "./ProfileContainer";
@@ -41,7 +41,7 @@ const EditProfileContainer = () => {
   const setIsEditing = useSetRecoilState(myPageIsEditingProfileContainer);
   const { profileData, updateProfileData } = useUserProfile();
 
-  const [phoneNumber, setPhoneNumber] = useRecoilState(myPagePhonNumber);
+  const setPhoneNumber = useSetRecoilState(myPagePhonNumber);
   const setIsPublic = useSetRecoilState(myPageIsPublic);
   const [activeField, setActiveField] = useRecoilState(myPageField);
   const [editSkills, setEditSkills] = useRecoilState(myPageSkills);
@@ -278,15 +278,15 @@ const EditProfileContainer = () => {
       </ProfileContainer>
 
       <ButtonWrapper>
-        <DefaultButton
+        <PrimaryButton
           text="취소"
-          buttonType="outline"
+          buttonType="line"
           size="m"
           onClick={() => setIsEditing(false)}
         />
-        <DefaultButton
+        <PrimaryButton
           text="저장"
-          buttonType="full"
+          buttonType="default"
           size="m"
           onClick={() => handleSave()}
         />

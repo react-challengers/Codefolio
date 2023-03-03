@@ -8,6 +8,7 @@ import ProfileImage from "./ProfileImage";
 import Tags from "./Tags";
 import Input from "./Input";
 import DropDown from "./DropDown";
+import PrimaryButton from "./PrimaryButton";
 
 export {
   DefaultButton,
@@ -20,4 +21,5 @@ export {
   Tags,
   Input,
   DropDown,
+  PrimaryButton,
 };
