@@ -1,7 +1,9 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useState } from "react";
 import styled from "styled-components";
 import Image, { StaticImageData } from "next/image";
 import image_upload from "@/public/icons/image_upload.svg";
+import disable_check from "@/public/icons/disable_check.svg";
+import enable_check from "@/public/icons/enable_check.svg";
 import { useRecoilState } from "recoil";
 import { postId, postSubTitle, postTitle, postCoverImage } from "@/lib/recoil";
 import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
@@ -18,6 +20,7 @@ const PostTitle = () => {
   // common input 으로 변경
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
+  const [isThumbnail, setIsThumbnail] = useState(false);
 
   const onChangeBackgroundImage = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
@@ -28,19 +31,24 @@ const PostTitle = () => {
       reader.onload = async (uploadedImg) => {
         const base64 = uploadedImg.target?.result;
         if (typeof base64 !== "string") return;
-        const fileId = uuidv4() + file[0].name;
+        const fileId = `${uuidv4()} / ${file[0].name}`;
+        const addCoverType = isThumbnail ? "/thumbnail" : "/cover";
 
         const imgFile = await convertEase64ToFile(base64);
         const publicImageUrl = await uploadImage(
           imgFile,
           "post-image",
-          `${isPostId}/${fileId}`
+          `${isPostId}/${fileId}${addCoverType}`
         );
         if (!publicImageUrl) return;
 
         setCoverImage(publicImageUrl);
       };
     }
+  };
+
+  const handleThumbnail = () => {
+    setIsThumbnail((prev) => !prev);
   };
 
   return (
@@ -66,6 +74,24 @@ const PostTitle = () => {
           placeholder="‘SA’, ‘프로젝트 회고’ 등 글의 종류를 입력하세요"
           maxLength={40}
         />
+        <ThumbnailContainer onClick={handleThumbnail}>
+          {isThumbnail ? (
+            <CheckInput
+              src={enable_check}
+              width={24}
+              height={24}
+              alt="checked"
+            />
+          ) : (
+            <CheckInput
+              src={disable_check}
+              width={24}
+              height={24}
+              alt="Unchecked"
+            />
+          )}
+          <CheckLabel>썸네일로 지정</CheckLabel>
+        </ThumbnailContainer>
         <ImgLabel htmlFor="background-image">
           <ImgIcon
             src={image_upload}
@@ -118,10 +144,12 @@ const TitleInput = styled.input`
   border: none;
   background-color: transparent;
 `;
+
 const SubTitleWrapper = styled.div`
   display: flex;
   background-color: transparent;
 `;
+
 const SubTitleInput = styled.input`
   width: 100%;
   height: 1.75rem;
@@ -134,7 +162,25 @@ const SubTitleInput = styled.input`
   border: none;
   background-color: transparent;
 `;
-const ImgLabel = styled.label``;
+
+const ThumbnailContainer = styled.div`
+  display: flex;
+  cursor: pointer;
+  padding-right: 1rem;
+`;
+
+const CheckInput = styled(Image)<StaticImageData>``;
+
+const CheckLabel = styled.span`
+  width: max-content;
+  padding: 0.25rem;
+  ${({ theme }) => theme.fonts.body14}
+  color: ${({ theme }) => theme.colors.white};
+`;
+
+const ImgLabel = styled.label`
+  cursor: pointer;
+`;
 
 const ImgIcon = styled(Image)<StaticImageData>`
   cursor: pointer;
