@@ -218,7 +218,12 @@ const Post: NextPage = () => {
         <PostHeader>
           {/* <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert> */}
           {/* <DefaultButton text="저장" type="outline" size="s" onClick={onSave} /> */}
-          <DefaultButton text="게시" type="full" size="s" onClick={onPost} />
+          <DefaultButton
+            text="게시"
+            buttonType="full"
+            size="s"
+            onClick={onPost}
+          />
         </PostHeader>
         <PostTitle />
         <ProjectInfo />

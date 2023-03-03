@@ -52,7 +52,8 @@ const GoodJobBadge = () => {
           <BadgeCount>3</BadgeCount>
         </BadgeItemContainer>
       </BadgeListContainer>
-      {/* comment */}
+
+      {/* comment 자리 */}
     </GoodJobTabsContainer>
   );
 };
@@ -65,6 +66,7 @@ const BadgeListContainer = styled.ul`
   display: flex;
   justify-content: space-between;
   padding: 0 7.5rem;
+  margin: 3.75rem 0 6rem;
 `;
 
 const BadgeItemContainer = styled.li`

@@ -138,3 +138,16 @@ interface CommentLikeType {
   comment_id: string;
   user_id: string;
 }
+
+interface ProfileBadgeType {
+  id: string;
+  created_at: Date;
+  user_id: string;
+  profile_id: string;
+  BadgeKind:
+    | "communication"
+    | "implementation"
+    | "initiative"
+    | "pencil"
+    | "puzzle";
+}
