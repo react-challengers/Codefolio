@@ -206,7 +206,7 @@ const EditInput = styled.input`
   outline: 0;
 
   border-width: 0 0 1px;
-  background-color: #1c1c1c;
+  background-color: ${({ theme }) => theme.colors.gray11};
   color: ${({ theme }) => theme.colors.white};
 `;
 
@@ -217,12 +217,12 @@ const CommentWrapper = styled.div`
 
 const CommentContent = styled.div`
   color: ${({ theme }) => theme.colors.gray2};
+  ${({ theme }) => theme.fonts.body16}
 `;
 
 const MoreButtonsWrappoer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
   padding-right: 2.5rem;
   gap: 1.2rem;
 
@@ -235,8 +235,8 @@ const ShowMoreModalContainer = styled.div`
   z-index: 10;
   width: 11.25rem;
   position: absolute;
-  top: 3rem;
-  right: -3rem;
+  top: 2rem;
+  right: -5rem;
   box-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
   border-radius: 0.25rem;
 `;

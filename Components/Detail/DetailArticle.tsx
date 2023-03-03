@@ -210,9 +210,9 @@ const DetailPageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
-  background-color: #1c1c1c;
+  background-color: ${({ theme }) => theme.colors.gray11};
   border-radius: 0.5rem;
-  padding-bottom: 3.125rem;
+  padding-bottom: 5.5rem;
 
   z-index: 1;
 `;

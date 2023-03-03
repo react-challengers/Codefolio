@@ -99,7 +99,7 @@ const CommentTextarea = styled.textarea`
 
   resize: none;
 
-  background-color: #1c1c1c;
+  background-color: ${({ theme }) => theme.colors.gray11};
   color: ${({ theme }) => theme.colors.white};
 `;
 

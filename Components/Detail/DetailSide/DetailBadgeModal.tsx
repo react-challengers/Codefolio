@@ -1,10 +1,14 @@
 import styled from "styled-components";
 import DetailBadges from "../DetailBadges";
 
-const DetailBadgeModal = () => {
+interface DetailBadgeModalProps {
+  closeModal: () => void;
+}
+
+const DetailBadgeModal = ({ closeModal }: DetailBadgeModalProps) => {
   return (
     <DetailBadgeModalContainer>
-      <DetailBadges />
+      <DetailBadges closeModal={closeModal} />
     </DetailBadgeModalContainer>
   );
 };

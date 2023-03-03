@@ -1,9 +1,117 @@
+import { useState } from "react";
 import styled from "styled-components";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { getCurrentUser } from "@/utils/APIs/supabase";
+import { useRouter } from "next/router";
+import addPostBadge from "@/utils/APIs/supabase/addPostBadge";
+import deletePostBadge from "@/utils/APIs/supabase/deletePostBadge";
+import getPostBadges from "@/utils/APIs/supabase/getPostBadges";
+import getBadgeByUid from "@/utils/APIs/supabase/getBadgeByUid";
 
-const DetailBadges = () => {
+interface DetailBadgesProps {
+  closeModal?: () => void;
+}
+
+const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
+  const queryClient = new QueryClient();
+  const router = useRouter();
+
+  const postId = router.query?.id;
+  const [ideaNum, setIdeaNum] = useState(0);
+  const [completeNum, setCompleteNum] = useState(0);
+  const [codeNum, setCodeNum] = useState(0);
+  const [functionNum, setFunctionNum] = useState(0);
+  const [badgeCheck, setBadgeCheck] = useState<string[]>([]);
+  const [userId, setUserId] = useState<string | undefined>("");
+
+  useQuery(["currentUser"], getCurrentUser, {
+    onSuccess: ({ data: { user } }) => {
+      if (user) setUserId(user.id);
+    },
+  });
+
+  const { refetch: refetchPostBadge } = useQuery(
+    ["getPostBadge", { postId }],
+    getPostBadges,
+    {
+      onSuccess: (data) => {
+        if (!data) return;
+
+        let idea = 0;
+        let complete = 0;
+        let code = 0;
+        let func = 0;
+        data.forEach(({ type }: any) => {
+          if (type === "idea") idea += 1;
+          if (type === "complete") complete += 1;
+          if (type === "code") code += 1;
+          if (type === "function") func += 1;
+        });
+
+        setIdeaNum(idea);
+        setCompleteNum(complete);
+        setCodeNum(code);
+        setFunctionNum(func);
+      },
+    }
+  );
+  // console.log(data);
+  const { refetch: refetchPostBadgeByUserId } = useQuery(
+    ["getPostBadgeByUserId", { userId, postId }],
+    getBadgeByUid,
+    {
+      onSuccess: (data) => {
+        const badgeList = data.map((v) => v.type);
+        setBadgeCheck(badgeList);
+      },
+    }
+  );
+
+  const { mutate: addBadge } = useMutation(addPostBadge, {
+    onSuccess: () => {
+      refetchPostBadge();
+      refetchPostBadgeByUserId();
+      // queryClient.invalidateQueries({ queryKey: ["getPostBadge", { postId }] });
+      // queryClient.invalidateQueries({
+      //   queryKey: ["getPostBadgeByUserId", { userId, postId }],
+      // });
+    },
+  });
+  const { mutate: deleteBadge } = useMutation(deletePostBadge, {
+    onSuccess: () => {
+      refetchPostBadge();
+      refetchPostBadgeByUserId();
+      // queryClient.invalidateQueries({ queryKey: ["getPostBadge", { postId }] });
+      // queryClient.invalidateQueries({
+      //   queryKey: ["getPostBadgeByUserId", { userId, postId }],
+      // });
+    },
+  });
+
+  const clickBadge = (badgeType: PostBadge) => {
+    if (!userId || !postId) return;
+
+    if (badgeCheck.includes(badgeType)) {
+      const newBadgeCheck = badgeCheck.filter((badge) => badge !== badgeType);
+      setBadgeCheck(newBadgeCheck);
+      deleteBadge({ userId, postId: postId as string, type: badgeType });
+    } else {
+      setBadgeCheck([...badgeCheck, badgeType]);
+      addBadge({ userId, postId: postId as string, type: badgeType });
+    }
+
+    if (closeModal) {
+      closeModal();
+    }
+  };
+
   return (
     <BadgesWrapper>
-      <BadgeWrapper>
+      <BadgeWrapper
+        onClick={() => clickBadge("idea")}
+        badgeCheck={badgeCheck}
+        badge="idea"
+      >
         <svg
           width="36"
           height="36"
@@ -16,11 +124,14 @@ const DetailBadges = () => {
             fill="#CCCCCC"
           />
         </svg>
-
         <p>굿아이디어</p>
-        <p>4</p>
+        <p>{ideaNum}</p>
       </BadgeWrapper>
-      <BadgeWrapper>
+      <BadgeWrapper
+        onClick={() => clickBadge("complete")}
+        badgeCheck={badgeCheck}
+        badge="complete"
+      >
         <svg
           width="36"
           height="36"
@@ -34,9 +145,13 @@ const DetailBadges = () => {
           />
         </svg>
         <p>완성도대박</p>
-        <p>4</p>
+        <p>{completeNum}</p>
       </BadgeWrapper>
-      <BadgeWrapper>
+      <BadgeWrapper
+        onClick={() => clickBadge("code")}
+        badgeCheck={badgeCheck}
+        badge="code"
+      >
         <svg
           width="36"
           height="36"
@@ -53,9 +168,13 @@ const DetailBadges = () => {
         </svg>
 
         <p>훌륭한코드</p>
-        <p>4</p>
+        <p>{codeNum}</p>
       </BadgeWrapper>
-      <BadgeWrapper>
+      <BadgeWrapper
+        onClick={() => clickBadge("function")}
+        badgeCheck={badgeCheck}
+        badge="function"
+      >
         <svg
           width="36"
           height="36"
@@ -77,11 +196,12 @@ const DetailBadges = () => {
           />
         </svg>
         <p>다양한기능</p>
-        <p>4</p>
+        <p>{functionNum}</p>
       </BadgeWrapper>
     </BadgesWrapper>
   );
 };
+
 const BadgesWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -89,14 +209,27 @@ const BadgesWrapper = styled.div`
   gap: 2rem;
 `;
 
-const BadgeWrapper = styled.div`
+interface BadgeWrapperProps {
+  badgeCheck: string[];
+  badge: string;
+}
+
+const BadgeWrapper = styled.div<BadgeWrapperProps>`
+  ${({ theme }) => theme.fonts.body14}
+
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
 
   cursor: pointer;
-  color: ${({ theme }) => theme.colors.gray3};
+  color: ${({ theme, badgeCheck, badge }) =>
+    theme.colors[badgeCheck.includes(badge) ? "primary6" : "gray3"]};
+
+  path {
+    ${({ theme, badgeCheck, badge }) =>
+      badgeCheck.includes(badge) && `fill: ${theme.colors.primary6}`};
+  }
 
   &:hover {
     color: ${({ theme }) => theme.colors.primary6};

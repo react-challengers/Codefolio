@@ -1,11 +1,44 @@
+import getPostBadges from "@/utils/APIs/supabase/getPostBadges";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import styled from "styled-components";
 import DetailBadgeModal from "./DetailBadgeModal";
 import DetailSideContainer from "./DetailSideContainer";
 
 const DetailSideBadges = () => {
+  const router = useRouter();
   const [showBadgeModal, setShowBadgeModal] = useState(false);
+  const [ideaNum, setIdeaNum] = useState(0);
+  const [completeNum, setCompleteNum] = useState(0);
+  const [codeNum, setCodeNum] = useState(0);
+  const [functionNum, setFunctionNum] = useState(0);
+
+  const postId = router.query.id;
+
+  useQuery(["getPostBadge", { postId }], getPostBadges, {
+    onSuccess: (data) => {
+      if (!data) return;
+      console.log(data);
+      let idea = 0;
+      let complete = 0;
+      let code = 0;
+      let func = 0;
+      data.forEach(({ type }) => {
+        if (type === "idea") idea += 1;
+        if (type === "complete") complete += 1;
+        if (type === "code") code += 1;
+        if (type === "function") func += 1;
+      });
+
+      setIdeaNum(idea);
+      setCompleteNum(complete);
+      setCodeNum(code);
+      setFunctionNum(func);
+    },
+  });
+
   return (
     <>
       <DetailSideContainer>
@@ -20,7 +53,7 @@ const DetailSideBadges = () => {
               width="24"
               height="24"
             />
-            <p>4</p>
+            <p>{ideaNum}</p>
           </BadgeWrapper>
           <BadgeWrapper>
             <Image
@@ -29,7 +62,7 @@ const DetailSideBadges = () => {
               width="24"
               height="24"
             />
-            <p>4</p>
+            <p>{completeNum}</p>
           </BadgeWrapper>
           <BadgeWrapper>
             <Image
@@ -38,7 +71,7 @@ const DetailSideBadges = () => {
               width="24"
               height="24"
             />
-            <p>4</p>
+            <p>{codeNum}</p>
           </BadgeWrapper>
           <BadgeWrapper>
             <Image
@@ -47,11 +80,13 @@ const DetailSideBadges = () => {
               width="24"
               height="24"
             />
-            <p>4</p>
+            <p>{functionNum}</p>
           </BadgeWrapper>
         </DetailBadgesContainer>
       </DetailSideContainer>
-      {showBadgeModal && <DetailBadgeModal />}
+      {showBadgeModal && (
+        <DetailBadgeModal closeModal={() => setShowBadgeModal(false)} />
+      )}
     </>
   );
 };

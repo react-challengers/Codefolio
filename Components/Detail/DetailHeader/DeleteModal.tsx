@@ -37,7 +37,7 @@ const ModalContainer = styled.div`
   box-shadow: 0px 0.25rem 0.625rem rgba(0, 0, 0, 0.25);
   border-radius: 0.25rem;
   width: 20.5rem;
-  background-color: #1c1c1c;
+  background-color: ${({ theme }) => theme.colors.gray11};
 
   display: flex;
   flex-direction: column;
