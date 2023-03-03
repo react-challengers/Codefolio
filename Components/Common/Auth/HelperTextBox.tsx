@@ -9,7 +9,7 @@ const HelperTextBox = ({ text }: HelperTextBoxProps) => {
 };
 
 const HelperTextBoxContainer = styled.div`
-  ${({ theme }) => theme.fonts.subtitle18}
+  ${({ theme }) => theme.fonts.body14}
   width: 27.25rem;
   height: 1.25rem;
   margin-bottom: 1.5rem;
