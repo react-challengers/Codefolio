@@ -14,7 +14,11 @@ import supabase from "@/lib/supabase";
  * );
  */
 const getOnePost = async (postId: string) => {
-  const res = await supabase.from("post").select().eq("id", postId).single();
+  const res = await supabase
+    .from("post")
+    .select<string, PostType>()
+    .eq("id", postId)
+    .single();
 
   if (res.error) {
     throw new Error(res.error.message);

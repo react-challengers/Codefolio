@@ -16,53 +16,16 @@ import styled from "styled-components";
  * 가로 스크롤로 처리하는 방안도 있습니다.
  */
 
-type TagSizeType = "sm" | "md" | "lg";
-
 interface TagsProps {
   tagItems: string[];
-  size?: TagSizeType;
+  color?: "primary6" | "white";
 }
 
-const tagSizeSwitch = (size: TagSizeType) => {
-  switch (size) {
-    case "sm":
-      return `
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.75rem;
-      `;
-    case "lg":
-      return `
-        font-size: 1.125rem;
-        padding: 0.625rem 1.625rem;
-        border-radius: 1.125rem;
-      `;
-    case "md":
-      return `
-        font-size: 1rem;
-        padding: 0.5rem 1rem;
-        border-radius: 1rem;
-      `;
-    default:
-      return `
-      font-size: 0.75rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.75rem;
-    `;
-  }
-};
-
-/**
- * 문자열만 들어간 Array만 Props로 받습니다.
- * li태그를 styled 컴포넌트로 활용하지 않은 이유는 key가 없기 때문입니다.
- * @param size 태그의 크기를 설정합니다. sm, md, lg
- */
-
-const Tags = ({ tagItems, size = "md" }: TagsProps) => {
+const Tags = ({ tagItems, color = "primary6" }: TagsProps) => {
   return (
     <TagsContainer>
       {tagItems?.map((item) => (
-        <TagsItem key={item} size={size}>
+        <TagsItem key={item} color={color}>
           {item}
         </TagsItem>
       ))}
@@ -70,24 +33,25 @@ const Tags = ({ tagItems, size = "md" }: TagsProps) => {
   );
 };
 
-const TagsContainer = styled.ul``;
+const TagsContainer = styled.ul`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`;
 
-type TagsItemType = {
-  key: string;
-  size: TagSizeType;
-};
+interface TagsItemProps {
+  color: "primary6" | "white";
+}
 
-const TagsItem = styled.li<TagsItemType>`
-  display: inline-block;
-  background-color: #999999;
-  color: #f2f2f2;
-  /* font-size: 0.75rem;
+const TagsItem = styled.li<TagsItemProps>`
+  ${({ theme }) => theme.fonts.body13En};
+  color: ${({ theme, color }) => theme.colors[color]};
+  background-color: ${({ theme }) => theme.colors.gray8};
+
   padding: 0.25rem 0.5rem;
-  border-radius: 0.75rem; */
-  ${(props) => tagSizeSwitch(props.size)}
-  white-space: nowrap;
-  margin: 1px;
-  margin-bottom: 0.25rem;
+  height: 1.375rem;
+  border-radius: 0.25rem;
 `;
 
 export default Tags;

@@ -96,12 +96,13 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
         <CommentTextarea
           value={inputValues.comment}
           onChange={handleInputChange("comment")}
-          placeholder="이 프로젝트에 대한 댓글을 남겨주세요."
+          placeholder="이 프로젝트에 대한 리뷰를 남겨주세요."
         />
       </CommentInputContainer>
       <HelperText isHelperText={isHelperText}>댓글을 입력해주세요.</HelperText>
       <PostCommentButton>
         <DefaultButton
+          color="primary6"
           text="작성하기"
           type="full"
           size="s"
@@ -120,8 +121,6 @@ const CommentInputContainer = styled.div`
 `;
 
 const PostCommentButton = styled.div`
-  margin-top: 0.875rem;
-
   display: flex;
   justify-content: end;
 `;
@@ -132,9 +131,12 @@ const CommentTextarea = styled.textarea`
   padding: 0.5rem 0.75rem;
 
   border-radius: 0.25rem;
-  border: 1px solid #dfdfdf;
+  border: 1px solid ${({ theme }) => theme.colors.gray6};
 
   resize: none;
+
+  background-color: ${({ theme }) => theme.colors.gray11};
+  color: ${({ theme }) => theme.colors.white};
 `;
 
 interface HelperTextProps {

@@ -6,6 +6,7 @@ import CardItem from "./Card/CardItem";
 import Modal from "./Modal";
 import ProfileImage from "./ProfileImage";
 import Tags from "./Tags";
+import Input from "./Input";
 import HelperTextBox from "./HelperTextBox";
 import DropDown from "./DropDown";
 
@@ -18,6 +19,5 @@ export {
   Modal,
   ProfileImage,
   Tags,
-  HelperTextBox,
   DropDown,
 };

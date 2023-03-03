@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-interface ErrorMassageBoxProps {
+interface ErrorMessageBoxProps {
   background: string | null;
 }
 
-const ErrorMassageBox = styled.div<ErrorMassageBoxProps>`
+const ErrorMessageBox = styled.div<ErrorMessageBoxProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,4 +23,4 @@ const ErrorMassageBox = styled.div<ErrorMassageBoxProps>`
   border-radius: 0.5rem;
 `;
 
-export default ErrorMassageBox;
+export default ErrorMessageBox;

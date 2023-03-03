@@ -28,7 +28,7 @@ const DetailTitle = ({
 
 const DetailTitleContainer = styled.div<{ backgroundColor: string }>`
   width: 100%;
-  height: 16.25rem;
+  height: 16rem;
   padding: 1.5rem 8.75rem 2.5rem 8.75rem;
   background-color: ${({ backgroundColor }) => backgroundColor};
   display: flex;

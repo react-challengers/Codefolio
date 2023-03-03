@@ -50,6 +50,7 @@ import {
   myPageSkills,
   myPageBookmarkFolders,
   myPageIsEditingProfileContainer,
+  myPageCurrentTab,
 } from "@/lib/recoil/myPageAtoms";
 
 import searchValueState from "@/lib/recoil/searchValue";
@@ -104,6 +105,7 @@ export {
   myPageSkills,
   myPageBookmarkFolders,
   myPageIsEditingProfileContainer,
+  myPageCurrentTab,
   // search
   searchValueState,
   // notification

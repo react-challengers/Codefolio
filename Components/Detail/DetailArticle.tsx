@@ -6,7 +6,6 @@ import {
   RelatedProject,
 } from "@/Components/Detail";
 import {
-  getAllPosts,
   getSingleUser,
   getCurrentUser,
   getIsBookMark,
@@ -19,6 +18,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { ClimbingBoxLoader } from "react-spinners";
 import styled from "styled-components";
+import DetailBadgesContainer from "./DetailBadgesContainer";
 import DetailContent from "./DetailContent";
 
 const DetailArticle = () => {
@@ -50,8 +50,9 @@ const DetailArticle = () => {
 
   const { data: currentPost, isLoading } = useQuery<PostType>(
     ["getOnePost", postId],
+    () => getOnePost(postId as string),
     {
-      queryFn: ({ queryKey }) => getOnePost(queryKey[1] as string),
+      // queryFn: ({ queryKey }) => getOnePost(queryKey[1] as string),
       onSuccess(data) {
         if (data) {
           setTitleData({
@@ -167,6 +168,7 @@ const DetailArticle = () => {
           {content && <DetailContent content={content} />}
         </DetailContentsMain>
       </DetailContentsContainer>
+      <DetailBadgesContainer />
       <RelatedProject category={category} />
       <Comment />
     </DetailPageContainer>
@@ -179,9 +181,9 @@ const DetailPageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.gray11};
   border-radius: 0.5rem;
-  padding-bottom: 3.125rem;
+  padding-bottom: 5.5rem;
 
   z-index: 1;
 `;

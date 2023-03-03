@@ -57,6 +57,9 @@ const myPageBookmarkFolders = atom<string[]>({
   default: [],
 });
 
+const myPageGitHub = atom({ key: "myPageGitHub", default: "" });
+
+// client only state만 존재합니다.
 const myPageIsEditingProfileContainer = atom({
   key: "myPageIsEditingProfileContainer",
   default: false,
@@ -67,7 +70,12 @@ const myPageGithub = atom({
   default: "https://github.com",
 });
 
-// state 결합
+const myPageCurrentTab = atom({
+  key: "myPageCurrentTab",
+  default: 0,
+});
+
+// state 결합하는 곳입니다.
 const myPageUserProfile = selector({
   key: "myPageUserProfile",
   get: ({ get }) => {
@@ -86,7 +94,7 @@ const myPageUserProfile = selector({
     const birthYear = get(myPageBirthYear);
     const career = get(myPageCareer);
     const bookmarkFolders = get(myPageBookmarkFolders);
-    const github = get(myPageGithub);
+    const github = get(myPageGitHub);
 
     // schema 유효성 검증
     const userProfile: UserProfileType = {
@@ -128,6 +136,8 @@ export {
   myPageBirthYear,
   myPageCareer,
   myPageBookmarkFolders,
+  myPageGithub,
   // 순수 클라이언트 state
   myPageIsEditingProfileContainer,
+  myPageCurrentTab,
 };

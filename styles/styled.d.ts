@@ -25,6 +25,7 @@ declare module "styled-components" {
       gray1: string;
       white: string;
       black: string;
+      messageError: string;
     };
 
     fonts: {
