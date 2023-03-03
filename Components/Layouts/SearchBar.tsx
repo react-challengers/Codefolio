@@ -44,6 +44,10 @@ const SearchBarContainer = styled.div`
   height: 2rem;
   background-color: ${({ theme }) => theme.colors.gray7};
   border-radius: 0.5rem;
+
+  &:focus-within {
+    background-color: ${({ theme }) => theme.colors.gray6};
+  }
 `;
 
 const SearchIcon = styled(Image)`
