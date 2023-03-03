@@ -89,7 +89,6 @@ const Skill = ({
 export const commonStyle = {
   "background-color": "grey",
   color: "white",
-  "border-radius": "3.125rem",
   height: "2.125rem",
   border: "none",
   padding: "0 0.75rem",
@@ -100,17 +99,21 @@ const SkillContainer = styled.label`
   ${commonStyle}
   display:flex;
   align-items: center;
+  border-radius: 0.25rem;
+  background-color: ${(props) => props.theme.colors.gray8};
 `;
 
 interface SkillInputProps {
   isDuplicate?: boolean;
 }
 
-const SkillInput = styled.input`
-  ${commonStyle}
+const SkillInput = styled.input<SkillInputProps>`
+  /* ${commonStyle} */
+  all: unset;
+  ${(props) => props.theme.fonts.body14En}
   width:5rem;
-  ${({ isDuplicate }: SkillInputProps) => ({
-    color: isDuplicate ? "orange" : "white",
+  ${({ isDuplicate, theme }) => ({
+    color: isDuplicate ? theme.colors.messageError : theme.colors.primary6,
     textDecoration: isDuplicate ? "line-through" : "none",
     fontWeight: isDuplicate ? "bold" : "normal",
   })}

@@ -257,7 +257,7 @@ const EditProfileContainer = () => {
           <ContentWrapper>
             <ContentTitle>스킬</ContentTitle>
             <SkillList
-              text="스킬 입력"
+              text="스택 입력"
               editSkills={editSkills}
               setEditSkills={setEditSkills}
             />

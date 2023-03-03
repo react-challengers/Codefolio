@@ -47,7 +47,8 @@ const SkillListContainer = styled.div`
 `;
 
 const SkillButton = styled.button`
-  ${commonStyle}
+  /* ${commonStyle} */
+  all: unset;
   cursor: pointer;
 `;
 
