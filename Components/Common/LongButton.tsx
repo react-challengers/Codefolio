@@ -1,25 +1,21 @@
 import styled from "styled-components";
 
 const LongButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0.625rem;
-
-  width: 27.1875rem;
+  width: 100%;
   height: 3.6875rem;
 
-  border: 1px solid #333333;
-  border-radius: 6.25rem;
+  background: none;
 
-  font-family: "Noto Sans KR";
-  font-style: normal;
-  font-size: 1.125rem;
+  ${({ theme }) => theme.fonts.subtitle18};
+  color: ${({ theme }) => theme.colors.gray1};
+
+  border: 1px solid ${({ theme }) => theme.colors.gray2};
+  border-radius: 0.5rem;
 
   cursor: pointer;
 
   :hover {
-    background-color: lightgray;
+    background-color: ${({ theme }) => theme.colors.gray9};
   }
 `;
 
