@@ -1,9 +1,9 @@
-import { deletePost } from "@/utils/APIs/supabase";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deletePost } from "@/utils/APIs/supabase";
+import SimpleModal from "@/Components/Common/SimpleModal";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import styled from "styled-components";
-import DeleteModal from "./DeleteModal";
 
 interface ShowMoreModalProps {
   closeModal: () => void;
@@ -60,9 +60,12 @@ const ShowMoreModal = ({ closeModal }: ShowMoreModalProps) => {
         <ItemWrapper onClick={onClickDeleteButton}>삭제하기</ItemWrapper>
       </ShowMoreModalContainer>
       {showDeleteModal && (
-        <DeleteModal
-          onCancel={() => setShowDeleteModal(false)}
-          onDelete={() => deletePostMutate(postId as string)}
+        <SimpleModal
+          bodyText="글을 삭제하시겠습니까?"
+          leftText="취소"
+          rightText="삭제"
+          onClickLeft={() => setShowDeleteModal(false)}
+          onClickRight={() => deletePostMutate(postId as string)}
         />
       )}
     </>

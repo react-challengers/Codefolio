@@ -1,27 +1,37 @@
 import React from "react";
 import styled from "styled-components";
 
-interface DeleteModalProps {
-  onCancel: () => void;
-  onLogin: () => void;
+interface SimpleModalProps {
+  bodyText: string;
+  leftText: string;
+  rightText: string;
+  onClickLeft: () => void;
+  onClickRight: () => void;
 }
 
-const LoginModal = ({ onCancel, onLogin }: DeleteModalProps) => {
+const SimpleModal = ({
+  bodyText,
+  leftText,
+  rightText,
+  onClickLeft,
+  onClickRight,
+}: SimpleModalProps) => {
   return (
-    <DeleteModalContainer>
+    <SimpleModalContainer>
       <ModalContainer>
-        <ModalBody>로그인하시겠습니까?</ModalBody>
+        <ModalBody>{bodyText}</ModalBody>
         <ModalFooter>
-          <CancelButton onClick={onCancel}>취소</CancelButton>
-          <DeleteButton onClick={onLogin}>로그인</DeleteButton>
+          <LeftButton onClick={onClickLeft}>{leftText}</LeftButton>
+          <RightButton onClick={onClickRight}>{rightText}</RightButton>
         </ModalFooter>
       </ModalContainer>
-    </DeleteModalContainer>
+    </SimpleModalContainer>
   );
 };
 
-const DeleteModalContainer = styled.div`
+const SimpleModalContainer = styled.div`
   position: fixed;
+  z-index: 2;
   top: 0;
   left: 0;
   width: 100vw;
@@ -65,16 +75,16 @@ const Button = styled.div`
   cursor: pointer;
 `;
 
-const CancelButton = styled(Button)`
+const LeftButton = styled(Button)`
   color: white;
   background-color: ${({ theme }) => theme.colors.gray4};
   border-bottom-left-radius: 4px;
 `;
 
-const DeleteButton = styled(Button)`
+const RightButton = styled(Button)`
   color: black;
   background-color: ${({ theme }) => theme.colors.primary4};
   border-bottom-right-radius: 4px;
 `;
 
-export default LoginModal;
+export default SimpleModal;

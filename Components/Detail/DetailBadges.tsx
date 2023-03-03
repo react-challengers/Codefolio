@@ -7,7 +7,7 @@ import addPostBadge from "@/utils/APIs/supabase/addPostBadge";
 import deletePostBadge from "@/utils/APIs/supabase/deletePostBadge";
 import getPostBadges from "@/utils/APIs/supabase/getPostBadges";
 import getBadgeByUid from "@/utils/APIs/supabase/getBadgeByUid";
-import LoginModal from "./LoginModal";
+import SimpleModal from "../Common/SimpleModal";
 
 interface DetailBadgesProps {
   closeModal?: () => void;
@@ -206,9 +206,12 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
         </BadgeWrapper>
       </BadgesWrapper>
       {showLoginModal && (
-        <LoginModal
-          onCancel={() => setShowLoginModal(false)}
-          onLogin={() => router.push("/auth/login")}
+        <SimpleModal
+          bodyText="로그인하시겠습니까?"
+          leftText="취소"
+          rightText="로그인"
+          onClickLeft={() => setShowLoginModal(false)}
+          onClickRight={() => router.push("/auth/login")}
         />
       )}
     </>
