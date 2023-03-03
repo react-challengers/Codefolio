@@ -19,7 +19,7 @@ const DetailBadgeModalContainer = styled.div`
   left: 8.75rem;
   background-color: ${({ theme }) => theme.colors.gray8};
 
-  padding: 32px;
+  padding: 2rem;
 
   box-shadow: 0rem 0.625rem 0.625rem rgba(0, 0, 0, 0.5);
   border-radius: 0.5rem;
