@@ -280,13 +280,13 @@ const EditProfileContainer = () => {
       <ButtonWrapper>
         <PrimaryButton
           text="취소"
-          type="outline"
+          buttonType="line"
           size="m"
           onClick={() => setIsEditing(false)}
         />
         <PrimaryButton
           text="저장"
-          type="full"
+          buttonType="default"
           size="m"
           onClick={() => handleSave()}
         />
