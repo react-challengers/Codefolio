@@ -8,7 +8,7 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import _ from "lodash";
-import { CardItem } from "@/Components/Common";
+import { CardItem, DropDown } from "@/Components/Common";
 import CategoryTag from "./CategoryTag";
 import HomeDropDownIcon from "./HomeDropDownIcon";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -37,22 +37,17 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     }
   );
 
-  const publicPosts = useMemo(() => {
-    if (allPostsData === undefined) return [];
-    return allPostsData.filter((post) => post.is_public === true);
-  }, [allPostsData]);
-
   // 카테고리 선택 시, 해당 카테고리에 맞는 포스트만 보여주기
   const filterPosts = useMemo(() => {
-    if (publicPosts === undefined) return [];
+    if (allPostsData === undefined) return [];
 
     if (selectedSubCategory.length !== 0) {
-      return publicPosts.filter((post) =>
+      return allPostsData.filter((post) =>
         selectedSubCategory.includes(post.sub_category)
       );
     }
-    return publicPosts;
-  }, [publicPosts, selectedSubCategory]);
+    return allPostsData;
+  }, [allPostsData, selectedSubCategory]);
 
   // 포스트 정렬
   const sortPosts = useMemo(() => {
@@ -100,6 +95,11 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     );
   };
 
+  const onClickDropDownHandler = (item: string) => {
+    setSelectedDropDownItem(item);
+    setIsDropDownOpen(false);
+  };
+
   // 다른 페이지에 갔다가 다시 돌아왔을 시, 카테고리가 초기화 되도록 설정
   useEffect(() => {
     setSelectedSubCategory([]);
@@ -129,15 +129,11 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         {isDropDownOpen && (
           <HomeDropDownList>
             {homeDropDownItems.map((item) => (
-              <HomeDropDownItemContainer
+              <DropDown
+                item={item}
                 key={item}
-                onClick={() => {
-                  setSelectedDropDownItem(item);
-                  setIsDropDownOpen(false);
-                }}
-              >
-                <HomeDropDownItem>{item}</HomeDropDownItem>
-              </HomeDropDownItemContainer>
+                onClickHandler={onClickDropDownHandler}
+              />
             ))}
           </HomeDropDownList>
         )}
@@ -251,20 +247,6 @@ const HomeDropDownList = styled.ul`
   filter: drop-shadow(0px 0.625rem 0.625rem rgba(0, 0, 0, 0.5));
   z-index: 2;
 `;
-
-const HomeDropDownItemContainer = styled.div`
-  height: 3.5rem;
-  display: flex;
-  align-items: center;
-  padding: 1.1563rem 0.75rem;
-
-  &:hover {
-    cursor: pointer;
-    background-color: ${({ theme }) => theme.colors.gray8};
-  }
-`;
-
-const HomeDropDownItem = styled.li``;
 
 const CardContainer = styled.div`
   cursor: pointer;
