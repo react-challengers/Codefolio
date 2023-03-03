@@ -69,12 +69,16 @@ const ProjectInfoDropDown = () => {
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
-          <TEXTBOX>프로젝트 스택*</TEXTBOX>
+          <TEXTBOX>
+            <span>프로젝트 스택*</span>
+            <CountState>{postSkill.length}/10</CountState>
+          </TEXTBOX>
           <SkillListWrapper>
             <SkillList
               text="개발 스택 추가"
               editSkills={postSkill}
               setEditSkills={setPostSkill}
+              maxLangth={10}
             />
           </SkillListWrapper>
         </ProjectInfoWrapper>
@@ -157,12 +161,16 @@ const ProjectInfoDropDown = () => {
         </ProjectInfoWrapper>
 
         <ProjectInfoWrapper>
-          <TEXTBOX>키워드 태그</TEXTBOX>
+          <TEXTBOX>
+            <span>키워드태그</span>
+            <CountState>{tag.length}/5</CountState>
+          </TEXTBOX>
           <TagList>
             <SkillList
               text="태그 추가"
               editSkills={tag}
               setEditSkills={setTag}
+              maxLangth={5}
             />
           </TagList>
         </ProjectInfoWrapper>
@@ -330,12 +338,20 @@ const TagList = styled.div`
 // `;
 
 const TEXTBOX = styled.div`
+  display: flex;
+  flex-direction: column;
+
   min-width: 7.5rem;
   min-height: 5rem;
   padding: 0.625rem 0;
 
   color: ${({ theme }) => theme.colors.gray3};
   ${({ theme }) => theme.fonts.body16};
+`;
+
+const CountState = styled.span`
+  color: ${({ theme }) => theme.colors.gray5};
+  ${({ theme }) => theme.fonts.body14};
 `;
 
 export default ProjectInfoDropDown;

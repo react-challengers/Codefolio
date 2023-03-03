@@ -16,7 +16,6 @@ import validateFile from "@/utils/commons/validationImage";
 import { Modal } from "../Common";
 
 /**
- * @TODO 이미지 확장자 유효성 검사 필요
  * @TODO storage 삭제 구현 필요
  */
 
@@ -111,7 +110,7 @@ const PostEditor: NextPage = () => {
         </Modal>
       )}
 
-      <MDEditor
+      <MDEditorStyled
         value={postContent}
         onChange={(value) => {
           setPostContent(value || "");
@@ -157,7 +156,7 @@ const PostEditor: NextPage = () => {
                 />
               </svg>
             ),
-            // eslint-disable-next-line react/no-unstable-nested-components
+            // eslint-disable-next-line react/no-unstable-nested-components, @typescript-eslint/no-explicit-any
             children: (handle: any) => {
               // API가 any를 지정합니다.
               return (
@@ -190,7 +189,27 @@ const PostEditor: NextPage = () => {
   );
 };
 
-export default PostEditor;
+const MDEditorStyled = styled(MDEditor)`
+  color: #fff;
+  border: 1px solid;
+  border-color: ${(props) => props.theme.colors.gray7};
+  background-color: transparent;
+  .w-md-editor-toolbar {
+    color: #000;
+    border-color: ${(props) => props.theme.colors.gray7};
+    background-color: transparent;
+  }
+  .w-md-editor-text-input {
+    color: #fff;
+    -webkit-text-fill-color: #fff;
+    border-color: ${(props) => props.theme.colors.gray7};
+    background-color: transparent;
+  }
+  .wmde-markdown {
+    color: #fff !important ;
+    background-color: transparent;
+  }
+`;
 
 const CustomImageContainer = styled.div`
   width: 15rem;
@@ -229,3 +248,5 @@ const CloseButton = styled.button`
     text-decoration: underline;
   }
 `;
+
+export default PostEditor;

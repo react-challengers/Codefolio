@@ -16,7 +16,7 @@ import {
   postSubTitle,
   postTags,
   postTitle,
-  postTitleBackgroundColor,
+  postCoverImage,
   postId,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
@@ -26,18 +26,21 @@ import PostTitle from "./PostTitle";
 import ProjectInfo from "./ProjectInfo";
 
 /**
- * @TODO custom hook으로 리팩토링하기
- * @TODO 카테고리 중복 선택 , 보여주는 UI
- * @TODO user_id 리코일로 관리
+ * @TODO 제목 자동완성
+ * @TODO 게시 후 컨펌 모달
  * @TODO 유효성 검사 리펙토링
+ * @TODO 배경이미지 사이즈 조절
+ * @TODO 함께한 팀원 카테고리 추가
+ *
+ * @TODO user_id 리코일로 관리
+ * @TODO 카테고리 중복 선택 , 보여주는 UI
+ * @TODO custom hook으로 리팩토링하기
  */
 const Post: NextPage = () => {
   const [isPostId] = useRecoilState(postId);
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
-  const [titleBackgroundColor, setTitleBackgroundColor] = useRecoilState(
-    postTitleBackgroundColor
-  );
+  const [coverImage, setCoverImage] = useRecoilState(postCoverImage);
   const [[startDate, endDate], setProjectDuration] =
     useRecoilState(postProjectDuration);
   const [skills, setSkills] = useRecoilState(postSkills);
@@ -62,7 +65,7 @@ const Post: NextPage = () => {
     id: isPostId,
     title,
     sub_title: subTitle,
-    title_background_color: titleBackgroundColor,
+    title_background_color: coverImage,
     large_category: postLargeCategory,
     sub_category: postSubCategory,
     skills,
@@ -163,7 +166,7 @@ const Post: NextPage = () => {
   const resetInput = () => {
     setTitle("");
     setSubTitle("");
-    setTitleBackgroundColor("");
+    setCoverImage("");
     setProjectDuration([getYYYYMM(), getYYYYMM()]);
     setSkills([]);
     setTag([]);
@@ -181,6 +184,7 @@ const Post: NextPage = () => {
     if (!validatePost()) return;
     // 게시
     if (router.asPath === "/create-post") {
+      // 컨펌 모달 띄우기
       const { data, error } = await supabase
         .from("post")
         .insert(newPostRow)
