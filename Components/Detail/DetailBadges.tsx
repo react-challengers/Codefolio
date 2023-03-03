@@ -231,12 +231,13 @@ interface BadgeWrapperProps {
 }
 
 const BadgeWrapper = styled.div<BadgeWrapperProps>`
-  ${({ theme }) => theme.fonts.body14}
+  p {
+    ${({ theme }) => theme.fonts.body14}
+  }
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
 
   cursor: pointer;
   color: ${({ theme, badgeCheck, badge }) =>
@@ -245,6 +246,10 @@ const BadgeWrapper = styled.div<BadgeWrapperProps>`
   path {
     ${({ theme, badgeCheck, badge }) =>
       badgeCheck.includes(badge) && `fill: ${theme.colors.primary6}`};
+  }
+
+  svg {
+    margin-bottom: 0.5rem;
   }
 
   &:hover {
