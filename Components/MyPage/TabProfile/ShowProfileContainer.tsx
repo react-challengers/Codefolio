@@ -2,7 +2,7 @@ import { useUserProfile } from "@/hooks/query";
 import { myPageIsEditingProfileContainer } from "@/lib/recoil";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { DefaultButton, Tags } from "@/Components/Common";
+import { PrimaryButton, Tags } from "@/Components/Common";
 import ProfileContainer from "./ProfileContainer";
 
 const ShowProfileContainer = () => {
@@ -59,7 +59,7 @@ const ShowProfileContainer = () => {
         <ContentContainer>
           <ContentWrapper>
             <ContentTitle>포지션</ContentTitle>
-            <Tags tagItems={profileData?.field} />
+            <Tags tagItems={profileData?.field} color="white" />
           </ContentWrapper>
           <ContentWrapper>
             <ContentTitle>기술스택</ContentTitle>
@@ -77,9 +77,9 @@ const ShowProfileContainer = () => {
       </ProfileContainer>
 
       <ButtonWrapper>
-        <DefaultButton
+        <PrimaryButton
           text="수정하기"
-          type="full"
+          buttonType="default"
           size="m"
           onClick={() => setIsEditing(true)}
         />

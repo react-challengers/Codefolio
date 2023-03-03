@@ -99,6 +99,7 @@ const SkillContainer = styled.label`
   ${commonStyle}
   display:flex;
   align-items: center;
+  border-radius: 0.25rem;
   box-sizing: border-box;
   width: fit-content;
 
@@ -111,16 +112,18 @@ interface SkillInputProps {
   isDuplicate?: boolean;
 }
 
-const SkillInput = styled.input`
-  ${commonStyle}
+const SkillInput = styled.input<SkillInputProps>`
+  /* ${commonStyle} */
+  all: unset;
+  ${(props) => props.theme.fonts.body14En}
+  width:5rem;
   box-sizing: border-box;
   background-color: transparent;
-  ${({ theme }) => theme.fonts.body14En}
-  ${({ isDuplicate }: SkillInputProps) => ({
-    color: isDuplicate ? "orange !important" : "#3ddfe9",
+  ${({ isDuplicate, theme }) => ({
+    color: isDuplicate ? theme.colors.messageError : theme.colors.primary6,
     textDecoration: isDuplicate ? "line-through" : "none",
     fontWeight: isDuplicate ? "bold" : "normal",
-  })}
+  })};
 `;
 
 const CancelButton = styled(Image)`

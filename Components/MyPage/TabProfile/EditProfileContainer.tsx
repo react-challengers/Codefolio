@@ -14,7 +14,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { checkEmail } from "@/utils/commons/authUtils";
-import { DefaultButton, Input, SkillList } from "@/Components/Common";
+import { Input, PrimaryButton, SkillList } from "@/Components/Common";
 import { useInput } from "@/hooks/common";
 import PositionTag from "./PositionTag";
 import ProfileContainer from "./ProfileContainer";
@@ -27,21 +27,22 @@ import DropDown from "./DropDown";
  */
 
 const fieldList = [
-  "웹",
-  "앱",
-  "보안",
-  "소프트웨어",
-  "데이터",
-  "블록체인",
-  "데브옵스",
-  "IOT/임베디드",
+  "Back-end",
+  "Front-end",
+  "Full-stack",
+  "Android",
+  "iOS",
+  "Flutter",
+  "React Native",
+  "AI",
+  "Big Data",
 ];
 
 const EditProfileContainer = () => {
   const setIsEditing = useSetRecoilState(myPageIsEditingProfileContainer);
   const { profileData, updateProfileData } = useUserProfile();
 
-  const [phoneNumber, setPhoneNumber] = useRecoilState(myPagePhonNumber);
+  const setPhoneNumber = useSetRecoilState(myPagePhonNumber);
   const setIsPublic = useSetRecoilState(myPageIsPublic);
   const [activeField, setActiveField] = useRecoilState(myPageField);
   const [editSkills, setEditSkills] = useRecoilState(myPageSkills);
@@ -117,7 +118,7 @@ const EditProfileContainer = () => {
     if (
       !inputValues.selfProfile ||
       !inputValues.userName ||
-      !checkEmail(inputValues.contactEmail) ||
+      checkEmail(inputValues.contactEmail) ||
       !checkIsPhoneNumber(inputValues.phoneNumber) ||
       activeField.length === 0 ||
       editSkills.length === 0
@@ -134,7 +135,7 @@ const EditProfileContainer = () => {
         setUserNameHelperText("");
       }
 
-      if (!checkEmail(inputValues.contactEmail)) {
+      if (checkEmail(inputValues.contactEmail)) {
         setEmailHelperText("이메일의 형식을 확인해주세요.");
       } else {
         setEmailHelperText("");
@@ -164,7 +165,6 @@ const EditProfileContainer = () => {
     setIsEditing(false);
 
     try {
-      console.log(inputValues.phoneNumber);
       const newProfileData: UserProfileType = {
         ...profileData,
         phone: inputValues.phoneNumber,
@@ -195,7 +195,7 @@ const EditProfileContainer = () => {
       <ProfileContainer title="기본 정보" rowGap={24}>
         <>
           <InfoWrapper>
-            <ContentTitle>이름*</ContentTitle>
+            <ContentTitle>이름</ContentTitle>
             <Input
               value={inputValues.userName}
               onChange={handleInputChange("userName")}
@@ -204,7 +204,7 @@ const EditProfileContainer = () => {
           </InfoWrapper>
 
           <InfoWrapper>
-            <ContentTitle>이메일*</ContentTitle>
+            <ContentTitle>이메일</ContentTitle>
             <Input
               value={inputValues.contactEmail}
               onChange={handleInputChange("contactEmail")}
@@ -257,7 +257,7 @@ const EditProfileContainer = () => {
           <ContentWrapper>
             <ContentTitle>스킬</ContentTitle>
             <SkillList
-              text="스킬 입력"
+              text="스택 입력"
               editSkills={editSkills}
               setEditSkills={setEditSkills}
             />
@@ -278,15 +278,15 @@ const EditProfileContainer = () => {
       </ProfileContainer>
 
       <ButtonWrapper>
-        <DefaultButton
+        <PrimaryButton
           text="취소"
-          type="outline"
+          buttonType="line"
           size="m"
           onClick={() => setIsEditing(false)}
         />
-        <DefaultButton
+        <PrimaryButton
           text="저장"
-          type="full"
+          buttonType="default"
           size="m"
           onClick={() => handleSave()}
         />

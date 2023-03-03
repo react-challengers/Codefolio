@@ -61,7 +61,8 @@ const SkillListContainer = styled.div`
 `;
 
 const SkillButton = styled.button`
-  ${commonStyle}
+  /* ${commonStyle} */
+  all: unset;
   cursor: pointer;
   background: transparent;
   color: ${({ theme }) => theme.colors.gray6};
