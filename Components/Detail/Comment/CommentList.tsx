@@ -20,7 +20,7 @@ const CommentList = ({ postId }: CommentListProps) => {
   const getComments = async (): Promise<
     PostgrestSingleResponse<CommentType[]>
   > => {
-    const res = await supabase
+    const res: PostgrestSingleResponse<CommentType[]> = await supabase
       .from("comment")
       .select("*")
       .order("created_at", { ascending: false })
