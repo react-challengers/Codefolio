@@ -97,7 +97,8 @@ interface PostType {
   progress_date: [string, string];
   members: MembersType[];
   tag: string[];
-  is_public: boolean;
+  github_url: string;
+  deployed_url: string;
   content: string;
   id: string;
   user_id: string;

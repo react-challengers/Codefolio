@@ -3,7 +3,8 @@ import {
   postContent,
   postMembers,
   postProjectDuration,
-  postPublic,
+  postGithubUrl,
+  postDeployedUrl,
   postSkills,
   postSubTitle,
   postTags,
@@ -38,7 +39,8 @@ const EditPostPage: NextPage = () => {
   const setProjectDuration = useSetRecoilState(postProjectDuration);
   const setSkills = useSetRecoilState(postSkills);
   const setTag = useSetRecoilState(postTags);
-  const setIsPublic = useSetRecoilState(postPublic);
+  const setGithubUrl = useSetRecoilState(postGithubUrl);
+  const setDeployedUrl = useSetRecoilState(postDeployedUrl);
   const setMembers = useSetRecoilState(postMembers);
   const setContent = useSetRecoilState(postContent);
   const setPostLargeCategory = useSetRecoilState(recoilPostLargeCategory);
@@ -79,7 +81,8 @@ const EditPostPage: NextPage = () => {
     setProjectDuration(post.progress_date);
     setSkills(post.skills);
     setTag(post.tag);
-    setIsPublic(post.is_public);
+    setGithubUrl(post.github_url);
+    setDeployedUrl(post.deployed_url);
     setMembers(post.members);
     setContent(post.content);
     setPostLargeCategory(post.large_category);
