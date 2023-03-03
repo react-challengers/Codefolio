@@ -142,6 +142,7 @@ const InputStyle = styled.input`
   outline: none;
   border-bottom: 0.0625rem solid grey;
   padding: 0.625rem 1.25rem;
+  box-sizing: border-box;
   background-color: transparent;
   ${({ theme }) => theme.fonts.body14Medium}
   color: ${({ theme }) => theme.colors.white};
