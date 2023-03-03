@@ -32,7 +32,7 @@ const CommentList = ({ postId }: CommentListProps) => {
   return (
     <div>
       {data &&
-        data.data?.map((comment: any) => (
+        data.data?.map((comment: CommentType) => (
           <CommentItem key={comment.id} comment={comment} />
         ))}
     </div>
