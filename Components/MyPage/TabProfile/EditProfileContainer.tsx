@@ -27,14 +27,15 @@ import DropDown from "./DropDown";
  */
 
 const fieldList = [
-  "웹",
-  "앱",
-  "보안",
-  "소프트웨어",
-  "데이터",
-  "블록체인",
-  "데브옵스",
-  "IOT/임베디드",
+  "Back-end",
+  "Front-end",
+  "Full-stack",
+  "Android",
+  "iOS",
+  "Flutter",
+  "React Native",
+  "AI",
+  "Big Data",
 ];
 
 const EditProfileContainer = () => {
@@ -117,7 +118,7 @@ const EditProfileContainer = () => {
     if (
       !inputValues.selfProfile ||
       !inputValues.userName ||
-      !checkEmail(inputValues.contactEmail) ||
+      checkEmail(inputValues.contactEmail) ||
       !checkIsPhoneNumber(inputValues.phoneNumber) ||
       activeField.length === 0 ||
       editSkills.length === 0
@@ -134,7 +135,7 @@ const EditProfileContainer = () => {
         setUserNameHelperText("");
       }
 
-      if (!checkEmail(inputValues.contactEmail)) {
+      if (checkEmail(inputValues.contactEmail)) {
         setEmailHelperText("이메일의 형식을 확인해주세요.");
       } else {
         setEmailHelperText("");
@@ -164,7 +165,6 @@ const EditProfileContainer = () => {
     setIsEditing(false);
 
     try {
-      console.log(inputValues.phoneNumber);
       const newProfileData: UserProfileType = {
         ...profileData,
         phone: inputValues.phoneNumber,

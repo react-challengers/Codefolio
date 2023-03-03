@@ -1,7 +1,7 @@
 import Image from "next/image";
 import styled from "styled-components";
 import { useUserProfile } from "@/hooks/query";
-import { ProfileImage } from "@/Components/Common";
+import { ProfileImage, Tags } from "@/Components/Common";
 import { ClimbingBoxLoader } from "react-spinners";
 import Link from "next/link";
 import { useSetRecoilState } from "recoil";
@@ -30,8 +30,8 @@ const UserInfoContainer = () => {
   }
 
   const handleChangeTab = () => {
-    setCurrentTab(4);
-    // TODO: 다른 사람 프로필을을 볼 주석해제하고 로직 추가하기
+    setCurrentTab(3);
+    // TODO: 다른 사람 프로필을을 볼 주석해제하고 로직 추가하고 위에 setCurrentTab에 대입하는 값은 1 더하기
     // setCurrentTab(2);
   };
 
@@ -69,8 +69,8 @@ const UserInfoContainer = () => {
               <ProfileInfoWrapper>
                 <UserNameWrapper>{profileData.user_name}</UserNameWrapper>
                 <EmailWrapper>{profileData.contact_email}</EmailWrapper>
+                <Tags tagItems={profileData.field} color="white" />
               </ProfileInfoWrapper>
-              {/* TODO 조건부 랜더링으로 기술스택 & 포지션 넣기 */}
               {profileData.github ? (
                 <Link href={profileData.github || ""}>
                   <GithubImage
@@ -152,6 +152,7 @@ const ProfileInfoContainer = styled.div`
 const ProfileInfoWrapper = styled.div`
   display: flex;
   gap: 0.75rem;
+  align-items: center;
 `;
 
 const UserNameWrapper = styled.p`
