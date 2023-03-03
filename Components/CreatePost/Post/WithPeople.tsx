@@ -19,12 +19,12 @@ const WithPeople = () => {
 
   // github 추가해야 함
   const {
-    profileData: { user_name: userName, field: userField },
+    profileData: { user_name: userName, field: userField, github: userGithub },
   } = useUserProfile();
 
-  useEffect(() => {
-    setPeople([{ name: userName, field: userField, github: "" }]);
-  }, [setPeople, userField, userName]);
+  // useEffect(() => {
+  //   setPeople([{ name: userName, field: userField, github: userGithub }]);
+  // }, [setPeople, userField, userGithub, userName]);
 
   const addPerson = () => {
     if (people.length === 0) {

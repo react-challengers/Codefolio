@@ -77,6 +77,7 @@ interface UserProfileType {
   self_profile: string;
   profile_image: string;
   background_image: string;
+  github: string;
 }
 
 interface NotificationType {

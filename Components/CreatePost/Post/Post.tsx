@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import styled from "styled-components";
 import getYYYYMM from "@/utils/commons/getYYYYMM";
-
+import { v4 as uuidv4 } from "uuid";
 import { useRecoilState } from "recoil";
 import {
   postContent,
@@ -49,7 +49,9 @@ import PostErrorMessage from "./PostErrorMessage";
  * @TODO custom hook으로 리팩토링하기
  */
 const Post: NextPage = () => {
-  const [isPostId] = useRecoilState(postId);
+  const [isPostId, setIsPostId] = useRecoilState(postId);
+  console.log("👉👉  isPostId:", isPostId);
+
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
   const [coverImage, setCoverImage] = useRecoilState(postCoverImage);
@@ -111,6 +113,9 @@ const Post: NextPage = () => {
   };
 
   useEffect(() => {
+    const uuid = uuidv4();
+    setIsPostId(uuid);
+
     const LoginState = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
@@ -209,6 +214,7 @@ const Post: NextPage = () => {
   };
 
   const resetInput = () => {
+    setIsPostId("");
     setTitle("");
     setSubTitle("");
     setCoverImage("");
