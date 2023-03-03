@@ -195,7 +195,7 @@ const EditProfileContainer = () => {
       <ProfileContainer title="기본 정보" rowGap={24}>
         <>
           <InfoWrapper>
-            <ContentTitle>이름*</ContentTitle>
+            <ContentTitle>이름</ContentTitle>
             <Input
               value={inputValues.userName}
               onChange={handleInputChange("userName")}
@@ -204,7 +204,7 @@ const EditProfileContainer = () => {
           </InfoWrapper>
 
           <InfoWrapper>
-            <ContentTitle>이메일*</ContentTitle>
+            <ContentTitle>이메일</ContentTitle>
             <Input
               value={inputValues.contactEmail}
               onChange={handleInputChange("contactEmail")}
