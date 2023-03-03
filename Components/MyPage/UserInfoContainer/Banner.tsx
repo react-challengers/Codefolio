@@ -67,6 +67,7 @@ const BannerColor = styled.div`
   width: 100vw;
   height: 11.25rem;
   background-color: ${(props) => props.theme.colors.gray9};
+  position: relative;
 `;
 
 const BannerImage = styled(Image)`
