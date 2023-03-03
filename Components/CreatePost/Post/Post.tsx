@@ -97,7 +97,7 @@ const Post: NextPage = () => {
     id: isPostId,
     title,
     sub_title: subTitle,
-    title_background_color: coverImage,
+    title_background_image: coverImage,
     large_category: postLargeCategory,
     sub_category: postSubCategory,
     skills,
