@@ -43,7 +43,12 @@ const SideBar = () => {
 
   return (
     <SideBarContainer>
-      <SideBarTitle onClick={onClickAllCategory}>전체</SideBarTitle>
+      <SideBarTitle
+        onClick={onClickAllCategory}
+        isSelected={!!selectedSubCategory.length}
+      >
+        전체
+      </SideBarTitle>
       <CategoryContainer>
         {largeCategoryItems.map((item: string) => (
           <li key={item}>
@@ -102,9 +107,14 @@ const SideBarContainer = styled.aside`
   padding: 3.5rem 1.5rem;
 `;
 
-const SideBarTitle = styled.span`
+interface SideBarTitleProps {
+  isSelected: boolean;
+}
+
+const SideBarTitle = styled.span<SideBarTitleProps>`
   ${({ theme }) => theme.fonts.title24}
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme, isSelected }) =>
+    isSelected ? theme.colors.gray4 : theme.colors.white};
   margin-left: 1rem;
   cursor: pointer;
 `;

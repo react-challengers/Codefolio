@@ -20,12 +20,14 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
  *   enabled: !!author,
  * });
  */
-const getSingleUser = async (author: string) => {
-  const { data }: PostgrestSingleResponse<UserProfileType> = await supabase
-    .from("user_profile")
-    .select()
-    .eq("user_id", author)
-    .single();
+const getSingleUser = async (userId: string) => {
+  const { data, error }: PostgrestSingleResponse<UserProfileType> =
+    await supabase.from("user_profile").select().eq("user_id", userId).single();
+
+  if (error) {
+    console.log(error);
+    return null;
+  }
 
   return data;
 };

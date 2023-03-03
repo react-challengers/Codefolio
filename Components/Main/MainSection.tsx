@@ -4,12 +4,14 @@ import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import _ from "lodash";
-import { CardItem } from "@/Components/Common";
+import { CardItem, DropDown } from "@/Components/Common";
 import CategoryTag from "./CategoryTag";
 import HomeDropDownIcon from "./HomeDropDownIcon";
+import "react-loading-skeleton/dist/skeleton.css";
 
 // TODO: Tag 데이터 구조화 고민하기
 
@@ -28,26 +30,24 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     useRecoilState(subCategoryState);
   const router = useRouter();
 
-  const { data: allPostsData } = useQuery<PostType[]>(["GET_POSTS"], {
-    queryFn: getAllPosts,
-  });
-
-  const publicPosts = useMemo(() => {
-    if (allPostsData === undefined) return [];
-    return allPostsData.filter((post) => post.is_public === true);
-  }, [allPostsData]);
+  const { data: allPostsData, isLoading } = useQuery<PostType[]>(
+    ["GET_POSTS"],
+    {
+      queryFn: getAllPosts,
+    }
+  );
 
   // 카테고리 선택 시, 해당 카테고리에 맞는 포스트만 보여주기
   const filterPosts = useMemo(() => {
-    if (publicPosts === undefined) return [];
+    if (allPostsData === undefined) return [];
 
     if (selectedSubCategory.length !== 0) {
-      return publicPosts.filter((post) =>
+      return allPostsData.filter((post) =>
         selectedSubCategory.includes(post.sub_category)
       );
     }
-    return publicPosts;
-  }, [publicPosts, selectedSubCategory]);
+    return allPostsData;
+  }, [allPostsData, selectedSubCategory]);
 
   // 포스트 정렬
   const sortPosts = useMemo(() => {
@@ -95,6 +95,11 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     );
   };
 
+  const onClickDropDownHandler = (item: string) => {
+    setSelectedDropDownItem(item);
+    setIsDropDownOpen(false);
+  };
+
   // 다른 페이지에 갔다가 다시 돌아왔을 시, 카테고리가 초기화 되도록 설정
   useEffect(() => {
     setSelectedSubCategory([]);
@@ -124,21 +129,34 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         {isDropDownOpen && (
           <HomeDropDownList>
             {homeDropDownItems.map((item) => (
-              <HomeDropDownItemContainer
+              <DropDown
+                item={item}
                 key={item}
-                onClick={() => {
-                  setSelectedDropDownItem(item);
-                  setIsDropDownOpen(false);
-                }}
-              >
-                <HomeDropDownItem>{item}</HomeDropDownItem>
-              </HomeDropDownItemContainer>
+                onClickHandler={onClickDropDownHandler}
+              />
             ))}
           </HomeDropDownList>
         )}
       </HomeDropDownContainer>
       <HomeCardGrid>
-        {allPostsData?.map((post: PostType) => (
+        {isLoading &&
+          new Array(12).fill(null).map((v, index) => (
+            <SkeletonTheme key={index} baseColor="#333" highlightColor="#555">
+              <div>
+                <Skeleton width={300} height={180} />
+                <Skeleton width={50} height={18} style={{ marginTop: 10 }} />
+                <Skeleton width="100%" height={24} style={{ marginTop: 10 }} />
+                <Skeleton width="100%" height={24} style={{ marginTop: 10 }} />
+                <Tags>
+                  <Skeleton width={60} height={22} style={{ marginTop: 10 }} />
+                  <Skeleton width={60} height={22} style={{ marginTop: 10 }} />
+                  <Skeleton width={60} height={22} style={{ marginTop: 10 }} />
+                  <Skeleton width={60} height={22} style={{ marginTop: 10 }} />
+                </Tags>
+              </div>
+            </SkeletonTheme>
+          ))}
+        {sortPosts?.map((post: PostType) => (
           <CardContainer
             key={post.id}
             onClick={() => {
@@ -169,7 +187,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
 const HomeMainContainer = styled.main`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 78.75rem;
   max-width: 78.75rem;
   margin-left: 1.5rem;
   margin-top: 3rem;
@@ -186,7 +204,7 @@ const HomeCardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 1rem;
-  width: 100%;
+  width: 78.75rem;
   margin-top: 1rem;
 `;
 
@@ -203,6 +221,10 @@ const HomeDropDownButton = styled.div`
 
   ${({ theme }) => theme.fonts.body14}
   color: ${({ theme }) => theme.colors.gray4};
+
+  svg {
+    margin-left: 0.5rem;
+  }
 
   &:hover {
     cursor: pointer;
@@ -230,22 +252,14 @@ const HomeDropDownList = styled.ul`
   z-index: 2;
 `;
 
-const HomeDropDownItemContainer = styled.div`
-  height: 3.5rem;
-  display: flex;
-  align-items: center;
-  padding: 1.1563rem 0.75rem;
-
-  &:hover {
-    cursor: pointer;
-    background-color: ${({ theme }) => theme.colors.gray8};
-  }
-`;
-
-const HomeDropDownItem = styled.li``;
-
 const CardContainer = styled.div`
   cursor: pointer;
+`;
+
+const Tags = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 `;
 
 export default MainSection;

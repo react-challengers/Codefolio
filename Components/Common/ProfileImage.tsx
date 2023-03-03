@@ -2,7 +2,7 @@ import Image, { StaticImageData } from "next/image";
 import styled from "styled-components";
 import anonProfile from "@/public/images/anonProfile.jpeg";
 
-type ProfileImagePageType = "myPage" | "detailPage";
+type ProfileImagePageType = "myPage" | "detailPage" | "GNB";
 interface ProfileImageProps {
   src?: string | StaticImageData | null;
   alt: string;
