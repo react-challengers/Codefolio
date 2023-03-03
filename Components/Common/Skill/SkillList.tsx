@@ -17,6 +17,7 @@ const SkillList = ({
 }: SkillPickerProps) => {
   const addSkill = () => {
     if (maxLangth && editSkills.length >= maxLangth) return null;
+
     if (!editSkills) return setEditSkills([""]);
     if (!editSkills.includes("")) setEditSkills([...editSkills, ""]);
     return null;
@@ -55,8 +56,7 @@ const SkillListContainer = styled.div`
   padding: 0.5rem;
   margin-bottom: 1.75rem;
 
-  border: 1px solid;
-  border-color: ${({ theme }) => theme.colors.gray7};
+  border: 1px solid ${({ theme }) => theme.colors.gray7};
   border-radius: 0.25rem;
 `;
 
