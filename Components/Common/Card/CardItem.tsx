@@ -225,7 +225,7 @@ const CardBottomWrapper = styled.div`
 const TitleWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.25rem;
 `;
 
 const Title = styled.h2`
@@ -237,7 +237,7 @@ const Title = styled.h2`
 `;
 
 const SubTitle = styled.h3`
-  ${({ theme }) => theme.fonts.body12};
+  ${({ theme }) => theme.fonts.body14};
   text-align: left;
   color: ${({ theme }) => theme.colors.gray4};
   overflow: hidden;

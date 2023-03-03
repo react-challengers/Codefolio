@@ -8,7 +8,12 @@ import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import { GNB, Footer } from "@/Components/Layouts";
 import { RecoilRoot } from "recoil";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  DehydratedState,
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Head from "next/head";
 import { Analytics } from "@vercel/analytics/react";
@@ -21,6 +26,7 @@ const App = ({
   pageProps,
 }: AppProps<{
   initialSession: Session;
+  dehydratedState: DehydratedState;
 }>) => {
   const [supabase] = useState(() => createBrowserSupabaseClient());
 
@@ -42,10 +48,12 @@ const App = ({
         >
           <ThemeProvider theme={theme}>
             <RecoilRoot>
-              <GNB />
-              <Component {...pageProps} />
-              <Footer />
-              <Analytics />
+              <Hydrate state={pageProps.dehydratedState}>
+                <GNB />
+                <Component {...pageProps} />
+                <Footer />
+                <Analytics />
+              </Hydrate>
             </RecoilRoot>
           </ThemeProvider>
         </SessionContextProvider>

@@ -1,36 +1,37 @@
 import { NextPage, GetStaticProps } from "next";
 import styled from "styled-components";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
 import { checkEmail, checkPassword } from "@/utils/commons/authUtils";
-import { ValidateText, AuthInput } from "@/Components/Common/Auth";
+import {
+  HelperTextBox,
+  AuthInput,
+  AuthButton,
+  ErrorMassageBox,
+} from "@/Components/Common/Auth";
 import { useSetRecoilState } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
-import { LongButton, Modal } from "@/Components/Common";
 import { useQuery } from "@tanstack/react-query";
 import { getCurrentUser } from "@/utils/APIs/supabase";
+import ico_github from "@/public/icons/ico_github.svg";
+import ico_google from "@/public/icons/ico_google.svg";
+import ico_ExclamationMark from "@/public/icons/ico_ExclamationMark.svg";
+import ico_close_16 from "@/public/icons/ico_close_16.svg";
 
-// import { kakaoInit } from "@/utils/APIs/socialLogin";
-
-/**
- * 일단 kakao 로그인의 경우 주석처리 해놨습니다.
- * @TODO 소셜 로그인 추가 구현 필요 (카카오, 네이버), supabase 서버와의 연결이 필요
- * @TODO 로그인 실패시, 처리 구현
- */
+import Image from "next/dist/client/image";
 
 const Login: NextPage = () => {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [emailValidate, setEmailValidate] = useState(true);
-  const [passwordValidate, setPasswordValidate] = useState(true);
 
-  const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState<string | null>("");
-  const [modalContent, setModalContent] = useState<string | null>("");
+  const [emailHelperText, setEmailHelperText] = useState("");
+  const [passwordHelperText, setPasswordHelperText] = useState("");
+
+  const [isError, setIsError] = useState(false);
 
   const setIsLogin = useSetRecoilState(userLoginCheck);
 
@@ -43,47 +44,19 @@ const Login: NextPage = () => {
     },
   });
 
-  // const kakaoLogin = async () => {
-  //   // 카카오 초기화
-  //   const kakao = kakaoInit();
-
-  //   // 카카오 로그인 구현
-  //   kakao.Auth.login({
-  //     success: () => {
-  //       kakao.API.request({
-  //         url: "/v2/user/me", // 사용자 정보 가져오기
-  //         success: (res: any) => {
-  //           // 로그인 성공할 경우 정보 확인 후 /kakao 페이지로 push
-  //           console.log(res);
-  //           router.push("/");
-  //         },
-  //         fail: (error: any) => {
-  //           console.log(error);
-  //         },
-  //       });
-  //     },
-  //     fail: (error: any) => {
-  //       console.log(error);
-  //     },
-  //   });
-  // };
+  const validateCheck = () => {
+    setEmailHelperText(checkEmail(email));
+    setPasswordHelperText(checkPassword(password));
+  };
 
   const signInWithEmail = async () => {
-    if (email === "" || password === "") {
-      return OpenModal("이메일과 비밀번호 모두 입력해주세요.", null);
-    }
+    validateCheck();
 
-    if (!checkEmail(email)) {
-      setEmailValidate(false);
-      return OpenModal("이메일의 형식을 확인해주세요.", null);
+    // 유효성 검사 결과 fail일 경우, supabase에 요청 안함
+    if (checkEmail(email) || checkPassword(password)) {
+      setIsError(true);
+      return;
     }
-    setEmailValidate(true);
-
-    if (!checkPassword(password)) {
-      setPasswordValidate(false);
-      return OpenModal("비밀번호는 8자리 이상 입니다.", null);
-    }
-    setPasswordValidate(true);
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -91,9 +64,9 @@ const Login: NextPage = () => {
     });
     if (!error) {
       setIsLogin(true);
-      return router.push("/");
+      router.push("/");
     }
-    return OpenModal("로그인 실패", null);
+    setIsError(true);
   };
 
   const signInWithGoogle = async () => {
@@ -102,9 +75,8 @@ const Login: NextPage = () => {
     });
     if (!error) {
       setIsLogin(true);
-      return router.push("/");
+      router.push("/");
     }
-    return OpenModal("구글 로그인 실패", null);
   };
 
   const signInWithGitHub = async () => {
@@ -114,59 +86,114 @@ const Login: NextPage = () => {
     if (!error) {
       setIsLogin(true);
       router.push("/");
-    } else {
-      OpenModal("github 로그인 실패", null);
     }
   };
 
-  const OpenModal = (title: string | null, content: string | null) => {
-    setModalTitle(title);
-    setModalContent(content);
-    setShowModal(true);
+  const resetInput = (key: string) => {
+    switch (key) {
+      case "email":
+        setEmail("");
+        setEmailHelperText("");
+        break;
+      case "password":
+        setPassword("");
+        setPasswordHelperText("");
+        break;
+
+      default:
+        break;
+    }
   };
 
   return (
     <LoginPageContainer>
-      {showModal && (
-        <Modal onClose={() => setShowModal(false)} title={modalTitle}>
-          {modalContent}
-        </Modal>
-      )}
       <EmptyContainer />
       <LoginSpace>
-        {/* <LoginButton>카카오로 로그인하기</LoginButton>
-          <LoginButton>네이버로 로그인하기</LoginButton> */}
-        <LongButton onClick={signInWithGoogle}>구글로 로그인하기</LongButton>
-        <LongButton onClick={signInWithGitHub}>Github로 로그인하기</LongButton>
+        {isError ? (
+          <ErrorMassageBox background="#E22C35">
+            <SocialIcon
+              src={ico_ExclamationMark}
+              alt="에러 느낌표"
+              width={20}
+              height={20}
+            />
+            등록 안 된 이메일이거나 비밀번호를 잘못 입력했습니다.
+          </ErrorMassageBox>
+        ) : (
+          <ErrorMassageBox background={null} />
+        )}
+        <SocialLoginButtonContainer>
+          <AuthButton buttonType="socialLogin" onclick={signInWithGoogle}>
+            <SocialIcon
+              src={ico_github}
+              alt="github 아이콘"
+              width={24}
+              height={24}
+            />
+            구글로 로그인하기
+          </AuthButton>
+          <AuthButton buttonType="socialLogin" onclick={signInWithGitHub}>
+            <SocialIcon
+              src={ico_google}
+              alt="google 아이콘"
+              width={24}
+              height={24}
+            />
+            Github로 로그인하기
+          </AuthButton>
+        </SocialLoginButtonContainer>
         <HrContainer>
+          <hr />
           <span> 또는 </span>
+          <hr />
         </HrContainer>
         <LoginForm>
-          <AuthInput
-            type={email}
-            placeholder="이메일"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {emailValidate ? (
-            <ValidateText />
-          ) : (
-            <ValidateText> 이메일을 확인해주세요. </ValidateText>
-          )}
-          <AuthInput
-            type="password"
-            placeholder="비밀번호"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {passwordValidate ? (
-            <ValidateText />
-          ) : (
-            <ValidateText> 비밀번호를 확인해보세요. </ValidateText>
-          )}
+          <div>
+            {emailHelperText && (
+              <CloseSvg
+                src={ico_close_16}
+                alt="email reset button"
+                width={25}
+                height={25}
+                onClick={() => resetInput("email")}
+              />
+            )}
+            <AuthInput
+              type={email}
+              value={email}
+              placeholder="이메일"
+              onChange={(e) => setEmail(e.target.value)}
+              validate={emailHelperText}
+            />
+
+            <HelperTextBox text={emailHelperText} />
+          </div>
+          <div>
+            {passwordHelperText && (
+              <CloseSvg
+                src={ico_close_16}
+                alt="password reset button"
+                width={25}
+                height={25}
+                onClick={() => resetInput("password")}
+              />
+            )}
+            <AuthInput
+              type="password"
+              value={password}
+              placeholder="비밀번호"
+              onChange={(e) => setPassword(e.target.value)}
+              validate={passwordHelperText}
+            />
+          </div>
+          <HelperTextBox text={passwordHelperText} />
         </LoginForm>
-        <LongButton onClick={signInWithEmail}>로그인</LongButton>
+        <AuthButton buttonType="outLine" onclick={signInWithEmail}>
+          로그인
+        </AuthButton>
         <FooterMassage>
           아직 회원이 아니신가요?
-          <Link href="./signup">회원가입</Link>
+          <CustomLink href="./signup">회원가입</CustomLink>
         </FooterMassage>
       </LoginSpace>
     </LoginPageContainer>
@@ -185,9 +212,14 @@ const LoginPageContainer = styled.div`
 `;
 
 const EmptyContainer = styled.div`
-  background-color: lightgray;
   width: 50%;
   height: 100vh;
+
+  border: none;
+
+  background-image: url("/images/login_background.png");
+  background-size: cover;
+  background-position: center;
 `;
 
 const LoginSpace = styled.div`
@@ -200,15 +232,23 @@ const LoginSpace = styled.div`
 `;
 
 const HrContainer = styled.div`
-  width: 26.875rem;
-  text-align: center;
-  border-bottom: 1px solid #a0a0a0;
-  line-height: 0.1em;
-  margin: 1.875rem 0.625rem 1.25rem;
+  display: flex;
+
+  margin-top: 1.5rem;
+
+  hr {
+    width: 11.25rem;
+    border: none;
+
+    border-top: 1px solid ${({ theme }) => theme.colors.gray6};
+  }
 
   span {
-    background: #fff;
-    padding: 0 0.625rem;
+    ${({ theme }) => theme.fonts.body14}
+
+    background: ${({ theme }) => theme.colors.gray11};
+    padding: 0 1.5rem;
+    color: ${({ theme }) => theme.colors.gray6};
   }
 `;
 
@@ -223,21 +263,46 @@ const LoginForm = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  margin-bottom: 3.5rem;
+  margin-bottom: 1.5rem;
+`;
+
+const CloseSvg = styled(Image)`
+  position: absolute;
+  float: left;
+
+  color: ${({ theme }) => theme.colors.gray4};
+
+  cursor: pointer;
+
+  margin-left: 25rem;
+`;
+
+const SocialLoginButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.5rem;
+`;
+
+const SocialIcon = styled(Image)`
+  margin-right: 0.5rem;
 `;
 
 const FooterMassage = styled.div`
-  width: 26.5rem;
-  height: 3.125rem;
+  ${({ theme }) => theme.fonts.body13};
 
-  margin-top: 0.625rem;
+  margin-top: 0.75rem;
+  color: ${({ theme }) => theme.colors.gray6};
+`;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.8125rem;
+const CustomLink = styled(Link)`
+  width: 3rem;
+  height: 1.125rem;
 
-  gap: 0.5rem;
+  margin-left: 0.875rem;
+  ${({ theme }) => theme.fonts.body13};
+
+  color: ${({ theme }) => theme.colors.gray6};
 `;
 
 export default Login;
