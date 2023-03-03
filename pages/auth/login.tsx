@@ -65,6 +65,7 @@ const Login: NextPage = () => {
     if (!error) {
       setIsLogin(true);
       router.push("/");
+      return;
     }
     setIsError(true);
   };
