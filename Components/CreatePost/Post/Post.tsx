@@ -24,6 +24,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import PostTitle from "./PostTitle";
 import ProjectInfo from "./ProjectInfo";
+import PostErrorMassage from "./PostErrorMassage";
 
 /**
  * @TODO custom hook으로 리팩토링하기
@@ -53,8 +54,9 @@ const Post: NextPage = () => {
     recoilPostSubCategory
   );
   const [userId, setUserId] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState("");
+
+  const [isError, setIsError] = useState(false);
+  const [errorMassage, setErrorMassage] = useState("에러");
 
   const router = useRouter();
 
@@ -99,53 +101,33 @@ const Post: NextPage = () => {
   const validatePost = () => {
     // 유효성 검사
     if (!title) {
-      setModalTitle("제목을 입력해주세요.");
-      setIsModalOpen(true);
       return false;
     }
     if (!subTitle) {
-      setModalTitle("소제목을 입력해주세요.");
-      setIsModalOpen(true);
       return false;
     }
     if (!postSubCategory) {
-      setModalTitle("카테고리를 선택해주세요.");
-      setIsModalOpen(true);
       return false;
     }
     if (skills.length === 0) {
-      setModalTitle("스킬을 입력해주세요.");
-      setIsModalOpen(true);
       return false;
     }
     if (skills.length !== new Set(skills).size) {
-      setModalTitle("개발 스택에 중복이 있습니다.");
-      setIsModalOpen(true);
       return false;
     }
     if (skills.some((skill) => skill === "")) {
-      setModalTitle("개발 스택에 공백이 있습니다.");
-      setIsModalOpen(true);
       return false;
     }
     if (tag.length !== new Set(tag).size) {
-      setModalTitle("태그에 중복이 있습니다.");
-      setIsModalOpen(true);
       return false;
     }
     if (tag.some((item) => item === "")) {
-      setModalTitle("태그에 공백이 있습니다.");
-      setIsModalOpen(true);
       return false;
     }
     if (tag.length === 0) {
-      setModalTitle("태그를 입력해주세요.");
-      setIsModalOpen(true);
       return false;
     }
     if (!content) {
-      setModalTitle("내용을 입력해주세요.");
-      setIsModalOpen(true);
       return false;
     }
     if (
@@ -153,8 +135,6 @@ const Post: NextPage = () => {
         .map((member) => Object.values(member))
         .some((item) => item.some((value) => value === ""))
     ) {
-      setModalTitle("팀원 정보에 빈칸이 있습니다.");
-      setIsModalOpen(true);
       return false;
     }
     return true;
@@ -215,20 +195,16 @@ const Post: NextPage = () => {
   }, []);
 
   return (
-    <>
-      {isModalOpen && (
-        <Modal title={modalTitle} onClose={() => setIsModalOpen(false)} />
-      )}
-      <section>
-        <PostHeader>
-          {/* <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert> */}
-          {/* <DefaultButton text="저장" type="outline" size="s" onClick={onSave} /> */}
-          <CreateButton onClick={onPost}>게시</CreateButton>
-        </PostHeader>
-        <PostTitle />
-        <ProjectInfo />
-      </section>
-    </>
+    <section>
+      <PostHeader>
+        {/* <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert> */}
+        {/* <DefaultButton text="저장" type="outline" size="s" onClick={onSave} /> */}
+        {isError && <PostErrorMassage>{errorMassage}</PostErrorMassage>}
+        <CreateButton onClick={onPost}>게시</CreateButton>
+      </PostHeader>
+      <PostTitle />
+      <ProjectInfo />
+    </section>
   );
 };
 
