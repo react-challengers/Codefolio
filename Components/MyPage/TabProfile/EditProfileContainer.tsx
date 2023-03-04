@@ -179,7 +179,7 @@ const EditProfileContainer = () => {
       };
       updateProfileData(newProfileData);
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) console.log(error.message);
     }
   };
 
