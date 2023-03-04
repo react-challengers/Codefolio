@@ -12,10 +12,7 @@ const SearchBar = () => {
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Enter" && event.nativeEvent.isComposing === false) {
-      router.push(`/search`, {
-        pathname: "/search",
-        query: { q: searchValue },
-      });
+      router.push(`/search?q=${searchValue}`);
     }
   };
 
