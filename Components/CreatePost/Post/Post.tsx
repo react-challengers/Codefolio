@@ -26,7 +26,8 @@ import {
   postDeployedUrlVaildate,
   postContentVaildate,
   postTagsVaildate,
-  postThubmnailCheck,
+  postThumbnailCheck,
+  postIsThumbnail,
 } from "@/lib/recoil";
 
 import supabase from "@/lib/supabase";
@@ -71,7 +72,9 @@ const Post: NextPage = () => {
   const [postSubCategory, setPostSubCategory] = useRecoilState(
     recoilPostSubCategory
   );
-  const [isThumbnail, setIsThumbnail] = useRecoilState(postThubmnailCheck);
+  const [thumbnailCheck, setThumbnailCheck] =
+    useRecoilState(postThumbnailCheck);
+  const [isThumbnail, setIsThumbnail] = useRecoilState(postIsThumbnail);
   const [userId, setUserId] = useState<string | null>(null);
 
   const router = useRouter();
@@ -113,12 +116,10 @@ const Post: NextPage = () => {
     deployed_url: deployedUrl,
     content,
     user_id: userId,
+    is_thumbnail: isThumbnail,
   };
 
   useEffect(() => {
-    const uuid = uuidv4();
-    setIsPostId(uuid);
-
     const LoginState = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
@@ -217,7 +218,7 @@ const Post: NextPage = () => {
   };
 
   const resetInput = () => {
-    setIsPostId("");
+    setIsPostId(uuidv4());
     setTitle("");
     setSubTitle("");
     setTitleBackgroundImage("");
@@ -230,22 +231,21 @@ const Post: NextPage = () => {
     setContent("");
     setPostLargeCategory("");
     setPostSubCategory("");
-    setIsThumbnail(true);
+    setThumbnailCheck(true);
+    setIsThumbnail("");
   };
+
+  useEffect(() => {
+    if (!thumbnailCheck) setIsThumbnail("");
+    if (thumbnailCheck && titleBackgroundImage) {
+      setIsThumbnail(titleBackgroundImage);
+    }
+  }, [thumbnailCheck, titleBackgroundImage]);
 
   const onPost = async () => {
     // 유효성 검사
     if (!validatePost()) {
       return;
-    }
-    // 썸네일 체크
-    if (isThumbnail && titleBackgroundImage) {
-      newPostRow.title_background_image = `${titleBackgroundImage}/thumbnail`;
-    } else if (!isThumbnail && titleBackgroundImage) {
-      newPostRow.title_background_image = titleBackgroundImage.replace(
-        "/thumbnail",
-        ""
-      );
     }
 
     // 게시

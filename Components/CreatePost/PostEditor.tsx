@@ -75,7 +75,7 @@ const PostEditor: NextPage = () => {
         setPostContent(resultString || "");
       });
     },
-    [isPostId, setPostContent]
+    [setPostContent]
   );
 
   // 에디터에 이미지 추가
