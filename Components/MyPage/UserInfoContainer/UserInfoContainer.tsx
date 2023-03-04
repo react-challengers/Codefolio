@@ -5,7 +5,10 @@ import { ProfileImage, Tags } from "@/Components/Common";
 import { ClimbingBoxLoader } from "react-spinners";
 import Link from "next/link";
 import { useSetRecoilState } from "recoil";
-import { myPageCurrentTab } from "@/lib/recoil";
+import {
+  myPageCurrentTab,
+  myPageIsEditingProfileContainer,
+} from "@/lib/recoil";
 import Banner from "./Banner";
 import useUserImage from "./useUserImage";
 
@@ -20,6 +23,7 @@ const UserInfoContainer = () => {
 
   const setCurrentTab = useSetRecoilState(myPageCurrentTab);
   const { handleImage: handleProfileImage } = useUserImage("profile_image");
+  const setIsEditing = useSetRecoilState(myPageIsEditingProfileContainer);
 
   if (!profileData.id || !profileData.user_id) {
     return (
@@ -31,6 +35,7 @@ const UserInfoContainer = () => {
 
   const handleChangeTab = () => {
     setCurrentTab(3);
+    setIsEditing(true);
     // TODO: 다른 사람 프로필을을 볼 주석해제하고 로직 추가하고 위에 setCurrentTab에 대입하는 값은 1 더하기
     // setCurrentTab(2);
   };

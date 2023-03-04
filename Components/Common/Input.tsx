@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, RefObject } from "react";
 import styled from "styled-components";
 
 interface InputProps {
@@ -7,6 +7,11 @@ interface InputProps {
   type?: string;
   placeholder?: string;
   errorMessage?: string;
+  ref?:
+    | ((instance: HTMLInputElement | null) => void)
+    | RefObject<HTMLInputElement>
+    | null
+    | undefined;
 }
 
 const Input = ({
@@ -15,6 +20,7 @@ const Input = ({
   type = "text",
   placeholder = "",
   errorMessage,
+  ref,
 }: InputProps) => {
   return (
     <InputContainer>
@@ -24,6 +30,7 @@ const Input = ({
         type={type}
         placeholder={placeholder}
         error={!!errorMessage}
+        ref={ref}
       />
       <ErrorMessage error={!!errorMessage}>{errorMessage}</ErrorMessage>
     </InputContainer>
