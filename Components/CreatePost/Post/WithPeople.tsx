@@ -64,7 +64,7 @@ const WithPeople = () => {
         <InputWrapper key={idx}>
           <HelperTextContainer>
             <InputStyle
-              placeholder="참여자"
+              placeholder="이름"
               value={person.name}
               onChange={changePerson(idx, "name")}
               maxLength={5}
@@ -74,7 +74,7 @@ const WithPeople = () => {
 
           <HelperTextContainer>
             <InputStyle
-              placeholder="개발 스택"
+              placeholder="참여 포지션"
               value={person.field}
               onChange={changePerson(idx, "field")}
               maxLength={11}
@@ -97,7 +97,7 @@ const WithPeople = () => {
           </CategoryPicker> */}
           <HelperTextContainer>
             <InputStyle
-              placeholder="참조링크"
+              placeholder="https://github.com/user"
               value={person.github}
               onChange={changePerson(idx, "github")}
             />
@@ -142,7 +142,6 @@ const InputWrapper = styled.div`
 `;
 
 const InputStyle = styled.input`
-  width: 100%;
   border: none;
   outline: none;
   border-bottom: 0.0625rem solid grey;
@@ -177,6 +176,7 @@ const CancelButton = styled(Image)`
 const HelperTextContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 export default WithPeople;

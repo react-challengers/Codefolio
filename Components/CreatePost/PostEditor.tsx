@@ -125,7 +125,7 @@ const PostEditor: NextPage = () => {
           onImagePasted(event.dataTransfer);
         }}
         textareaProps={{
-          placeholder: "Fill in your markdown for the coolest of the cool.",
+          placeholder: "프로젝트 내용을 입력해 주세요.",
         }}
         commands={[
           commands.bold,
@@ -191,16 +191,16 @@ const PostEditor: NextPage = () => {
 
 const MDEditorStyled = styled(MDEditor)`
   -webkit-text-fill-color: ${(props) => props.theme.colors.white};
-  & > div {
+  ::placeholder {
   }
   .w-md-editor {
-    background-color: ${(props) => props.theme.colors.gray7}!important;
+    background-color: none;
   }
   .w-md-editor-toolbar {
-    color: ${(props) => props.theme.colors.black};
-    border-color: ${(props) => props.theme.colors.gray7};
-    background-color: #0d1118;
-    & li > button {
+    -webkit-text-fill-color: ${(props) => props.theme.colors.black} !important;
+    border: 1px solid ${(props) => props.theme.colors.gray7};
+    background-color: ${(props) => props.theme.colors.gray11};
+    & li > button > svg > path {
       color: ${(props) => props.theme.colors.gray2};
     }
     & li > button:hover {
@@ -221,6 +221,8 @@ const MDEditorStyled = styled(MDEditor)`
   .w-md-editor-input {
     background-color: ${(props) => props.theme.colors.gray11};
     border-right: 1px solid ${(props) => props.theme.colors.gray7};
+    color: ${(props) => props.theme.colors.white};
+
     ::-webkit-scrollbar {
       background-color: ${(props) => props.theme.colors.gray11};
     }
