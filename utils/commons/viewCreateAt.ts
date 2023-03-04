@@ -1,4 +1,4 @@
-const viewCreateAt = (value: string) => {
+const viewCreateAt = (value: string | Date) => {
   const today = new Date();
   const timeValue = new Date(value);
 

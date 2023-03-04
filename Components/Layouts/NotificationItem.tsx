@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import viewCreateAt from "@/utils/commons/viewCreateAt";
 import { ProfileImage } from "../Common";
 import NotificationBookmarkIcon from "./NotificationBookmarkIcon";
 import NotificationCommentIcon from "./NotificationCommentIcon";
@@ -81,6 +82,9 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
           {notificationUserName}
           {notification.content}
         </NotificationContent>
+        <NotificationTime>
+          {viewCreateAt(notification.created_at)}
+        </NotificationTime>
       </NotificationContentContainer>
     </NotificationItemContainer>
   );
@@ -134,6 +138,11 @@ const NotificationContentContainer = styled.div`
 const NotificationContent = styled.div`
   ${({ theme }) => theme.fonts.body14};
   color: ${({ theme }) => theme.colors.gray2};
+`;
+
+const NotificationTime = styled.div`
+  ${({ theme }) => theme.fonts.body13};
+  color: ${({ theme }) => theme.colors.gray6};
 `;
 
 export default NotificationItem;
