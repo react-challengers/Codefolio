@@ -24,7 +24,7 @@ const CardItemContainer = ({ itemList }: CardItemContainerProps) => {
           >
             <CardItem
               postId={post.id}
-              imageSrc={findThumbnailInContent(post.title_background_image)}
+              imageSrc={findThumbnailInContent(post.is_thumbnail, post.content)}
               imageAlt={`${post.title}썸네일`}
               title={post.title}
               subTitle={post.sub_title}

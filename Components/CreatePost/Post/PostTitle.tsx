@@ -8,7 +8,7 @@ import { useRecoilState } from "recoil";
 import {
   postId,
   postSubTitle,
-  postThubmnailCheck,
+  postThumbnailCheck,
   postTitle,
   postTitleBackgroundImage,
 } from "@/lib/recoil";
@@ -28,7 +28,7 @@ const PostTitle = () => {
   // common input 으로 변경
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
-  const [isThumbnail, setIsThumbnail] = useRecoilState(postThubmnailCheck);
+  const [isThumbnail, setIsThumbnail] = useRecoilState(postThumbnailCheck);
 
   const handleThumbnail = () => {
     setIsThumbnail((prev) => !prev);

@@ -65,7 +65,8 @@ const RelatedProject = ({ category }: RelatedProjectProps) => {
                     <CardItem
                       postId={post.id}
                       imageSrc={findThumbnailInContent(
-                        post.title_background_image
+                        post.is_thumbnail,
+                        post.content
                       )}
                       imageAlt={`${post.title}썸네일`}
                       title={post.title}

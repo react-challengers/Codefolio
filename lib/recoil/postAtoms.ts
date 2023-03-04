@@ -1,9 +1,10 @@
 import getYYYYMM from "@/utils/commons/getYYYYMM";
+import { v4 as uuidV4 } from "uuid";
 import { atom } from "recoil";
 
 const postId = atom<string>({
   key: "postId",
-  default: "",
+  default: `${uuidV4()}`,
 });
 
 const postTitle = atom<string>({
@@ -72,9 +73,14 @@ const postContent = atom<string>({
   default: "",
 });
 
-const postThubmnailCheck = atom<boolean>({
-  key: "postThubmnailCheck",
+const postThumbnailCheck = atom<boolean>({
+  key: "postThumbnailCheck",
   default: true,
+});
+
+const postIsThumbnail = atom<string>({
+  key: "postIsThumbnail",
+  default: "",
 });
 
 export {
@@ -91,5 +97,6 @@ export {
   postGithubUrl,
   postDeployedUrl,
   postContent,
-  postThubmnailCheck,
+  postThumbnailCheck,
+  postIsThumbnail,
 };
