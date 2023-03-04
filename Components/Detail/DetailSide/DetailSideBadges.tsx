@@ -39,54 +39,50 @@ const DetailSideBadges = () => {
   });
 
   return (
-    <>
-      <DetailSideContainer>
-        <Title>추천 배지</Title>
-        <DetailBadgesContainer
-          onClick={() => setShowBadgeModal((prev) => !prev)}
-        >
-          <BadgeWrapper>
-            <Image
-              src="/icons/badge-light.svg"
-              alt="뱃지"
-              width="24"
-              height="24"
-            />
-            <p>{ideaNum}</p>
-          </BadgeWrapper>
-          <BadgeWrapper>
-            <Image
-              src="/icons/badge-check.svg"
-              alt="뱃지"
-              width="24"
-              height="24"
-            />
-            <p>{completeNum}</p>
-          </BadgeWrapper>
-          <BadgeWrapper>
-            <Image
-              src="/icons/badge-code.svg"
-              alt="뱃지"
-              width="24"
-              height="24"
-            />
-            <p>{codeNum}</p>
-          </BadgeWrapper>
-          <BadgeWrapper>
-            <Image
-              src="/icons/badge-setting.svg"
-              alt="뱃지"
-              width="24"
-              height="24"
-            />
-            <p>{functionNum}</p>
-          </BadgeWrapper>
-        </DetailBadgesContainer>
-      </DetailSideContainer>
-      {showBadgeModal && (
-        <DetailBadgeModal closeModal={() => setShowBadgeModal(false)} />
-      )}
-    </>
+    <DetailSideContainer>
+      <Title>추천 배지</Title>
+      <DetailBadgesContainer onClick={() => setShowBadgeModal((prev) => !prev)}>
+        <BadgeWrapper>
+          <Image
+            src="/icons/badge-light.svg"
+            alt="뱃지"
+            width="24"
+            height="24"
+          />
+          <p>{ideaNum}</p>
+        </BadgeWrapper>
+        <BadgeWrapper>
+          <Image
+            src="/icons/badge-check.svg"
+            alt="뱃지"
+            width="24"
+            height="24"
+          />
+          <p>{completeNum}</p>
+        </BadgeWrapper>
+        <BadgeWrapper>
+          <Image
+            src="/icons/badge-code.svg"
+            alt="뱃지"
+            width="24"
+            height="24"
+          />
+          <p>{codeNum}</p>
+        </BadgeWrapper>
+        <BadgeWrapper>
+          <Image
+            src="/icons/badge-setting.svg"
+            alt="뱃지"
+            width="24"
+            height="24"
+          />
+          <p>{functionNum}</p>
+        </BadgeWrapper>
+        {showBadgeModal && (
+          <DetailBadgeModal closeModal={() => setShowBadgeModal(false)} />
+        )}
+      </DetailBadgesContainer>
+    </DetailSideContainer>
   );
 };
 
@@ -111,6 +107,7 @@ const DetailBadgesContainer = styled.div`
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray8};
   }
+  position: relative;
 `;
 
 const BadgeWrapper = styled.div`
