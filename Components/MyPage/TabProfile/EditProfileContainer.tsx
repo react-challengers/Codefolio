@@ -225,7 +225,7 @@ const EditProfileContainer = () => {
           <InfoWrapper>
             <ContentTitle>휴대전화</ContentTitle>
             <Input
-              type="number"
+              type="tel"
               value={inputValues.phoneNumber}
               onChange={handleInputChange("phoneNumber")}
               placeholder="‘-’없이 11자리를 입력하세요"
