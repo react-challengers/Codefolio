@@ -15,7 +15,7 @@ import {
   postSubTitle,
   postTags,
   postTitle,
-  postCoverImage,
+  postTitleBackgroundImage,
   postId,
   postErrorBoxText,
   postSubCategoryVaildate,
@@ -53,7 +53,9 @@ const Post: NextPage = () => {
 
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
-  const [coverImage, setCoverImage] = useRecoilState(postCoverImage);
+  const [titleBackgroundImage, setTitleBackgroundImage] = useRecoilState(
+    postTitleBackgroundImage
+  );
   const [[startDate, endDate], setProjectDuration] =
     useRecoilState(postProjectDuration);
   const [skills, setSkills] = useRecoilState(postSkills);
@@ -98,7 +100,7 @@ const Post: NextPage = () => {
     id: isPostId,
     title,
     sub_title: subTitle,
-    title_background_image: coverImage,
+    title_background_image: titleBackgroundImage,
     large_category: postLargeCategory,
     sub_category: postSubCategory,
     skills,
@@ -216,7 +218,7 @@ const Post: NextPage = () => {
     setIsPostId("");
     setTitle("");
     setSubTitle("");
-    setCoverImage("");
+    setTitleBackgroundImage("");
     setProjectDuration([getYYYYMM(), getYYYYMM()]);
     setSkills([]);
     setTag([]);

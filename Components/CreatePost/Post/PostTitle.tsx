@@ -5,7 +5,12 @@ import image_upload from "@/public/icons/image_upload.svg";
 import disable_check from "@/public/icons/disable_check.svg";
 import enable_check from "@/public/icons/enable_check.svg";
 import { useRecoilState } from "recoil";
-import { postId, postSubTitle, postTitle, postCoverImage } from "@/lib/recoil";
+import {
+  postId,
+  postSubTitle,
+  postTitle,
+  postTitleBackgroundImage,
+} from "@/lib/recoil";
 import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import uploadImage from "@/utils/commons/uploadImage";
 import { v4 as uuidv4 } from "uuid";
@@ -16,7 +21,9 @@ import { v4 as uuidv4 } from "uuid";
 
 const PostTitle = () => {
   const [isPostId] = useRecoilState(postId);
-  const [coverImage, setCoverImage] = useRecoilState(postCoverImage);
+  const [titlieBackgroundImage, setTitleBackgroundImage] = useRecoilState(
+    postTitleBackgroundImage
+  );
   // common input 으로 변경
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
@@ -42,7 +49,7 @@ const PostTitle = () => {
         );
         if (!publicImageUrl) return;
 
-        setCoverImage(publicImageUrl);
+        setTitleBackgroundImage(publicImageUrl);
       };
     }
   };
@@ -53,9 +60,9 @@ const PostTitle = () => {
 
   return (
     <TitleContainer>
-      {coverImage && (
-        <CoverImageBackground
-          src={coverImage}
+      {titlieBackgroundImage && (
+        <TitleBackground
+          src={titlieBackgroundImage}
           width={1400}
           height={262}
           alt="커버 이미지"
@@ -121,7 +128,7 @@ const TitleContainer = styled.div`
   overflow: hidden;
 `;
 
-const CoverImageBackground = styled(Image)`
+const TitleBackground = styled(Image)`
   position: absolute;
   top: 0;
   left: 0;

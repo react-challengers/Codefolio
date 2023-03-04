@@ -16,8 +16,8 @@ const postSubTitle = atom<string>({
   default: "",
 });
 
-const postCoverImage = atom<string>({
-  key: "postCoverImage",
+const postTitleBackgroundImage = atom<string>({
+  key: "postTitleBackgroundImage",
   default: "",
 });
 
@@ -76,7 +76,7 @@ export {
   postId,
   postTitle,
   postSubTitle,
-  postCoverImage,
+  postTitleBackgroundImage,
   postLargeCategory,
   postSubCategory,
   postSkills,
