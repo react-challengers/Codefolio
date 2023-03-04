@@ -189,6 +189,7 @@ const HomeMainContainer = styled.main`
   flex-direction: column;
   width: 78.75rem;
   max-width: 78.75rem;
+  min-height: 65rem;
   margin-left: 1.5rem;
   margin-top: 3rem;
 `;
