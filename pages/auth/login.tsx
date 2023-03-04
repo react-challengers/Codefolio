@@ -1,7 +1,7 @@
 import { NextPage, GetStaticProps } from "next";
 import styled from "styled-components";
 import Link from "next/link";
-import { useState } from "react";
+import { KeyboardEvent, useState } from "react";
 import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
 import { checkEmail, checkPassword } from "@/utils/commons/authUtils";
@@ -90,6 +90,12 @@ const Login: NextPage = () => {
     }
   };
 
+  const handleEnterKey = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      signInWithEmail(); // Enter 입력이 되면 클릭 이벤트 실행
+    }
+  };
+
   const resetInput = (key: string) => {
     switch (key) {
       case "email":
@@ -165,6 +171,7 @@ const Login: NextPage = () => {
               placeholder="이메일"
               onChange={(e) => setEmail(e.target.value)}
               validate={emailHelperText}
+              onKeyUp={(e) => handleEnterKey(e)}
             />
 
             <HelperTextBox text={emailHelperText} />
@@ -184,6 +191,7 @@ const Login: NextPage = () => {
               value={password}
               placeholder="비밀번호"
               onChange={(e) => setPassword(e.target.value)}
+              onKeyUp={(e) => handleEnterKey(e)}
               validate={passwordHelperText}
             />
           </div>
