@@ -31,13 +31,14 @@ const DetailTitleContainer = styled.div<{ backgroundColor: string }>`
   height: 16rem;
   padding: 1.5rem 8.75rem 2.5rem 8.75rem;
   background-color: ${({ backgroundColor }) => backgroundColor};
+  background-size: cover;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 `;
 
 const DetailTitleHeader = styled.p`
-  color: #b3b3b3;
+  color: ${(props) => props.theme.colors.gray4};
 `;
 
 const DetailTitleText = styled.div<{ titleColor: string }>`
@@ -51,7 +52,7 @@ const DetailTitleText = styled.div<{ titleColor: string }>`
   }
   h3 {
     font-size: 1.25rem;
-    color: #999999;
+    color: ${(props) => props.theme.colors.gray5};
   }
 `;
 
