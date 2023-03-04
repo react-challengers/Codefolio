@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent } from "react";
 import styled from "styled-components";
 import Image, { StaticImageData } from "next/image";
 import image_upload from "@/public/icons/image_upload.svg";
@@ -8,6 +8,7 @@ import { useRecoilState } from "recoil";
 import {
   postId,
   postSubTitle,
+  postThubmnailCheck,
   postTitle,
   postTitleBackgroundImage,
 } from "@/lib/recoil";
@@ -27,7 +28,11 @@ const PostTitle = () => {
   // common input 으로 변경
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
-  const [isThumbnail, setIsThumbnail] = useState(false);
+  const [isThumbnail, setIsThumbnail] = useRecoilState(postThubmnailCheck);
+
+  const handleThumbnail = () => {
+    setIsThumbnail((prev) => !prev);
+  };
 
   const onChangeBackgroundImage = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
@@ -38,24 +43,19 @@ const PostTitle = () => {
       reader.onload = async (uploadedImg) => {
         const base64 = uploadedImg.target?.result;
         if (typeof base64 !== "string") return;
-        const fileId = `${uuidv4()} / ${file[0].name}`;
-        const addCoverType = isThumbnail ? "/thumbnail" : "/cover";
+        const fileId = `${uuidv4()}`;
 
         const imgFile = await convertEase64ToFile(base64);
         const publicImageUrl = await uploadImage(
           imgFile,
           "post-image",
-          `${isPostId}/${fileId}${addCoverType}`
+          `${isPostId}/${fileId}`
         );
         if (!publicImageUrl) return;
 
         setTitleBackgroundImage(publicImageUrl);
       };
     }
-  };
-
-  const handleThumbnail = () => {
-    setIsThumbnail((prev) => !prev);
   };
 
   return (

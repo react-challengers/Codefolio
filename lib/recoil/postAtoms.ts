@@ -72,6 +72,11 @@ const postContent = atom<string>({
   default: "",
 });
 
+const postThubmnailCheck = atom<boolean>({
+  key: "postThubmnailCheck",
+  default: true,
+});
+
 export {
   postId,
   postTitle,
@@ -86,4 +91,5 @@ export {
   postGithubUrl,
   postDeployedUrl,
   postContent,
+  postThubmnailCheck,
 };

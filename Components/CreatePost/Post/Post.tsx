@@ -26,6 +26,7 @@ import {
   postDeployedUrlVaildate,
   postContentVaildate,
   postTagsVaildate,
+  postThubmnailCheck,
 } from "@/lib/recoil";
 
 import supabase from "@/lib/supabase";
@@ -70,6 +71,7 @@ const Post: NextPage = () => {
   const [postSubCategory, setPostSubCategory] = useRecoilState(
     recoilPostSubCategory
   );
+  const [isThumbnail, setIsThumbnail] = useRecoilState(postThubmnailCheck);
   const [userId, setUserId] = useState<string | null>(null);
 
   const router = useRouter();
@@ -228,14 +230,24 @@ const Post: NextPage = () => {
     setContent("");
     setPostLargeCategory("");
     setPostSubCategory("");
+    setIsThumbnail(true);
   };
 
   const onPost = async () => {
-    // 게시 버튼
     // 유효성 검사
     if (!validatePost()) {
       return;
     }
+    // 썸네일 체크
+    if (isThumbnail && titleBackgroundImage) {
+      newPostRow.title_background_image = `${titleBackgroundImage}/thumbnail`;
+    } else if (!isThumbnail && titleBackgroundImage) {
+      newPostRow.title_background_image = titleBackgroundImage.replace(
+        "/thumbnail",
+        ""
+      );
+    }
+
     // 게시
     if (router.asPath === "/create-post") {
       // 컨펌 모달 띄우기
