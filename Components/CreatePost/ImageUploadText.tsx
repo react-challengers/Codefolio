@@ -16,7 +16,7 @@ const ImageUploadText = () => {
 };
 
 const ImageUploadTextPath = styled.path`
-  fill: #b3b3b3;
+  fill: ${({ theme }) => theme.colors.gray4};
 `;
 
 export default ImageUploadText;
