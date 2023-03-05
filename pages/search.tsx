@@ -7,7 +7,7 @@ import _ from "lodash";
 import { NextPage, GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
-import { ClimbingBoxLoader } from "react-spinners";
+import { SyncLoader } from "react-spinners";
 import styled from "styled-components";
 
 const queryFn = async (query: string) => {
@@ -60,7 +60,7 @@ const Search: NextPage = () => {
   };
 
   if (isLoading)
-    return <Loader color="#00BFFF" size={50} loading={isLoading} />;
+    return <Loader color="#3DDFE9" margin={4} size={16} speedMultiplier={1} />;
 
   if (data?.length === 0)
     return (
@@ -126,7 +126,7 @@ const SearchContainer = styled.div`
   margin: 0 auto;
 `;
 
-const Loader = styled(ClimbingBoxLoader)`
+const Loader = styled(SyncLoader)`
   position: fixed !important;
   top: 50%;
   left: 50%;

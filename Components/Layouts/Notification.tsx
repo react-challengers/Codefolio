@@ -1,7 +1,7 @@
 import { getCurrentUser, getNotification } from "@/utils/APIs/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { ClimbingBoxLoader } from "react-spinners";
+import { SyncLoader } from "react-spinners";
 import styled from "styled-components";
 import NotificationItem from "./NotificationItem";
 
@@ -28,7 +28,7 @@ const Notification = () => {
     return (
       <NotificationContainer>
         <EmptyNotification>
-          <Loader color="#fff" size={20} speedMultiplier={2} />
+          <Loader color="#3DDFE9" margin={4} size={16} speedMultiplier={1} />
         </EmptyNotification>
       </NotificationContainer>
     );
@@ -82,7 +82,7 @@ const EmptyNotification = styled.div`
   color: ${({ theme }) => theme.colors.gray2};
 `;
 
-const Loader = styled(ClimbingBoxLoader)`
+const Loader = styled(SyncLoader)`
   position: absolute;
 `;
 
