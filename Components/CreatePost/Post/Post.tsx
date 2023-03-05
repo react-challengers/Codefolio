@@ -198,7 +198,6 @@ const Post: NextPage = () => {
         .some((item) => item.some((value) => value === ""))
     ) {
       setErrorMessage("필수 입력 항목을 확인해 주세요.");
-      validateWithPeople();
     }
     if (!title || !subTitle) {
       setErrorMessage("프로젝트 제목 또는 소제목을 입력해주세요");
@@ -249,6 +248,7 @@ const Post: NextPage = () => {
   const onPost = async () => {
     // 게시 버튼
     // 유효성 검사
+    validateWithPeople();
     if (!validatePost()) {
       return;
     }
