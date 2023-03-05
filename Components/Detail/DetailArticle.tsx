@@ -16,7 +16,7 @@ import getTextColorByBackgroundColor from "@/utils/detail/getTextColorByBackgrou
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { ClimbingBoxLoader } from "react-spinners";
+import { SyncLoader } from "react-spinners";
 import styled from "styled-components";
 import DetailBadgesContainer from "./DetailBadgesContainer";
 import DetailContent from "./DetailContent";
@@ -148,7 +148,7 @@ const DetailArticle = () => {
   );
 
   if (isLoading || isAuthorLoading || currentUserLoading)
-    return <Loader color="#fff" size={20} speedMultiplier={2} />;
+    return <Loader color="#3DDFE9" size={16} speedMultiplier={1} margin={4} />;
 
   return (
     <DetailPageContainer>
@@ -203,7 +203,7 @@ const DetailContentsMain = styled.main`
 
 const DetailContentsSide = styled.aside``;
 
-const Loader = styled(ClimbingBoxLoader)`
+const Loader = styled(SyncLoader)`
   position: fixed !important;
   top: 50%;
   left: 50%;

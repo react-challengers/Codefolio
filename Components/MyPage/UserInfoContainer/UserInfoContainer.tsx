@@ -2,7 +2,7 @@ import Image from "next/image";
 import styled from "styled-components";
 import { useUserProfile } from "@/hooks/query";
 import { ProfileImage, Tags } from "@/Components/Common";
-import { ClimbingBoxLoader } from "react-spinners";
+import { SyncLoader } from "react-spinners";
 import Link from "next/link";
 import { useSetRecoilState } from "recoil";
 import {
@@ -28,7 +28,7 @@ const UserInfoContainer = () => {
   if (!profileData.id || !profileData.user_id) {
     return (
       <InfoContainer>
-        <Loader color="#3B89E3" size={20} speedMultiplier={2} />
+        <Loader color="#3DDFE9" margin={4} size={16} speedMultiplier={1} />
       </InfoContainer>
     );
   }
@@ -181,7 +181,7 @@ const SelfProfileWrapper = styled.div`
   text-align: justify;
 `;
 
-const Loader = styled(ClimbingBoxLoader)`
+const Loader = styled(SyncLoader)`
   width: 7.5rem !important;
   height: 7.5rem !important;
   padding: 8.6875rem;
