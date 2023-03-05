@@ -188,6 +188,8 @@ const Post: NextPage = () => {
         .map((member) => Object.values(member))
         .some((item) => item.some((value) => value === ""))
     ) {
+      validateWithPeople();
+
       setErrorMessage("필수 입력 항목을 확인해 주세요.");
     }
     if (!title || !subTitle) {
@@ -239,7 +241,6 @@ const Post: NextPage = () => {
   const onPost = async () => {
     // 게시 버튼
     // 유효성 검사
-    validateWithPeople();
     if (!validatePost()) {
       return;
     }

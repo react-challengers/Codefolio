@@ -65,7 +65,10 @@ const ProjectInfoDropDown = () => {
         <ProjectInfoWrapper>
           <TEXTBOX>카테고리*</TEXTBOX>
           <HelperTextContainer>
-            <CategoryPicker onClick={handleShowCategory}>
+            <CategoryPicker
+              CategoryVaildate={subCategoryVaildate}
+              onClick={handleShowCategory}
+            >
               {largeCategory && subCategory ? (
                 <span>{subCategory}</span>
               ) : (
@@ -91,6 +94,7 @@ const ProjectInfoDropDown = () => {
           <HelperTextContainer>
             <SkillListWrapper>
               <SkillList
+                skillsVaildate={skillsVaildate}
                 text="개발 스택 추가"
                 editSkills={postSkill}
                 setEditSkills={setPostSkill}
@@ -165,6 +169,7 @@ const ProjectInfoDropDown = () => {
               value={githubUrl}
               onChange={(e) => setGithubUrl(e.target.value)}
               placeholder="https://github.com/project"
+              githubUrlVaildate={githubUrlVaildate}
             />
             <HelperTextBox text={githubUrlVaildate} />
           </HelperTextContainer>
@@ -239,7 +244,11 @@ const ProjectInfoWrapper = styled.div`
   width: 100%;
 `;
 
-const CategoryPicker = styled.div`
+interface CategoryPickerProps {
+  CategoryVaildate: string;
+}
+
+const CategoryPicker = styled.div<CategoryPickerProps>`
   position: relative;
   display: flex;
   align-items: center;
@@ -249,7 +258,9 @@ const CategoryPicker = styled.div`
   height: 100%;
   cursor: pointer;
 
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray7};
+  border-bottom: 1px solid
+    ${({ CategoryVaildate, theme }) =>
+      CategoryVaildate ? "#E22C35" : theme.colors.gray7};
   ${({ theme }) => theme.fonts.body14Medium};
 
   span {
@@ -325,7 +336,10 @@ const CheckInput = styled(Image)`
   margin: 0 0.5rem;
 `;
 
-const InputURL = styled.input`
+interface InputURLProps {
+  githubUrlVaildate?: string;
+}
+const InputURL = styled.input<InputURLProps>`
   width: 100%;
   height: 100%;
   padding-left: 0.625rem 1rem;
@@ -334,7 +348,8 @@ const InputURL = styled.input`
   background-color: transparent;
   border: none;
   border-bottom: 0.0625rem solid;
-  border-color: ${({ theme }) => theme.colors.gray7};
+  border-color: ${({ githubUrlVaildate, theme }) =>
+    githubUrlVaildate ? "#E22C35" : theme.colors.gray7};
 
   ${({ theme }) => theme.fonts.body14};
   color: ${({ theme }) => theme.colors.white};
@@ -345,7 +360,6 @@ const InputURL = styled.input`
 
 const SkillListWrapper = styled.div`
   width: 100%;
-  padding-top: 0.625rem;
 `;
 
 const TagList = styled.div`

@@ -7,6 +7,7 @@ interface SkillPickerProps {
   editSkills: string[];
   setEditSkills: Dispatch<React.SetStateAction<string[]>>;
   maxLangth?: number;
+  skillsVaildate?: string;
 }
 
 const SkillList = ({
@@ -14,6 +15,7 @@ const SkillList = ({
   editSkills,
   setEditSkills,
   maxLangth,
+  skillsVaildate,
 }: SkillPickerProps) => {
   const addSkill = () => {
     if (maxLangth && editSkills.length >= maxLangth) return null;
@@ -29,7 +31,7 @@ const SkillList = ({
   };
 
   return (
-    <SkillListContainer>
+    <SkillListContainer skillsVaildate={skillsVaildate}>
       {editSkills?.map((skill, idx) => (
         <Skill
           key={idx}
@@ -47,7 +49,11 @@ const SkillList = ({
   );
 };
 
-const SkillListContainer = styled.div`
+interface SkillListContainerProps {
+  skillsVaildate?: string;
+}
+
+const SkillListContainer = styled.div<SkillListContainerProps>`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -55,7 +61,9 @@ const SkillListContainer = styled.div`
   width: 100%;
   padding: 0.5rem;
 
-  border: 1px solid ${({ theme }) => theme.colors.gray7};
+  border: 1px solid
+    ${({ skillsVaildate, theme }) =>
+      skillsVaildate ? "#E22C35" : theme.colors.gray7};
   border-radius: 0.25rem;
 `;
 

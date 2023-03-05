@@ -72,6 +72,7 @@ const WithPeople = () => {
               value={person.name}
               onChange={changePerson(idx, "name")}
               maxLength={5}
+              validate={membersVaildate[idx]?.name}
             />
             <HelperTextBox text={membersVaildate[idx]?.name} />
           </HelperTextContainer>
@@ -82,6 +83,7 @@ const WithPeople = () => {
               value={person.field}
               onChange={changePerson(idx, "field")}
               maxLength={11}
+              validate={membersVaildate[idx]?.field}
             />
             <HelperTextBox text={membersVaildate[idx]?.field} />
           </HelperTextContainer>
@@ -90,6 +92,7 @@ const WithPeople = () => {
               placeholder="https://github.com/user"
               value={person.github}
               onChange={changePerson(idx, "github")}
+              validate={membersVaildate[idx]?.github}
             />
             <HelperTextBox text={membersVaildate[idx]?.github} />
           </HelperTextContainer>
@@ -131,10 +134,15 @@ const InputWrapper = styled.div`
   }
 `;
 
-const InputStyle = styled.input`
+interface InputStyleProps {
+  validate?: string;
+}
+
+const InputStyle = styled.input<InputStyleProps>`
   border: none;
   outline: none;
-  border-bottom: 0.0625rem solid grey;
+  border-bottom: 1px solid
+    ${({ validate, theme }) => (validate ? "#E22C35" : theme.colors.gray7)};
   padding: 0.625rem 1.25rem;
   box-sizing: border-box;
   background-color: transparent;
