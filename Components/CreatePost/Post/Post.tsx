@@ -27,7 +27,6 @@ import {
   postContentVaildate,
   postTagsVaildate,
   postThumbnailCheck,
-  postIsThumbnail,
 } from "@/lib/recoil";
 
 import supabase from "@/lib/supabase";
@@ -74,7 +73,6 @@ const Post: NextPage = () => {
   );
   const [thumbnailCheck, setThumbnailCheck] =
     useRecoilState(postThumbnailCheck);
-  const [isThumbnail, setIsThumbnail] = useRecoilState(postIsThumbnail);
   const [userId, setUserId] = useState<string | null>(null);
 
   const router = useRouter();
@@ -116,7 +114,7 @@ const Post: NextPage = () => {
     deployed_url: deployedUrl,
     content,
     user_id: userId,
-    is_thumbnail: isThumbnail,
+    thumbnail_check: thumbnailCheck,
   };
 
   useEffect(() => {
@@ -231,22 +229,16 @@ const Post: NextPage = () => {
     setContent("");
     setPostLargeCategory("");
     setPostSubCategory("");
-    setThumbnailCheck(true);
-    setIsThumbnail("");
+    setThumbnailCheck(false);
   };
-
-  useEffect(() => {
-    if (!thumbnailCheck) setIsThumbnail("");
-    if (thumbnailCheck && titleBackgroundImage) {
-      setIsThumbnail(titleBackgroundImage);
-    }
-  }, [thumbnailCheck, titleBackgroundImage]);
 
   const onPost = async () => {
     // 유효성 검사
     if (!validatePost()) {
       return;
     }
+
+    if (!titleBackgroundImage) setThumbnailCheck(false);
 
     // 게시
     if (router.asPath === "/create-post") {

@@ -75,12 +75,7 @@ const postContent = atom<string>({
 
 const postThumbnailCheck = atom<boolean>({
   key: "postThumbnailCheck",
-  default: true,
-});
-
-const postIsThumbnail = atom<string>({
-  key: "postIsThumbnail",
-  default: "",
+  default: false,
 });
 
 export {
@@ -98,5 +93,4 @@ export {
   postDeployedUrl,
   postContent,
   postThumbnailCheck,
-  postIsThumbnail,
 };

@@ -15,7 +15,6 @@ import {
   postDeployedUrl,
   postContent,
   postThumbnailCheck,
-  postIsThumbnail,
 } from "@/lib/recoil/postAtoms";
 
 import {
@@ -78,7 +77,6 @@ export {
   postDeployedUrl,
   postContent,
   postThumbnailCheck,
-  postIsThumbnail,
   // post validate
   postTitleVaildate,
   postSubTitleVaildate,

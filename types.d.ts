@@ -112,7 +112,7 @@ interface PostType {
   comment_count: number;
   like_count: number;
   bookmark_count: number;
-  is_thumbnail: string;
+  thumbnail_check: boolean;
 }
 
 interface FollowType {

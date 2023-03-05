@@ -28,10 +28,11 @@ const PostTitle = () => {
   // common input 으로 변경
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
-  const [isThumbnail, setIsThumbnail] = useRecoilState(postThumbnailCheck);
+  const [thumbnailCheck, setThumbnailCheck] =
+    useRecoilState(postThumbnailCheck);
 
   const handleThumbnail = () => {
-    setIsThumbnail((prev) => !prev);
+    setThumbnailCheck((prev) => !prev);
   };
 
   const onChangeBackgroundImage = (e: ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +44,7 @@ const PostTitle = () => {
       reader.onload = async (uploadedImg) => {
         const base64 = uploadedImg.target?.result;
         if (typeof base64 !== "string") return;
-        const fileId = `${uuidv4()}`;
+        const fileId = uuidv4();
 
         const imgFile = await convertEase64ToFile(base64);
         const publicImageUrl = await uploadImage(
@@ -82,7 +83,7 @@ const PostTitle = () => {
           maxLength={40}
         />
         <ThumbnailContainer onClick={handleThumbnail}>
-          {isThumbnail ? (
+          {thumbnailCheck ? (
             <CheckInput
               src={enable_check}
               width={24}
