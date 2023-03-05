@@ -166,9 +166,9 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
             <CardItem
               postId={post.id}
               imageSrc={findThumbnailInContent(
-                post.thumbnail_check,
-                post.title_background_image,
-                post.content
+                post.thumbnail_check
+                  ? post.title_background_image
+                  : post.content
               )}
               imageAlt={`${post.title}썸네일`}
               title={post.title}
