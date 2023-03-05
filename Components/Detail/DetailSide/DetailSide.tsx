@@ -5,7 +5,7 @@ import DetailSidePeople from "./DetailSidePeople";
 
 interface DetailSideProps {
   progressDate: string[];
-  subCategory: string;
+  category: string;
   tag: string[];
   skills: string[];
   members: string[];
@@ -14,7 +14,7 @@ interface DetailSideProps {
 
 const DetailSide = ({
   progressDate,
-  subCategory,
+  category,
   tag,
   skills,
   members,
@@ -31,7 +31,7 @@ const DetailSide = ({
       <DetailSidePeople
         github=""
         authorInfo={authorInfo}
-        subCategory={subCategory}
+        subCategory={category}
         members={members}
       />
     </SideContainer>

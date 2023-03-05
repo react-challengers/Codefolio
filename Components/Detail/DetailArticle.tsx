@@ -30,12 +30,11 @@ const DetailArticle = () => {
     title: "",
     subtitle: "",
     backgroundColor: "",
-    field: "",
-    subCategory: "",
+    category: "",
   });
   const [sideData, setSideData] = useState({
     progressDate: ["", ""],
-    subCategory: "",
+    category: "",
     skills: ["Front-end", "Android"],
     tag: [""],
     members: [""],
@@ -59,19 +58,18 @@ const DetailArticle = () => {
             title: data.title,
             subtitle: data.sub_title,
             backgroundColor: data.title_background_image,
-            field: data.large_category,
-            subCategory: data.sub_category,
+            category: data.category,
           });
           setSideData({
             progressDate: data.progress_date,
-            subCategory: data.sub_category,
+            category: data.category,
             skills: data.skills,
             tag: data.tag,
             members: data.members,
           });
           setContent(data.content);
           setAuthor(data.user_id);
-          setCategory(data.sub_category);
+          setCategory(data.category);
         }
       },
       onError(error) {
