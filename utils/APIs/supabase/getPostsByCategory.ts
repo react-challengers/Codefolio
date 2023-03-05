@@ -10,7 +10,7 @@ const getPostsByCategory = async (category: string) => {
   const res: PostgrestSingleResponse<PostType[]> = await supabase
     .from("post")
     .select("*")
-    .eq("sub_category", category)
+    .eq("category", category)
     .order("created_at", { ascending: false });
 
   return res;

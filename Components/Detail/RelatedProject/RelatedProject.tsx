@@ -73,7 +73,7 @@ const RelatedProject = ({ category }: RelatedProjectProps) => {
                       comments={post.comment_count}
                       likes={post.like_count}
                       bookmarks={post.bookmark_count}
-                      field={post.sub_category}
+                      field={post.category}
                       userId={post.user_id}
                     />
                   </CardItemContainer>

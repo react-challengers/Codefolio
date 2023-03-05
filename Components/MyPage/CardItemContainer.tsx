@@ -33,7 +33,7 @@ const CardItemContainer = ({ itemList }: CardItemContainerProps) => {
               comments={post.comment_count}
               likes={post.like_count}
               bookmarks={post.bookmark_count}
-              field={`${post.large_category} | ${post.sub_category}`}
+              field={`${post.category}`}
               userId={post.user_id}
             />
           </CardItemWrapper>

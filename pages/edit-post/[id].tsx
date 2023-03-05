@@ -85,8 +85,8 @@ const EditPostPage: NextPage = () => {
     setDeployedUrl(post.deployed_url);
     setMembers(post.members);
     setContent(post.content);
-    setPostLargeCategory(post.large_category);
-    setPostSubCategory(post.sub_category);
+    setPostLargeCategory(post.category);
+    setPostSubCategory(post.category);
   }, [post]);
 
   const PostEditor = dynamic(
