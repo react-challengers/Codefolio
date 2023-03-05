@@ -14,7 +14,7 @@ const useUserProfile = () => {
   const queryClient = useQueryClient();
 
   // get
-  const { data } = useQuery([USER_PROFILE], getUserProfile, {});
+  const { data, isLoading } = useQuery([USER_PROFILE], getUserProfile, {});
 
   // null이면 갱신
   const profileData: UserProfileType = {
@@ -61,7 +61,7 @@ const useUserProfile = () => {
     },
   });
 
-  return { profileData, updateProfileData };
+  return { profileData, updateProfileData, isLoading };
 };
 
 export default useUserProfile;
