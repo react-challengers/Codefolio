@@ -20,6 +20,7 @@ const WithPeople = () => {
   // github 추가해야 함
   const {
     profileData: { user_name: userName, field: userField, github: userGithub },
+    isLoading,
   } = useUserProfile();
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const WithPeople = () => {
     setPeople([
       { name: userName, field: userField.join(), github: userGithub },
     ]);
-  }, []);
+  }, [userName]);
 
   const addPerson = () => {
     if (people.length === 0) {
@@ -58,6 +59,9 @@ const WithPeople = () => {
     setPeople(newPeople);
   };
 
+  // TODO: 로딩 스피너 변경
+  if (isLoading) return null;
+
   return (
     <WithPeopleContainer>
       {people.map((person, idx) => (
@@ -81,20 +85,6 @@ const WithPeople = () => {
             />
             <HelperTextBox text={membersVaildate} />
           </HelperTextContainer>
-          {/* <CategoryPicker onClick={handleShowCategory}>
-            {largeCategory && subCategory ? (
-              <span>{subCategory}</span>
-            ) : (
-              <span>카테고리를 선택해주세요.</span>
-            )}
-            <DropdownImage
-              src={arrow_down}
-              alt="category selete icon"
-              width={16}
-              height={16}
-            />
-            {categoryVisible && <FieldDropDown />}
-          </CategoryPicker> */}
           <HelperTextContainer>
             <InputStyle
               placeholder="https://github.com/user"
