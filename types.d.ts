@@ -97,8 +97,7 @@ interface PostType {
   title: string;
   sub_title: string;
   title_background_image: string;
-  large_category: string;
-  sub_category: string;
+  category: string;
   skills: string[];
   progress_date: [string, string];
   members: MembersType[];
