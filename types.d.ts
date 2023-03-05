@@ -98,6 +98,7 @@ interface PostType {
   sub_title: string;
   title_background_image: string;
   category: string;
+  sub_category: string;
   skills: string[];
   progress_date: [string, string];
   members: MembersType[];
