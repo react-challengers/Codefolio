@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import styled from "styled-components";
 import getYYYYMM from "@/utils/commons/getYYYYMM";
 import { v4 as uuidv4 } from "uuid";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   postContent,
   postLargeCategory as recoilPostLargeCategory,
@@ -74,25 +74,16 @@ const Post: NextPage = () => {
 
   // validate - 카테고리, 스택, 기간, 키워드태그, 함께한 사람, 깃허브주소, 배포주소, 함께한사람 깃헙레포
   const [errorMessage, setErrorMessage] = useRecoilState(postErrorBoxText);
-  const [subCategoryVaildate, setSubCategoryVaildate] = useRecoilState(
-    postSubCategoryVaildate
-  );
-  const [skillsVaildate, setSkillsVaildate] =
-    useRecoilState(postSkillsVaildate);
-  const [projectDurationVaildate, setProjectDurationVaildate] = useRecoilState(
+  const setSubCategoryVaildate = useSetRecoilState(postSubCategoryVaildate);
+  const setSkillsVaildate = useSetRecoilState(postSkillsVaildate);
+  const setProjectDurationVaildate = useSetRecoilState(
     postProjectDurationVaildate
   );
-  const [membersVaildate, setMembersVaildate] =
-    useRecoilState(postMembersVaildate);
-  const [tagsVaildate, setTagsVaildate] = useRecoilState(postTagsVaildate);
-  const [githubUrlVaildate, setGithubUrlVaildate] = useRecoilState(
-    postGithubUrlVaildate
-  );
-  const [deployedUrlVaildate, setDeployedUrlVaildate] = useRecoilState(
-    postDeployedUrlVaildate
-  );
-  const [contentVaildate, setContentVaildate] =
-    useRecoilState(postContentVaildate);
+  const setMembersVaildate = useSetRecoilState(postMembersVaildate);
+  const setTagsVaildate = useSetRecoilState(postTagsVaildate);
+  const setGithubUrlVaildate = useSetRecoilState(postGithubUrlVaildate);
+  const setDeployedUrlVaildate = useSetRecoilState(postDeployedUrlVaildate);
+  const setContentVaildate = useSetRecoilState(postContentVaildate);
 
   const newPostRow = {
     id: isPostId,
