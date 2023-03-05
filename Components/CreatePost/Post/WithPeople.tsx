@@ -73,7 +73,7 @@ const WithPeople = () => {
               onChange={changePerson(idx, "name")}
               maxLength={5}
             />
-            <HelperTextBox text={membersVaildate} />
+            <HelperTextBox text={membersVaildate[idx]?.name} />
           </HelperTextContainer>
 
           <HelperTextContainer>
@@ -83,7 +83,7 @@ const WithPeople = () => {
               onChange={changePerson(idx, "field")}
               maxLength={11}
             />
-            <HelperTextBox text={membersVaildate} />
+            <HelperTextBox text={membersVaildate[idx]?.field} />
           </HelperTextContainer>
           <HelperTextContainer>
             <InputStyle
@@ -91,7 +91,7 @@ const WithPeople = () => {
               value={person.github}
               onChange={changePerson(idx, "github")}
             />
-            <HelperTextBox text={membersVaildate} />
+            <HelperTextBox text={membersVaildate[idx]?.github} />
           </HelperTextContainer>
           <CancelButton
             onClick={onDelete(idx)}

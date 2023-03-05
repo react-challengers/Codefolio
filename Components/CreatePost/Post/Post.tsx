@@ -141,11 +141,29 @@ const Post: NextPage = () => {
     setSubCategoryVaildate("");
     setSkillsVaildate("");
     setProjectDurationVaildate("");
-    setMembersVaildate("");
+    setMembersVaildate([]);
     setGithubUrlVaildate("");
     setDeployedUrlVaildate("");
     setContentVaildate("");
     setTagsVaildate("");
+  };
+
+  const validateWithPeople = () => {
+    const newMembersVaildate = [];
+
+    for (let index = 0; index < members.length; index += 1) {
+      newMembersVaildate.push({ name: "", field: "", github: "" });
+      if (members[index].name === "") {
+        newMembersVaildate[index].name = "필수 입력 항목입니다.";
+      }
+      if (members[index].field === "") {
+        newMembersVaildate[index].field = "필수 입력 항목입니다.";
+      }
+      if (!checkUrl(members[index].github)) {
+        newMembersVaildate[index].github = "깃허브 주소 형식에 맞지 않습니다.";
+      }
+    }
+    setMembersVaildate(newMembersVaildate);
   };
 
   const validatePost = () => {
@@ -180,7 +198,7 @@ const Post: NextPage = () => {
         .some((item) => item.some((value) => value === ""))
     ) {
       setErrorMessage("필수 입력 항목을 확인해 주세요.");
-      setMembersVaildate("필수 입력 항목 입니다.");
+      validateWithPeople();
     }
     if (!title || !subTitle) {
       setErrorMessage("프로젝트 제목 또는 소제목을 입력해주세요");

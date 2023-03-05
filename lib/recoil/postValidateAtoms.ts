@@ -30,9 +30,15 @@ const postProjectDurationVaildate = atom<string>({
   default: "",
 });
 
-const postMembersVaildate = atom<string>({
+interface MembersVaildateType {
+  name: string;
+  field: string;
+  github: string;
+}
+
+const postMembersVaildate = atom<MembersVaildateType[]>({
   key: "postMembersVaildate",
-  default: "",
+  default: [],
 });
 const postTagsVaildate = atom<string>({
   key: "postTagsVaildate",
