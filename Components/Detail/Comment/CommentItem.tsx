@@ -156,20 +156,15 @@ const CommentItem = ({ comment }: CommentItemProps) => {
               />
             </>
           ) : (
-            <>
-              <DefaultButton
-                text="수정"
-                type="outline"
-                size="s"
-                onClick={handleEditClick}
+            <MoreButtonsWrappoer>
+              <Image
+                src={`/icons/more${showMoreModal ? "-on" : ""}.svg`}
+                onClick={() => setShowMoreModal((prev) => !prev)}
+                width={24}
+                height={24}
+                alt="더보기 버튼"
               />
-              <DefaultButton
-                text="삭제"
-                type="outline"
-                size="s"
-                onClick={() => deleteCommentMutate()}
-              />
-            </>
+            </MoreButtonsWrappoer>
           )}
         </ButtonWrapper>
       ) : (
