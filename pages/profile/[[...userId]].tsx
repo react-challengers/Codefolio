@@ -27,6 +27,8 @@ const ProfilePage: NextPage = () => {
 
   const router = useRouter();
 
+  const profileId = router.query.userId![0];
+
   useQuery(["currentUser"], {
     queryFn: getCurrentUser,
     onSuccess({ data: { user } }) {
@@ -42,11 +44,11 @@ const ProfilePage: NextPage = () => {
     setCurrentTab(idx);
   };
 
-  useEffect(() => {
-    if (!isLogin) {
-      router.push("/auth/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!isLogin) {
+  //     router.push("/auth/login");
+  //   }
+  // }, []);
 
   // 내가 작성한 아이템 리스트
   const myItemList = useMemo(() => {
