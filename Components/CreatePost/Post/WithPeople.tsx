@@ -25,14 +25,8 @@ const WithPeople = () => {
   } = useUserProfile();
 
   useEffect(() => {
-    if (!userField || userField.length === 0) {
-      setPeople([{ name: userName, field: "", github: userGithub }]);
-      return;
-    }
-    setPeople([
-      { name: userName, field: userField.join(), github: userGithub },
-    ]);
-  }, [userName]);
+    setPeople([{ name: userName, field: "", github: userGithub }]);
+  }, []);
 
   const addPerson = () => {
     if (people.length === 0) {

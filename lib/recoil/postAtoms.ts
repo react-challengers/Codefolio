@@ -24,7 +24,7 @@ const postTitleBackgroundImage = atom<string>({
 
 const postLargeCategory = atom<string>({
   key: "postLargeCategory",
-  default: "웹",
+  default: "",
 });
 
 const postSubCategory = atom<string>({
