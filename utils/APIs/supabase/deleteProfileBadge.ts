@@ -1,6 +1,6 @@
 import supabase from "@/lib/supabase";
 
-interface DeleteBookmarkParams {
+interface DeleteProfileBadgeProps {
   profileId: string;
   userId: string;
   type: ProfileBadge;
@@ -16,7 +16,7 @@ const deleteProfileBadge = async ({
   profileId,
   userId,
   type,
-}: DeleteBookmarkParams) => {
+}: DeleteProfileBadgeProps) => {
   const { data, error } = await supabase
     .from("profile_badge")
     .delete()

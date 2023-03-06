@@ -13,7 +13,7 @@ import { useState } from "react";
 import { getCurrentUser } from "@/utils/APIs/supabase";
 import getProfileBadgeByUid from "@/utils/APIs/supabase/getProfileBadgeByUid";
 import addProfileBadge from "@/utils/APIs/supabase/addProfileBadge";
-import deleteProfileBadge from "@/utils/APIs/supabase/deleteProfilePadge";
+import deleteProfileBadge from "@/utils/APIs/supabase/deleteProfileBadge";
 import { useRouter } from "next/router";
 import ConfirmModal from "@/Components/Common/ConfirmModal";
 import ProfileComment from "./ProfileComment";
@@ -167,7 +167,9 @@ const GoodJobBadge = () => {
           </BadgeItemContainer>
         </BadgeListContainer>
 
-        {userId !== profileId && <ProfileCommentInput userId={userId} />}
+        {userId !== profileId && (
+          <ProfileCommentInput userId={userId} profileId={profileId} />
+        )}
         <ProfileComment profileId={profileId} />
       </GoodJobTabsContainer>
 

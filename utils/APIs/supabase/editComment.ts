@@ -8,9 +8,13 @@ import supabase from "@/lib/supabase";
  * const { mutate: editCommentMutate } = useMutation(editComment);
  * editCommentMutate(id, comment);
  */
-const editComment = async (id: string, comment: string) => {
+const editComment = async (
+  id: string,
+  comment: string,
+  dbType: "comment" | "profile_comment"
+) => {
   const res = await supabase
-    .from("comment")
+    .from(dbType)
     .update({ content: comment })
     .eq("id", id);
 

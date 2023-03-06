@@ -19,10 +19,11 @@ import supabase from "@/lib/supabase";
  */
 
 interface CommentItemProps {
-  comment: CommentType;
+  comment: any;
+  dbType: "comment" | "profile_comment";
 }
 
-const CommentItem = ({ comment }: CommentItemProps) => {
+const CommentItem = ({ comment, dbType }: CommentItemProps) => {
   const queryClient = useQueryClient();
 
   const [showMoreModal, setShowMoreModal] = useState(false);
@@ -73,29 +74,38 @@ const CommentItem = ({ comment }: CommentItemProps) => {
         .match({
           user_id: userId,
           target_id: author,
-          post_id: comment.post_id as string,
+          [dbType === "comment" ? "post_id" : "profile_id"]: (dbType ===
+          "comment"
+            ? comment.post_id
+            : comment.profile_id) as string,
           type,
         });
     }
   );
 
   const { mutate: deleteCommentMutate } = useMutation(
-    () => deleteComment(comment.id),
+    () => deleteComment(comment.id, dbType),
     {
       onSuccess: async () => {
-        deleteNotificationMutate("comment");
+        deleteNotificationMutate(dbType);
         await decrementComment(comment.post_id);
-        queryClient.invalidateQueries(["getComment"]);
-        queryClient.invalidateQueries(["GET_POSTS"]);
+        if (dbType === "comment") {
+          queryClient.invalidateQueries(["getComment"]);
+          queryClient.invalidateQueries(["GET_POSTS"]);
+        } else {
+          queryClient.invalidateQueries(["getProfileComment"]);
+        }
       },
     }
   );
 
   const { mutate: editCommentMutate } = useMutation(
-    () => editComment(comment.id, editContent),
+    () => editComment(comment.id, editContent, dbType),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["getComment"]);
+        queryClient.invalidateQueries([
+          dbType === "comment" ? "getComment" : "getProfileComment",
+        ]);
       },
     }
   );

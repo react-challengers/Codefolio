@@ -3,28 +3,32 @@ import { useInput } from "@/hooks/common";
 import { useUserProfile } from "@/hooks/query";
 import { initAmplitude } from "@/utils/amplitude/amplitude";
 import postProfileComment from "@/utils/APIs/supabase/postProfileComment";
-import { logEvent } from "@amplitude/analytics-browser";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface ProfileCommentInputProps {
   userId: string | string[] | undefined;
+  profileId: string | undefined;
 }
 
-const ProfileCommentInput = ({ userId }: ProfileCommentInputProps) => {
-  const queryClient = new QueryClient();
+const ProfileCommentInput = ({
+  userId,
+  profileId,
+}: ProfileCommentInputProps) => {
+  const queryClient = useQueryClient();
+
   const [isHelperText, setIsHelperText] = useState(false);
   const { inputValues, handleInputChange, resetAllInput } = useInput({
     comment: "",
   });
 
   const {
-    profileData: {
-      profile_image: profileImage,
-      user_name: username,
-      id: profileId,
-    },
+    profileData: { profile_image: profileImage, user_name: username },
   } = useUserProfile();
 
   const { mutate: createComment } = useMutation(
@@ -35,10 +39,8 @@ const ProfileCommentInput = ({ userId }: ProfileCommentInputProps) => {
         userId as string
       ),
     {
-      onSuccess: async () => {
-        // addNotificationMutate("profle_comment");
-        // await incrementComment(profileId as string);
-        queryClient.invalidateQueries(["getComment"]);
+      onSuccess: () => {
+        queryClient.invalidateQueries(["getProfileComment"]);
       },
     }
   );

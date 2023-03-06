@@ -22,7 +22,7 @@ const postProfileComment = async (
   userId: string
 ) => {
   const res = await supabase
-    .from("comment")
+    .from("profile_comment")
     .insert({ content: comment, profile_id: profileId, user_id: userId });
   return res;
 };

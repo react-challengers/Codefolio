@@ -1,11 +1,10 @@
 import CommentItem from "@/Components/Detail/Comment/CommentItem";
 import supabase from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import styled from "styled-components";
 
 interface ProfileCommentProps {
-  profileId: string | string[] | undefined;
+  profileId: string | undefined;
 }
 
 const ProfileComment = ({ profileId }: ProfileCommentProps) => {
@@ -18,14 +17,10 @@ const ProfileComment = ({ profileId }: ProfileCommentProps) => {
     return res;
   };
 
-  const { data, isError, isLoading, refetch } = useQuery(
-    ["getComment"],
+  const { data, isError, isLoading } = useQuery(
+    ["getProfileComment"],
     getComments
   );
-
-  useEffect(() => {
-    refetch();
-  }, [profileId, refetch]);
 
   if (isLoading) return <>loading...</>;
 
@@ -35,7 +30,11 @@ const ProfileComment = ({ profileId }: ProfileCommentProps) => {
     <ProfileCommentContainer>
       {data &&
         data.data?.map((comment: CommentType) => (
-          <CommentItem key={comment.id} comment={comment} />
+          <CommentItem
+            key={comment.id}
+            comment={comment}
+            dbType="profile_comment"
+          />
         ))}
     </ProfileCommentContainer>
   );
@@ -43,6 +42,7 @@ const ProfileComment = ({ profileId }: ProfileCommentProps) => {
 
 const ProfileCommentContainer = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 2rem;
 `;
 
