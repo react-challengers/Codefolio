@@ -337,7 +337,7 @@ const CheckInput = styled(Image)`
 `;
 
 interface InputURLProps {
-  githubUrlVaildate?: string;
+  githubUrlValidate?: string;
 }
 const InputURL = styled.input<InputURLProps>`
   width: 100%;
@@ -348,8 +348,8 @@ const InputURL = styled.input<InputURLProps>`
   background-color: transparent;
   border: none;
   border-bottom: 0.0625rem solid;
-  border-color: ${({ githubUrlVaildate, theme }) =>
-    githubUrlVaildate ? theme.colors.messageError : theme.colors.gray7};
+  border-color: ${({ githubUrlValidate, theme }) =>
+    githubUrlValidate ? theme.colors.messageError : theme.colors.gray7};
 
   ${({ theme }) => theme.fonts.body14};
   color: ${({ theme }) => theme.colors.white};
