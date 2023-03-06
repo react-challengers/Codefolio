@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface ProfileCommentInputProps {
-  userId: string;
+  userId: string | string[] | undefined;
 }
 
 const ProfileCommentInput = ({ userId }: ProfileCommentInputProps) => {

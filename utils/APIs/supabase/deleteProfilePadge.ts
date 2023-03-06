@@ -18,7 +18,7 @@ const deleteProfileBadge = async ({
   type,
 }: DeleteBookmarkParams) => {
   const { data, error } = await supabase
-    .from("post_badge")
+    .from("profile_badge")
     .delete()
     .match({ profile_id: profileId, user_id: userId, type });
 
