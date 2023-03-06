@@ -17,17 +17,13 @@ const CommentList = ({ postId }: CommentListProps) => {
     return res;
   };
 
-  const { data, isError, isLoading, refetch } = useQuery(["getComment"], {
+  const { data, refetch } = useQuery(["getComment"], {
     queryFn: getComments,
   });
 
   useEffect(() => {
     refetch();
   }, [postId, refetch]);
-
-  if (isLoading) return <>loading...</>;
-
-  if (isError) return <>error</>;
 
   return (
     <div>

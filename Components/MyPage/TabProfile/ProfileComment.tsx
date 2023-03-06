@@ -18,18 +18,11 @@ const ProfileComment = ({ profileId }: ProfileCommentProps) => {
     return res;
   };
 
-  const { data, isError, isLoading, refetch } = useQuery(
-    ["getProfileComment"],
-    getComments
-  );
+  const { data, refetch } = useQuery(["getProfileComment"], getComments);
 
   useEffect(() => {
     refetch();
   }, [profileId, refetch]);
-
-  if (isLoading) return <>loading...</>;
-
-  if (isError) return <>error</>;
 
   return (
     <ProfileCommentContainer>
