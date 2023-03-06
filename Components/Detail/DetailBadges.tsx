@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getCurrentUser } from "@/utils/APIs/supabase";
 import { useRouter } from "next/router";
 import addPostBadge from "@/utils/APIs/supabase/addPostBadge";
 import deletePostBadge from "@/utils/APIs/supabase/deletePostBadge";
 import getPostBadges from "@/utils/APIs/supabase/getPostBadges";
 import getBadgeByUid from "@/utils/APIs/supabase/getBadgeByUid";
+import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
 import ConfirmModal from "../Common/ConfirmModal";
 
 interface DetailBadgesProps {
@@ -14,7 +15,6 @@ interface DetailBadgesProps {
 }
 
 const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
-  const queryClient = new QueryClient();
   const router = useRouter();
 
   const postId = router.query?.id;
@@ -77,6 +77,7 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
       // queryClient.invalidateQueries({
       //   queryKey: ["getPostBadgeByUserId", { userId, postId }],
       // });
+      logEvent("Add Badge", { from: "Detail Page" });
     },
   });
   const { mutate: deleteBadge } = useMutation(deletePostBadge, {
@@ -109,6 +110,10 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
       closeModal();
     }
   };
+
+  useEffect(() => {
+    initAmplitude();
+  }, []);
 
   return (
     <>

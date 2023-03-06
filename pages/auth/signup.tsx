@@ -4,7 +4,7 @@ import Link from "next/link";
 import supabase from "@/lib/supabase";
 import Image from "next/image";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   AuthInput,
@@ -25,6 +25,7 @@ import { getCurrentUser } from "@/utils/APIs/supabase";
 
 import ico_close_16 from "@/public/icons/ico_close_16.svg";
 import ico_ExclamationMark from "@/public/icons/ico_ExclamationMark.svg";
+import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
 
 /**
  * @TODO custom hooks 을 사용해서 리팩토링
@@ -92,6 +93,7 @@ const SignUpPage: NextPage = () => {
     }
 
     if (!error) {
+      logEvent("SignUp Success", { from: "SignUp Page" });
       setIsLogin(true);
       router.push("/");
     }
@@ -120,6 +122,11 @@ const SignUpPage: NextPage = () => {
         break;
     }
   };
+
+  useEffect(() => {
+    initAmplitude();
+    logEvent("Enter SignUp Page", { from: "SignUp Page" });
+  }, []);
 
   return (
     <SignupPageContainer>

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   postLargeCategory,
@@ -34,10 +34,10 @@ const ProjectInfoDropDown = () => {
   const [githubUrl, setGithubUrl] = useRecoilState(postGithubUrl);
   const [deployedUrl, setDeployedUrl] = useRecoilState(postDeployedUrl);
   const largeCategory = useRecoilValue(postLargeCategory);
-  const subCategory = useRecoilValue(postSubCategory);
+  const [subCategory, setSubCategory] = useRecoilState(postSubCategory);
 
   const [categoryVisible, setCategoryVisible] = useState(false);
-  const [inProgress, setInProgress] = useState(false);
+  const [inProgress, setInProgress] = useState(true);
 
   // helperText state
   const subCategoryValidate = useRecoilValue(postSubCategoryValidate);
@@ -50,14 +50,28 @@ const ProjectInfoDropDown = () => {
     setCategoryVisible((prev) => !prev);
   };
 
+  // Project Duration[1]의 값이 진행중일 경우, 포맷을 맞춰주기 위해 "1900-01"로 설정
   const handleProgress = () => {
     setInProgress((prev) => !prev);
     if (!inProgress) {
-      setDate((prev) => [prev[0], "진행중"]);
+      setDate((prev) => [prev[0], "1900-01"]);
     } else {
       setDate((prev) => [prev[0], getYYYYMM(new Date())]);
     }
   };
+
+  const handleClickCategory = (category: string) => {
+    setSubCategory(category);
+    setCategoryVisible(false);
+  };
+
+  useEffect(() => {
+    if (endDate === "1900-01") {
+      setInProgress(true);
+    } else {
+      setInProgress(false);
+    }
+  }, [endDate]);
 
   return (
     <ProjectInfoDropDownContainer>
@@ -69,18 +83,23 @@ const ProjectInfoDropDown = () => {
               CategoryValidate={subCategoryValidate}
               onClick={handleShowCategory}
             >
-              {largeCategory && subCategory ? (
+              {subCategory ? (
                 <span>{subCategory}</span>
               ) : (
                 <span>카테고리를 선택해주세요.</span>
               )}
               <DropdownImage
                 src={arrow_down}
-                alt="category selete icon"
+                alt="category select icon"
                 width={16}
                 height={16}
               />
-              {categoryVisible && <FieldDropDown />}
+              {categoryVisible && (
+                <FieldDropDown
+                  handleClick={handleClickCategory}
+                  visibleToggle={handleShowCategory}
+                />
+              )}
             </CategoryPicker>
             <HelperTextBox text={subCategoryValidate} />
           </HelperTextContainer>
@@ -118,8 +137,8 @@ const ProjectInfoDropDown = () => {
                 }
                 selectsStart
                 startDate={new Date(startDate)}
-                endDate={new Date(endDate)}
-                maxDate={new Date(endDate)}
+                endDate={inProgress ? null : new Date(endDate)}
+                maxDate={inProgress ? null : new Date(endDate)}
               />
               <SpaceBetweenDatePicker> ~ </SpaceBetweenDatePicker>
               {inProgress ? (
@@ -127,14 +146,14 @@ const ProjectInfoDropDown = () => {
               ) : (
                 <StyledDatePicker
                   showMonthYearPicker
-                  selected={new Date(endDate)}
+                  selected={inProgress ? null : new Date(endDate)}
                   dateFormat="yyyy-MM"
                   onChange={(date: Date) =>
                     setDate((prev) => [prev[0], getYYYYMM(date)])
                   }
                   selectsEnd
                   startDate={new Date(startDate)}
-                  endDate={new Date(endDate)}
+                  endDate={inProgress ? null : new Date(endDate)}
                   minDate={new Date(startDate)}
                 />
               )}

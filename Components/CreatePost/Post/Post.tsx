@@ -33,6 +33,7 @@ import supabase from "@/lib/supabase";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import checkUrl from "@/utils/commons/checkUrl";
+import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
 
 import PostTitle from "./PostTitle";
 import ProjectInfo from "./ProjectInfo";
@@ -260,6 +261,7 @@ const Post: NextPage = () => {
         .single();
       if (!error) {
         resetInput();
+        logEvent("create_post", { from: "create_post" });
         router.push({
           pathname: "/",
           query: { id: data.id },
@@ -281,6 +283,7 @@ const Post: NextPage = () => {
   };
 
   useEffect(() => {
+    initAmplitude();
     return () => {
       resetInput();
     };

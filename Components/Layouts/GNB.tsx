@@ -9,7 +9,7 @@ import {
   getNotification,
   getUserProfile,
 } from "@/utils/APIs/supabase";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -23,6 +23,7 @@ import SearchBar from "./SearchBar";
 
 const GNB = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [userCheck, setUserCheck] = useRecoilState(recoilUserLoginCheck);
   const resetSubCategoryState = useResetRecoilState(subCategoryState);
   const [currentUserProfileImage, setCurrentUserProfileImage] =
@@ -91,6 +92,7 @@ const GNB = () => {
     if (error) {
       throw new Error(error.message);
     }
+    queryClient.invalidateQueries(["USER_PROFILE"]);
     setUserCheck(false);
     router.push("/");
   };

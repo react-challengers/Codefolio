@@ -1,7 +1,7 @@
 import { NextPage, GetStaticProps } from "next";
 import styled from "styled-components";
 import Link from "next/link";
-import { KeyboardEvent, useState } from "react";
+import { KeyboardEvent, useState, useEffect } from "react";
 import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
 import { checkEmail, checkPassword } from "@/utils/commons/authUtils";
@@ -21,6 +21,7 @@ import ico_ExclamationMark from "@/public/icons/ico_ExclamationMark.svg";
 import ico_close_16 from "@/public/icons/ico_close_16.svg";
 
 import Image from "next/image";
+import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
 
 const Login: NextPage = () => {
   const router = useRouter();
@@ -63,6 +64,7 @@ const Login: NextPage = () => {
       password,
     });
     if (!error) {
+      logEvent("Sign In With Email", { from: "Login Page" });
       setIsLogin(true);
       router.push("/");
       return;
@@ -78,6 +80,8 @@ const Login: NextPage = () => {
       setIsLogin(true);
       router.push("/");
     }
+
+    logEvent("Sign In With Google", { from: "Login Page" });
   };
 
   const signInWithGitHub = async () => {
@@ -88,6 +92,8 @@ const Login: NextPage = () => {
       setIsLogin(true);
       router.push("/");
     }
+
+    logEvent("Sign In With GitHub", { from: "Login Page" });
   };
 
   const handleEnterKey = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -111,6 +117,11 @@ const Login: NextPage = () => {
         break;
     }
   };
+
+  useEffect(() => {
+    initAmplitude();
+    logEvent("Enter Login Page", { from: "Login Page" });
+  }, []);
 
   return (
     <LoginPageContainer>

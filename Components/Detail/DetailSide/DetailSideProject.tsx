@@ -26,7 +26,8 @@ const DetailSideProject = ({
       <TitleWrapper>
         <Title>프로젝트 기간</Title>
         <Description>
-          {progressDate[0]} ~ {progressDate[1]}
+          {progressDate[0]} ~
+          {progressDate[1] === "1900-01" ? "진행중" : progressDate[1]}
         </Description>
       </TitleWrapper>
 

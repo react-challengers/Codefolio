@@ -1,5 +1,3 @@
-import { postLargeCategory, postSubCategory } from "@/lib/recoil";
-import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 /**
@@ -13,64 +11,40 @@ import styled from "styled-components";
  * enum의 데이터는 전역으로 공유되지 않는 것 같습니다. 타입은 전역으로 공유됩니다.
  */
 enum Field {
-  WEB = "웹",
-  APP = "앱",
-  DATA = "데이터",
-  AI = "인공지능",
+  Front = "Front-end",
+  Back = "Back-end",
+  Full = "Full-stack",
+  Andriod = "Android",
+  IOS = "iOS",
+  Flutter = "Flutter",
+  RN = "React Native",
+  Bigdata = "Big data",
+  AI = "AI",
 }
 
 const field = Object.values(Field);
 
-const FieldDropDown = () => {
-  const largeCategory = useRecoilValue(postLargeCategory);
-  const setLargeCategory = useSetRecoilState(postLargeCategory);
-  const setSubCategory = useSetRecoilState(postSubCategory);
-
-  const getSubCatories = () => {
-    switch (largeCategory) {
-      case "웹":
-        return ["Full-stack", "Front-end", "Back-end"];
-      case "앱":
-        return ["Android", "iOS", "Flutter", "React Native"];
-      case "데이터":
-        return ["Big data"];
-      case "인공지능":
-        return ["AI"];
-      default:
-        return ["기타"];
-    }
-  };
-
-  const handleClickSubCategory = (item: string) => {
-    setSubCategory(item);
-  };
-
+interface FiledDropDownProps {
+  handleClick: (item: string) => void;
+  visibleToggle: (visible: boolean) => void;
+}
+const FieldDropDown = ({ handleClick, visibleToggle }: FiledDropDownProps) => {
   return (
     <FieldDropDownContainer>
-      <ul>
+      <FiledBlock>
         {field.map((item) => (
           <FiledItemContainer
-            onMouseOver={() => {
-              setLargeCategory(item);
+            key={item.toString()}
+            onClick={() => {
+              handleClick(item);
+              visibleToggle(false);
             }}
-            key={item.toString()}
-          >
-            {item}
-          </FiledItemContainer>
-        ))}
-      </ul>
-      <Divider />
-      <SubUlWrapper>
-        {getSubCatories().map((item) => (
-          <FiledItemContainer
-            key={item.toString()}
-            onClick={() => handleClickSubCategory(item)}
             dataCursor
           >
             {item}
           </FiledItemContainer>
         ))}
-      </SubUlWrapper>
+      </FiledBlock>
     </FieldDropDownContainer>
   );
 };
@@ -107,14 +81,8 @@ const FiledItemContainer = styled.li<{
   }
 `;
 
-const SubUlWrapper = styled.ul`
+const FiledBlock = styled.ul`
   width: 100%;
-`;
-
-const Divider = styled.hr`
-  padding: 0;
-  margin: 0;
-  border-color: ${({ theme }) => theme.colors.gray7};
 `;
 
 export default FieldDropDown;
