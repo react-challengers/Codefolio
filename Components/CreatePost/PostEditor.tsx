@@ -59,7 +59,7 @@ const PostEditor: NextPage = () => {
       }
 
       files.map(async (file) => {
-        const fileId = uuidv4() + file.name;
+        const fileId = uuidv4();
 
         const compressedFile = await compressImg(file);
         if (!compressedFile) return;
@@ -77,7 +77,7 @@ const PostEditor: NextPage = () => {
         setPostContent(resultString || "");
       });
     },
-    [isPostId, setPostContent]
+    [setPostContent]
   );
 
   // 에디터에 이미지 추가

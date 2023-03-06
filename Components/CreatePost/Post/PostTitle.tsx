@@ -1,11 +1,17 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent } from "react";
 import styled from "styled-components";
 import Image, { StaticImageData } from "next/image";
 import image_upload from "@/public/icons/image_upload.svg";
 import disable_check from "@/public/icons/disable_check.svg";
 import enable_check from "@/public/icons/enable_check.svg";
 import { useRecoilState } from "recoil";
-import { postId, postSubTitle, postTitle, postCoverImage } from "@/lib/recoil";
+import {
+  postId,
+  postSubTitle,
+  postThumbnailCheck,
+  postTitle,
+  postTitleBackgroundImage,
+} from "@/lib/recoil";
 import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import uploadImage from "@/utils/commons/uploadImage";
 import { v4 as uuidv4 } from "uuid";
@@ -16,11 +22,18 @@ import { v4 as uuidv4 } from "uuid";
 
 const PostTitle = () => {
   const [isPostId] = useRecoilState(postId);
-  const [coverImage, setCoverImage] = useRecoilState(postCoverImage);
+  const [titlieBackgroundImage, setTitleBackgroundImage] = useRecoilState(
+    postTitleBackgroundImage
+  );
   // common input 으로 변경
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
-  const [isThumbnail, setIsThumbnail] = useState(false);
+  const [thumbnailCheck, setThumbnailCheck] =
+    useRecoilState(postThumbnailCheck);
+
+  const handleThumbnail = () => {
+    setThumbnailCheck((prev) => !prev);
+  };
 
   const onChangeBackgroundImage = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
@@ -31,31 +44,26 @@ const PostTitle = () => {
       reader.onload = async (uploadedImg) => {
         const base64 = uploadedImg.target?.result;
         if (typeof base64 !== "string") return;
-        const fileId = `${uuidv4()} / ${file[0].name}`;
-        const addCoverType = isThumbnail ? "/thumbnail" : "/cover";
+        const fileId = uuidv4();
 
         const imgFile = await convertEase64ToFile(base64);
         const publicImageUrl = await uploadImage(
           imgFile,
           "post-image",
-          `${isPostId}/${fileId}${addCoverType}`
+          `${isPostId}/${fileId}`
         );
         if (!publicImageUrl) return;
 
-        setCoverImage(publicImageUrl);
+        setTitleBackgroundImage(publicImageUrl);
       };
     }
   };
 
-  const handleThumbnail = () => {
-    setIsThumbnail((prev) => !prev);
-  };
-
   return (
     <TitleContainer>
-      {coverImage && (
-        <CoverImageBackground
-          src={coverImage}
+      {titlieBackgroundImage && (
+        <TitleBackground
+          src={titlieBackgroundImage}
           width={1400}
           height={262}
           alt="커버 이미지"
@@ -75,7 +83,7 @@ const PostTitle = () => {
           maxLength={40}
         />
         <ThumbnailContainer onClick={handleThumbnail}>
-          {isThumbnail ? (
+          {thumbnailCheck ? (
             <CheckInput
               src={enable_check}
               width={24}
@@ -121,7 +129,7 @@ const TitleContainer = styled.div`
   overflow: hidden;
 `;
 
-const CoverImageBackground = styled(Image)`
+const TitleBackground = styled(Image)`
   position: absolute;
   top: 0;
   left: 0;

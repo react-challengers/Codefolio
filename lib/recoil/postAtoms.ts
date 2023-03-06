@@ -1,9 +1,10 @@
 import getYYYYMM from "@/utils/commons/getYYYYMM";
+import { v4 as uuidV4 } from "uuid";
 import { atom } from "recoil";
 
 const postId = atom<string>({
   key: "postId",
-  default: "",
+  default: `${uuidV4()}`,
 });
 
 const postTitle = atom<string>({
@@ -16,8 +17,8 @@ const postSubTitle = atom<string>({
   default: "",
 });
 
-const postCoverImage = atom<string>({
-  key: "postCoverImage",
+const postTitleBackgroundImage = atom<string>({
+  key: "postTitleBackgroundImage",
   default: "",
 });
 
@@ -72,11 +73,16 @@ const postContent = atom<string>({
   default: "",
 });
 
+const postThumbnailCheck = atom<boolean>({
+  key: "postThumbnailCheck",
+  default: false,
+});
+
 export {
   postId,
   postTitle,
   postSubTitle,
-  postCoverImage,
+  postTitleBackgroundImage,
   postLargeCategory,
   postSubCategory,
   postSkills,
@@ -86,4 +92,5 @@ export {
   postGithubUrl,
   postDeployedUrl,
   postContent,
+  postThumbnailCheck,
 };

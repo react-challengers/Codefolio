@@ -4,7 +4,7 @@ import {
   postId,
   postTitle,
   postSubTitle,
-  postCoverImage,
+  postTitleBackgroundImage,
   postLargeCategory,
   postSubCategory,
   postSkills,
@@ -14,6 +14,7 @@ import {
   postGithubUrl,
   postDeployedUrl,
   postContent,
+  postThumbnailCheck,
 } from "@/lib/recoil/postAtoms";
 
 import {
@@ -65,7 +66,7 @@ export {
   postId,
   postTitle,
   postSubTitle,
-  postCoverImage,
+  postTitleBackgroundImage,
   postLargeCategory,
   postSubCategory,
   postSkills,
@@ -75,6 +76,7 @@ export {
   postGithubUrl,
   postDeployedUrl,
   postContent,
+  postThumbnailCheck,
   // post validate
   postTitleVaildate,
   postSubTitleVaildate,

@@ -15,7 +15,7 @@ import {
   postSubTitle,
   postTags,
   postTitle,
-  postCoverImage,
+  postTitleBackgroundImage,
   postId,
   postErrorBoxText,
   postSubCategoryVaildate,
@@ -26,6 +26,7 @@ import {
   postDeployedUrlVaildate,
   postContentVaildate,
   postTagsVaildate,
+  postThumbnailCheck,
 } from "@/lib/recoil";
 
 import supabase from "@/lib/supabase";
@@ -53,7 +54,9 @@ const Post: NextPage = () => {
 
   const [title, setTitle] = useRecoilState(postTitle);
   const [subTitle, setSubTitle] = useRecoilState(postSubTitle);
-  const [coverImage, setCoverImage] = useRecoilState(postCoverImage);
+  const [titleBackgroundImage, setTitleBackgroundImage] = useRecoilState(
+    postTitleBackgroundImage
+  );
   const [[startDate, endDate], setProjectDuration] =
     useRecoilState(postProjectDuration);
   const [skills, setSkills] = useRecoilState(postSkills);
@@ -68,6 +71,8 @@ const Post: NextPage = () => {
   const [postSubCategory, setPostSubCategory] = useRecoilState(
     recoilPostSubCategory
   );
+  const [thumbnailCheck, setThumbnailCheck] =
+    useRecoilState(postThumbnailCheck);
   const [userId, setUserId] = useState<string | null>(null);
 
   const router = useRouter();
@@ -98,7 +103,7 @@ const Post: NextPage = () => {
     id: isPostId,
     title,
     sub_title: subTitle,
-    title_background_image: coverImage,
+    title_background_image: titleBackgroundImage,
     large_category: postLargeCategory,
     sub_category: postSubCategory,
     skills,
@@ -109,12 +114,10 @@ const Post: NextPage = () => {
     deployed_url: deployedUrl,
     content,
     user_id: userId,
+    thumbnail_check: thumbnailCheck,
   };
 
   useEffect(() => {
-    const uuid = uuidv4();
-    setIsPostId(uuid);
-
     const LoginState = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
@@ -213,10 +216,10 @@ const Post: NextPage = () => {
   };
 
   const resetInput = () => {
-    setIsPostId("");
+    setIsPostId(uuidv4());
     setTitle("");
     setSubTitle("");
-    setCoverImage("");
+    setTitleBackgroundImage("");
     setProjectDuration([getYYYYMM(), getYYYYMM()]);
     setSkills([]);
     setTag([]);
@@ -226,14 +229,17 @@ const Post: NextPage = () => {
     setContent("");
     setPostLargeCategory("");
     setPostSubCategory("");
+    setThumbnailCheck(false);
   };
 
   const onPost = async () => {
-    // 게시 버튼
     // 유효성 검사
     if (!validatePost()) {
       return;
     }
+
+    if (!titleBackgroundImage) setThumbnailCheck(false);
+
     // 게시
     if (router.asPath === "/create-post") {
       // 컨펌 모달 띄우기
