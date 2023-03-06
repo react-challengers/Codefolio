@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface ErrorMessageBoxProps {
-  background: string | null;
+  Error: boolean;
 }
 
 const ErrorMessageBox = styled.div<ErrorMessageBoxProps>`
@@ -11,13 +11,12 @@ const ErrorMessageBox = styled.div<ErrorMessageBoxProps>`
 
   ${({ theme }) => theme.fonts.subtitle16}
   color: ${({ theme }) => theme.colors.white};
-  background: ${(props) => props.background};
 
   width: 27.25rem;
   height: 3.5rem;
 
   background: ${(props) =>
-    props.background ? "red" : props.theme.colors.gray11};
+    props.Error ? props.theme.colors.messageError : props.theme.colors.gray11};
 
   margin-bottom: 1.75rem;
   border-radius: 0.5rem;

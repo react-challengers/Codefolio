@@ -20,7 +20,7 @@ import ico_google from "@/public/icons/ico_google.svg";
 import ico_ExclamationMark from "@/public/icons/ico_ExclamationMark.svg";
 import ico_close_16 from "@/public/icons/ico_close_16.svg";
 
-import Image from "next/dist/client/image";
+import Image from "next/image";
 
 const Login: NextPage = () => {
   const router = useRouter();
@@ -117,7 +117,7 @@ const Login: NextPage = () => {
       <EmptyContainer />
       <LoginSpace>
         {isError ? (
-          <ErrorMessageBox background="#E22C35">
+          <ErrorMessageBox Error>
             <SocialIcon
               src={ico_ExclamationMark}
               alt="에러 느낌표"
@@ -127,7 +127,7 @@ const Login: NextPage = () => {
             등록 안 된 이메일이거나 비밀번호를 잘못 입력했습니다.
           </ErrorMessageBox>
         ) : (
-          <ErrorMessageBox background={null} />
+          <ErrorMessageBox Error={false} />
         )}
         <SocialLoginButtonContainer>
           <AuthButton buttonType="socialLogin" onclick={signInWithGoogle}>

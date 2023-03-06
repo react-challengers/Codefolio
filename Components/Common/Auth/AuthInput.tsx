@@ -15,7 +15,9 @@ const AuthInput = styled.input<AuthInputProps>`
 
   border-width: 0 0 1px;
   border-color: ${(props) =>
-    props.validate === "" ? props.theme.colors.gray7 : "red"};
+    props.validate === ""
+      ? props.theme.colors.gray7
+      : props.theme.colors.messageError};
 
   outline: none;
 

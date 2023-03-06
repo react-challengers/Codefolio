@@ -9,11 +9,11 @@ import {
   postGithubUrl,
   postDeployedUrl,
   postTags,
-  postSubCategoryVaildate,
-  postSkillsVaildate,
-  postGithubUrlVaildate,
-  postDeployedUrlVaildate,
-  postTagsVaildate,
+  postSubCategoryValidate,
+  postSkillsValidate,
+  postGithubUrlValidate,
+  postDeployedUrlValidate,
+  postTagsValidate,
 } from "@/lib/recoil";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
@@ -40,11 +40,11 @@ const ProjectInfoDropDown = () => {
   const [inProgress, setInProgress] = useState(false);
 
   // helperText state
-  const subCategoryVaildate = useRecoilValue(postSubCategoryVaildate);
-  const skillsVaildate = useRecoilValue(postSkillsVaildate);
-  const tagsVaildate = useRecoilValue(postTagsVaildate);
-  const githubUrlVaildate = useRecoilValue(postGithubUrlVaildate);
-  const deployedUrlVaildate = useRecoilValue(postDeployedUrlVaildate);
+  const subCategoryValidate = useRecoilValue(postSubCategoryValidate);
+  const skillsValidate = useRecoilValue(postSkillsValidate);
+  const tagsValidate = useRecoilValue(postTagsValidate);
+  const githubUrlValidate = useRecoilValue(postGithubUrlValidate);
+  const deployedUrlValidate = useRecoilValue(postDeployedUrlValidate);
 
   const handleShowCategory = () => {
     setCategoryVisible((prev) => !prev);
@@ -65,7 +65,10 @@ const ProjectInfoDropDown = () => {
         <ProjectInfoWrapper>
           <TEXTBOX>카테고리*</TEXTBOX>
           <HelperTextContainer>
-            <CategoryPicker onClick={handleShowCategory}>
+            <CategoryPicker
+              CategoryValidate={subCategoryValidate}
+              onClick={handleShowCategory}
+            >
               {largeCategory && subCategory ? (
                 <span>{subCategory}</span>
               ) : (
@@ -79,7 +82,7 @@ const ProjectInfoDropDown = () => {
               />
               {categoryVisible && <FieldDropDown />}
             </CategoryPicker>
-            <HelperTextBox text={subCategoryVaildate} />
+            <HelperTextBox text={subCategoryValidate} />
           </HelperTextContainer>
         </ProjectInfoWrapper>
 
@@ -91,13 +94,14 @@ const ProjectInfoDropDown = () => {
           <HelperTextContainer>
             <SkillListWrapper>
               <SkillList
+                skillsValidate={skillsValidate}
                 text="개발 스택 추가"
                 editSkills={postSkill}
                 setEditSkills={setPostSkill}
                 maxLangth={10}
               />
             </SkillListWrapper>
-            <HelperTextBox text={skillsVaildate} />
+            <HelperTextBox text={skillsValidate} />
           </HelperTextContainer>
         </ProjectInfoWrapper>
 
@@ -165,8 +169,9 @@ const ProjectInfoDropDown = () => {
               value={githubUrl}
               onChange={(e) => setGithubUrl(e.target.value)}
               placeholder="https://github.com/project"
+              githubUrlValidate={githubUrlValidate}
             />
-            <HelperTextBox text={githubUrlVaildate} />
+            <HelperTextBox text={githubUrlValidate} />
           </HelperTextContainer>
         </ProjectInfoWrapper>
 
@@ -180,7 +185,7 @@ const ProjectInfoDropDown = () => {
               onChange={(e) => setDeployedUrl(e.target.value)}
               placeholder="https://example.com"
             />
-            <HelperTextBox text={deployedUrlVaildate} />
+            <HelperTextBox text={deployedUrlValidate} />
           </HelperTextContainer>
         </ProjectInfoWrapper>
 
@@ -198,7 +203,7 @@ const ProjectInfoDropDown = () => {
                 maxLangth={5}
               />
             </TagList>
-            <HelperTextBox text={tagsVaildate} />
+            <HelperTextBox text={tagsValidate} />
           </HelperTextContainer>
         </ProjectInfoWrapper>
 
@@ -239,7 +244,11 @@ const ProjectInfoWrapper = styled.div`
   width: 100%;
 `;
 
-const CategoryPicker = styled.div`
+interface CategoryPickerProps {
+  CategoryValidate: string;
+}
+
+const CategoryPicker = styled.div<CategoryPickerProps>`
   position: relative;
   display: flex;
   align-items: center;
@@ -249,7 +258,9 @@ const CategoryPicker = styled.div`
   height: 100%;
   cursor: pointer;
 
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray7};
+  border-bottom: 1px solid
+    ${({ CategoryValidate, theme }) =>
+      CategoryValidate ? theme.colors.messageError : theme.colors.gray7};
   ${({ theme }) => theme.fonts.body14Medium};
 
   span {
@@ -325,7 +336,10 @@ const CheckInput = styled(Image)`
   margin: 0 0.5rem;
 `;
 
-const InputURL = styled.input`
+interface InputURLProps {
+  githubUrlValidate?: string;
+}
+const InputURL = styled.input<InputURLProps>`
   width: 100%;
   height: 100%;
   padding-left: 0.625rem 1rem;
@@ -334,7 +348,8 @@ const InputURL = styled.input`
   background-color: transparent;
   border: none;
   border-bottom: 0.0625rem solid;
-  border-color: ${({ theme }) => theme.colors.gray7};
+  border-color: ${({ githubUrlValidate, theme }) =>
+    githubUrlValidate ? theme.colors.messageError : theme.colors.gray7};
 
   ${({ theme }) => theme.fonts.body14};
   color: ${({ theme }) => theme.colors.white};
@@ -345,7 +360,6 @@ const InputURL = styled.input`
 
 const SkillListWrapper = styled.div`
   width: 100%;
-  padding-top: 0.625rem;
 `;
 
 const TagList = styled.div`

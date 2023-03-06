@@ -13,7 +13,7 @@ const HelperTextBoxContainer = styled.div`
   width: 100%;
   height: 1.25rem;
   margin-bottom: 1.5rem;
-  color: red;
+  color: ${({ theme }) => theme.colors.messageError};
 `;
 
 export default HelperTextBox;

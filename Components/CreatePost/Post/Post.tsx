@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import styled from "styled-components";
 import getYYYYMM from "@/utils/commons/getYYYYMM";
 import { v4 as uuidv4 } from "uuid";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   postContent,
   postLargeCategory as recoilPostLargeCategory,
@@ -18,14 +18,14 @@ import {
   postTitleBackgroundImage,
   postId,
   postErrorBoxText,
-  postSubCategoryVaildate,
-  postSkillsVaildate,
-  postProjectDurationVaildate,
-  postMembersVaildate,
-  postGithubUrlVaildate,
-  postDeployedUrlVaildate,
-  postContentVaildate,
-  postTagsVaildate,
+  postSubCategoryValidate,
+  postSkillsValidate,
+  postProjectDurationValidate,
+  postMembersValidate,
+  postGithubUrlValidate,
+  postDeployedUrlValidate,
+  postContentValidate,
+  postTagsValidate,
   postThumbnailCheck,
 } from "@/lib/recoil";
 
@@ -77,27 +77,18 @@ const Post: NextPage = () => {
 
   const router = useRouter();
 
-  // validate - 카테고리, 스택, 기간, 키워드태그, 함께한 사람, 깃허브주소, 배포주소, 함께한사람 깃헙레포
+  // Validate - 카테고리, 스택, 기간, 키워드태그, 함께한 사람, 깃허브주소, 배포주소, 함께한사람 깃헙레포
   const [errorMessage, setErrorMessage] = useRecoilState(postErrorBoxText);
-  const [subCategoryVaildate, setSubCategoryVaildate] = useRecoilState(
-    postSubCategoryVaildate
+  const setSubCategoryValidate = useSetRecoilState(postSubCategoryValidate);
+  const setSkillsValidate = useSetRecoilState(postSkillsValidate);
+  const setProjectDurationValidate = useSetRecoilState(
+    postProjectDurationValidate
   );
-  const [skillsVaildate, setSkillsVaildate] =
-    useRecoilState(postSkillsVaildate);
-  const [projectDurationVaildate, setProjectDurationVaildate] = useRecoilState(
-    postProjectDurationVaildate
-  );
-  const [membersVaildate, setMembersVaildate] =
-    useRecoilState(postMembersVaildate);
-  const [tagsVaildate, setTagsVaildate] = useRecoilState(postTagsVaildate);
-  const [githubUrlVaildate, setGithubUrlVaildate] = useRecoilState(
-    postGithubUrlVaildate
-  );
-  const [deployedUrlVaildate, setDeployedUrlVaildate] = useRecoilState(
-    postDeployedUrlVaildate
-  );
-  const [contentVaildate, setContentVaildate] =
-    useRecoilState(postContentVaildate);
+  const setMembersValidate = useSetRecoilState(postMembersValidate);
+  const setTagsValidate = useSetRecoilState(postTagsValidate);
+  const setGithubUrlValidate = useSetRecoilState(postGithubUrlValidate);
+  const setDeployedUrlValidate = useSetRecoilState(postDeployedUrlValidate);
+  const setContentValidate = useSetRecoilState(postContentValidate);
 
   const newPostRow = {
     id: isPostId,
@@ -141,60 +132,79 @@ const Post: NextPage = () => {
 
   const postErrorReset = () => {
     setErrorMessage("");
-    setSubCategoryVaildate("");
-    setSkillsVaildate("");
-    setProjectDurationVaildate("");
-    setMembersVaildate("");
-    setGithubUrlVaildate("");
-    setDeployedUrlVaildate("");
-    setContentVaildate("");
-    setTagsVaildate("");
+    setSubCategoryValidate("");
+    setSkillsValidate("");
+    setProjectDurationValidate("");
+    setMembersValidate([]);
+    setGithubUrlValidate("");
+    setDeployedUrlValidate("");
+    setContentValidate("");
+    setTagsValidate("");
   };
 
-  const validatePost = () => {
+  const ValidateWithPeople = () => {
+    const newMembersValidate = [];
+
+    for (let index = 0; index < members.length; index += 1) {
+      newMembersValidate.push({ name: "", field: "", github: "" });
+      if (members[index].name === "") {
+        newMembersValidate[index].name = "필수 입력 항목입니다.";
+      }
+      if (members[index].field === "") {
+        newMembersValidate[index].field = "필수 입력 항목입니다.";
+      }
+      if (!checkUrl(members[index].github)) {
+        newMembersValidate[index].github = "깃허브 주소 형식에 맞지 않습니다.";
+      }
+    }
+    setMembersValidate(newMembersValidate);
+  };
+
+  const ValidatePost = () => {
     postErrorReset();
     // 유효성 검사
     if (!postSubCategory) {
       setErrorMessage("필수 입력 항목을 확인해 주세요.");
-      setSubCategoryVaildate("필수 입력 항목입니다.");
+      setSubCategoryValidate("필수 입력 항목입니다.");
     }
     if (skills.length === 0) {
       setErrorMessage("필수 입력 항목을 확인해 주세요.");
-      setSkillsVaildate("필수 입력 항목입니다.");
+      setSkillsValidate("필수 입력 항목입니다.");
     }
     if (skills.length !== new Set(skills).size) {
       setErrorMessage("필수 입력 항목을 확인해 주세요.");
-      setSkillsVaildate("중복되는 스택을 확인해 주세요.");
+      setSkillsValidate("중복되는 스택을 확인해 주세요.");
     }
     if (skills.some((skill) => skill === "")) {
       setErrorMessage("필수 입력 항목을 확인해 주세요.");
-      setSkillsVaildate("필수 입력 항목입니다.");
+      setSkillsValidate("필수 입력 항목입니다.");
     }
     if (!content) {
       setErrorMessage("글의 내용을 입력해주세요.");
     }
     if (tag.length !== new Set(tag).size) {
       setErrorMessage("필수 입력 항목을 확인해 주세요.");
-      setTagsVaildate("중복되는 태그를 확인해 주세요.");
+      setTagsValidate("중복되는 태그를 확인해 주세요.");
     }
     if (
       members
         .map((member) => Object.values(member))
         .some((item) => item.some((value) => value === ""))
     ) {
+      ValidateWithPeople();
+
       setErrorMessage("필수 입력 항목을 확인해 주세요.");
-      setMembersVaildate("필수 입력 항목 입니다.");
     }
     if (!title || !subTitle) {
       setErrorMessage("프로젝트 제목 또는 소제목을 입력해주세요");
     }
 
     if (githubUrl && !checkUrl(githubUrl)) {
-      setGithubUrlVaildate("깃허브 주소 형식에 맞지 않습니다.");
+      setGithubUrlValidate("깃허브 주소 형식에 맞지 않습니다.");
     }
 
     if (deployedUrl && !checkUrl(deployedUrl)) {
-      setDeployedUrlVaildate("사이트 주소 형식에 맞지 않습니다.");
+      setDeployedUrlValidate("사이트 주소 형식에 맞지 않습니다.");
     }
 
     if (
@@ -234,7 +244,7 @@ const Post: NextPage = () => {
 
   const onPost = async () => {
     // 유효성 검사
-    if (!validatePost()) {
+    if (!ValidatePost()) {
       return;
     }
 
