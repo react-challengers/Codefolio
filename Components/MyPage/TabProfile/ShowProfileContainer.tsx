@@ -3,12 +3,17 @@ import { myPageIsEditingProfileContainer } from "@/lib/recoil";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { PrimaryButton, Tags } from "@/Components/Common";
+import { useRouter } from "next/router";
 import ProfileContainer from "./ProfileContainer";
 
 const ShowProfileContainer = () => {
   const setIsEditing = useSetRecoilState(myPageIsEditingProfileContainer);
+  const router = useRouter();
 
-  const { profileData } = useUserProfile();
+  // 옵셔널 체이닝으로 존재하지 않는 프로필은 본인으로 리다이렉팅
+  const profileUserId = router?.query?.userId?.[0];
+  const { profileData } = useUserProfile(profileUserId);
+  const { profileData: selfProfileData } = useUserProfile();
 
   if (!profileData) return <div>Error</div>;
 
@@ -77,12 +82,14 @@ const ShowProfileContainer = () => {
       </ProfileContainer>
 
       <ButtonWrapper>
-        <PrimaryButton
-          text="수정하기"
-          buttonType="default"
-          size="m"
-          onClick={() => setIsEditing(true)}
-        />
+        {selfProfileData.user_id === profileUserId || !profileUserId ? (
+          <PrimaryButton
+            text="수정하기"
+            buttonType="default"
+            size="m"
+            onClick={() => setIsEditing(true)}
+          />
+        ) : null}
       </ButtonWrapper>
     </TabProfileContainer>
   );

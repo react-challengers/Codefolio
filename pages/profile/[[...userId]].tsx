@@ -17,20 +17,27 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { myPageCurrentTab, userLoginCheck } from "@/lib/recoil";
 import { useUserProfile } from "@/hooks/query";
 
-const tabList = ["프로젝트", "북마크", "좋아요", "칭찬배지", "프로필"];
-
 const ProfilePage: NextPage = () => {
   const [currentTab, setCurrentTab] = useRecoilState(myPageCurrentTab);
   const [userId, setUserId] = useState("");
   const [likeIds, setLikeIds] = useState<string[]>([]);
   const [bookmarkIds, setBookmarkIds] = useState<string[]>([]);
-  const [isLogin, setIsLogin] = useRecoilState(userLoginCheck);
+  const isLogin = useRecoilValue(userLoginCheck);
 
   const { profileData } = useUserProfile();
   const router = useRouter();
 
   // 옵셔널 체이닝으로 존재하지 않는 프로필은 본인으로 리다이렉팅
   const profileUserId = router?.query?.userId?.[0];
+
+  // profileUserId === "" && profileData.user_id === true
+  let selfProfileTabList = ["프로젝트", "칭찬배지", "프로필"];
+
+  if (!profileUserId) {
+    selfProfileTabList = ["프로젝트", "북마크", "좋아요", "칭찬배지", "프로필"];
+  } else if (profileUserId === profileData.user_id) {
+    selfProfileTabList = ["프로젝트", "북마크", "좋아요", "칭찬배지", "프로필"];
+  }
 
   useQuery(["currentUser"], {
     queryFn: getCurrentUser,
@@ -57,10 +64,19 @@ const ProfilePage: NextPage = () => {
     }
   }, []);
 
-  // 내가 작성한 아이템 리스트
+  // 본인이 작성한 아이템 리스트
   const myItemList = useMemo(() => {
     if (!itemList) return [];
-    return itemList.filter((item) => item.user_id === userId);
+
+    // 로그인한 유저의 프로필
+    if (profileData.user_id === profileUserId || !profileUserId)
+      return itemList.filter((item) => item.user_id === userId);
+
+    // 다른 프로필
+    if (profileData.user_id !== profileUserId)
+      return itemList.filter((item) => item.user_id === profileUserId);
+
+    return [];
   }, [itemList, userId]);
 
   // 내가 북마크한 아이템 id 리스트
@@ -132,12 +148,13 @@ const ProfilePage: NextPage = () => {
 
   // 중첩 삼항연산자 해체
   let Component = null;
-  if (currentTab === tabList.length - 1) {
+  if (currentTab === selfProfileTabList.length - 1) {
     Component = <TabProfile />;
-  } else if (currentTab === tabList.length - 2) {
+  } else if (currentTab === selfProfileTabList.length - 2) {
     Component = <GoodJobBadge />;
   } else if (filteredItemList?.length > 0) {
     Component = <CardItemContainer itemList={filteredItemList ?? []} />;
+    console.log(filteredItemList);
   } else {
     Component = <EmptyPost>게시글이 없습니다.</EmptyPost>;
   }
@@ -146,7 +163,7 @@ const ProfilePage: NextPage = () => {
     <MyPageContainer>
       <UserInfoContainer profileUserId={profileUserId} />
       <MyPageTab
-        tabList={tabList}
+        tabList={selfProfileTabList}
         currentTab={currentTab}
         onClick={handleClick}
       />
