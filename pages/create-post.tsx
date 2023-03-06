@@ -1,6 +1,7 @@
 import Post from "@/Components/CreatePost/Post/Post";
 import PostEditor from "@/Components/CreatePost/PostEditor";
 import { userLoginCheck } from "@/lib/recoil";
+import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -16,6 +17,8 @@ const CreatePostPage = () => {
     if (!isLogin) {
       router.push("/auth/login");
     }
+    initAmplitude();
+    logEvent("Enter Create Post Page", { from: "Create Post Page" });
   }, []);
 
   return (

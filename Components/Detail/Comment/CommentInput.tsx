@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useInput } from "@/hooks/common";
 import { useUserProfile } from "@/hooks/query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DefaultButton, ProfileImage } from "@/Components/Common";
 import {
   postComment,
@@ -11,6 +11,7 @@ import {
 } from "@/utils/APIs/supabase";
 import supabase from "@/lib/supabase";
 import createNotificationContent from "@/utils/notification/createNotificationContent";
+import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
 
 interface CommentInputProps {
   postId: string | string[] | undefined;
@@ -65,6 +66,7 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
       onSuccess: async () => {
         addNotificationMutate("comment");
         await incrementComment(postId as string);
+        logEvent("createComment", { from: "detailPage" });
         queryClient.invalidateQueries(["getComment"]);
         queryClient.invalidateQueries(["GET_POSTS"]);
       },
@@ -84,6 +86,10 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
     createComment();
     resetAllInput();
   };
+
+  useEffect(() => {
+    initAmplitude();
+  }, []);
 
   return (
     <>
