@@ -7,7 +7,7 @@ import {
   COMMUNICATION_ICON_PATH,
   IMPLEMENTATION_ICON_PATH,
 } from "@/utils/constant";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import getUserBadge from "@/utils/APIs/supabase/getUserBadge";
 import { useState } from "react";
 import { getCurrentUser } from "@/utils/APIs/supabase";
@@ -73,7 +73,7 @@ const GoodJobBadge = () => {
   );
 
   const { refetch: refetchBadgeByUid } = useQuery(
-    ["getPostBadgeByUserId", { userId, profileId: "" }],
+    ["getPostBadgeByUserId", { userId, profileId }],
     getProfileBadgeByUid,
     {
       onSuccess: (data) => {
