@@ -77,7 +77,7 @@ const GoodJobBadge = () => {
     getProfileBadgeByUid,
     {
       onSuccess: (data) => {
-        const badgeList = data.map((v) => v.type);
+        const badgeList = data.map((badge) => badge.type);
         setBadgeCheck(badgeList);
       },
     }
