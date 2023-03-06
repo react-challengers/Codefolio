@@ -20,6 +20,10 @@ const PreviewContent = styled(MarkdownPreview)`
   width: 60rem;
   padding: 1rem;
   background-color: ${({ theme }) => theme.colors.gray11};
+
+  li {
+    list-style-type: disc;
+  }
 `;
 
 export default DetailContent;

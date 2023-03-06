@@ -20,6 +20,7 @@ enum Field {
   RN = "React Native",
   Bigdata = "Big data",
   AI = "AI",
+  ETC = "기타",
 }
 
 const field = Object.values(Field);

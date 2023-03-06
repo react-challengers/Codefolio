@@ -49,7 +49,9 @@ const App = ({
             <RecoilRoot>
               <Hydrate state={pageProps.dehydratedState}>
                 <GNB />
-                <Component {...pageProps} />
+                <div data-color-mode="dark">
+                  <Component {...pageProps} />
+                </div>
                 <Footer />
                 <Analytics />
               </Hydrate>
