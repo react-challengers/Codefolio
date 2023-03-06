@@ -7,53 +7,165 @@ import {
   COMMUNICATION_ICON_PATH,
   IMPLEMENTATION_ICON_PATH,
 } from "@/utils/constant";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import getUserBadge from "@/utils/APIs/supabase/getUserBadge";
+import { useState } from "react";
+import { getCurrentUser } from "@/utils/APIs/supabase";
+import getProfileBadgeByUid from "@/utils/APIs/supabase/getProfileBadgeByUid";
+import addProfileBadge from "@/utils/APIs/supabase/addProfileBadge";
+import deleteProfileBadge from "@/utils/APIs/supabase/deleteProfilePadge";
+import { useRouter } from "next/router";
+import ConfirmModal from "@/Components/Common/ConfirmModal";
+import ProfileComment from "./ProfileComment";
+import ProfileCommentInput from "./ProfileCommentInput";
 
 /**
  * @TODO Badge 줄바꿈처리
  */
 
 const GoodJobBadge = () => {
+  const queryClient = new QueryClient();
+  const router = useRouter();
+
+  const profileId = router.query?.userId;
+
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const [puzzleNum, setPuzzleNum] = useState(0);
+  const [pencilNum, setPencilNum] = useState(0);
+  const [arrowNum, setArrowNum] = useState(0);
+  const [chatNum, setChatNum] = useState(0);
+  const [toolNum, setToolNum] = useState(0);
+  const [badgeCheck, setBadgeCheck] = useState<string[]>([]);
+  const [userId, setUserId] = useState<string | undefined>("");
+
+  useQuery(["currentUser"], getCurrentUser, {
+    onSuccess: ({ data: { user } }) => {
+      if (user) setUserId(user.id);
+    },
+  });
+
+  useQuery(["getUserBadge", { profileId }], getUserBadge, {
+    onSuccess: (data) => {
+      if (!data) return;
+
+      let puzzle = 0;
+      let pencil = 0;
+      let arrow = 0;
+      let chat = 0;
+      let tool = 0;
+      data.forEach(({ type }: any) => {
+        if (type === "puzzle") puzzle += 1;
+        if (type === "pencil") pencil += 1;
+        if (type === "arrow") arrow += 1;
+        if (type === "chat") chat += 1;
+        if (type === "tool") tool += 1;
+      });
+      setPuzzleNum(puzzle);
+      setPencilNum(pencil);
+      setArrowNum(arrow);
+      setChatNum(chat);
+      setToolNum(tool);
+    },
+  });
+
+  useQuery(
+    ["getPostBadgeByUserId", { userId, profileId: "" }],
+    getProfileBadgeByUid,
+    {
+      onSuccess: (data) => {
+        const badgeList = data.map((v) => v.type);
+        setBadgeCheck(badgeList);
+      },
+    }
+  );
+
+  const { mutate: addBadge } = useMutation(addProfileBadge, {
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getUserBadge", { profileId }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["getPostBadgeByUserId", { userId, profileId }],
+      });
+    },
+  });
+  const { mutate: deleteBadge } = useMutation(deleteProfileBadge, {
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getUserBadge", { profileId }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["getPostBadgeByUserId", { userId, profileId }],
+      });
+    },
+  });
+
+  const clickBadge = (badgeType: ProfileBadge) => {
+    if (!userId) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    if (badgeCheck.includes(badgeType)) {
+      const newBadgeCheck = badgeCheck.filter((badge) => badge !== badgeType);
+      setBadgeCheck(newBadgeCheck);
+      deleteBadge({ userId, profileId: profileId as string, type: badgeType });
+    } else {
+      setBadgeCheck([...badgeCheck, badgeType]);
+      addBadge({ userId, profileId: profileId as string, type: badgeType });
+    }
+  };
+
   return (
-    <GoodJobTabsContainer>
-      <BadgeListContainer>
-        {/* puzzle */}
-        <BadgeItemContainer>
-          <BadgeIcon d={PUZZLE_ICON_PATH} highlight />
-          <BadgeText>문제해결력이 좋아요</BadgeText>
-          <BadgeCount>1</BadgeCount>
-        </BadgeItemContainer>
+    <>
+      <GoodJobTabsContainer>
+        <BadgeListContainer>
+          <BadgeItemContainer onClick={() => clickBadge("puzzle")}>
+            <BadgeIcon d={PUZZLE_ICON_PATH} />
+            <BadgeText>문제해결력이 좋아요</BadgeText>
+            <BadgeCount>{puzzleNum}</BadgeCount>
+          </BadgeItemContainer>
 
-        {/* pencil */}
-        <BadgeItemContainer>
-          <BadgeIcon d={PENCIL_ICON_PATH} highlight />
-          <BadgeText>학습능력이 훌륭해요</BadgeText>
-          <BadgeCount>2</BadgeCount>
-        </BadgeItemContainer>
+          <BadgeItemContainer onClick={() => clickBadge("pencil")}>
+            <BadgeIcon d={PENCIL_ICON_PATH} />
+            <BadgeText>학습능력이 훌륭해요</BadgeText>
+            <BadgeCount>{pencilNum}</BadgeCount>
+          </BadgeItemContainer>
 
-        {/* initiative */}
-        <BadgeItemContainer>
-          <BadgeIcon d={INITIATIVE_ICON_PATH} highlight />
-          <BadgeText>자기주도적으로 일해요</BadgeText>
-          <BadgeCount>2</BadgeCount>
-        </BadgeItemContainer>
+          <BadgeItemContainer onClick={() => clickBadge("arrow")}>
+            <BadgeIcon d={INITIATIVE_ICON_PATH} />
+            <BadgeText>자기주도적으로 일해요</BadgeText>
+            <BadgeCount>{arrowNum}</BadgeCount>
+          </BadgeItemContainer>
 
-        {/* communication */}
-        <BadgeItemContainer>
-          <BadgeIcon d={COMMUNICATION_ICON_PATH} highlight />
-          <BadgeText>의사소통이 원활해요</BadgeText>
-          <BadgeCount>3</BadgeCount>
-        </BadgeItemContainer>
+          <BadgeItemContainer onClick={() => clickBadge("chat")}>
+            <BadgeIcon d={COMMUNICATION_ICON_PATH} />
+            <BadgeText>의사소통이 원활해요</BadgeText>
+            <BadgeCount>{chatNum}</BadgeCount>
+          </BadgeItemContainer>
 
-        {/* implementation */}
-        <BadgeItemContainer>
-          <BadgeIcon d={IMPLEMENTATION_ICON_PATH} highlight />
-          <BadgeText>구현도가 높아요</BadgeText>
-          <BadgeCount>3</BadgeCount>
-        </BadgeItemContainer>
-      </BadgeListContainer>
+          <BadgeItemContainer onClick={() => clickBadge("tool")}>
+            <BadgeIcon d={IMPLEMENTATION_ICON_PATH} />
+            <BadgeText>구현도가 높아요</BadgeText>
+            <BadgeCount>{toolNum}</BadgeCount>
+          </BadgeItemContainer>
+        </BadgeListContainer>
 
-      {/* comment 자리 */}
-    </GoodJobTabsContainer>
+        {userId !== profileId && <ProfileCommentInput />}
+        <ProfileComment profileId={profileId} />
+      </GoodJobTabsContainer>
+
+      {showLoginModal && (
+        <ConfirmModal
+          bodyText="로그인하시겠습니까?"
+          leftText="취소"
+          rightText="로그인"
+          onClickLeft={() => setShowLoginModal(false)}
+          onClickRight={() => router.push("/auth/login")}
+        />
+      )}
+    </>
   );
 };
 
@@ -72,6 +184,17 @@ const BadgeItemContainer = styled.li`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  color: ${({ theme }) => theme.colors.gray3};
+
+  cursor: pointer;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary6};
+    path {
+      fill: ${({ theme }) => theme.colors.primary6};
+    }
+  }
 `;
 
 const BadgeText = styled.p`

@@ -2,10 +2,9 @@ import styled from "styled-components";
 
 interface IconProps {
   d: string;
-  highlight: boolean;
 }
 
-const BadgeIcon = ({ d, highlight }: IconProps) => {
+const BadgeIcon = ({ d }: IconProps) => {
   return (
     <svg
       width="36"
@@ -14,14 +13,13 @@ const BadgeIcon = ({ d, highlight }: IconProps) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <IconPath d={d} highlight={highlight} />
+      <IconPath d={d} />
     </svg>
   );
 };
 
-const IconPath = styled.path<{ highlight: boolean }>`
-  fill: ${({ theme, highlight }) =>
-    highlight ? theme.colors.primary6 : theme.colors.gray3};
+const IconPath = styled.path`
+  fill: ${({ theme }) => theme.colors.gray3};
 `;
 
 export default BadgeIcon;

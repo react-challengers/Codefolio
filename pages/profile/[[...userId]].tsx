@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { myPageCurrentTab, userLoginCheck } from "@/lib/recoil";
 
-const tabList = ["프로젝트", "북마크", "좋아요", "프로필"];
+const tabList = ["프로젝트", "북마크", "좋아요", "칭찬배지", "프로필"];
 
 const ProfilePage: NextPage = () => {
   const [currentTab, setCurrentTab] = useRecoilState(myPageCurrentTab);
@@ -125,10 +125,8 @@ const ProfilePage: NextPage = () => {
   let Component = null;
   if (currentTab === tabList.length - 1) {
     Component = <TabProfile />;
-
-    // TODO: 다른 프로필을 볼 수 있을 때 칭찬배지 탭을 해제합니다.
-    // } else if (currentTab === tabList.length - 2) {
-    // Component = <GoodJobBadge />;
+  } else if (currentTab === tabList.length - 2) {
+    Component = <GoodJobBadge />;
   } else if (filteredItemList?.length > 0) {
     Component = <CardItemContainer itemList={filteredItemList ?? []} />;
   } else {
