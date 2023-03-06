@@ -1,7 +1,7 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
-import { useCallback, useState } from "react";
+import { ClipboardEvent, useCallback, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { v4 as uuidv4 } from "uuid";
@@ -29,6 +29,13 @@ const PostEditor: NextPage = () => {
   const isPostId = useRecoilValue(postId);
   const [postContent, setPostContent] = useRecoilState(recoilPostContent);
   const [showModal, setShowModal] = useState(false);
+
+  const handleOnPaste = (e: ClipboardEvent<HTMLDivElement>) => {
+    if (e.clipboardData.files.length) {
+      e.preventDefault();
+      onImagePasted(e.clipboardData);
+    }
+  };
 
   const onImagePasted = useCallback(
     async (
@@ -118,10 +125,7 @@ const PostEditor: NextPage = () => {
           setPostContent(value || "");
         }}
         height={600}
-        onPaste={(event) => {
-          event.preventDefault();
-          onImagePasted(event.clipboardData);
-        }}
+        onPaste={handleOnPaste}
         onDrop={(event) => {
           event.preventDefault();
           onImagePasted(event.dataTransfer);
