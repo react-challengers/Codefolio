@@ -5,6 +5,7 @@ import useUserImage from "./useUserImage";
 interface BannerProps {
   src?: string;
   alt?: string;
+  checkProfileAuthorization?: boolean;
 }
 
 /**
@@ -15,17 +16,24 @@ interface BannerProps {
  * <ProfileImage src={src} alt={alt} />
  */
 
-const Banner = ({ src = "", alt = "프로필 배경이미지" }: BannerProps) => {
+const Banner = ({
+  src = "",
+  alt = "프로필 배경이미지",
+  checkProfileAuthorization = false,
+}: BannerProps) => {
   const { handleImage: handleBackgroundImage } =
     useUserImage("background_image");
 
   if (!src) {
     return (
       <BannerColor>
-        <ImgLabel htmlFor="background-color-picker">
+        <ImgLabel
+          htmlFor="background-color-picker"
+          checkProfileAuthorization={checkProfileAuthorization}
+        >
           <ImgIcon
             src="/icons/ico-photo.svg"
-            alt="배경색 지정 아이콘"
+            alt="배경 사진 지정 아이콘"
             width={36}
             height={36}
           />
@@ -43,10 +51,13 @@ const Banner = ({ src = "", alt = "프로필 배경이미지" }: BannerProps) =>
   return (
     <BannerContainer>
       <BannerImage src={src} alt={alt} sizes="100vw" width={100} height={180} />
-      <ImgLabel htmlFor="background-color-picker">
+      <ImgLabel
+        htmlFor="background-color-picker"
+        checkProfileAuthorization={checkProfileAuthorization}
+      >
         <ImgIcon
           src="/icons/ico-photo.svg"
-          alt="배경색 지정 아이콘"
+          alt="배경 사진 지정 아이콘"
           width={36}
           height={36}
         />
@@ -79,11 +90,13 @@ const BannerImage = styled(Image)`
   opacity: 80%;
 `;
 
-const ImgLabel = styled.label`
+const ImgLabel = styled.label<{ checkProfileAuthorization: boolean }>`
   position: absolute;
   right: 2.5rem;
   bottom: 1.25rem;
   z-index: 1;
+  visibility: ${(props) =>
+    props.checkProfileAuthorization ? "visible" : "hidden"};
 `;
 
 const ImgIcon = styled(Image)<StaticImageData>`
