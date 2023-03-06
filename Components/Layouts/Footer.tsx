@@ -31,41 +31,28 @@ const Footer = () => {
         <ContributorContainer>
           <ContributorWrapper>
             <CopyRightText>Developer</CopyRightText>
-            <Link
-              href="https://github.com/Jeremy-Kr"
-              style={{ textDecoration: "none" }}
-            >
+            <Link href="https://github.com/Jeremy-Kr">
               <CopyRightText>@이정익</CopyRightText>
             </Link>
-            <Link
-              href="https://github.com/hyoloui"
-              style={{ textDecoration: "none" }}
-            >
+            <Link href="https://github.com/hyoloui">
               <CopyRightText>@이승효</CopyRightText>
             </Link>
-            <Link
-              href="https://github.com/arch-spatula"
-              style={{ textDecoration: "none" }}
-            >
+            <Link href="https://github.com/arch-spatula">
               <CopyRightText>@김상현</CopyRightText>
             </Link>
-            <Link
-              href="https://github.com/yunjunhojj"
-              style={{ textDecoration: "none" }}
-            >
+            <Link href="https://github.com/yunjunhojj">
               <CopyRightText>@윤준호</CopyRightText>
             </Link>
-            <Link
-              href="https://github.com/nno3onn"
-              style={{ textDecoration: "none" }}
-            >
+            <Link href="https://github.com/nno3onn">
               <CopyRightText>@허다은</CopyRightText>
             </Link>
           </ContributorWrapper>
           <ContributorDivider />
           <ContributorWrapper>
             <CopyRightText>Designer</CopyRightText>
-            <CopyRightText>@하예영</CopyRightText>
+            <Link href="https://www.linkedin.com/in/cocker/">
+              <CopyRightText>@하예영</CopyRightText>
+            </Link>
           </ContributorWrapper>
         </ContributorContainer>
       </FooterWrapper>
@@ -133,6 +120,9 @@ const ContributorDivider = styled.hr`
 const ContributorWrapper = styled.div`
   display: flex;
   gap: 0.5rem;
+  a {
+    text-decoration: none;
+  }
 `;
 
 export default Footer;
