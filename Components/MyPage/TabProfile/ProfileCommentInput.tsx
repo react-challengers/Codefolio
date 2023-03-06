@@ -3,11 +3,7 @@ import { useInput } from "@/hooks/common";
 import { useUserProfile } from "@/hooks/query";
 import { initAmplitude } from "@/utils/amplitude/amplitude";
 import postProfileComment from "@/utils/APIs/supabase/postProfileComment";
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 

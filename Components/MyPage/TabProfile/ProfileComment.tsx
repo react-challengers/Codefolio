@@ -1,6 +1,7 @@
 import CommentItem from "@/Components/Detail/Comment/CommentItem";
 import supabase from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import styled from "styled-components";
 
 interface ProfileCommentProps {
@@ -17,10 +18,14 @@ const ProfileComment = ({ profileId }: ProfileCommentProps) => {
     return res;
   };
 
-  const { data, isError, isLoading } = useQuery(
+  const { data, isError, isLoading, refetch } = useQuery(
     ["getProfileComment"],
     getComments
   );
+
+  useEffect(() => {
+    refetch();
+  }, [profileId, refetch]);
 
   if (isLoading) return <>loading...</>;
 
