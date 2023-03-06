@@ -15,6 +15,7 @@ import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { myPageCurrentTab, userLoginCheck } from "@/lib/recoil";
+import { useUserProfile } from "@/hooks/query";
 
 const tabList = ["프로젝트", "북마크", "좋아요", "칭찬배지", "프로필"];
 
@@ -23,9 +24,13 @@ const ProfilePage: NextPage = () => {
   const [userId, setUserId] = useState("");
   const [likeIds, setLikeIds] = useState<string[]>([]);
   const [bookmarkIds, setBookmarkIds] = useState<string[]>([]);
-  const isLogin = useRecoilValue(userLoginCheck);
+  const [isLogin, setIsLogin] = useRecoilState(userLoginCheck);
 
+  const { profileData } = useUserProfile();
   const router = useRouter();
+
+  // 옵셔널 체이닝으로 존재하지 않는 프로필은 본인으로 리다이렉팅
+  const profileUserId = router?.query?.userId?.[0];
 
   useQuery(["currentUser"], {
     queryFn: getCurrentUser,
@@ -42,11 +47,15 @@ const ProfilePage: NextPage = () => {
     setCurrentTab(idx);
   };
 
-  // useEffect(() => {
-  //   if (!isLogin) {
-  //     router.push("/auth/login");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!profileData.user_id) return;
+    if (isLogin && !profileUserId) {
+      router.push(`/profile/${profileData.user_id}`);
+    }
+    if (!isLogin && !profileUserId) {
+      router.push("/auth/login");
+    }
+  }, []);
 
   // 내가 작성한 아이템 리스트
   const myItemList = useMemo(() => {
@@ -118,9 +127,6 @@ const ProfilePage: NextPage = () => {
         return myItemList;
     }
   }, [currentTab, myItemList, bookmarkList, likeList]);
-
-  // 옵셔널 체이닝으로 존재하지 않는 프로필은 본인으로 리다이렉팅
-  const profileUserId = router?.query?.userId?.[0];
 
   if (!filteredItemList) return <div>에러</div>;
 
