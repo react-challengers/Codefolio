@@ -147,7 +147,7 @@ const HelperText = styled.div<HelperTextProps>`
   margin-top: 0.5rem;
   margin-left: 3.5rem;
   font-size: 1rem;
-  color: #ff0000;
+  color: ${({ theme }) => theme.colors.messageError};
   opacity: ${({ isHelperText }) => (isHelperText ? 1 : 0)};
   transition: all 0.5s ease-in-out;
 `;

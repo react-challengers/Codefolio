@@ -1,4 +1,4 @@
-import { postMembers, postMembersVaildate } from "@/lib/recoil";
+import { postMembers, postMembersValidate } from "@/lib/recoil";
 import Image from "next/image";
 import { ChangeEvent, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -14,8 +14,8 @@ import { HelperTextBox } from "@/Components/Common";
 const WithPeople = () => {
   const [people, setPeople] = useRecoilState(postMembers);
 
-  // recoil validate state
-  const membersVaildate = useRecoilValue(postMembersVaildate);
+  // recoil Validate state
+  const membersValidate = useRecoilValue(postMembersValidate);
 
   // github 추가해야 함
   const {
@@ -72,9 +72,9 @@ const WithPeople = () => {
               value={person.name}
               onChange={changePerson(idx, "name")}
               maxLength={5}
-              validate={membersVaildate[idx]?.name}
+              Validate={membersValidate[idx]?.name}
             />
-            <HelperTextBox text={membersVaildate[idx]?.name} />
+            <HelperTextBox text={membersValidate[idx]?.name} />
           </HelperTextContainer>
 
           <HelperTextContainer>
@@ -83,18 +83,18 @@ const WithPeople = () => {
               value={person.field}
               onChange={changePerson(idx, "field")}
               maxLength={11}
-              validate={membersVaildate[idx]?.field}
+              Validate={membersValidate[idx]?.field}
             />
-            <HelperTextBox text={membersVaildate[idx]?.field} />
+            <HelperTextBox text={membersValidate[idx]?.field} />
           </HelperTextContainer>
           <HelperTextContainer>
             <InputStyle
               placeholder="https://github.com/user"
               value={person.github}
               onChange={changePerson(idx, "github")}
-              validate={membersVaildate[idx]?.github}
+              Validate={membersValidate[idx]?.github}
             />
-            <HelperTextBox text={membersVaildate[idx]?.github} />
+            <HelperTextBox text={membersValidate[idx]?.github} />
           </HelperTextContainer>
           <CancelButton
             onClick={onDelete(idx)}
@@ -135,15 +135,15 @@ const InputWrapper = styled.div`
 `;
 
 interface InputStyleProps {
-  validate?: string;
+  Validate?: string;
 }
 
 const InputStyle = styled.input<InputStyleProps>`
   border: none;
   outline: none;
   border-bottom: 1px solid
-    ${({ validate, theme }) =>
-      validate ? theme.colors.messageError : theme.colors.gray7};
+    ${({ Validate, theme }) =>
+      Validate ? theme.colors.messageError : theme.colors.gray7};
   padding: 0.625rem 1.25rem;
   box-sizing: border-box;
   background-color: transparent;

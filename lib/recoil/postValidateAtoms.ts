@@ -5,71 +5,71 @@ const postErrorBoxText = atom<string>({
   default: "",
 });
 
-const postTitleVaildate = atom<string>({
-  key: "postTitleVaildate",
+const postTitleValidate = atom<string>({
+  key: "postTitleValidate",
   default: "",
 });
 
-const postSubTitleVaildate = atom<string>({
-  key: "postSubTitleVaildate",
+const postSubTitleValidate = atom<string>({
+  key: "postSubTitleValidate",
   default: "",
 });
 
-const postSubCategoryVaildate = atom<string>({
-  key: "postSubCategoryVaildate",
+const postSubCategoryValidate = atom<string>({
+  key: "postSubCategoryValidate",
   default: "",
 });
 
-const postSkillsVaildate = atom<string>({
-  key: "postSkillsVaildate",
+const postSkillsValidate = atom<string>({
+  key: "postSkillsValidate",
   default: "",
 });
 
-const postProjectDurationVaildate = atom<string>({
-  key: "postProjectDurationVaildate",
+const postProjectDurationValidate = atom<string>({
+  key: "postProjectDurationValidate",
   default: "",
 });
 
-interface MembersVaildateType {
+interface MembersValidateType {
   name: string;
   field: string;
   github: string;
 }
 
-const postMembersVaildate = atom<MembersVaildateType[]>({
-  key: "postMembersVaildate",
+const postMembersValidate = atom<MembersValidateType[]>({
+  key: "postMembersValidate",
   default: [],
 });
-const postTagsVaildate = atom<string>({
-  key: "postTagsVaildate",
+const postTagsValidate = atom<string>({
+  key: "postTagsValidate",
   default: "",
 });
 
-const postGithubUrlVaildate = atom<string>({
-  key: "postGithubUrlVaildate",
+const postGithubUrlValidate = atom<string>({
+  key: "postGithubUrlValidate",
   default: "",
 });
 
-const postDeployedUrlVaildate = atom<string>({
-  key: "postDeployedUrlVaildate",
+const postDeployedUrlValidate = atom<string>({
+  key: "postDeployedUrlValidate",
   default: "",
 });
 
-const postContentVaildate = atom<string>({
-  key: "postContentVaildate",
+const postContentValidate = atom<string>({
+  key: "postContentValidate",
   default: "",
 });
 
 export {
-  postTitleVaildate,
-  postSubTitleVaildate,
-  postSubCategoryVaildate,
-  postSkillsVaildate,
-  postProjectDurationVaildate,
-  postMembersVaildate,
-  postGithubUrlVaildate,
-  postDeployedUrlVaildate,
-  postContentVaildate,
+  postTitleValidate,
+  postSubTitleValidate,
+  postSubCategoryValidate,
+  postSkillsValidate,
+  postProjectDurationValidate,
+  postMembersValidate,
+  postGithubUrlValidate,
+  postDeployedUrlValidate,
+  postContentValidate,
   postErrorBoxText,
-  postTagsVaildate,
+  postTagsValidate,
 };
