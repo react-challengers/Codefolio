@@ -6,6 +6,7 @@ import styled from "styled-components";
 import trash_can from "@/public/icons/trash_can.svg";
 import { useUserProfile } from "@/hooks/query";
 import { HelperTextBox } from "@/Components/Common";
+import FieldPicker from "./FieldPicker";
 
 /**
  * @TODO withPeople logic 확정 후에 유효성 검사 추가 확인 필요
@@ -73,18 +74,13 @@ const WithPeople = () => {
               onChange={changePerson(idx, "name")}
               maxLength={5}
               Validate={membersValidate[idx]?.name}
+              disabled={idx === 0}
             />
             <HelperTextBox text={membersValidate[idx]?.name} />
           </HelperTextContainer>
 
           <HelperTextContainer>
-            <InputStyle
-              placeholder="참여 포지션"
-              value={person.field}
-              onChange={changePerson(idx, "field")}
-              maxLength={11}
-              Validate={membersValidate[idx]?.field}
-            />
+            <FieldPicker field={person.field as string} />
             <HelperTextBox text={membersValidate[idx]?.field} />
           </HelperTextContainer>
           <HelperTextContainer>
@@ -123,7 +119,7 @@ const InputWrapper = styled.div`
   position: relative;
   gap: 1rem;
   &:first-child {
-    & > input:first-child {
+    & > :first-child input {
       border-radius: 0.25rem;
       color: ${({ theme }) => theme.colors.gray3};
       background-color: ${({ theme }) => theme.colors.gray5};

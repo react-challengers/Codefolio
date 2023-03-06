@@ -13,6 +13,7 @@ import {
   postSubCategory as recoilPostSubCategory,
   postLargeCategory as recoilPostLargeCategory,
   userLoginCheck,
+  postThumbnailCheck,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import { NextPage } from "next";
@@ -45,6 +46,7 @@ const EditPostPage: NextPage = () => {
   const setContent = useSetRecoilState(postContent);
   const setPostLargeCategory = useSetRecoilState(recoilPostLargeCategory);
   const setPostSubCategory = useSetRecoilState(recoilPostSubCategory);
+  const setIsThumbnail = useSetRecoilState(postThumbnailCheck);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -87,6 +89,7 @@ const EditPostPage: NextPage = () => {
     setContent(post.content);
     setPostLargeCategory(post.large_category);
     setPostSubCategory(post.sub_category);
+    setIsThumbnail(post.thumbnail_check);
   }, [post]);
 
   const PostEditor = dynamic(

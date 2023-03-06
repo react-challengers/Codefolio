@@ -12,10 +12,9 @@ import {
   getIsLike,
   getOnePost,
 } from "@/utils/APIs/supabase";
-import getTextColorByBackgroundColor from "@/utils/detail/getTextColorByBackgroundColor";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SyncLoader } from "react-spinners";
 import styled from "styled-components";
 import DetailBadgesContainer from "./DetailBadgesContainer";
@@ -29,7 +28,7 @@ const DetailArticle = () => {
   const [titleData, setTitleData] = useState({
     title: "",
     subtitle: "",
-    backgroundColor: "",
+    backgroundImage: "",
     field: "",
     subCategory: "",
   });
@@ -42,7 +41,6 @@ const DetailArticle = () => {
   });
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
-  const [titleColor, setTitleColor] = useState("black");
   const [currentUserId, setCurrentUserId] = useState("");
   const [isBookmark, setIsBookmark] = useState(false);
   const [isLike, setIsLike] = useState(false);
@@ -58,7 +56,7 @@ const DetailArticle = () => {
           setTitleData({
             title: data.title,
             subtitle: data.sub_title,
-            backgroundColor: data.title_background_image,
+            backgroundImage: data.title_background_image,
             field: data.large_category,
             subCategory: data.sub_category,
           });
@@ -103,15 +101,6 @@ const DetailArticle = () => {
       setCurrentUserId("");
     },
   });
-
-  // 이미지로 변경 후 삭제
-  useEffect(() => {
-    const luma = getTextColorByBackgroundColor(titleData.backgroundColor);
-    if (luma < 127.5) setTitleColor("white");
-    else setTitleColor("black");
-  }, [titleData.backgroundColor]);
-
-  // -----------
 
   const { isLoading: isBookmarkLoading } = useQuery(
     ["getBookmark", currentUserId, postId],
@@ -159,7 +148,7 @@ const DetailArticle = () => {
         setIsLike={setIsLike}
         currentUserId={currentUserId}
       />
-      <DetailTitle {...titleData} titleColor={titleColor} />
+      <DetailTitle {...titleData} />
       <DetailContentsContainer>
         <DetailContentsSide>
           <DetailSide {...sideData} authorInfo={authorInfo} />

@@ -81,6 +81,7 @@ const ShowMoreModalContainer = styled.div`
   right: 1rem;
   box-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
   border-radius: 0.25rem;
+  z-index: 2;
 `;
 
 const ItemWrapper = styled.div`

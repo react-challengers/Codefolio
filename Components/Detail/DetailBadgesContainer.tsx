@@ -14,6 +14,7 @@ const DetailBadgesContainer = () => {
 const BadgesContainer = styled.div`
   width: 100%;
   padding: 3.5rem 7.5rem;
+  margin-top: 2rem;
 
   border-top: 1px solid ${({ theme }) => theme.colors.gray7};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray7};
