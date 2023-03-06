@@ -101,7 +101,9 @@ const Search: NextPage = () => {
           <CardItem
             key={post.id}
             postId={post.id}
-            imageSrc={findThumbnailInContent(post.content)}
+            imageSrc={findThumbnailInContent(
+              post.thumbnail_check ? post.title_background_image : post.content
+            )}
             imageAlt={`${post.title}썸네일`}
             title={post.title}
             subTitle={post.sub_title}
@@ -124,6 +126,7 @@ const SearchContainer = styled.div`
   flex-direction: column;
   width: 98.75rem;
   margin: 0 auto;
+  min-height: 56rem;
 `;
 
 const Loader = styled(SyncLoader)`

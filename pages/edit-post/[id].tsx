@@ -9,7 +9,7 @@ import {
   postSubTitle,
   postTags,
   postTitle,
-  postCoverImage,
+  postTitleBackgroundImage,
   postSubCategory as recoilPostSubCategory,
   postLargeCategory as recoilPostLargeCategory,
   userLoginCheck,
@@ -35,7 +35,7 @@ const EditPostPage: NextPage = () => {
 
   const setTitle = useSetRecoilState(postTitle);
   const setSubTitle = useSetRecoilState(postSubTitle);
-  const setTitleBackgroundColor = useSetRecoilState(postCoverImage);
+  const setTitleBackgroundColor = useSetRecoilState(postTitleBackgroundImage);
   const setProjectDuration = useSetRecoilState(postProjectDuration);
   const setSkills = useSetRecoilState(postSkills);
   const setTag = useSetRecoilState(postTags);
