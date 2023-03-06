@@ -42,11 +42,11 @@ const ProfilePage: NextPage = () => {
     setCurrentTab(idx);
   };
 
-  useEffect(() => {
-    if (!isLogin) {
-      router.push("/auth/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!isLogin) {
+  //     router.push("/auth/login");
+  //   }
+  // }, []);
 
   // 내가 작성한 아이템 리스트
   const myItemList = useMemo(() => {
@@ -119,6 +119,9 @@ const ProfilePage: NextPage = () => {
     }
   }, [currentTab, myItemList, bookmarkList, likeList]);
 
+  // 옵셔널 체이닝으로 존재하지 않는 프로필은 본인으로 리다이렉팅
+  const profileUserId = router?.query?.userId?.[0];
+
   if (!filteredItemList) return <div>에러</div>;
 
   // 중첩 삼항연산자 해체
@@ -135,7 +138,7 @@ const ProfilePage: NextPage = () => {
 
   return (
     <MyPageContainer>
-      <UserInfoContainer />
+      <UserInfoContainer profileUserId={profileUserId} />
       <MyPageTab
         tabList={tabList}
         currentTab={currentTab}

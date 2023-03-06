@@ -10,11 +10,15 @@ const USER_PROFILE = "user_profile";
  * @TODO 최초 데이터를 유출하지 말고 갱신된 쿼리캐시를 리코일로 유출하기
  */
 
-const useUserProfile = () => {
+const useUserProfile = (profileUserId = "") => {
   const queryClient = useQueryClient();
 
   // get
-  const { data, isLoading } = useQuery([USER_PROFILE], getUserProfile, {});
+  const { data, isLoading } = useQuery(
+    [USER_PROFILE, profileUserId],
+    () => getUserProfile(profileUserId),
+    {}
+  );
 
   // null이면 갱신
   const profileData: UserProfileType = {

@@ -121,6 +121,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
         alt="프로필이미지"
         page="detailPage"
         src={userProfileImage}
+        profileId={comment.user_id}
       />
       <TextBox>
         <CommentTitle>
