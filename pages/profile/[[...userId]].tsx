@@ -27,8 +27,6 @@ const ProfilePage: NextPage = () => {
 
   const router = useRouter();
 
-  const profileId = router.query.userId![0];
-
   useQuery(["currentUser"], {
     queryFn: getCurrentUser,
     onSuccess({ data: { user } }) {
@@ -121,6 +119,9 @@ const ProfilePage: NextPage = () => {
     }
   }, [currentTab, myItemList, bookmarkList, likeList]);
 
+  // 옵셔널 체이닝으로 존재하지 않는 프로필은 본인으로 리다이렉팅
+  const profileUserId = router?.query?.userId?.[0];
+
   if (!filteredItemList) return <div>에러</div>;
 
   // 중첩 삼항연산자 해체
@@ -139,7 +140,7 @@ const ProfilePage: NextPage = () => {
 
   return (
     <MyPageContainer>
-      <UserInfoContainer />
+      <UserInfoContainer profileUserId={profileUserId} />
       <MyPageTab
         tabList={tabList}
         currentTab={currentTab}
