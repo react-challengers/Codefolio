@@ -20,6 +20,8 @@ const DetailSide = ({
   members,
   authorInfo,
 }: DetailSideProps) => {
+  console.log("authorInfo", authorInfo);
+
   return (
     <SideContainer>
       <DetailSideBadge />
@@ -29,7 +31,6 @@ const DetailSide = ({
         skills={skills}
       />
       <DetailSidePeople
-        github=""
         authorInfo={authorInfo}
         subCategory={subCategory}
         members={members}
