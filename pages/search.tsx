@@ -5,6 +5,7 @@ import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 import { NextPage, GetServerSideProps } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { SyncLoader } from "react-spinners";
@@ -70,10 +71,6 @@ const Search: NextPage = () => {
       </EmptySearchResult>
     );
 
-  const onClickCardItem = (id: string) => {
-    router.push(`/detail/${id}`);
-  };
-
   return (
     <SearchContainer>
       <SearchInfo>
@@ -102,10 +99,7 @@ const Search: NextPage = () => {
       </DropDownContainer>
       <CardGrid>
         {sortPosts?.map((post) => (
-          <CardItemWrapper
-            key={post.id}
-            onClick={() => onClickCardItem(post.id)}
-          >
+          <CardItemWrapper key={post.id} href={`/detail/${post.id}`}>
             <CardItem
               postId={post.id}
               imageSrc={findThumbnailInContent(
@@ -131,8 +125,9 @@ const Search: NextPage = () => {
   );
 };
 
-const CardItemWrapper = styled.div`
+const CardItemWrapper = styled(Link)`
   cursor: pointer;
+  text-decoration: none;
 `;
 
 const SearchContainer = styled.div`
