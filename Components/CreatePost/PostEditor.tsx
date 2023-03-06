@@ -2,6 +2,7 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
 import { useCallback, useState } from "react";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import { v4 as uuidv4 } from "uuid";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -14,6 +15,7 @@ import styled from "styled-components";
 import compressImg from "@/utils/commons/compressImg";
 import validateFile from "@/utils/commons/validationImage";
 import { Modal } from "../Common";
+import ImageUploadText from "./ImageUploadText";
 
 /**
  * @TODO storage 삭제 구현 필요
@@ -161,8 +163,19 @@ const PostEditor: NextPage = () => {
               // API가 any를 지정합니다.
               return (
                 <CustomImageContainer>
+                  <ImageContainerCloseButtonWrapper>
+                    <Image
+                      src="/icons/close.svg"
+                      width={16}
+                      height={16}
+                      alt="닫힘버튼"
+                      onClick={() => handle.close()}
+                    />
+                  </ImageContainerCloseButtonWrapper>
                   <label htmlFor="file">
-                    <ImageUploadButton>이미지 업로드하기</ImageUploadButton>
+                    <ImageUploadButton>
+                      <ImageUploadText />
+                    </ImageUploadButton>
                   </label>
                   <ImageInput
                     type="file"
@@ -175,9 +188,6 @@ const PostEditor: NextPage = () => {
                       handle.close();
                     }}
                   />
-                  <CloseButton type="button" onClick={() => handle.close()}>
-                    close
-                  </CloseButton>
                 </CustomImageContainer>
               );
             },
@@ -233,44 +243,53 @@ const MDEditorStyled = styled(MDEditor)`
   .w-md-editor-preview {
     box-shadow: none;
   }
+
+  .w-md-editor-toolbar-child {
+    background: none;
+  }
 `;
 
 const CustomImageContainer = styled.div`
-  width: 15rem;
-  padding: 0.625rem;
-  background-color: #eee;
+  width: 11.25rem;
+  height: 5.25rem;
+  padding-top: 0.25rem;
+  /* padding: 0.625rem; */
+  background-color: ${({ theme }) => theme.colors.gray9};
+  border-radius: 0.25rem;
+`;
+
+const ImageContainerCloseButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 0.25rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  cursor: pointer;
 `;
 
 const ImageUploadButton = styled.div`
-  width: 9.375rem;
+  width: 7rem;
   height: 1.875rem;
-  background: #fff;
-  border: 1px solid rgb(77, 77, 77);
-  border-radius: 0.625rem;
-  font-weight: 500;
+  background: none;
+  border: 1px solid ${({ theme }) => theme.colors.gray2};
+  border-radius: 0.25rem;
+  padding: 0.375rem 0;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 0 auto;
+
+  box-sizing: border-box;
+  text-align: center;
+
   &:hover {
-    background: rgb(77, 77, 77);
-    color: #fff;
+    border-color: ${({ theme }) => theme.colors.primary1};
+    path {
+      fill: ${({ theme }) => theme.colors.primary1};
+    }
   }
 `;
 
 const ImageInput = styled.input`
   display: none;
-`;
-
-const CloseButton = styled.button`
-  all: unset;
-  display: block;
-  margin-left: auto;
-  margin-top: 0.625rem;
-  cursor: pointer;
-  :hover {
-    text-decoration: underline;
-  }
 `;
 
 export default PostEditor;
