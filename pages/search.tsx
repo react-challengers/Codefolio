@@ -124,6 +124,7 @@ const SearchContainer = styled.div`
   flex-direction: column;
   width: 98.75rem;
   margin: 0 auto;
+  min-height: 56rem;
 `;
 
 const Loader = styled(SyncLoader)`
