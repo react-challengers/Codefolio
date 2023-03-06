@@ -111,7 +111,7 @@ const PostTitle = () => {
         <TitleBackgroundInput
           id="background-image"
           type="file"
-          accept="image/jpg,image/png,image/jpeg,image/gif"
+          accept="image/*"
           multiple={false}
           onChange={onChangeBackgroundImage}
         />

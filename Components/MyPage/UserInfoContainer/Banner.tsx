@@ -32,6 +32,7 @@ const Banner = ({ src = "", alt = "프로필 배경이미지" }: BannerProps) =>
           <UserBackgroundImagePicker
             id="background-color-picker"
             type="file"
+            accept="image/*"
             onChange={handleBackgroundImage}
           />
         </ImgLabel>
@@ -52,6 +53,7 @@ const Banner = ({ src = "", alt = "프로필 배경이미지" }: BannerProps) =>
         <UserBackgroundImagePicker
           id="background-color-picker"
           type="file"
+          accept="image/*"
           onChange={handleBackgroundImage}
         />
       </ImgLabel>
