@@ -251,6 +251,10 @@ const MDEditorStyled = styled(MDEditor)`
   .w-md-editor-toolbar-child {
     background: none;
   }
+
+  li {
+    list-style-type: disc;
+  }
 `;
 
 const CustomImageContainer = styled.div`
