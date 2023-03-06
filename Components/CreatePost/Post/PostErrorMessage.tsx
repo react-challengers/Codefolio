@@ -27,7 +27,7 @@ const ErrorMessageBox = styled.div`
 
   ${({ theme }) => theme.fonts.subtitle16}
 
-  background-color: #e22c36;
+  background-color:  ${({ theme }) => theme.colors.messageError};
 
   margin-right: 2rem;
 

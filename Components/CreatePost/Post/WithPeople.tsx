@@ -142,7 +142,8 @@ const InputStyle = styled.input<InputStyleProps>`
   border: none;
   outline: none;
   border-bottom: 1px solid
-    ${({ validate, theme }) => (validate ? "#E22C35" : theme.colors.gray7)};
+    ${({ validate, theme }) =>
+      validate ? theme.colors.messageError : theme.colors.gray7};
   padding: 0.625rem 1.25rem;
   box-sizing: border-box;
   background-color: transparent;

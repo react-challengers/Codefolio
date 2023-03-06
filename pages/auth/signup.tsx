@@ -2,6 +2,7 @@ import { NextPage, GetStaticProps } from "next";
 import styled from "styled-components";
 import Link from "next/link";
 import supabase from "@/lib/supabase";
+import Image from "next/image";
 
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -22,7 +23,6 @@ import { userLoginCheck } from "@/lib/recoil";
 import { useQuery } from "@tanstack/react-query";
 import { getCurrentUser } from "@/utils/APIs/supabase";
 
-import Image from "next/dist/client/image";
 import ico_close_16 from "@/public/icons/ico_close_16.svg";
 import ico_ExclamationMark from "@/public/icons/ico_ExclamationMark.svg";
 
@@ -128,7 +128,7 @@ const SignUpPage: NextPage = () => {
         <SignupForm>
           <div>
             {isError ? (
-              <ErrorMessageBox background="#E22C35">
+              <ErrorMessageBox Error>
                 <SocialIcon
                   src={ico_ExclamationMark}
                   alt="에러 느낌표"
@@ -138,7 +138,7 @@ const SignUpPage: NextPage = () => {
                 이미 등록된 아이디 입니다.
               </ErrorMessageBox>
             ) : (
-              <ErrorMessageBox background={null} />
+              <ErrorMessageBox Error={false} />
             )}
             {userNameHelperText && (
               <CloseSvg

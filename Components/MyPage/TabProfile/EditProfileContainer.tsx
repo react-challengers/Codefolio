@@ -328,7 +328,7 @@ interface FieldHelpTextProps {
 }
 
 const FieldHelpText = styled.span<FieldHelpTextProps>`
-  color: red;
+  color: ${({ theme }) => theme.colors.messageError};
   font-size: 1rem;
   opacity: ${({ isEmptyField }) => (isEmptyField ? 1 : 0)};
   transition: opacity 0.5s;
@@ -339,7 +339,7 @@ interface SkillHelpTextProps {
 }
 
 const SkillHelpText = styled.span<SkillHelpTextProps>`
-  color: red;
+  color: ${({ theme }) => theme.colors.messageError};
   font-size: 1rem;
   margin-left: 8rem;
   opacity: ${({ isEmptySkills }) => (isEmptySkills ? 1 : 0)};

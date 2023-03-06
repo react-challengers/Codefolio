@@ -260,7 +260,7 @@ const CategoryPicker = styled.div<CategoryPickerProps>`
 
   border-bottom: 1px solid
     ${({ CategoryVaildate, theme }) =>
-      CategoryVaildate ? "#E22C35" : theme.colors.gray7};
+      CategoryVaildate ? theme.colors.messageError : theme.colors.gray7};
   ${({ theme }) => theme.fonts.body14Medium};
 
   span {
@@ -349,7 +349,7 @@ const InputURL = styled.input<InputURLProps>`
   border: none;
   border-bottom: 0.0625rem solid;
   border-color: ${({ githubUrlVaildate, theme }) =>
-    githubUrlVaildate ? "#E22C35" : theme.colors.gray7};
+    githubUrlVaildate ? theme.colors.messageError : theme.colors.gray7};
 
   ${({ theme }) => theme.fonts.body14};
   color: ${({ theme }) => theme.colors.white};

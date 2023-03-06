@@ -63,7 +63,7 @@ const SkillListContainer = styled.div<SkillListContainerProps>`
 
   border: 1px solid
     ${({ skillsVaildate, theme }) =>
-      skillsVaildate ? "#E22C35" : theme.colors.gray7};
+      skillsVaildate ? theme.colors.messageError : theme.colors.gray7};
   border-radius: 0.25rem;
 `;
 
