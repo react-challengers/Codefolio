@@ -29,6 +29,7 @@ const DetailSidePeople = ({
               src={authorInfo?.profile_image}
               alt="프로필 사진"
               page="detailPage"
+              profileId={authorInfo?.user_id}
             />
             <UserInfo>
               <h2>{authorInfo?.user_name}</h2>

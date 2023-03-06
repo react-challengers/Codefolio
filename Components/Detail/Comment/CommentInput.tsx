@@ -30,7 +30,7 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
   });
 
   const {
-    profileData: { profile_image: profileImage },
+    profileData: { profile_image: profileImage, user_id: userProfileId },
   } = useUserProfile();
 
   useQuery(["getOnePost", postId], {
@@ -98,6 +98,7 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
           src={profileImage}
           alt="사용자 프로필 이미지"
           page="detailPage"
+          profileId={userProfileId}
         />
         <CommentTextarea
           value={inputValues.comment}
