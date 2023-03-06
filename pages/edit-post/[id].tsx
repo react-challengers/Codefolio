@@ -3,27 +3,27 @@ import {
   postContent,
   postMembers,
   postProjectDuration,
-  postPublic,
+  postGithubUrl,
+  postDeployedUrl,
   postSkills,
   postSubTitle,
   postTags,
   postTitle,
-  postTitleBackgroundColor,
+  postTitleBackgroundImage,
   postSubCategory as recoilPostSubCategory,
   postLargeCategory as recoilPostLargeCategory,
   userLoginCheck,
+  postThumbnailCheck,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
-import { Editor } from "@toast-ui/react-editor";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const EditPostPage: NextPage = () => {
-  const editorRef = useRef<Editor>(null);
   const router = useRouter();
   const [post, setPost] = useState<PostType | null>(null);
   const isLogin = useRecoilValue(userLoginCheck);
@@ -36,15 +36,17 @@ const EditPostPage: NextPage = () => {
 
   const setTitle = useSetRecoilState(postTitle);
   const setSubTitle = useSetRecoilState(postSubTitle);
-  const setTitleBackgroundColor = useSetRecoilState(postTitleBackgroundColor);
+  const setTitleBackgroundColor = useSetRecoilState(postTitleBackgroundImage);
   const setProjectDuration = useSetRecoilState(postProjectDuration);
   const setSkills = useSetRecoilState(postSkills);
   const setTag = useSetRecoilState(postTags);
-  const setIsPublic = useSetRecoilState(postPublic);
+  const setGithubUrl = useSetRecoilState(postGithubUrl);
+  const setDeployedUrl = useSetRecoilState(postDeployedUrl);
   const setMembers = useSetRecoilState(postMembers);
   const setContent = useSetRecoilState(postContent);
   const setPostLargeCategory = useSetRecoilState(recoilPostLargeCategory);
   const setPostSubCategory = useSetRecoilState(recoilPostSubCategory);
+  const setIsThumbnail = useSetRecoilState(postThumbnailCheck);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -77,15 +79,17 @@ const EditPostPage: NextPage = () => {
     if (!post) return;
     setTitle(post.title);
     setSubTitle(post.sub_title);
-    setTitleBackgroundColor(post.title_background_color);
+    setTitleBackgroundColor(post.title_background_image);
     setProjectDuration(post.progress_date);
     setSkills(post.skills);
     setTag(post.tag);
-    setIsPublic(post.is_public);
+    setGithubUrl(post.github_url);
+    setDeployedUrl(post.deployed_url);
     setMembers(post.members);
     setContent(post.content);
     setPostLargeCategory(post.large_category);
     setPostSubCategory(post.sub_category);
+    setIsThumbnail(post.thumbnail_check);
   }, [post]);
 
   const PostEditor = dynamic(
@@ -98,7 +102,7 @@ const EditPostPage: NextPage = () => {
   return (
     <MainWrapper>
       <Post />
-      <PostEditor editorRef={editorRef} />
+      <PostEditor />
     </MainWrapper>
   );
 };

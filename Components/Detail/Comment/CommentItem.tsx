@@ -1,21 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import supabase from "@/lib/supabase";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import viewCreateAt from "@/utils/commons/viewCreateAt";
 import { DefaultButton, ProfileImage } from "@/Components/Common";
+import {
+  decrementComment,
+  deleteComment,
+  editComment,
+  getCurrentUser,
+  getOnePost,
+  getSingleUser,
+} from "@/utils/APIs/supabase";
+import Image from "next/image";
+import supabase from "@/lib/supabase";
 
 /**
  * @TODO useInput으로 리팩토링 고민
  */
-
-interface CommentType {
-  id: string;
-  post_id: string;
-  user_id: string;
-  content: string;
-  created_at: string;
-}
 
 interface CommentItemProps {
   comment: CommentType;
@@ -24,55 +25,74 @@ interface CommentItemProps {
 const CommentItem = ({ comment }: CommentItemProps) => {
   const queryClient = useQueryClient();
 
+  const [showMoreModal, setShowMoreModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
-  const [currentUSERID, setCurrentUSERID] = useState<string | undefined>("");
+  const [userId, setUserId] = useState<string | undefined>("");
   const [userName, setUserName] = useState("");
   const [userProfileImage, setUserProfileImage] = useState("");
+  const [author, setAuthor] = useState("");
 
-  useEffect(() => {
-    // 로그인 상태 확인
-    const LoginState = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data) {
-        setCurrentUSERID(data.session?.user.id);
+  useQuery(["currentUser"], {
+    queryFn: getCurrentUser,
+    onSuccess({ data: { user } }) {
+      if (user) {
+        setUserId(user.id);
       }
-    };
+    },
+  });
 
-    LoginState();
-  }, []);
+  useQuery(["getOnePost", comment.post_id], {
+    queryFn: ({ queryKey }) => getOnePost(queryKey[1] as string),
+    onSuccess: (data) => {
+      if (data) {
+        setAuthor(data.user_id);
+      }
+    },
+  });
 
-  useEffect(() => {
-    const getUserProfile = async () => {
-      const { data } = await supabase
-        .from("user_profile")
-        .select("*")
-        .eq("user_id", comment.user_id)
-        .single();
-
+  useQuery(["getSingleUser", comment.user_id], {
+    queryFn: ({ queryKey }) => getSingleUser(queryKey[1] as string),
+    onSuccess(data) {
+      if (!data) return;
       setUserName(data.user_name);
       setUserProfileImage(data.profile_image);
-    };
+    },
+    onError(error) {
+      console.log(error);
+    },
+    enabled: !!comment.user_id,
+  });
 
-    getUserProfile();
-  }, [comment.user_id]);
+  // 추후 리팩토링 대상(결합도가 높음)
+  const { mutate: deleteNotificationMutate } = useMutation(
+    async (type: string) => {
+      await supabase
+        .from("notification")
+        .delete()
+        .match({
+          user_id: userId,
+          target_id: author,
+          post_id: comment.post_id as string,
+          type,
+        });
+    }
+  );
 
-  const { mutate: deleteComment } = useMutation(
-    (): any => supabase.from("comment").delete().eq("id", comment.id),
+  const { mutate: deleteCommentMutate } = useMutation(
+    () => deleteComment(comment.id),
     {
       onSuccess: async () => {
-        await supabase.rpc("decrement_comment", { row_id: comment.post_id });
+        deleteNotificationMutate("comment");
+        await decrementComment(comment.post_id);
         queryClient.invalidateQueries(["getComment"]);
+        queryClient.invalidateQueries(["GET_POSTS"]);
       },
     }
   );
 
-  const { mutate: editComment } = useMutation(
-    (): any =>
-      supabase
-        .from("comment")
-        .update({ content: editContent })
-        .eq("id", comment.id),
+  const { mutate: editCommentMutate } = useMutation(
+    () => editComment(comment.id, editContent),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["getComment"]);
@@ -81,8 +101,9 @@ const CommentItem = ({ comment }: CommentItemProps) => {
   );
 
   const handleEditClick = async () => {
+    setShowMoreModal(false);
     if (isEditing) {
-      editComment();
+      editCommentMutate();
     }
     setIsEditing((prev) => !prev);
   };
@@ -117,7 +138,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
           <CommentContent>{comment.content}</CommentContent>
         )}
       </TextBox>
-      {currentUSERID === comment.user_id ? (
+      {userId === comment.user_id ? (
         <ButtonWrapper>
           {isEditing ? (
             <>
@@ -135,30 +156,34 @@ const CommentItem = ({ comment }: CommentItemProps) => {
               />
             </>
           ) : (
-            <>
-              <DefaultButton
-                text="수정"
-                type="outline"
-                size="s"
-                onClick={handleEditClick}
+            <MoreButtonsWrappoer>
+              <Image
+                src={`/icons/more${showMoreModal ? "-on" : ""}.svg`}
+                onClick={() => setShowMoreModal((prev) => !prev)}
+                width={24}
+                height={24}
+                alt="더보기 버튼"
               />
-              <DefaultButton
-                text="삭제"
-                type="outline"
-                size="s"
-                onClick={() => deleteComment()}
-              />
-            </>
+            </MoreButtonsWrappoer>
           )}
         </ButtonWrapper>
       ) : (
         <ButtonWrapper />
+      )}
+      {showMoreModal && (
+        <ShowMoreModalContainer>
+          <ItemWrapper onClick={handleEditClick}>수정하기</ItemWrapper>
+          <ItemWrapper onClick={() => deleteCommentMutate()}>
+            삭제하기
+          </ItemWrapper>
+        </ShowMoreModalContainer>
       )}
     </CommentContainer>
   );
 };
 
 const CommentContainer = styled.div`
+  position: relative;
   display: flex;
   margin-top: 2.5rem;
 `;
@@ -178,14 +203,16 @@ const TextBox = styled.div`
 `;
 
 const CommentTitle = styled.div`
+  color: ${({ theme }) => theme.colors.white};
   height: 1.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 1rem;
 
   span {
     font-size: 1rem;
-    color: #b3b3b3;
+    color: ${({ theme }) => theme.colors.gray4};
 
     display: flex;
     align-items: center;
@@ -199,15 +226,54 @@ const EditInput = styled.input`
   outline: 0;
 
   border-width: 0 0 1px;
+  background-color: ${({ theme }) => theme.colors.gray11};
+  color: ${({ theme }) => theme.colors.white};
 `;
 
 const CommentWrapper = styled.div`
   display: flex;
   gap: 1rem;
+  h3 {
+    ${({ theme }) => theme.fonts.subtitle16}
+  }
+  span {
+    ${({ theme }) => theme.fonts.body14}
+  }
 `;
 
 const CommentContent = styled.div`
-  color: #666666;
+  color: ${({ theme }) => theme.colors.gray2};
+  ${({ theme }) => theme.fonts.body16}
+`;
+
+const MoreButtonsWrappoer = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding-right: 2.5rem;
+  gap: 1.2rem;
+
+  cursor: pointer;
+`;
+
+const ShowMoreModalContainer = styled.div`
+  color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.gray9};
+  z-index: 10;
+  width: 11.25rem;
+  position: absolute;
+  top: 2rem;
+  right: -5rem;
+  box-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
+  border-radius: 0.25rem;
+`;
+
+const ItemWrapper = styled.div`
+  line-height: 3.5rem;
+  cursor: pointer;
+  padding-left: 1.5rem;
+  :hover {
+    background-color: ${({ theme }) => theme.colors.gray8};
+  }
 `;
 
 export default CommentItem;

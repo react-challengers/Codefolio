@@ -24,9 +24,9 @@ const myPageUserId = atom({
   default: "",
 });
 
-const myPageBackgroundColor = atom({
-  key: "myPageBackgroundColor",
-  default: "#ffffff",
+const myPageBackgroundImage = atom({
+  key: "myPageBackgroundImage",
+  default: "",
 });
 
 const myPageProfileImage = atom({
@@ -57,12 +57,25 @@ const myPageBookmarkFolders = atom<string[]>({
   default: [],
 });
 
+const myPageGitHub = atom({ key: "myPageGitHub", default: "" });
+
+// client only state만 존재합니다.
 const myPageIsEditingProfileContainer = atom({
   key: "myPageIsEditingProfileContainer",
   default: false,
 });
 
-// state 결합
+const myPageGithub = atom({
+  key: "myPageGithub",
+  default: "https://github.com",
+});
+
+const myPageCurrentTab = atom({
+  key: "myPageCurrentTab",
+  default: 0,
+});
+
+// state 결합하는 곳입니다.
 const myPageUserProfile = selector({
   key: "myPageUserProfile",
   get: ({ get }) => {
@@ -72,7 +85,7 @@ const myPageUserProfile = selector({
     const contactEmail = get(myPageContactEmail);
     const selfProfile = get(myPageSelfProfile);
     const userId = get(myPageUserId);
-    const backgroundColor = get(myPageBackgroundColor);
+    const backgroundImage = get(myPageBackgroundImage);
     const profileImage = get(myPageProfileImage);
     const gender = get(myPageGender);
     const isPublic = get(myPageIsPublic);
@@ -81,6 +94,7 @@ const myPageUserProfile = selector({
     const birthYear = get(myPageBirthYear);
     const career = get(myPageCareer);
     const bookmarkFolders = get(myPageBookmarkFolders);
+    const github = get(myPageGitHub);
 
     // schema 유효성 검증
     const userProfile: UserProfileType = {
@@ -90,7 +104,7 @@ const myPageUserProfile = selector({
       contact_email: contactEmail,
       self_profile: selfProfile,
       user_id: userId,
-      background_color: backgroundColor,
+      background_image: backgroundImage,
       profile_image: profileImage,
       gender,
       is_public: isPublic,
@@ -99,6 +113,7 @@ const myPageUserProfile = selector({
       birth_year: birthYear,
       career,
       bookmark_folders: bookmarkFolders,
+      github,
     };
     return userProfile;
   },
@@ -110,7 +125,7 @@ export {
   myPageUserName,
   myPageContactEmail,
   myPageSelfProfile,
-  myPageBackgroundColor,
+  myPageBackgroundImage,
   myPageUserId,
   myPageProfileImage,
   myPageUserProfile,
@@ -121,6 +136,8 @@ export {
   myPageBirthYear,
   myPageCareer,
   myPageBookmarkFolders,
+  myPageGithub,
   // 순수 클라이언트 state
   myPageIsEditingProfileContainer,
+  myPageCurrentTab,
 };

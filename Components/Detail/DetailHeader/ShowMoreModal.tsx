@@ -1,44 +1,87 @@
-import supabase from "@/lib/supabase";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deletePost } from "@/utils/APIs/supabase";
+import ConfirmModal from "@/Components/Common/ConfirmModal";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import styled from "styled-components";
 
-const ShowMoreModal = () => {
+interface ShowMoreModalProps {
+  closeModal: () => void;
+}
+
+const ShowMoreModal = ({ closeModal }: ShowMoreModalProps) => {
   const router = useRouter();
   const {
     query: { id: postId },
   } = router;
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const editPost = async () => {
     router.push(`/edit-post/${postId}`);
   };
 
-  const deletePost = async () => {
-    const { error } = await supabase.from("post").delete().eq("id", postId);
-    if (error) {
-      alert("오류가 발생했습니다. 다시 시도홰주세요.");
-      return;
-    }
-    alert("게시물이 삭제되었습니다.");
-    router.push("/");
+  const { mutate: deletePostMutate } = useMutation(deletePost, {
+    onMutate: async () => {
+      await queryClient.cancelQueries(["getPost", postId]);
+
+      const previousPost = queryClient.getQueryData<PostType>([
+        "getPost",
+        postId,
+      ]);
+
+      if (previousPost) {
+        queryClient.setQueryData(["getPost", postId], null);
+      }
+
+      return { previousPost };
+    },
+    onError: (error, variables, context) => {
+      if (context?.previousPost) {
+        queryClient.setQueryData(["getPost", postId], {
+          ...context.previousPost,
+        });
+      }
+    },
+    onSuccess: async () => {
+      router.push("/");
+    },
+  });
+
+  const onClickDeleteButton = () => {
+    setShowDeleteModal(true);
   };
 
   return (
-    <ShowMoreModalContainer>
-      <ItemWrapper onClick={editPost}>수정하기</ItemWrapper>
-      <ItemWrapper onClick={deletePost}>삭제하기</ItemWrapper>
-    </ShowMoreModalContainer>
+    <>
+      <ShowMoreModalContainer>
+        <ItemWrapper onClick={editPost}>수정하기</ItemWrapper>
+        <ItemWrapper onClick={onClickDeleteButton}>삭제하기</ItemWrapper>
+      </ShowMoreModalContainer>
+      {showDeleteModal && (
+        <ConfirmModal
+          bodyText="글을 삭제하시겠습니까?"
+          leftText="취소"
+          rightText="삭제"
+          onClickLeft={() => setShowDeleteModal(false)}
+          onClickRight={() => deletePostMutate(postId as string)}
+        />
+      )}
+    </>
   );
 };
 
 const ShowMoreModalContainer = styled.div`
-  background-color: white;
+  color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.gray9};
   width: 11.25rem;
   position: absolute;
   top: 3.75rem;
-  right: 2.5rem;
-  border: 1px solid #dfdfdf;
+  right: 1rem;
   box-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
   border-radius: 0.25rem;
+  z-index: 2;
 `;
 
 const ItemWrapper = styled.div`
@@ -46,7 +89,7 @@ const ItemWrapper = styled.div`
   cursor: pointer;
   padding-left: 0.75rem;
   :hover {
-    background-color: #e6e6e6;
+    background-color: ${({ theme }) => theme.colors.gray8};
   }
 `;
 

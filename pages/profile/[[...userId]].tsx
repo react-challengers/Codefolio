@@ -3,40 +3,43 @@ import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import {
   CardItemContainer,
+  GoodJobBadge,
   MyPageContainer,
   MyPageTab,
   TabProfile,
   UserInfoContainer,
 } from "@/Components/MyPage";
-import { useQueryClient } from "@tanstack/react-query";
-import { getAllPosts } from "@/utils/APIs/supabase";
+import { useQuery } from "@tanstack/react-query";
+import { getAllPosts, getCurrentUser } from "@/utils/APIs/supabase";
 import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
-import { useRecoilValue } from "recoil";
-import { userLoginCheck } from "@/lib/recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { myPageCurrentTab, userLoginCheck } from "@/lib/recoil";
 
 const tabList = ["프로젝트", "북마크", "좋아요", "프로필"];
 
 const ProfilePage: NextPage = () => {
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentTab, setCurrentTab] = useRecoilState(myPageCurrentTab);
   const [userId, setUserId] = useState("");
-  const [itemList, setItemList] = useState<PostType[]>([]);
   const [likeIds, setLikeIds] = useState<string[]>([]);
   const [bookmarkIds, setBookmarkIds] = useState<string[]>([]);
   const isLogin = useRecoilValue(userLoginCheck);
 
   const router = useRouter();
-  const queryClient = useQueryClient();
+
+  useQuery(["currentUser"], {
+    queryFn: getCurrentUser,
+    onSuccess({ data: { user } }) {
+      if (user) {
+        setUserId(user.id);
+      }
+    },
+  });
+
+  const { data: itemList } = useQuery<PostType[]>(["GET_POSTS"], getAllPosts);
 
   const handleClick = (idx: number) => {
     setCurrentTab(idx);
-  };
-
-  const handleUserId = async () => {
-    const { data } = await supabase.auth.getSession();
-    if (data.session?.user) {
-      setUserId(data.session?.user.id);
-    }
   };
 
   useEffect(() => {
@@ -45,35 +48,9 @@ const ProfilePage: NextPage = () => {
     }
   }, []);
 
-  useEffect(() => {
-    handleUserId();
-  }, []);
-
-  useEffect(() => {
-    const fetchAllPosts = async () => {
-      const newQueryData = await queryClient.fetchQuery<PostType[]>(
-        ["GET_POSTS"],
-        getAllPosts
-      );
-      return newQueryData;
-    };
-
-    const queryData: PostType[] | undefined = queryClient.getQueryData([
-      "GET_POSTS",
-    ]);
-    if (queryData) {
-      setItemList(queryData);
-    } else {
-      fetchAllPosts().then((res) => {
-        if (res) {
-          setItemList(res);
-        }
-      });
-    }
-  }, [queryClient]);
-
   // 내가 작성한 아이템 리스트
   const myItemList = useMemo(() => {
+    if (!itemList) return [];
     return itemList.filter((item) => item.user_id === userId);
   }, [itemList, userId]);
 
@@ -94,6 +71,7 @@ const ProfilePage: NextPage = () => {
 
   const bookmarkList = useMemo(() => {
     if (bookmarkIds) {
+      if (!itemList) return [];
       return itemList.filter((item) => bookmarkIds.includes(item.id));
     }
     return itemList;
@@ -116,6 +94,7 @@ const ProfilePage: NextPage = () => {
 
   const likeList = useMemo(() => {
     if (likeIds) {
+      if (!itemList) return [];
       return itemList.filter((item) => likeIds.includes(item.id));
     }
     return itemList;
@@ -140,7 +119,22 @@ const ProfilePage: NextPage = () => {
     }
   }, [currentTab, myItemList, bookmarkList, likeList]);
 
-  // TODO: itemList 이용해서 필터링된 카드 아이템 리스트 만들기
+  if (!filteredItemList) return <div>에러</div>;
+
+  // 중첩 삼항연산자 해체
+  let Component = null;
+  if (currentTab === tabList.length - 1) {
+    Component = <TabProfile />;
+
+    // TODO: 다른 프로필을 볼 수 있을 때 칭찬배지 탭을 해제합니다.
+    // } else if (currentTab === tabList.length - 2) {
+    // Component = <GoodJobBadge />;
+  } else if (filteredItemList?.length > 0) {
+    Component = <CardItemContainer itemList={filteredItemList ?? []} />;
+  } else {
+    Component = <EmptyPost>게시글이 없습니다.</EmptyPost>;
+  }
+
   return (
     <MyPageContainer>
       <UserInfoContainer />
@@ -149,19 +143,21 @@ const ProfilePage: NextPage = () => {
         currentTab={currentTab}
         onClick={handleClick}
       />
-      <ContentContainer>
-        {currentTab === tabList.length - 1 ? (
-          <TabProfile />
-        ) : (
-          <CardItemContainer itemList={filteredItemList} />
-        )}
-      </ContentContainer>
+      <ContentContainer>{Component}</ContentContainer>
     </MyPageContainer>
   );
 };
 
-const ContentContainer = styled.div`
-  width: 64rem;
+const ContentContainer = styled.section`
+  width: 58.75rem;
+`;
+
+const EmptyPost = styled.div`
+  ${(props) => props.theme.fonts.title24}
+  color: ${(props) => props.theme.colors.gray7};
+  width: 100%;
+  padding: 5.25rem 0;
+  text-align: center;
 `;
 
 export default ProfilePage;

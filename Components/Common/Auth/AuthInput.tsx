@@ -1,18 +1,31 @@
 import styled from "styled-components";
 
-const AuthInput = styled.input`
-  width: 26.5rem;
+interface AuthInputProps {
+  validate: string;
+}
+
+const AuthInput = styled.input<AuthInputProps>`
+  ${({ theme }) => theme.fonts.body14Medium};
+  caret-color: ${({ theme }) => theme.colors.gray7};
+
+  width: 27.25rem;
   height: 2.5rem;
 
-  border-width: 0 0 1px;
-  border-color: black;
-  outline: none;
-  font-size: 1rem;
+  box-sizing: border-box;
 
-  :focus {
-    border-color: blue;
-    border-width: 0 0 3px;
-  }
+  border-width: 0 0 1px;
+  border-color: ${(props) =>
+    props.validate === ""
+      ? props.theme.colors.gray7
+      : props.theme.colors.messageError};
+
+  outline: none;
+
+  color: ${({ theme }) => theme.colors.white};
+
+  padding: 0.625rem 1rem 0.625rem 1rem;
+
+  background-color: ${({ theme }) => theme.colors.gray11};
 `;
 
 export default AuthInput;

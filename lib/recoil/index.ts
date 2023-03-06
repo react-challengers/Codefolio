@@ -1,18 +1,36 @@
 import { largeCategoryState, subCategoryState } from "@/lib/recoil/atoms";
 
 import {
+  postId,
   postTitle,
   postSubTitle,
-  postTitleBackgroundColor,
+  postTitleBackgroundImage,
   postLargeCategory,
   postSubCategory,
   postSkills,
   postProjectDuration,
   postMembers,
   postTags,
-  postPublic,
+  postGithubUrl,
+  postDeployedUrl,
   postContent,
+  postThumbnailCheck,
 } from "@/lib/recoil/postAtoms";
+
+import {
+  postTitleValidate,
+  postSubTitleValidate,
+  postSubCategoryValidate,
+  postSkillsValidate,
+  postProjectDurationValidate,
+  postMembersValidate,
+  postTagsValidate,
+  postGithubUrlValidate,
+  postDeployedUrlValidate,
+  postContentValidate,
+  postErrorBoxText,
+} from "@/lib/recoil/postValidateAtoms";
+
 import userLoginCheck from "@/lib/recoil/userLoginCheck";
 
 import {
@@ -23,7 +41,7 @@ import {
   myPageSelfProfile,
   myPagePhonNumber,
   myPageUserId,
-  myPageBackgroundColor,
+  myPageBackgroundImage,
   myPageProfileImage,
   myPageGender,
   myPageBirthYear,
@@ -33,24 +51,44 @@ import {
   myPageSkills,
   myPageBookmarkFolders,
   myPageIsEditingProfileContainer,
+  myPageCurrentTab,
 } from "@/lib/recoil/myPageAtoms";
+
+import searchValueState from "@/lib/recoil/searchValue";
+
+import isNotificationState from "@/lib/recoil/notificationAtoms";
 
 export {
   userLoginCheck,
   largeCategoryState,
   subCategoryState,
   // post
+  postId,
   postTitle,
   postSubTitle,
-  postTitleBackgroundColor,
+  postTitleBackgroundImage,
   postLargeCategory,
   postSubCategory,
   postSkills,
   postProjectDuration,
   postMembers,
   postTags,
-  postPublic,
+  postGithubUrl,
+  postDeployedUrl,
   postContent,
+  // post Validate
+  postTitleValidate,
+  postSubTitleValidate,
+  postSubCategoryValidate,
+  postSkillsValidate,
+  postProjectDurationValidate,
+  postMembersValidate,
+  postTagsValidate,
+  postGithubUrlValidate,
+  postDeployedUrlValidate,
+  postContentValidate,
+  postThumbnailCheck,
+  postErrorBoxText,
   // myPage
   myPageId,
   myPageUserProfile,
@@ -59,7 +97,7 @@ export {
   myPageContactEmail,
   myPagePhonNumber,
   myPageUserId,
-  myPageBackgroundColor,
+  myPageBackgroundImage,
   myPageProfileImage,
   myPageGender,
   myPageBirthYear,
@@ -69,4 +107,9 @@ export {
   myPageSkills,
   myPageBookmarkFolders,
   myPageIsEditingProfileContainer,
+  myPageCurrentTab,
+  // search
+  searchValueState,
+  // notification
+  isNotificationState,
 };

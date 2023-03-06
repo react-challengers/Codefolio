@@ -1,40 +1,90 @@
 import {
-  largeCategoryState,
+  isNotificationState,
   subCategoryState,
   userLoginCheck as recoilUserLoginCheck,
 } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
+import {
+  getCurrentUser,
+  getNotification,
+  getUserProfile,
+} from "@/utils/APIs/supabase";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import styled from "styled-components";
+import { DropDown, ProfileImage } from "../Common";
+import CreatePostIcon from "./CreatePostIcon";
+import Notification from "./Notification";
+import NotificationIcons from "./NotificationIcons";
+import SearchBar from "./SearchBar";
 
 const GNB = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [userCheck, setUserCheck] = useRecoilState(recoilUserLoginCheck);
-  const resetLargeCategoryState = useResetRecoilState(largeCategoryState);
   const resetSubCategoryState = useResetRecoilState(subCategoryState);
+  const [currentUserProfileImage, setCurrentUserProfileImage] =
+    useState<string>("");
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
+    useRecoilState(isNotificationState);
+  const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [notificationType, setNotificationType] = useState<"new" | "default">(
+    "default"
+  );
 
-  useEffect(() => {
-    const getSessionUser = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        throw new Error(error.message);
-      }
-      if (data.session) {
+  useQuery(["currentUser"], {
+    queryFn: getCurrentUser,
+    onSuccess({ data: { user } }) {
+      if (user) {
         setUserCheck(true);
+        setCurrentUserId(user.id);
       } else {
         setUserCheck(false);
       }
-    };
-    getSessionUser();
-  }, [setUserCheck]);
+    },
+  });
+
+  useQuery(["USER_PROFILE"], getUserProfile, {
+    onSuccess: (data) => {
+      if (data?.profile_image) {
+        setCurrentUserProfileImage(data.profile_image);
+      }
+    },
+  });
+
+  const { data: notifications } = useQuery<NotificationType[]>(
+    ["notification", currentUserId],
+    {
+      queryFn: ({ queryKey }) => getNotification(queryKey[1] as string),
+      enabled: !!currentUserId,
+    }
+  );
+
+  useEffect(() => {
+    if (notifications?.some((notification) => !notification.is_read)) {
+      setNotificationType("new");
+    } else {
+      setNotificationType("default");
+    }
+  }, [notifications]);
 
   const handleClickLogo = () => {
-    resetLargeCategoryState();
     resetSubCategoryState();
     router.push("/");
+  };
+
+  const dropDownItems = ["프로필", "로그아웃"];
+
+  const handleProfileDropdown = () => {
+    setIsProfileDropdownOpen((prev) => !prev);
+  };
+
+  const handleNotificationDropdown = () => {
+    setIsNotificationDropdownOpen((prev) => !prev);
   };
 
   const handleLogout = async () => {
@@ -42,66 +92,75 @@ const GNB = () => {
     if (error) {
       throw new Error(error.message);
     }
+    queryClient.invalidateQueries(["USER_PROFILE"]);
     setUserCheck(false);
     router.push("/");
+  };
+
+  const handleDropDownItemClick = (item: string) => {
+    if (item === "프로필") {
+      router.push("/profile");
+      setIsProfileDropdownOpen(false);
+    } else if (item === "로그아웃") {
+      handleLogout();
+      setIsProfileDropdownOpen(false);
+    }
   };
 
   if (router.pathname.includes("auth")) return <> </>;
 
   return (
     <GNBContainer>
-      <ButtonWrapper onClick={handleClickLogo}>Codefolio</ButtonWrapper>
-      <ButtonsContainer>
-        {/* <ButtonWrapper onClick={() => null}>
+      <GNBLeftSideContainer>
+        <ButtonWrapper onClick={handleClickLogo}>
+          {/* <GNBLogo>Codefolio</GNBLogo> */}
           <Image
-            src="/icons/search.svg"
-            alt="검색 아이콘"
-            width="24"
-            height="24"
+            src="/logos/mainLogo.svg"
+            width={24}
+            height={24}
+            alt="코드폴리오 로고"
           />
         </ButtonWrapper>
-        <ButtonWrapper onClick={() => null}>
-          <Image
-            src="/icons/notification.svg"
-            alt="알림 아이콘"
-            width="24"
-            height="24"
-          />
-        </ButtonWrapper> */}
+        <SearchBar />
+      </GNBLeftSideContainer>
+      <ButtonsContainer>
         {userCheck ? (
           <>
+            <ButtonWrapper
+              onClick={handleNotificationDropdown}
+              isOpen={isNotificationDropdownOpen}
+            >
+              <NotificationIcon type={notificationType} />
+            </ButtonWrapper>
+            {isNotificationDropdownOpen && <Notification />}
             <ButtonWrapper
               onClick={() =>
                 router.push(userCheck ? "/create-post" : "/auth/login")
               }
             >
-              <Image
-                src="/icons/post.svg"
-                alt="게시글 등록 아이콘"
-                width="24"
-                height="24"
+              <CreatePostIcon />
+            </ButtonWrapper>
+            <ButtonWrapper onClick={handleProfileDropdown}>
+              <ProfileImage
+                page="GNB"
+                alt="내 프로필 이미지"
+                src={currentUserProfileImage}
               />
             </ButtonWrapper>
-            <ButtonWrapper onClick={() => router.push("/profile")}>
-              <Image
-                src="/icons/person.svg"
-                alt="내 프로필 아이콘"
-                width="24"
-                height="24"
-              />
-            </ButtonWrapper>
-            <ButtonWrapper onClick={() => handleLogout()}>
-              <Image
-                src="/icons/logout.svg"
-                alt="로그아웃 아이콘"
-                width="24"
-                height="24"
-              />
-            </ButtonWrapper>
+            <ProfileDropDownList>
+              {isProfileDropdownOpen &&
+                dropDownItems.map((item) => (
+                  <DropDown
+                    key={item}
+                    item={item}
+                    onClickHandler={handleDropDownItemClick}
+                  />
+                ))}
+            </ProfileDropDownList>
           </>
         ) : (
           <ButtonWrapper onClick={() => router.push("/auth/login")}>
-            <span>LOGIN</span>
+            <LoginButton>로그인</LoginButton>
           </ButtonWrapper>
         )}
       </ButtonsContainer>
@@ -112,8 +171,7 @@ const GNB = () => {
 const GNBContainer = styled.div`
   width: 100vw;
   height: 3.5rem;
-  background-color: grey;
-  position: sticky;
+  background-color: ${({ theme }) => theme.colors.gray10};
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -121,15 +179,94 @@ const GNBContainer = styled.div`
   padding: 0 2.5rem;
 `;
 
-const ButtonsContainer = styled.div`
+const GNBLeftSideContainer = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 1rem;
 `;
 
-const ButtonWrapper = styled.div`
+const ButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+`;
+
+interface ButtonWrapperProps {
+  isOpen?: boolean;
+}
+
+const ButtonWrapper = styled.div<ButtonWrapperProps>`
   cursor: pointer;
   padding: 0.5rem;
+
+  path,
+  circle {
+    transition: all 0.2s ease-in-out;
+  }
+
+  ${({ isOpen, theme }) =>
+    isOpen &&
+    `path {
+      fill: ${theme.colors.primary6};
+    }
+    circle {
+      fill: ${theme.colors.primary6};
+    }`}
+
+  &:hover {
+    path {
+      fill: ${({ theme }) => theme.colors.primary6};
+    }
+    circle {
+      fill: ${({ theme }) => theme.colors.primary6};
+    }
+  }
+`;
+
+const GNBLogo = styled.div`
+  ${({ theme }) => theme.fonts.title24};
+  color: ${({ theme }) => theme.colors.primary6};
+`;
+
+const ProfileDropDownList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 3.75rem;
+  width: 11.25rem;
+
+  background-color: ${({ theme }) => theme.colors.gray9};
+  ${({ theme }) => theme.fonts.body14};
+  color: ${({ theme }) => theme.colors.white};
+
+  border-radius: 0.25rem;
+  filter: drop-shadow(0px 0.625rem 0.625rem rgba(0, 0, 0, 0.5));
+  z-index: 2;
+`;
+
+const LoginButton = styled.button`
+  ${({ theme }) => theme.fonts.body16};
+  color: ${({ theme }) => theme.colors.gray4};
+  height: 2.25rem;
+  width: 5.875rem;
+  background: none;
+  cursor: pointer;
+
+  border: 1px solid ${({ theme }) => theme.colors.gray2};
+  border-radius: 0.25rem;
+
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border: 1px solid ${({ theme }) => theme.colors.primary6};
+    color: ${({ theme }) => theme.colors.primary6};
+  }
+`;
+
+const NotificationIcon = styled(NotificationIcons)`
+  cursor: pointer;
 `;
 
 export default GNB;

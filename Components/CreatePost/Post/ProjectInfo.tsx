@@ -1,14 +1,14 @@
 import Image from "next/image";
 import styled from "styled-components";
 import { useState } from "react";
-import arrow_down from "@/public/images/arrow_down.jpg";
+import arrow_down from "@/public/icons/arrow_down.svg";
 import ProjectInfoDropDown from "./ProjectInfoDropDown";
 
 const ProjectInfo = () => {
   const [openDropdown, setOpenDropdown] = useState(true);
 
   return (
-    <div>
+    <ProjectInfoContainer>
       <DropdownContainer>
         <ProjectInfoTitle>프로젝트 정보</ProjectInfoTitle>
         <DropdownButton onClick={() => setOpenDropdown((prev) => !prev)}>
@@ -16,28 +16,34 @@ const ProjectInfo = () => {
         </DropdownButton>
       </DropdownContainer>
       {openDropdown && <ProjectInfoDropDown />}
-    </div>
+    </ProjectInfoContainer>
   );
 };
 
-const DropdownContainer = styled.div`
-  border: 1px solid #cccccc;
+const ProjectInfoContainer = styled.div`
+  margin: 0.5rem 0;
+`;
 
+const DropdownContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  padding: 1.5rem 4.5rem;
+
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.colors.gray7};
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
 `;
 
 const ProjectInfoTitle = styled.div`
-  margin: 1.1094rem auto 1.1094rem 3.125rem;
-
-  font-size: 1rem;
+  ${({ theme }) => theme.fonts.subtitle18Bold};
+  color: ${({ theme }) => theme.colors.gray1};
 `;
 
 const DropdownButton = styled.button`
-  border: none;
-  margin-right: 2.5rem;
-  background-color: white;
+  all: unset;
   cursor: pointer;
 `;
 

@@ -6,6 +6,10 @@ import CardItem from "./Card/CardItem";
 import Modal from "./Modal";
 import ProfileImage from "./ProfileImage";
 import Tags from "./Tags";
+import Input from "./Input";
+import HelperTextBox from "./HelperTextBox";
+import DropDown from "./DropDown";
+import PrimaryButton from "./PrimaryButton";
 
 export {
   DefaultButton,
@@ -16,4 +20,8 @@ export {
   Modal,
   ProfileImage,
   Tags,
+  DropDown,
+  PrimaryButton,
+  Input,
+  HelperTextBox,
 };

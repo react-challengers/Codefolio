@@ -5,12 +5,19 @@ import { ThemeProvider } from "styled-components";
 import theme from "@/styles/theme";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GNB, Footer } from "@/Components/Layouts";
 import { RecoilRoot } from "recoil";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  DehydratedState,
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Head from "next/head";
+import { Analytics } from "@vercel/analytics/react";
+import { init } from "@amplitude/analytics-browser";
 
 const queryClient = new QueryClient();
 
@@ -19,8 +26,14 @@ const App = ({
   pageProps,
 }: AppProps<{
   initialSession: Session;
+  dehydratedState: DehydratedState;
 }>) => {
   const [supabase] = useState(() => createBrowserSupabaseClient());
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!, "user@amplitude.com");
+  }, []);
 
   return (
     <>
@@ -34,9 +47,12 @@ const App = ({
         >
           <ThemeProvider theme={theme}>
             <RecoilRoot>
-              <GNB />
-              <Component {...pageProps} />
-              <Footer />
+              <Hydrate state={pageProps.dehydratedState}>
+                <GNB />
+                <Component {...pageProps} />
+                <Footer />
+                <Analytics />
+              </Hydrate>
             </RecoilRoot>
           </ThemeProvider>
         </SessionContextProvider>

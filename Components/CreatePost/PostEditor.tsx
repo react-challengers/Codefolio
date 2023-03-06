@@ -1,122 +1,295 @@
-import "@toast-ui/editor/dist/toastui-editor.css";
-import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
-import "tui-color-picker/dist/tui-color-picker.css";
-import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
-import "@toast-ui/editor/dist/i18n/ko-kr";
-import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
-import "prismjs/themes/prism.css";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
 
-import { Editor } from "@toast-ui/react-editor";
-import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-import codeSyntaxHighlightPlugin from "@toast-ui/editor-plugin-code-syntax-highlight";
-import Prism from "prismjs";
-import { RefObject, useCallback, useEffect } from "react";
-import supabase from "@/lib/supabase";
-import imageCompression from "browser-image-compression";
-import { useRecoilState } from "recoil";
-import { postContent as recoilPostContent } from "@/lib/recoil";
+import { useCallback, useState } from "react";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import { v4 as uuidv4 } from "uuid";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { postContent as recoilPostContent, postId } from "@/lib/recoil";
+import type { MDEditorProps } from "@uiw/react-md-editor";
+import { NextPage } from "next";
+import * as commands from "@uiw/react-md-editor/lib/commands";
+import uploadImage from "@/utils/commons/uploadImage";
+import styled from "styled-components";
+import compressImg from "@/utils/commons/compressImg";
+import validateFile from "@/utils/commons/validationImage";
+import { Modal } from "../Common";
+import ImageUploadText from "./ImageUploadText";
 
 /**
  * @TODO storage 삭제 구현 필요
- * @TODO uuid flag 꽃아야 함 >> 게시와 임시저장의 용도로 분류
  */
 
-interface PostEditorProps {
-  editorRef: RefObject<Editor>;
-}
+const MDEditor = dynamic<MDEditorProps>(() => import("@uiw/react-md-editor"), {
+  ssr: false,
+});
 
-const PostEditor = ({ editorRef }: PostEditorProps) => {
+const PostEditor: NextPage = () => {
+  const isPostId = useRecoilValue(postId);
   const [postContent, setPostContent] = useRecoilState(recoilPostContent);
-  const toolbarItems = [
-    ["heading", "bold", "italic", "strike"],
-    ["hr"],
-    ["ul", "ol", "task"],
-    ["table", "link"],
-    ["image"], // <-- 이미지 추가 툴바
-    ["code"],
-    ["scrollSync"],
-  ];
+  const [showModal, setShowModal] = useState(false);
 
-  // 이미지 추가
-  type HookCallback = (url: string, text?: string) => void;
+  const onImagePasted = useCallback(
+    async (
+      dataTransfer: DataTransfer | FileList | null // Drag and Drop API
+    ) => {
+      if (!dataTransfer) return;
+      const files: File[] = []; // 드래그 앤 드랍으로 가져온 파일들
+      if (dataTransfer instanceof DataTransfer) {
+        for (let index = 0; index < dataTransfer.items.length; index += 1) {
+          const file = dataTransfer.items[index].getAsFile();
 
-  const addImage = useCallback(async (blob: File, dropImage: HookCallback) => {
-    const img = await compressImg(blob); // 이미지 압축
-    if (!img) return;
-    const url = await uploadImage(img); // 업로드된 이미지 서버 url
-    if (!url) return;
-    dropImage(url, `${blob.name}`); // 에디터에 이미지 추가
-  }, []);
+          if (file && !validateFile(file)) {
+            setShowModal(true);
+            return;
+          }
+          files.push(file as File);
+        }
+      } else if (dataTransfer instanceof FileList) {
+        for (let index = 0; index < dataTransfer.length; index += 1) {
+          const file = dataTransfer[index];
 
-  useEffect(() => {
-    if (editorRef.current) {
-      const editorIns = editorRef.current.getInstance();
-      editorIns.removeHook("addImageBlobHook");
-      editorIns.addHook("addImageBlobHook", addImage);
+          if (!validateFile(file)) {
+            setShowModal(true);
+            return;
+          }
+          files.push(file);
+        }
+      }
+
+      files.map(async (file) => {
+        const fileId = uuidv4();
+
+        const compressedFile = await compressImg(file);
+        if (!compressedFile) return;
+
+        const uploadResult = await uploadImage(
+          compressedFile,
+          "post-image",
+          `${isPostId}/${fileId}`
+        );
+        if (!uploadResult) return;
+
+        const insertString = `![${file.name}](${uploadResult})`;
+        const resultString = insertToTextArea(insertString);
+
+        setPostContent(resultString || "");
+      });
+    },
+    [setPostContent]
+  );
+
+  // 에디터에 이미지 추가
+  const insertToTextArea = (intsertString: string) => {
+    const textarea = document.querySelector("textarea");
+    if (!textarea) {
+      return null;
     }
-  }, [editorRef, addImage]);
+    let sentence = textarea.value;
+    const len = sentence.length;
+    const pos = textarea.selectionStart;
+    const end = textarea.selectionEnd;
 
-  // 이미지 업로드
+    const front = sentence.slice(0, pos);
+    const back = sentence.slice(pos, len);
 
-  const uploadImage = async (blob: File) => {
-    try {
-      const imgPath = crypto.randomUUID();
-      await supabase.storage.from("post-image").upload(imgPath, blob);
+    sentence = front + intsertString + back;
 
-      // 이미지 올리기
-      const urlResult = await supabase.storage
-        .from("post-image")
-        .getPublicUrl(imgPath);
-      return urlResult.data.publicUrl;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  };
-
-  // //이미지 압축
-  const compressImg = async (blob: File): Promise<File | void> => {
-    const options = {
-      maxSize: 1,
-      initialQuality: 0.55, // initial 0.7
-    };
-    const result = await imageCompression(blob, options)
-      .then((res) => res)
-      .catch((e) => console.log(e, "압축 에러"));
-    return result;
-  };
-
-  const handleOnEditorChange = () => {
-    // 유효성 검사
-    const editorText = editorRef.current?.getInstance().getMarkdown();
-    if (editorText === " " || editorText === "" || editorText === undefined) {
-      return;
-    }
-    // HTML 대신에 Markdown으로 저장합니다.
-    setPostContent(editorText);
+    textarea.value = sentence;
+    textarea.selectionEnd = end + intsertString.length;
+    return sentence;
   };
 
   return (
-    <Editor
-      ref={editorRef}
-      initialValue={postContent ?? null}
-      previewStyle="vertical"
-      height="600px"
-      initialEditType="markdown"
-      useCommandShortcut
-      toolbarItems={toolbarItems}
-      language="ko-KR"
-      plugins={[
-        colorSyntax,
-        [codeSyntaxHighlightPlugin, { highlighter: Prism }],
-      ]}
-      hooks={{
-        // @ts-ignore
-        addImageBlobHook: addImage,
-      }}
-      onChange={() => handleOnEditorChange()}
-    />
+    <div>
+      {showModal && (
+        <Modal
+          onClose={() => setShowModal(false)}
+          title="이미지 파일이 아닙니다."
+        >
+          jpeg, jpg, png, svg 등 이미지 파일을 넣어주세요.
+        </Modal>
+      )}
+
+      <MDEditorStyled
+        value={postContent}
+        onChange={(value) => {
+          setPostContent(value || "");
+        }}
+        height={600}
+        onPaste={(event) => {
+          event.preventDefault();
+          onImagePasted(event.clipboardData);
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          onImagePasted(event.dataTransfer);
+        }}
+        textareaProps={{
+          placeholder: "프로젝트 내용을 입력해 주세요.",
+        }}
+        commands={[
+          commands.bold,
+          commands.italic,
+          commands.strikethrough,
+          commands.hr,
+          commands.title,
+          commands.divider,
+
+          commands.link,
+          commands.quote,
+          commands.code,
+          commands.divider,
+
+          commands.unorderedListCommand,
+          commands.orderedListCommand,
+          commands.checkedListCommand,
+          commands.divider,
+
+          commands.group([], {
+            name: "image",
+            groupName: "image",
+            icon: (
+              <svg width="12" height="12" viewBox="0 0 20 20">
+                <path
+                  fill="currentColor"
+                  d="M15 9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4-7H1c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 13l-6-5-2 2-4-5-4 8V4h16v11z"
+                />
+              </svg>
+            ),
+            // eslint-disable-next-line react/no-unstable-nested-components, @typescript-eslint/no-explicit-any
+            children: (handle: any) => {
+              // API가 any를 지정합니다.
+              return (
+                <CustomImageContainer>
+                  <ImageContainerCloseButtonWrapper>
+                    <Image
+                      src="/icons/close.svg"
+                      width={16}
+                      height={16}
+                      alt="닫힘버튼"
+                      onClick={() => handle.close()}
+                    />
+                  </ImageContainerCloseButtonWrapper>
+                  <label htmlFor="file">
+                    <ImageUploadButton>
+                      <ImageUploadText />
+                    </ImageUploadButton>
+                  </label>
+                  <ImageInput
+                    type="file"
+                    id="file"
+                    value=""
+                    multiple
+                    accept="image/*"
+                    onChange={(e) => {
+                      onImagePasted(e.target.files);
+                      handle.close();
+                    }}
+                  />
+                </CustomImageContainer>
+              );
+            },
+            buttonProps: { "aria-label": "Insert image" },
+          }),
+        ]}
+      />
+    </div>
   );
 };
+
+const MDEditorStyled = styled(MDEditor)`
+  -webkit-text-fill-color: ${(props) => props.theme.colors.white};
+  ::placeholder {
+  }
+  .w-md-editor {
+    background-color: none;
+  }
+  .w-md-editor-toolbar {
+    -webkit-text-fill-color: ${(props) => props.theme.colors.black} !important;
+    border: 1px solid ${(props) => props.theme.colors.gray7};
+    background-color: ${(props) => props.theme.colors.gray11};
+    & li > button > svg > path {
+      color: ${(props) => props.theme.colors.gray2};
+    }
+    & li > button:hover {
+      background-color: #343942;
+    }
+    & li.active > button {
+      background-color: #343942;
+    }
+  }
+  .w-md-editor-toolbar-divider {
+    background-color: ${(props) => props.theme.colors.gray7};
+  }
+  .w-md-editor-content {
+    background-color: ${(props) => props.theme.colors.gray7};
+    border: 1px solid ${(props) => props.theme.colors.gray7};
+    border-top: none;
+  }
+  .w-md-editor-input {
+    background-color: ${(props) => props.theme.colors.gray11};
+    border-right: 1px solid ${(props) => props.theme.colors.gray7};
+    color: ${(props) => props.theme.colors.white};
+
+    ::-webkit-scrollbar {
+      background-color: ${(props) => props.theme.colors.gray11};
+    }
+  }
+  .wmde-markdown {
+    background-color: ${(props) => props.theme.colors.gray11};
+  }
+  .w-md-editor-preview {
+    box-shadow: none;
+  }
+
+  .w-md-editor-toolbar-child {
+    background: none;
+  }
+`;
+
+const CustomImageContainer = styled.div`
+  width: 11.25rem;
+  height: 5.25rem;
+  padding-top: 0.25rem;
+  /* padding: 0.625rem; */
+  background-color: ${({ theme }) => theme.colors.gray9};
+  border-radius: 0.25rem;
+`;
+
+const ImageContainerCloseButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 0.25rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  cursor: pointer;
+`;
+
+const ImageUploadButton = styled.div`
+  width: 7rem;
+  height: 1.875rem;
+  background: none;
+  border: 1px solid ${({ theme }) => theme.colors.gray2};
+  border-radius: 0.25rem;
+  padding: 0.375rem 0;
+  cursor: pointer;
+  margin: 0 auto;
+
+  box-sizing: border-box;
+  text-align: center;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primary1};
+    path {
+      fill: ${({ theme }) => theme.colors.primary1};
+    }
+  }
+`;
+
+const ImageInput = styled.input`
+  display: none;
+`;
 
 export default PostEditor;

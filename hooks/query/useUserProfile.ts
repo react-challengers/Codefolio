@@ -7,16 +7,14 @@ const USER_PROFILE = "user_profile";
 /**
  * user_profile 테이블에 관한 query hook입니다.
  * @see https://tanstack.com/query/v5/docs/react/guides/optimistic-updates
- * @TODO updateCache함수 구현
- * @TODO 최초 데이터를 유출하지 말고 갱신된 쿼리캐시를 유출하기
- * @TODO 변수명 변경: const { profileCache, setProfileCache, updateProfileData } = useUserProfile();
+ * @TODO 최초 데이터를 유출하지 말고 갱신된 쿼리캐시를 리코일로 유출하기
  */
 
 const useUserProfile = () => {
   const queryClient = useQueryClient();
 
   // get
-  const { data } = useQuery([USER_PROFILE], getUserProfile, {});
+  const { data, isLoading } = useQuery([USER_PROFILE], getUserProfile, {});
 
   // null이면 갱신
   const profileData: UserProfileType = {
@@ -26,7 +24,7 @@ const useUserProfile = () => {
     phone: data?.phone ?? "01000000000",
     contact_email: data?.contact_email ?? "",
     profile_image: data?.profile_image ?? "",
-    background_color: data?.background_color ?? "#ffffff",
+    background_image: data?.background_image ?? "",
     birth_year: data?.birth_year ?? new Date().getFullYear(),
     self_profile: data?.self_profile ?? "",
     gender: data?.gender ?? "선택안함",
@@ -35,6 +33,7 @@ const useUserProfile = () => {
     skills: data?.skills ? data?.skills : [],
     career: data?.career ?? "신입",
     bookmark_folders: data?.bookmark_folders ?? [],
+    github: data?.github ?? "",
   };
 
   // 최초 데이터 갱신
@@ -62,7 +61,7 @@ const useUserProfile = () => {
     },
   });
 
-  return { profileData, updateProfileData };
+  return { profileData, updateProfileData, isLoading };
 };
 
 export default useUserProfile;

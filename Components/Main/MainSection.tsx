@@ -1,15 +1,17 @@
-import { largeCategoryState, subCategoryState } from "@/lib/recoil";
-import Image from "next/image";
+import { subCategoryState } from "@/lib/recoil";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
-import bottom_arrow from "@/public/icons/bottom_arrow.svg";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import _ from "lodash";
-import { CardItem, Tags } from "@/Components/Common";
+import { CardItem, DropDown } from "@/Components/Common";
+import CategoryTag from "./CategoryTag";
+import HomeDropDownIcon from "./HomeDropDownIcon";
+import "react-loading-skeleton/dist/skeleton.css";
 
 // TODO: Tag 데이터 구조화 고민하기
 
@@ -19,46 +21,33 @@ interface MainSectionProps {
 
 const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  const homeDropDownItems = ["최신순", "댓글순", "추천순"];
+  const homeDropDownItems = ["최신순", "추천순", "댓글순"];
   const [selectedDropDownItem, setSelectedDropDownItem] = useState(
     homeDropDownItems[0]
   );
-  const [selectedLargeCategory, setSelectedLargeCategory] =
-    useRecoilState(largeCategoryState);
+
   const [selectedSubCategory, setSelectedSubCategory] =
     useRecoilState(subCategoryState);
   const router = useRouter();
 
-  const { data: allPostsData } = useQuery<PostType[]>(["GET_POSTS"], {
-    queryFn: getAllPosts,
-  });
-
-  const publicPosts = useMemo(() => {
-    if (allPostsData === undefined) return [];
-    return allPostsData.filter((post) => post.is_public === true);
-  }, [allPostsData]);
+  const { data: allPostsData, isLoading } = useQuery<PostType[]>(
+    ["GET_POSTS"],
+    {
+      queryFn: getAllPosts,
+    }
+  );
 
   // 카테고리 선택 시, 해당 카테고리에 맞는 포스트만 보여주기
   const filterPosts = useMemo(() => {
-    if (publicPosts === undefined) return [];
-    if (
-      selectedLargeCategory.length !== 0 &&
-      selectedSubCategory.length === 0
-    ) {
-      return publicPosts.filter((post) =>
-        selectedLargeCategory.includes(post.large_category)
-      );
-    }
-    if (
-      selectedLargeCategory.length !== 0 &&
-      selectedSubCategory.length !== 0
-    ) {
-      return publicPosts.filter((post) =>
+    if (allPostsData === undefined) return [];
+
+    if (selectedSubCategory.length !== 0) {
+      return allPostsData.filter((post) =>
         selectedSubCategory.includes(post.sub_category)
       );
     }
-    return publicPosts;
-  }, [publicPosts, selectedLargeCategory, selectedSubCategory]);
+    return allPostsData;
+  }, [allPostsData, selectedSubCategory]);
 
   // 포스트 정렬
   const sortPosts = useMemo(() => {
@@ -100,23 +89,33 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     setIsModalOpen(true);
   };
 
+  const onClickDeleteCategory = (category: string) => {
+    setSelectedSubCategory(
+      selectedSubCategory.filter((item) => item !== category)
+    );
+  };
+
+  const onClickDropDownHandler = (item: string) => {
+    setSelectedDropDownItem(item);
+    setIsDropDownOpen(false);
+  };
+
   // 다른 페이지에 갔다가 다시 돌아왔을 시, 카테고리가 초기화 되도록 설정
   useEffect(() => {
-    setSelectedLargeCategory([]);
     setSelectedSubCategory([]);
-  }, [setSelectedLargeCategory, setSelectedSubCategory]);
+  }, [setSelectedSubCategory]);
 
   return (
     <HomeMainContainer>
       <TagContainer>
-        {selectedLargeCategory.length !== 0 &&
-          selectedSubCategory.length !== 0 && (
-            <Tags tagItems={selectedSubCategory} size="md" />
-          )}
-        {selectedLargeCategory.length !== 0 &&
-          selectedSubCategory.length === 0 && (
-            <Tags tagItems={selectedLargeCategory} size="lg" />
-          )}
+        {selectedSubCategory.length !== 0 &&
+          selectedSubCategory.map((category) => (
+            <CategoryTag
+              category={category}
+              key={category}
+              deleteHandler={onClickDeleteCategory}
+            />
+          ))}
       </TagContainer>
       <HomeDropDownContainer>
         <HomeDropDownButton
@@ -125,25 +124,38 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
           }}
         >
           {selectedDropDownItem}
-          <Image src={bottom_arrow} alt="bottom_arrow" width={32} height={32} />
+          <HomeDropDownIcon />
         </HomeDropDownButton>
         {isDropDownOpen && (
           <HomeDropDownList>
             {homeDropDownItems.map((item) => (
-              <HomeDropDownItemContainer
+              <DropDown
+                item={item}
                 key={item}
-                onClick={() => {
-                  setSelectedDropDownItem(item);
-                  setIsDropDownOpen(false);
-                }}
-              >
-                <HomeDropDownItem>{item}</HomeDropDownItem>
-              </HomeDropDownItemContainer>
+                onClickHandler={onClickDropDownHandler}
+              />
             ))}
           </HomeDropDownList>
         )}
       </HomeDropDownContainer>
       <HomeCardGrid>
+        {isLoading &&
+          new Array(12).fill(null).map((v, index) => (
+            <SkeletonTheme key={index} baseColor="#333" highlightColor="#555">
+              <div>
+                <Skeleton width={300} height={180} />
+                <Skeleton width={50} height={18} style={{ marginTop: 10 }} />
+                <Skeleton width="100%" height={24} style={{ marginTop: 10 }} />
+                <Skeleton width="100%" height={24} style={{ marginTop: 10 }} />
+                <Tags>
+                  <Skeleton width={60} height={22} style={{ marginTop: 10 }} />
+                  <Skeleton width={60} height={22} style={{ marginTop: 10 }} />
+                  <Skeleton width={60} height={22} style={{ marginTop: 10 }} />
+                  <Skeleton width={60} height={22} style={{ marginTop: 10 }} />
+                </Tags>
+              </div>
+            </SkeletonTheme>
+          ))}
         {sortPosts?.map((post: PostType) => (
           <CardContainer
             key={post.id}
@@ -152,15 +164,21 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
             }}
           >
             <CardItem
-              imageSrc={findThumbnailInContent(post.content)}
+              postId={post.id}
+              imageSrc={findThumbnailInContent(
+                post.thumbnail_check
+                  ? post.title_background_image
+                  : post.content
+              )}
               imageAlt={`${post.title}썸네일`}
               title={post.title}
               subTitle={post.sub_title}
-              tagItems={post.tag}
+              skills={post.skills}
               date={getPostDate(post.created_at)}
               comments={post.comment_count}
               likes={post.like_count}
-              field={`${post.large_category} | ${post.sub_category}`}
+              bookmarks={post.bookmark_count}
+              field={`${post.sub_category}`}
               userId={post.user_id}
             />
           </CardContainer>
@@ -173,8 +191,9 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
 const HomeMainContainer = styled.main`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 75rem;
+  width: 78.75rem;
+  max-width: 78.75rem;
+  min-height: 65rem;
   margin-left: 1.5rem;
   margin-top: 3rem;
 `;
@@ -190,7 +209,7 @@ const HomeCardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 1rem;
-  width: 100%;
+  width: 78.75rem;
   margin-top: 1rem;
 `;
 
@@ -203,10 +222,22 @@ const HomeDropDownContainer = styled.div`
 const HomeDropDownButton = styled.div`
   display: flex;
   align-items: center;
-  width: 5rem;
+  width: 4rem;
+
+  ${({ theme }) => theme.fonts.body14}
+  color: ${({ theme }) => theme.colors.gray4};
+
+  svg {
+    margin-left: 0.5rem;
+  }
 
   &:hover {
     cursor: pointer;
+    color: ${({ theme }) => theme.colors.primary6};
+
+    path {
+      fill: ${({ theme }) => theme.colors.primary6};
+    }
   }
 `;
 
@@ -215,28 +246,25 @@ const HomeDropDownList = styled.ul`
   flex-direction: column;
   position: absolute;
   top: 11rem;
-  width: 7rem;
-  background-color: white;
-  border: 1px solid #e1e4e8;
+  width: 11.25rem;
+
+  background-color: ${({ theme }) => theme.colors.gray9};
+  ${({ theme }) => theme.fonts.body14};
+  color: ${({ theme }) => theme.colors.white};
+
   border-radius: 0.25rem;
-  font-size: 1rem;
-  gap: 0.5rem;
-  z-index: 1;
-`;
-
-const HomeDropDownItemContainer = styled.div`
-  &:hover {
-    cursor: pointer;
-    background-color: #f6f8fa;
-  }
-`;
-
-const HomeDropDownItem = styled.li`
-  margin: 0.5rem;
+  filter: drop-shadow(0px 0.625rem 0.625rem rgba(0, 0, 0, 0.5));
+  z-index: 2;
 `;
 
 const CardContainer = styled.div`
   cursor: pointer;
+`;
+
+const Tags = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 `;
 
 export default MainSection;

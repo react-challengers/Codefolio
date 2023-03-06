@@ -1,5 +1,11 @@
 import getYYYYMM from "@/utils/commons/getYYYYMM";
+import { v4 as uuidV4 } from "uuid";
 import { atom } from "recoil";
+
+const postId = atom<string>({
+  key: "postId",
+  default: `${uuidV4()}`,
+});
 
 const postTitle = atom<string>({
   key: "postTitle",
@@ -11,9 +17,9 @@ const postSubTitle = atom<string>({
   default: "",
 });
 
-const postTitleBackgroundColor = atom<string>({
-  key: "postTitleBackgroundColor",
-  default: "#fff",
+const postTitleBackgroundImage = atom<string>({
+  key: "postTitleBackgroundImage",
+  default: "",
 });
 
 const postLargeCategory = atom<string>({
@@ -38,7 +44,7 @@ const postProjectDuration = atom<[string, string]>({
 
 interface MembersType {
   name: string;
-  field: string;
+  field: string[] | string;
   github: string;
 }
 
@@ -52,26 +58,39 @@ const postTags = atom<string[]>({
   default: [],
 });
 
-const postPublic = atom<boolean>({
-  key: "postPublic",
-  default: true,
+const postGithubUrl = atom<string>({
+  key: "postGithubUrl",
+  default: "",
+});
+
+const postDeployedUrl = atom<string>({
+  key: "postDeplyedUrl",
+  default: "",
 });
 
 const postContent = atom<string>({
   key: "postContent",
-  default: "프로젝트 내용을 입력해주세요.",
+  default: "",
+});
+
+const postThumbnailCheck = atom<boolean>({
+  key: "postThumbnailCheck",
+  default: false,
 });
 
 export {
+  postId,
   postTitle,
   postSubTitle,
-  postTitleBackgroundColor,
+  postTitleBackgroundImage,
   postLargeCategory,
   postSubCategory,
   postSkills,
   postProjectDuration,
   postMembers,
   postTags,
-  postPublic,
+  postGithubUrl,
+  postDeployedUrl,
   postContent,
+  postThumbnailCheck,
 };

@@ -1,22 +1,34 @@
 import { NextPage, GetStaticProps } from "next";
 import styled from "styled-components";
 import Link from "next/link";
-import { useState, useEffect } from "react";
 import supabase from "@/lib/supabase";
+import Image from "next/image";
+
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { AuthInput, ValidateText } from "@/Components/Common/Auth";
-import { LongButton, Modal } from "@/Components/Common";
+import {
+  AuthInput,
+  AuthButton,
+  HelperTextBox,
+  ErrorMessageBox,
+} from "@/Components/Common/Auth";
 import {
   checkEmail,
   checkPassword,
   checkUserName,
+  checkSamePassword,
 } from "@/utils/commons/authUtils";
 import { useSetRecoilState } from "recoil";
 import { userLoginCheck } from "@/lib/recoil";
+import { useQuery } from "@tanstack/react-query";
+import { getCurrentUser } from "@/utils/APIs/supabase";
+
+import ico_close_16 from "@/public/icons/ico_close_16.svg";
+import ico_ExclamationMark from "@/public/icons/ico_ExclamationMark.svg";
+import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
 
 /**
- * 현재 가장 기본적 유효성검사, "빈 인풋 체크"와 비밀번호 확인 부분만 추가되어 있습니다.
- * @TODO custom hooks (made by nne3enn) 을 사용해서 리팩토링
+ * @TODO custom hooks 을 사용해서 리팩토링
  */
 
 const SignUpPage: NextPage = () => {
@@ -27,56 +39,44 @@ const SignUpPage: NextPage = () => {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
-  const [userNameValidate, setUserNameValidate] = useState(true);
-  const [emailValidate, setEmailValidate] = useState(true);
-  const [passwordValidate, setPasswordValidate] = useState(true);
-  const [passwordCheckValidate, setPasswordCheckValidate] = useState(true);
+  const [userNameHelperText, setUserNameHelperText] = useState("");
+  const [emailHelperText, setEmailHelperText] = useState("");
+  const [passwordHelperText, setPasswordHelperText] = useState("");
+  const [passwordCheckHelperText, setPasswordCheckHelperText] = useState("");
+
+  const [isError, setIsError] = useState(false);
 
   const setIsLogin = useSetRecoilState(userLoginCheck);
 
-  const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState<string | null>("");
-  const [modalContent, setModalContent] = useState<string | null>("");
-
-  useEffect(() => {
-    // 로그인 상태 확인
-    const LoginState = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session !== null) {
+  useQuery(["currentUser"], {
+    queryFn: getCurrentUser,
+    onSuccess({ data: { user } }) {
+      if (user) {
         router.push("/");
       }
-    };
-    LoginState();
-  }, [router]);
+    },
+  });
+
+  const validateCheck = () => {
+    setUserNameHelperText(checkUserName(userName));
+    setEmailHelperText(checkEmail(email));
+    setPasswordHelperText(checkPassword(password));
+    setPasswordCheckHelperText(checkSamePassword(password, passwordCheck));
+  };
 
   const signupWithEmail = async () => {
-    if (!userName || !email || !password || !passwordCheck) {
-      return OpenModal("모든 데이터를 입력해주세요.", null);
-    }
+    validateCheck();
+    setIsError(false);
 
-    if (!checkUserName(userName)) {
-      setUserNameValidate(false);
-      return OpenModal("이름(닉네임)은 2글자 이상입니다.", null);
+    // 유효성 검사 결과 fail일 경우, supabase에 요청 안함
+    if (
+      checkUserName(userName) ||
+      checkEmail(email) ||
+      checkPassword(password) ||
+      checkSamePassword(password, passwordCheck)
+    ) {
+      return;
     }
-    setUserNameValidate(true);
-
-    if (!checkEmail(email)) {
-      setEmailValidate(false);
-      return OpenModal("이메일의 형식을 확인해주세요.", null);
-    }
-    setEmailValidate(true);
-
-    if (!checkPassword(password)) {
-      setPasswordValidate(false);
-      return OpenModal("비밀번호는 8자리 이상 입니다. ", null);
-    }
-    setPasswordValidate(true);
-
-    if (!(password === passwordCheck)) {
-      setPasswordCheckValidate(false);
-      return OpenModal("비밀번호가 일치하지 않습니다.", null);
-    }
-    setPasswordCheckValidate(true);
 
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -88,79 +88,148 @@ const SignUpPage: NextPage = () => {
         },
       },
     });
+    if (error?.stack?.includes("User already registered")) {
+      setIsError(true);
+    }
 
     if (!error) {
+      logEvent("SignUp Success", { from: "SignUp Page" });
       setIsLogin(true);
-      OpenModal("회원가입 완료", null);
-      return router.push("/");
+      router.push("/");
     }
-    return OpenModal("회원가입 실패", null);
   };
 
-  const OpenModal = (title: string | null, content: string | null) => {
-    setModalTitle(title);
-    setModalContent(content);
-    setShowModal(true);
+  const resetInput = (key: string) => {
+    switch (key) {
+      case "userName":
+        setUserName("");
+        setUserNameHelperText("");
+        break;
+      case "email":
+        setEmail("");
+        setEmailHelperText("");
+        break;
+      case "password":
+        setPassword("");
+        setPasswordHelperText("");
+        break;
+      case "passwordCheck":
+        setPasswordCheck("");
+        setPasswordCheckHelperText("");
+        break;
+
+      default:
+        break;
+    }
   };
+
+  useEffect(() => {
+    initAmplitude();
+    logEvent("Enter SignUp Page", { from: "SignUp Page" });
+  }, []);
 
   return (
     <SignupPageContainer>
-      {showModal && (
-        <Modal onClose={() => setShowModal(false)} title={modalTitle}>
-          {modalContent}
-        </Modal>
-      )}
       <EmptyContainer />
       <SignupSpace>
         <SignupForm>
-          <AuthInput
-            value={userName}
-            placeholder="이름(닉네임) 2글자 이상"
-            onChange={(e) => setUserName(e.target.value)}
-          />
-          {userNameValidate ? (
-            <ValidateText />
-          ) : (
-            <ValidateText> 닉네임을 확인해주세요. </ValidateText>
-          )}
-          <AuthInput
-            type={email}
-            value={email}
-            placeholder="이메일"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {emailValidate ? (
-            <ValidateText />
-          ) : (
-            <ValidateText> 이메일을 형식을 확인해주세요. </ValidateText>
-          )}
-          <AuthInput
-            type="password"
-            value={password}
-            placeholder="비밀번호 8글자 이상"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {passwordValidate ? (
-            <ValidateText />
-          ) : (
-            <ValidateText> 비밀번호 8자리 이상 입니다. </ValidateText>
-          )}
-          <AuthInput
-            type="password"
-            value={passwordCheck}
-            placeholder="비밀번호 확인"
-            onChange={(e) => setPasswordCheck(e.target.value)}
-          />
-          {passwordCheckValidate ? (
-            <ValidateText />
-          ) : (
-            <ValidateText> 비밀번호가 일치하지 않습니다. </ValidateText>
-          )}
-          <SignupButton onClick={signupWithEmail}>회원가입</SignupButton>
-          <FooterMassage>
-            <CustomLink href="./login">로그인하러가기</CustomLink>
-          </FooterMassage>
+          <div>
+            {isError ? (
+              <ErrorMessageBox Error>
+                <SocialIcon
+                  src={ico_ExclamationMark}
+                  alt="에러 느낌표"
+                  width={20}
+                  height={20}
+                />
+                이미 등록된 아이디 입니다.
+              </ErrorMessageBox>
+            ) : (
+              <ErrorMessageBox Error={false} />
+            )}
+            {userNameHelperText && (
+              <CloseSvg
+                src={ico_close_16}
+                alt="user name reset button"
+                width={25}
+                height={25}
+                onClick={() => resetInput("userName")}
+              />
+            )}
+            <AuthInput
+              value={userName}
+              placeholder="이름(닉네임)"
+              onChange={(e) => setUserName(e.target.value)}
+              validate={userNameHelperText}
+            />
+          </div>
+          <div>
+            <HelperTextBox text={userNameHelperText} />
+            {emailHelperText && (
+              <CloseSvg
+                src={ico_close_16}
+                alt="email reset button"
+                width={25}
+                height={25}
+                onClick={() => resetInput("email")}
+              />
+            )}
+            <AuthInput
+              type={email}
+              value={email}
+              placeholder="이메일"
+              onChange={(e) => setEmail(e.target.value)}
+              validate={emailHelperText}
+            />
+          </div>
+          <div>
+            <HelperTextBox text={emailHelperText} />
+            {passwordHelperText && (
+              <CloseSvg
+                src={ico_close_16}
+                alt="password reset button"
+                width={25}
+                height={25}
+                onClick={() => resetInput("password")}
+              />
+            )}
+            <AuthInput
+              type="password"
+              value={password}
+              placeholder="비밀번호"
+              onChange={(e) => setPassword(e.target.value)}
+              validate={passwordHelperText}
+            />
+          </div>
+
+          <div>
+            <HelperTextBox text={passwordHelperText} />
+            {passwordCheckHelperText && (
+              <CloseSvg
+                src={ico_close_16}
+                alt="paspasswordChecksword reset button"
+                width={25}
+                height={25}
+                onClick={() => resetInput("passwordCheck")}
+              />
+            )}
+            <AuthInput
+              type="password"
+              value={passwordCheck}
+              placeholder="비밀번호 확인"
+              onChange={(e) => setPasswordCheck(e.target.value)}
+              validate={passwordCheckHelperText}
+            />
+          </div>
+
+          <HelperTextBox text={passwordCheckHelperText} />
         </SignupForm>
+        <AuthButton buttonType="outLine" onclick={signupWithEmail}>
+          회원가입
+        </AuthButton>
+        <FooterMessage>
+          <CustomLink href="./login">로그인하기</CustomLink>
+        </FooterMessage>
       </SignupSpace>
     </SignupPageContainer>
   );
@@ -176,15 +245,24 @@ const SignupPageContainer = styled.div`
   display: flex;
 `;
 
+const SocialIcon = styled(Image)`
+  margin-right: 0.5rem;
+`;
+
 const EmptyContainer = styled.div`
-  background-color: lightgray;
   width: 50%;
   height: 100vh;
+
+  background-image: url("/images/signup_background.png");
+  background-size: cover;
+  background-position: center;
 `;
 
 const SignupSpace = styled.div`
   flex-grow: 1;
   display: flex;
+  flex-direction: column;
+
   justify-content: center;
   align-items: center;
 `;
@@ -192,29 +270,34 @@ const SignupSpace = styled.div`
 const SignupForm = styled.div`
   display: flex;
   flex-direction: column;
-
-  justify-content: space-between;
   align-items: center;
-
-  margin-bottom: 3.5rem;
 `;
 
-const SignupButton = styled(LongButton)`
-  margin-top: 2rem;
+const CloseSvg = styled(Image)`
+  position: absolute;
+  float: left;
+
+  color: ${({ theme }) => theme.colors.gray4};
+
+  cursor: pointer;
+
+  margin-left: 25rem;
 `;
 
-const FooterMassage = styled.div`
-  margin-top: 0.5rem;
+const FooterMessage = styled.div`
+  margin-top: 0.75rem;
 
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.8125rem;
 `;
 
 const CustomLink = styled(Link)`
-  text-decoration: none;
-  color: black;
+  width: 3.75rem;
+  height: 1.125rem;
+  ${({ theme }) => theme.fonts.body13};
+
+  color: ${({ theme }) => theme.colors.gray6};
 `;
 
 export default SignUpPage;

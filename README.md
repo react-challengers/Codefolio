@@ -44,7 +44,7 @@ $ yarn dev
 
 > 부트캠프 수강생들이 작업한 프로젝트를 체계적으로 정리하여 채용과 연계할 수 있는 포트폴리오 공유 서비스
 
-# Tach Stack
+# Tech Stack
 
 <div align="center">
 
@@ -58,7 +58,7 @@ $ yarn dev
 - 로컬 상태관리를 위해 recoil을 사용합니다.
 - 서버 상태관리를 위해 react-query를 사용합니다.
 - CSS in JS를 사용하기 위해 styled-components를 사용합니다.
-- Text Editor는 toast/ui를 사용합니다.
+- Text Editor는 toast/ui의 Editor를 사용합니다.
 - 유틸리티를 편리하게 사용하기 위해 lodash를 사용합니다.
 
 - Tech Stack 결정 과정

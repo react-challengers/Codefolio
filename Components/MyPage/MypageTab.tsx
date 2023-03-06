@@ -29,7 +29,7 @@ interface TabsContainerProps {
 const TabsContainer = styled.div<TabsContainerProps>`
   display: grid;
   grid-template-columns: repeat(${({ listLength }) => listLength}, 1fr);
-  width: 64rem;
+  width: 58.75rem;
 `;
 
 interface TabWrapperProps {
@@ -39,9 +39,14 @@ interface TabWrapperProps {
 const TabWrapper = styled.div<TabWrapperProps>`
   text-align: center;
   padding: 1rem;
-  border-top: 1px solid ${({ active }) => (active ? "black" : "lightgrey")};
+  border-top: ${({ active }) => (active ? `3px` : `1px`)} solid
+    ${({ active, theme }) => (active ? theme.colors.white : theme.colors.gray5)};
   cursor: pointer;
   transition: all 0.3s ease-in-out;
+  color: ${({ active, theme }) =>
+    active ? theme.colors.white : theme.colors.gray5};
+  margin: 0 0 2.25rem;
+  height: 3.5rem;
 `;
 
 export default Tabs;

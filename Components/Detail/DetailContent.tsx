@@ -1,23 +1,25 @@
-import "@toast-ui/editor/dist/toastui-editor-viewer.css";
-import "prismjs/themes/prism.css";
-import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
 
-import { Viewer } from "@toast-ui/react-editor";
-import codeSyntaxHighlightPlugin from "@toast-ui/editor-plugin-code-syntax-highlight";
-import Prism from "prismjs";
+import dynamic from "next/dynamic";
+import styled from "styled-components";
+
+const MarkdownPreview = dynamic(() => import("@uiw/react-markdown-preview"), {
+  ssr: false,
+});
 
 interface DetailContentProps {
   content: string;
 }
 
-// 다이나믹 임포트 고려
 const DetailContent = ({ content }: DetailContentProps) => {
-  return (
-    <Viewer
-      initialValue={content}
-      plugins={[[codeSyntaxHighlightPlugin, { highlighter: Prism }]]}
-    />
-  );
+  return <PreviewContent source={content} />;
 };
+
+const PreviewContent = styled(MarkdownPreview)`
+  width: 60rem;
+  padding: 1rem;
+  background-color: ${({ theme }) => theme.colors.gray11};
+`;
 
 export default DetailContent;

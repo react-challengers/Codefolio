@@ -1,5 +1,7 @@
 type Gender = "남자" | "여자" | "선택안함";
 
+type PostBadge = "idea" | "complete" | "code" | "function";
+
 declare enum Field {
   WEB = "웹",
   APP = "앱",
@@ -54,9 +56,11 @@ enum SoftWareCategory {
 }
 
 enum NotificationKind {
-  COMMENT = "댓글",
-  LIKE = "좋아요",
-  FOLLOW = "팔로우",
+  COMMENT = "comment",
+  LIKE = "like",
+  BOOKMARK = "bookmark",
+  POST_BADGE = "badge",
+  PROFILE_BADGE = "profileBadge",
 }
 
 interface UserProfileType {
@@ -74,36 +78,41 @@ interface UserProfileType {
   birth_year: number;
   self_profile: string;
   profile_image: string;
-  background_color: string;
+  background_image: string;
+  github: string;
 }
 
 interface NotificationType {
   id: string;
-  user_id: string;
-  context: string;
   created_at: Date;
-  is_checked: boolean;
-  notificationKind: NotificationKind;
+  user_id: string;
   target_id: string;
+  post_id?: string;
+  content: string;
+  type: NotificationKind;
+  is_read: boolean;
 }
 
 interface PostType {
   title: string;
   sub_title: string;
-  title_background_color: string;
+  title_background_image: string;
   large_category: string;
   sub_category: string;
   skills: string[];
   progress_date: [string, string];
   members: MembersType[];
   tag: string[];
-  is_public: boolean;
+  github_url: string;
+  deployed_url: string;
   content: string;
   id: string;
   user_id: string;
   created_at: string;
   comment_count: number;
   like_count: number;
+  bookmark_count: number;
+  thumbnail_check: boolean;
 }
 
 interface FollowType {
@@ -129,10 +138,24 @@ interface CommentType {
   post_id: string;
   user_id: string;
   content: string;
+  created_at: string;
 }
 
 interface CommentLikeType {
   id: string;
   comment_id: string;
   user_id: string;
+}
+
+interface ProfileBadgeType {
+  id: string;
+  created_at: Date;
+  user_id: string;
+  profile_id: string;
+  BadgeKind:
+    | "communication"
+    | "implementation"
+    | "initiative"
+    | "pencil"
+    | "puzzle";
 }

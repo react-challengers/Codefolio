@@ -6,9 +6,15 @@ import { DetailModal, MainSection, SideBar } from "@/Components/Main";
 import Head from "next/head";
 import { useState } from "react";
 import styled from "styled-components";
+// import * as amplitude from "@amplitude/analytics-browser";
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Amplitude 실행 시 주석을 풀고 사용하세요.
+  // useEffect(() => {
+  //   amplitude.track("접속 확인");
+  // }, []);
 
   return (
     <>
