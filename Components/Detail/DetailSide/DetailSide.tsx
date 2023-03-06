@@ -20,8 +20,6 @@ const DetailSide = ({
   members,
   authorInfo,
 }: DetailSideProps) => {
-  console.log("authorInfo", authorInfo);
-
   return (
     <SideContainer>
       <DetailSideBadge />
