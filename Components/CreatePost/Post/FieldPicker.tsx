@@ -1,6 +1,6 @@
 import { postMembers } from "@/lib/recoil";
 import { useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import arrow_down from "@/public/icons/arrow_down.svg";
 import Image from "next/image";
 import styled from "styled-components";
