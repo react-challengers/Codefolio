@@ -92,7 +92,9 @@ const Post: NextPage = () => {
   const setContentValidate = useSetRecoilState(postContentValidate);
 
   const newPostRow = {
-    id: isPostId,
+    id: (router.asPath === "/create-post"
+      ? isPostId
+      : router.query.id) as string,
     title,
     sub_title: subTitle,
     title_background_image: titleBackgroundImage,
@@ -116,8 +118,14 @@ const Post: NextPage = () => {
         setUserId(data.session?.user.id);
       }
     };
-    setErrorMessage("");
 
+    if (router.asPath === "/create-post") {
+      setIsPostId(uuidv4());
+    } else {
+      setIsPostId(router.query.id as string);
+    }
+
+    setErrorMessage("");
     LoginState();
   }, []);
 
