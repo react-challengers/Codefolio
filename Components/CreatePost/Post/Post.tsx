@@ -227,7 +227,7 @@ const Post: NextPage = () => {
   };
 
   const resetInput = () => {
-    setIsPostId(uuidv4());
+    setIsPostId((router.query?.id as string) ?? uuidv4());
     setTitle("");
     setSubTitle("");
     setTitleBackgroundImage("");
