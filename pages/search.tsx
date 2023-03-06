@@ -70,6 +70,10 @@ const Search: NextPage = () => {
       </EmptySearchResult>
     );
 
+  const onClickCardItem = (id: string) => {
+    router.push(`/detail/${id}`);
+  };
+
   return (
     <SearchContainer>
       <SearchInfo>
@@ -98,28 +102,38 @@ const Search: NextPage = () => {
       </DropDownContainer>
       <CardGrid>
         {sortPosts?.map((post) => (
-          <CardItem
+          <CardItemWrapper
             key={post.id}
-            postId={post.id}
-            imageSrc={findThumbnailInContent(
-              post.thumbnail_check ? post.title_background_image : post.content
-            )}
-            imageAlt={`${post.title}썸네일`}
-            title={post.title}
-            subTitle={post.sub_title}
-            skills={post.skills}
-            date={getPostDate(post.created_at)}
-            comments={post.comment_count}
-            likes={post.like_count}
-            bookmarks={post.bookmark_count}
-            field={`${post.sub_category}`}
-            userId={post.user_id}
-          />
+            onClick={() => onClickCardItem(post.id)}
+          >
+            <CardItem
+              postId={post.id}
+              imageSrc={findThumbnailInContent(
+                post.thumbnail_check
+                  ? post.title_background_image
+                  : post.content
+              )}
+              imageAlt={`${post.title}썸네일`}
+              title={post.title}
+              subTitle={post.sub_title}
+              skills={post.skills}
+              date={getPostDate(post.created_at)}
+              comments={post.comment_count}
+              likes={post.like_count}
+              bookmarks={post.bookmark_count}
+              field={`${post.sub_category}`}
+              userId={post.user_id}
+            />
+          </CardItemWrapper>
         ))}
       </CardGrid>
     </SearchContainer>
   );
 };
+
+const CardItemWrapper = styled.div`
+  cursor: pointer;
+`;
 
 const SearchContainer = styled.div`
   display: flex;
