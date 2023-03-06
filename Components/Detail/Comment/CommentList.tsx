@@ -33,7 +33,7 @@ const CommentList = ({ postId }: CommentListProps) => {
     <div>
       {data &&
         data.data?.map((comment: CommentType) => (
-          <CommentItem key={comment.id} comment={comment} />
+          <CommentItem key={comment.id} comment={comment} dbType="comment" />
         ))}
     </div>
   );
