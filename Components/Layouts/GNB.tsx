@@ -1,4 +1,5 @@
 import { useSubscribeRoute } from "@/hooks/common";
+import useOutsideClick from "@/hooks/query/useOutsideClick";
 import {
   isNotificationState,
   subCategoryState,
@@ -13,7 +14,7 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { DropDown, ProfileImage } from "../Common";
@@ -35,6 +36,14 @@ const GNB = () => {
   const [currentUserId, setCurrentUserId] = useState<string>("");
   const [notificationType, setNotificationType] = useState<"new" | "default">(
     "default"
+  );
+
+  const profileDropdownRef = useRef<HTMLUListElement>(null);
+  useOutsideClick(profileDropdownRef, () => setIsProfileDropdownOpen(false));
+
+  const NotificationDropdownRef = useRef<HTMLDivElement>(null);
+  useOutsideClick(NotificationDropdownRef, () =>
+    setIsNotificationDropdownOpen(false)
   );
 
   useQuery(["currentUser"], {
@@ -82,7 +91,6 @@ const GNB = () => {
 
   const handleProfileDropdown = () => {
     setIsProfileDropdownOpen((prev) => !prev);
-    if (isNotificationDropdownOpen) setIsNotificationDropdownOpen(false);
   };
 
   const handleNotificationDropdown = () => {
@@ -141,7 +149,11 @@ const GNB = () => {
             >
               <NotificationIcon type={notificationType} />
             </ButtonWrapper>
-            {isNotificationDropdownOpen && <Notification />}
+            {isNotificationDropdownOpen && (
+              <NotificationContainer ref={NotificationDropdownRef}>
+                <Notification />
+              </NotificationContainer>
+            )}
             <ButtonWrapper
               onClick={() =>
                 router.push(userCheck ? "/create-post" : "/auth/login")
@@ -156,7 +168,7 @@ const GNB = () => {
                 src={currentUserProfileImage}
               />
             </ButtonWrapper>
-            <ProfileDropDownList>
+            <ProfileDropDownList ref={profileDropdownRef}>
               {isProfileDropdownOpen &&
                 dropDownItems.map((item) => (
                   <DropDown
@@ -176,6 +188,12 @@ const GNB = () => {
     </GNBContainer>
   );
 };
+
+const NotificationContainer = styled.div`
+  position: absolute;
+  top: 3.75rem;
+  right: 2.5rem;
+`;
 
 const GNBContainer = styled.div`
   width: 100vw;
