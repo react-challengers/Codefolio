@@ -1,4 +1,4 @@
-import { DefaultButton, ProfileImage } from "@/Components/Common";
+import { PrimaryButton, ProfileImage } from "@/Components/Common";
 import { useInput } from "@/hooks/common";
 import { useUserProfile } from "@/hooks/query";
 import { initAmplitude } from "@/utils/amplitude/amplitude";
@@ -75,11 +75,10 @@ const ProfileCommentInput = ({
       </CommentInputContainer>
       <HelperText isHelperText={isHelperText}>댓글을 입력해주세요.</HelperText>
       <PostCommentButton>
-        <DefaultButton
-          color="primary6"
+        <PrimaryButton
           text="작성하기"
-          type="full"
-          size="s"
+          buttonType="default"
+          size="m"
           onClick={handleAddComment}
         />
       </PostCommentButton>

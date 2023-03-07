@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import viewCreateAt from "@/utils/commons/viewCreateAt";
-import { DefaultButton, ProfileImage } from "@/Components/Common";
+import { PrimaryButton, ProfileImage } from "@/Components/Common";
 import {
   decrementComment,
   deleteComment,
@@ -157,15 +157,15 @@ const CommentItem = ({ comment, dbType }: CommentItemProps) => {
         <ButtonWrapper>
           {isEditing ? (
             <>
-              <DefaultButton
+              <PrimaryButton
                 text="완료"
-                type="outline"
+                buttonType="default"
                 size="s"
                 onClick={handleEditClick}
               />
-              <DefaultButton
+              <PrimaryButton
                 text="취소"
-                type="outline"
+                buttonType="line"
                 size="s"
                 onClick={handleCanceled}
               />
