@@ -1,18 +1,22 @@
 import { postMembers } from "@/lib/recoil";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import arrow_down from "@/public/icons/arrow_down.svg";
 import Image from "next/image";
 import styled from "styled-components";
 import FieldDropDown from "./FieldDropDown";
+import useOutsideClick from "@/hooks/query/useOutsideClick";
 
 interface FieldPickerProps {
   field: string;
   idx: number;
 }
 const FieldPicker = ({ field, idx }: FieldPickerProps) => {
+  const fieldRef = useRef<any>();
   const [visibleField, setVisibleField] = useState(false);
   const [people, setPeople] = useRecoilState(postMembers);
+
+  useOutsideClick(fieldRef, () => setVisibleField(false));
 
   const handleClickField = (item: string) => {
     const newPeople = people.map((person, i) => {
@@ -28,7 +32,7 @@ const FieldPicker = ({ field, idx }: FieldPickerProps) => {
     setVisibleField(!visibleField);
   };
   return (
-    <FieldPickerContainer onClick={handleShowField}>
+    <FieldPickerContainer onClick={handleShowField} ref={fieldRef}>
       {field ? <span>{field}</span> : <span>참여 포지션</span>}
       <DropdownImage
         src={arrow_down}
