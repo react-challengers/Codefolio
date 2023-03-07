@@ -48,7 +48,7 @@ const GNB = () => {
     },
   });
 
-  useQuery(["USER_PROFILE"], getUserProfile, {
+  useQuery(["USER_PROFILE"], () => getUserProfile(), {
     onSuccess: (data) => {
       if (data?.profile_image) {
         setCurrentUserProfileImage(data.profile_image);

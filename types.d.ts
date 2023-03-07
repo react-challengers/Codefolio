@@ -1,6 +1,7 @@
 type Gender = "남자" | "여자" | "선택안함";
 
 type PostBadge = "idea" | "complete" | "code" | "function";
+type ProfileBadge = "puzzle" | "pencil" | "arrow" | "chat" | "tool";
 
 declare enum Field {
   WEB = "웹",

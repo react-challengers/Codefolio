@@ -12,14 +12,18 @@ import {
 import Banner from "./Banner";
 import useUserImage from "./useUserImage";
 
+interface UserInfoContainerType {
+  profileUserId?: string;
+}
+
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한
  * @TODO 깃헙 아이콘 white로 변경
  * @TODO 활동분야, 기술 스택 tags추가
  */
 
-const UserInfoContainer = () => {
-  const { profileData } = useUserProfile();
+const UserInfoContainer = ({ profileUserId }: UserInfoContainerType) => {
+  const { profileData } = useUserProfile(profileUserId);
 
   const setCurrentTab = useSetRecoilState(myPageCurrentTab);
   const { handleImage: handleProfileImage } = useUserImage("profile_image");

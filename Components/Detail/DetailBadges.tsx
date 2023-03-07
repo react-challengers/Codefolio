@@ -49,7 +49,6 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
           if (type === "code") code += 1;
           if (type === "function") func += 1;
         });
-
         setIdeaNum(idea);
         setCompleteNum(complete);
         setCodeNum(code);

@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { myPageCurrentTab, userLoginCheck } from "@/lib/recoil";
 
-const tabList = ["프로젝트", "북마크", "좋아요", "프로필"];
+const tabList = ["프로젝트", "북마크", "좋아요", "칭찬배지", "프로필"];
 
 const ProfilePage: NextPage = () => {
   const [currentTab, setCurrentTab] = useRecoilState(myPageCurrentTab);
@@ -42,11 +42,11 @@ const ProfilePage: NextPage = () => {
     setCurrentTab(idx);
   };
 
-  useEffect(() => {
-    if (!isLogin) {
-      router.push("/auth/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!isLogin) {
+  //     router.push("/auth/login");
+  //   }
+  // }, []);
 
   // 내가 작성한 아이템 리스트
   const myItemList = useMemo(() => {
@@ -119,16 +119,17 @@ const ProfilePage: NextPage = () => {
     }
   }, [currentTab, myItemList, bookmarkList, likeList]);
 
+  // 옵셔널 체이닝으로 존재하지 않는 프로필은 본인으로 리다이렉팅
+  const profileUserId = router?.query?.userId?.[0];
+
   if (!filteredItemList) return <div>에러</div>;
 
   // 중첩 삼항연산자 해체
   let Component = null;
   if (currentTab === tabList.length - 1) {
     Component = <TabProfile />;
-
-    // TODO: 다른 프로필을 볼 수 있을 때 칭찬배지 탭을 해제합니다.
-    // } else if (currentTab === tabList.length - 2) {
-    // Component = <GoodJobBadge />;
+  } else if (currentTab === tabList.length - 2) {
+    Component = <GoodJobBadge />;
   } else if (filteredItemList?.length > 0) {
     Component = <CardItemContainer itemList={filteredItemList ?? []} />;
   } else {
@@ -137,7 +138,7 @@ const ProfilePage: NextPage = () => {
 
   return (
     <MyPageContainer>
-      <UserInfoContainer />
+      <UserInfoContainer profileUserId={profileUserId} />
       <MyPageTab
         tabList={tabList}
         currentTab={currentTab}

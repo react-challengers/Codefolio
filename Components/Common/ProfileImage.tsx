@@ -1,12 +1,14 @@
 import Image, { StaticImageData } from "next/image";
 import styled from "styled-components";
 import anonProfile from "@/public/images/anonProfile.jpeg";
+import Link from "next/link";
 
 type ProfileImagePageType = "myPage" | "detailPage" | "GNB";
 interface ProfileImageProps {
   src?: string | StaticImageData | null;
   alt: string;
   page: ProfileImagePageType;
+  profileId?: string;
 }
 
 /**
@@ -19,7 +21,24 @@ interface ProfileImageProps {
  * <ProfileImage src={src} alt={alt} page={page} />
  */
 
-const ProfileImage = ({ src = anonProfile, alt, page }: ProfileImageProps) => {
+const ProfileImage = ({
+  src = anonProfile,
+  alt,
+  page,
+  profileId,
+}: ProfileImageProps) => {
+  if (profileId)
+    return (
+      <ProfileLink href={`/profile/${profileId}`}>
+        <ProfileImageItem
+          src={src || anonProfile}
+          alt={alt}
+          width={page === "myPage" ? 100 : 40}
+          height={page === "myPage" ? 100 : 40}
+        />
+      </ProfileLink>
+    );
+
   return (
     <ProfileImageItem
       src={src || anonProfile}
@@ -32,6 +51,10 @@ const ProfileImage = ({ src = anonProfile, alt, page }: ProfileImageProps) => {
 
 const ProfileImageItem = styled(Image)`
   border-radius: 50%;
+`;
+
+const ProfileLink = styled(Link)`
+  cursor: pointer;
 `;
 
 export default ProfileImage;

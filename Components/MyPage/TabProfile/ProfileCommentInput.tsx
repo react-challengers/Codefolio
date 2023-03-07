@@ -1,74 +1,42 @@
-import styled from "styled-components";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { DefaultButton, ProfileImage } from "@/Components/Common";
 import { useInput } from "@/hooks/common";
 import { useUserProfile } from "@/hooks/query";
+import { initAmplitude } from "@/utils/amplitude/amplitude";
+import postProfileComment from "@/utils/APIs/supabase/postProfileComment";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { DefaultButton, ProfileImage } from "@/Components/Common";
-import {
-  postComment,
-  incrementComment,
-  getOnePost,
-} from "@/utils/APIs/supabase";
-import supabase from "@/lib/supabase";
-import createNotificationContent from "@/utils/notification/createNotificationContent";
-import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
+import styled from "styled-components";
 
-interface CommentInputProps {
-  postId: string | string[] | undefined;
-  userId: string | undefined;
+interface ProfileCommentInputProps {
+  userId: string | string[] | undefined;
+  profileId: string | undefined;
 }
 
-const CommentInput = ({ postId, userId }: CommentInputProps) => {
+const ProfileCommentInput = ({
+  userId,
+  profileId,
+}: ProfileCommentInputProps) => {
   const queryClient = useQueryClient();
 
   const [isHelperText, setIsHelperText] = useState(false);
-  const [postTitle, setPostTitle] = useState("");
-  const [author, setAuthor] = useState("");
-
   const { inputValues, handleInputChange, resetAllInput } = useInput({
     comment: "",
   });
 
   const {
-    profileData: { profile_image: profileImage, user_id: userProfileId },
+    profileData: { profile_image: profileImage, user_name: username },
   } = useUserProfile();
 
-  useQuery(["getOnePost", postId], {
-    queryFn: ({ queryKey }) => getOnePost(queryKey[1] as string),
-    onSuccess: (data) => {
-      if (data) {
-        setPostTitle(data.title);
-        setAuthor(data.user_id);
-      }
-    },
-  });
-
-  // 추후 리팩토링 대상(결합도가 높음)
-  const { mutate: addNotificationMutate } = useMutation(
-    async (type: string) => {
-      await supabase
-        .from("notification")
-        .insert({
-          user_id: userId,
-          target_id: author,
-          post_id: postId as string,
-          content: createNotificationContent(type, postTitle),
-          is_read: false,
-          type,
-        })
-        .single();
-    }
-  );
-
   const { mutate: createComment } = useMutation(
-    () => postComment(inputValues.comment, postId as string, userId as string),
+    () =>
+      postProfileComment(
+        inputValues.comment,
+        profileId as string,
+        userId as string
+      ),
     {
-      onSuccess: async () => {
-        addNotificationMutate("comment");
-        await incrementComment(postId as string);
-        logEvent("createComment", { from: "detailPage" });
-        queryClient.invalidateQueries(["getComment"]);
-        queryClient.invalidateQueries(["GET_POSTS"]);
+      onSuccess: () => {
+        queryClient.invalidateQueries(["getProfileComment"]);
       },
     }
   );
@@ -98,12 +66,11 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
           src={profileImage}
           alt="사용자 프로필 이미지"
           page="detailPage"
-          profileId={userProfileId}
         />
         <CommentTextarea
           value={inputValues.comment}
           onChange={handleInputChange("comment")}
-          placeholder="이 프로젝트에 대한 리뷰를 남겨주세요."
+          placeholder={`칭찬배지와 함께 ${username}님에 대한 칭찬 코멘트를 남겨주세요.`}
         />
       </CommentInputContainer>
       <HelperText isHelperText={isHelperText}>댓글을 입력해주세요.</HelperText>
@@ -122,9 +89,12 @@ const CommentInput = ({ postId, userId }: CommentInputProps) => {
 
 const CommentInputContainer = styled.div`
   height: 7rem;
+  padding-top: 3rem;
+  border-top: 1px solid ${({ theme }) => theme.colors.gray4};
 
   display: flex;
   justify-content: space-between;
+  gap: 2rem;
 `;
 
 const PostCommentButton = styled.div`
@@ -153,10 +123,11 @@ interface HelperTextProps {
 const HelperText = styled.div<HelperTextProps>`
   margin-top: 0.5rem;
   margin-left: 3.5rem;
+  padding-left: 1rem;
   font-size: 1rem;
   color: ${({ theme }) => theme.colors.messageError};
   opacity: ${({ isHelperText }) => (isHelperText ? 1 : 0)};
   transition: all 0.5s ease-in-out;
 `;
 
-export default CommentInput;
+export default ProfileCommentInput;
