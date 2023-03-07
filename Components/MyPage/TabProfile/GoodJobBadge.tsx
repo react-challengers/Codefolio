@@ -112,7 +112,7 @@ const GoodJobBadge = () => {
           type: currentBadge,
         });
       },
-      200,
+      500,
       { leading: true, trailing: false }
     ),
     [currentBadge]
@@ -129,7 +129,7 @@ const GoodJobBadge = () => {
           type: currentBadge,
         });
       },
-      200,
+      500,
       { leading: true, trailing: false }
     ),
     [currentBadge]

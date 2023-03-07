@@ -107,7 +107,7 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
         setBadgeCheck(newBadgeCheck);
         deleteBadge({ userId, postId: postId as string, type: currentBadge });
       },
-      200,
+      500,
       { leading: true, trailing: false }
     ),
     [currentBadge]
@@ -121,7 +121,7 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
         setBadgeCheck([...badgeCheck, currentBadge]);
         addBadge({ userId, postId: postId as string, type: currentBadge });
       },
-      200,
+      500,
       { leading: true, trailing: false }
     ),
     [currentBadge]

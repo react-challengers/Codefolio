@@ -210,7 +210,7 @@ const DetailHeader = ({
         incrementBookmark(postId as string);
         queryClient.invalidateQueries(["GET_POSTS"]);
       },
-      200,
+      500,
       { leading: true, trailing: false }
     ),
     []
@@ -223,7 +223,7 @@ const DetailHeader = ({
         decrementBookmark(postId as string);
         queryClient.invalidateQueries(["GET_POSTS"]);
       },
-      200,
+      500,
       { leading: true, trailing: false }
     ),
     []
@@ -246,7 +246,7 @@ const DetailHeader = ({
         decrementLike(postId as string);
         queryClient.invalidateQueries(["GET_POSTS"]);
       },
-      200,
+      500,
       { leading: true, trailing: false }
     ),
     []
@@ -259,7 +259,7 @@ const DetailHeader = ({
         incrementLike(postId as string);
         queryClient.invalidateQueries(["GET_POSTS"]);
       },
-      200,
+      500,
       { leading: true, trailing: false }
     ),
     []
