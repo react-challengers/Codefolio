@@ -390,7 +390,7 @@ const StyledDatePicker = styled(DatePicker)`
 `;
 
 const InDateProgress = styled.div`
-  min-width: 18rem;
+  min-width: 20.625rem;
   border-radius: 0.25rem;
   padding: 0.625rem 1rem;
   padding-right: 3.75rem;
