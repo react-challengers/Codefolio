@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import viewCreateAt from "@/utils/commons/viewCreateAt";
@@ -13,6 +13,7 @@ import {
 } from "@/utils/APIs/supabase";
 import Image from "next/image";
 import supabase from "@/lib/supabase";
+import useOutsideClick from "@/hooks/query/useOutsideClick";
 
 /**
  * @TODO useInput으로 리팩토링 고민
@@ -25,6 +26,9 @@ interface CommentItemProps {
 
 const CommentItem = ({ comment, dbType }: CommentItemProps) => {
   const queryClient = useQueryClient();
+
+  const dropdownRef = useRef<any>();
+  useOutsideClick(dropdownRef, () => setShowMoreModal(false));
 
   const [showMoreModal, setShowMoreModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -182,7 +186,7 @@ const CommentItem = ({ comment, dbType }: CommentItemProps) => {
         <ButtonWrapper />
       )}
       {showMoreModal && (
-        <ShowMoreModalContainer>
+        <ShowMoreModalContainer ref={dropdownRef}>
           <ItemWrapper onClick={handleEditClick}>수정하기</ItemWrapper>
           <ItemWrapper onClick={() => deleteCommentMutate()}>
             삭제하기

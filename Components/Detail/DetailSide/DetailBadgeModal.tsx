@@ -1,3 +1,5 @@
+import useOutsideClick from "@/hooks/query/useOutsideClick";
+import { useRef } from "react";
 import styled from "styled-components";
 import DetailBadges from "../DetailBadges";
 
@@ -6,8 +8,12 @@ interface DetailBadgeModalProps {
 }
 
 const DetailBadgeModal = ({ closeModal }: DetailBadgeModalProps) => {
+  const badgeModalRef = useRef<any>();
+
+  useOutsideClick(badgeModalRef, () => closeModal());
+
   return (
-    <DetailBadgeModalContainer>
+    <DetailBadgeModalContainer ref={badgeModalRef}>
       <DetailBadges closeModal={closeModal} />
     </DetailBadgeModalContainer>
   );
