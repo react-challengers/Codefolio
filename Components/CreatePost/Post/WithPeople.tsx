@@ -116,7 +116,7 @@ const InputWrapper = styled.div`
     & > :first-child input {
       border-radius: 0.25rem;
       color: ${({ theme }) => theme.colors.gray3};
-      background-color: ${({ theme }) => theme.colors.gray5};
+      background-color: ${({ theme }) => theme.colors.gray7};
     }
     & > img {
       display: none;

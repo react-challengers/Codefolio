@@ -395,7 +395,7 @@ const InDateProgress = styled.div`
   padding: 0.625rem 1rem;
   padding-right: 3.75rem;
 
-  background-color: ${({ theme }) => theme.colors.gray5};
+  background-color: ${({ theme }) => theme.colors.gray7};
   color: ${({ theme }) => theme.colors.gray3};
   ${({ theme }) => theme.fonts.body14};
 `;
