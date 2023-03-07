@@ -15,6 +15,7 @@ import {
 import convertEase64ToFile from "@/utils/commons/convertBase64ToFile";
 import uploadImage from "@/utils/commons/uploadImage";
 import { v4 as uuidv4 } from "uuid";
+import compressImg from "@/utils/commons/compressImg";
 
 /**
  * @TODO  input을 커스텀 훅으로 만들기.
@@ -35,28 +36,30 @@ const PostTitle = () => {
     setThumbnailCheck((prev) => !prev);
   };
 
-  const onChangeBackgroundImage = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChangeBackgroundImage = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
-    if (file?.length === 0) return;
-    if (file !== null) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file[0]);
-      reader.onload = async (uploadedImg) => {
-        const base64 = uploadedImg.target?.result;
-        if (typeof base64 !== "string") return;
-        const fileId = uuidv4();
+    if (!file) return;
 
-        const imgFile = await convertEase64ToFile(base64);
-        const publicImageUrl = await uploadImage(
-          imgFile,
-          "post-image",
-          `${isPostId}/${fileId}`
-        );
-        if (!publicImageUrl) return;
+    const compression = await compressImg(file[0]);
+    if (!compression) return;
 
-        setTitleBackgroundImage(publicImageUrl);
-      };
-    }
+    const reader = new FileReader();
+    reader.readAsDataURL(compression);
+    reader.onload = async (uploadedImg) => {
+      const base64 = uploadedImg.target?.result;
+      if (typeof base64 !== "string") return;
+      const fileId = uuidv4();
+
+      const imgFile = await convertEase64ToFile(base64);
+      const publicImageUrl = await uploadImage(
+        imgFile,
+        "post-image",
+        `${isPostId}/${fileId}`
+      );
+      if (!publicImageUrl) return;
+
+      setTitleBackgroundImage(publicImageUrl);
+    };
   };
 
   return (
