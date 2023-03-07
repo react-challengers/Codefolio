@@ -10,12 +10,13 @@ import {
 } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
-import { getAllPosts } from "@/utils/APIs/supabase";
+import getInfinitePosts from "@/utils/APIs/supabase/getInfinitePosts";
 import _ from "lodash";
 import { CardItem, DropDown } from "@/Components/Common";
+import getAllPostsCount from "@/utils/APIs/supabase/getAllPostsCount";
 import useOutsideClick from "@/hooks/query/useOutsideClick";
 import CategoryTag from "./CategoryTag";
 import HomeDropDownIcon from "./HomeDropDownIcon";
@@ -41,23 +42,62 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     useRecoilState(subCategoryState);
   const router = useRouter();
 
-  const { data: allPostsData, isLoading } = useQuery<PostType[]>(
-    ["GET_POSTS"],
-    {
-      queryFn: getAllPosts,
-    }
+  const observerTargetEl = useRef<HTMLDivElement>(null);
+
+  // 총 post 개수를 갖고 옵니다.
+  const { data: allPostsDataCount, isLoading: isLoadingCount } = useQuery(
+    ["GET_POSTSCOUNT"],
+    getAllPostsCount
   );
+
+  const [page, setPage] = useState(1);
+
+  const {
+    data: allPostsData,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(["GET_INFINIFEPOSTS"], getInfinitePosts, {
+    getNextPageParam: () => {
+      // return lastPage.length;
+      return page;
+    },
+    onSuccess(data) {
+      setPage(data.pageParams.length + 1);
+    },
+  });
+
+  // observer 셋팅
+  useEffect(() => {
+    if (!observerTargetEl.current || !hasNextPage) return;
+
+    const io = new IntersectionObserver((entries, observer) => {
+      if (entries[0].isIntersecting && allPostsData && allPostsDataCount) {
+        if (allPostsData.pages.flat().length < allPostsDataCount - 1) {
+          fetchNextPage();
+        }
+      }
+    });
+    io.observe(observerTargetEl.current);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      io.disconnect();
+    };
+  }, [fetch, hasNextPage]);
 
   // 카테고리 선택 시, 해당 카테고리에 맞는 포스트만 보여주기
   const filterPosts = useMemo(() => {
-    if (allPostsData === undefined) return [];
+    if (allPostsData?.pages.flat() === undefined) return [];
 
     if (selectedSubCategory.length !== 0) {
-      return allPostsData.filter((post) =>
-        selectedSubCategory.includes(post.sub_category)
-      );
+      return allPostsData?.pages
+        .flat()
+        .filter((post: PostType) =>
+          selectedSubCategory.includes(post.sub_category)
+        );
     }
-    return allPostsData;
+    return allPostsData?.pages.flat();
   }, [allPostsData, selectedSubCategory]);
 
   // 포스트 정렬
@@ -81,7 +121,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     } else {
       setIsModalOpen(false);
     }
-  }, [router.query.id, setIsModalOpen]);
+  }, [router.query.id, setIsModalOpen, allPostsData]);
 
   const onClickDropDown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -167,38 +207,44 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
               </div>
             </SkeletonTheme>
           ))}
-        {sortPosts?.map((post: PostType) => (
-          <CardContainer
-            key={post.id}
-            onClick={() => {
-              openModal(post.id);
-            }}
-          >
-            <CardItem
-              postId={post.id}
-              imageSrc={findThumbnailInContent(
-                post.thumbnail_check
-                  ? post.title_background_image
-                  : post.content
-              )}
-              imageAlt={`${post.title}썸네일`}
-              title={post.title}
-              subTitle={post.sub_title}
-              skills={post.skills}
-              date={getPostDate(post.created_at)}
-              comments={post.comment_count}
-              likes={post.like_count}
-              bookmarks={post.bookmark_count}
-              field={`${post.sub_category}`}
-              userId={post.user_id}
-            />
-          </CardContainer>
-        ))}
+        {sortPosts &&
+          sortPosts.map((post: PostType) => (
+            <CardContainer
+              key={post.id}
+              onClick={() => {
+                openModal(post.id);
+              }}
+            >
+              <CardItem
+                postId={post.id}
+                imageSrc={findThumbnailInContent(
+                  post.thumbnail_check
+                    ? post.title_background_image
+                    : post.content
+                )}
+                imageAlt={`${post.title}썸네일`}
+                title={post.title}
+                subTitle={post.sub_title}
+                skills={post.skills}
+                date={getPostDate(post.created_at)}
+                comments={post.comment_count}
+                likes={post.like_count}
+                bookmarks={post.bookmark_count}
+                field={`${post.sub_category}`}
+                userId={post.user_id}
+              />
+            </CardContainer>
+          ))}
       </HomeCardGrid>
+      <Target ref={observerTargetEl} />
     </HomeMainContainer>
   );
 };
 
+const Target = styled.div`
+  margin-top: 10%;
+  height: 1px;
+`;
 const HomeMainContainer = styled.main`
   display: flex;
   flex-direction: column;
