@@ -1,3 +1,4 @@
+import { useSubscribeRoute } from "@/hooks/common";
 import {
   isNotificationState,
   subCategoryState,
@@ -81,11 +82,20 @@ const GNB = () => {
 
   const handleProfileDropdown = () => {
     setIsProfileDropdownOpen((prev) => !prev);
+    if (isNotificationDropdownOpen) setIsNotificationDropdownOpen(false);
   };
 
   const handleNotificationDropdown = () => {
     setIsNotificationDropdownOpen((prev) => !prev);
+    if (isProfileDropdownOpen) setIsProfileDropdownOpen(false);
   };
+
+  const handleResetDropdowns = () => {
+    setIsProfileDropdownOpen(false);
+    setIsNotificationDropdownOpen(false);
+  };
+
+  useSubscribeRoute(handleResetDropdowns);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -113,7 +123,6 @@ const GNB = () => {
     <GNBContainer>
       <GNBLeftSideContainer>
         <ButtonWrapper onClick={handleClickLogo}>
-          {/* <GNBLogo>Codefolio</GNBLogo> */}
           <Image
             src="/logos/mainLogo.svg"
             width={24}
@@ -223,11 +232,6 @@ const ButtonWrapper = styled.div<ButtonWrapperProps>`
       fill: ${({ theme }) => theme.colors.primary6};
     }
   }
-`;
-
-const GNBLogo = styled.div`
-  ${({ theme }) => theme.fonts.title24};
-  color: ${({ theme }) => theme.colors.primary6};
 `;
 
 const ProfileDropDownList = styled.ul`
