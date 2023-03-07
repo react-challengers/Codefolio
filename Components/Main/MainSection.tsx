@@ -1,6 +1,13 @@
 import { subCategoryState } from "@/lib/recoil";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
@@ -9,6 +16,7 @@ import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { getAllPosts } from "@/utils/APIs/supabase";
 import _ from "lodash";
 import { CardItem, DropDown } from "@/Components/Common";
+import useOutsideClick from "@/hooks/query/useOutsideClick";
 import CategoryTag from "./CategoryTag";
 import HomeDropDownIcon from "./HomeDropDownIcon";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -25,6 +33,9 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   const [selectedDropDownItem, setSelectedDropDownItem] = useState(
     homeDropDownItems[0]
   );
+
+  const homeDropDownRef = useRef<HTMLUListElement>(null);
+  useOutsideClick(homeDropDownRef, () => setIsDropDownOpen(false));
 
   const [selectedSubCategory, setSelectedSubCategory] =
     useRecoilState(subCategoryState);
@@ -127,7 +138,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
           <HomeDropDownIcon />
         </HomeDropDownButton>
         {isDropDownOpen && (
-          <HomeDropDownList>
+          <HomeDropDownList ref={homeDropDownRef}>
             {homeDropDownItems.map((item) => (
               <DropDown
                 item={item}
