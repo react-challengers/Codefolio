@@ -20,18 +20,18 @@ const PrimaryButton = ({
   disabled = false,
 }: PrimaryButtonProps) => {
   return (
-    <DefaultButtonContainer
+    <PrimaryButtonContainer
       buttonType={buttonType}
       size={size}
       onClick={onClick}
       disabled={disabled}
     >
       {text}
-    </DefaultButtonContainer>
+    </PrimaryButtonContainer>
   );
 };
 
-const DefaultButtonContainer = styled.button<{
+const PrimaryButtonContainer = styled.button<{
   buttonType: PrimaryButtonType;
   size: PrimaryButtonSize;
   onClick: MouseEventHandler<HTMLButtonElement>;
@@ -48,25 +48,30 @@ const DefaultButtonContainer = styled.button<{
     buttonType === "default"
       ? theme.fonts.subtitle18Bold
       : theme.fonts.subtitle18}
-  color: ${(props) => props.theme.colors.primary6};
+  color: ${({ buttonType, theme }) =>
+    buttonType === "default" ? theme.colors.gray11 : theme.colors.primary6};
   background-color: ${({ buttonType, theme }) =>
-    buttonType === "default" ? theme.colors.gray8 : `none`};
+    buttonType === "default" ? theme.colors.primary4 : `none`};
   border: 1px solid
     ${({ theme, buttonType }) =>
       buttonType === "default" ? `none` : theme.colors.primary6};
+
   :hover {
     background-color: ${({ buttonType, theme }) =>
-      buttonType === "default" ? theme.colors.gray5 : theme.colors.gray8};
+      buttonType === "default" ? theme.colors.primary6 : theme.colors.gray8};
   }
+
   :disabled {
     ${(props) => props.theme.fonts.subtitle18}
-    color: ${(props) => props.theme.colors.white};
+    color: ${({ buttonType, theme }) =>
+      buttonType === "default" ? theme.colors.gray3 : theme.colors.gray4};
     background-color: ${({ theme, buttonType }) =>
-      buttonType === "default" ? theme.colors.gray4 : theme.colors.primary2};
+      buttonType === "default" ? theme.colors.gray7 : theme.colors.primary2};
   }
+
   /* "s" | "m": */
-  width: ${({ size }) => (size === "m" ? `10rem` : `5.625rem`)};
-  height: 3.75rem;
+  width: ${({ size }) => (size === "m" ? `10rem` : `5.5rem`)};
+  height: ${({ size }) => (size === "m" ? "3.75rem" : "3rem")};
 `;
 
 export default PrimaryButton;
