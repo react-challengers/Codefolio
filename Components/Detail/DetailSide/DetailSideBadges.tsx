@@ -41,43 +41,45 @@ const DetailSideBadges = () => {
   return (
     <DetailSideContainer>
       <Title>추천 배지</Title>
-      <DetailBadgesContainer onClick={() => setShowBadgeModal((prev) => !prev)}>
-        <BadgeWrapper>
-          <Image
-            src="/icons/badge-light.svg"
-            alt="뱃지"
-            width="24"
-            height="24"
-          />
-          <p>{ideaNum}</p>
-        </BadgeWrapper>
-        <BadgeWrapper>
-          <Image
-            src="/icons/badge-check.svg"
-            alt="뱃지"
-            width="24"
-            height="24"
-          />
-          <p>{completeNum}</p>
-        </BadgeWrapper>
-        <BadgeWrapper>
-          <Image
-            src="/icons/badge-code.svg"
-            alt="뱃지"
-            width="24"
-            height="24"
-          />
-          <p>{codeNum}</p>
-        </BadgeWrapper>
-        <BadgeWrapper>
-          <Image
-            src="/icons/badge-setting.svg"
-            alt="뱃지"
-            width="24"
-            height="24"
-          />
-          <p>{functionNum}</p>
-        </BadgeWrapper>
+      <DetailBadgesContainer>
+        <OnlyBadgesContainer onClick={() => setShowBadgeModal((prev) => !prev)}>
+          <BadgeWrapper>
+            <Image
+              src="/icons/badge-light.svg"
+              alt="뱃지"
+              width="24"
+              height="24"
+            />
+            <p>{ideaNum}</p>
+          </BadgeWrapper>
+          <BadgeWrapper>
+            <Image
+              src="/icons/badge-check.svg"
+              alt="뱃지"
+              width="24"
+              height="24"
+            />
+            <p>{completeNum}</p>
+          </BadgeWrapper>
+          <BadgeWrapper>
+            <Image
+              src="/icons/badge-code.svg"
+              alt="뱃지"
+              width="24"
+              height="24"
+            />
+            <p>{codeNum}</p>
+          </BadgeWrapper>
+          <BadgeWrapper>
+            <Image
+              src="/icons/badge-setting.svg"
+              alt="뱃지"
+              width="24"
+              height="24"
+            />
+            <p>{functionNum}</p>
+          </BadgeWrapper>
+        </OnlyBadgesContainer>
         {showBadgeModal && (
           <DetailBadgeModal closeModal={() => setShowBadgeModal(false)} />
         )}
@@ -96,18 +98,20 @@ const DetailBadgesContainer = styled.div`
   color: ${({ theme }) => theme.colors.gray4};
   border: 1px solid ${({ theme }) => theme.colors.gray4};
   border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
 
   cursor: pointer;
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray8};
   }
   position: relative;
+`;
+
+const OnlyBadgesContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
 `;
 
 const BadgeWrapper = styled.div`

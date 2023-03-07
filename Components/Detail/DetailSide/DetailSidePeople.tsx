@@ -7,14 +7,12 @@ import DetailSideContainer from "./DetailSideContainer";
 import DetailWith from "./DetailWith";
 
 interface DetailSidePeopleProps {
-  github: string;
   authorInfo: UserProfileType | null | undefined;
   subCategory: string;
   members: string[];
 }
 
 const DetailSidePeople = ({
-  github,
   authorInfo,
   subCategory,
   members,
@@ -37,7 +35,7 @@ const DetailSidePeople = ({
             </UserInfo>
           </UserInfoWrapper>
 
-          <Link href={github}>
+          <Link target="_blank" href={authorInfo?.github ?? ""}>
             <GithubImage
               src="/icons/github.svg"
               width={20}
