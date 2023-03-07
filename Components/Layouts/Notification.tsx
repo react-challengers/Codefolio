@@ -61,10 +61,6 @@ const NotificationContainer = styled.div`
   max-height: 25rem;
   overflow-y: scroll;
 
-  position: absolute;
-  top: 3.75rem;
-  right: 2.5rem;
-
   box-shadow: 0px 0.625rem 0.625rem rgba(0, 0, 0, 0.5);
   border-radius: 0.5rem;
 

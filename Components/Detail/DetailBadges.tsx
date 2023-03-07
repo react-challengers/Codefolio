@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getCurrentUser } from "@/utils/APIs/supabase";
@@ -8,6 +8,7 @@ import deletePostBadge from "@/utils/APIs/supabase/deletePostBadge";
 import getPostBadges from "@/utils/APIs/supabase/getPostBadges";
 import getBadgeByUid from "@/utils/APIs/supabase/getBadgeByUid";
 import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
+import _ from "lodash";
 import ConfirmModal from "../Common/ConfirmModal";
 
 interface DetailBadgesProps {
@@ -25,6 +26,7 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
   const [functionNum, setFunctionNum] = useState(0);
   const [badgeCheck, setBadgeCheck] = useState<string[]>([]);
   const [userId, setUserId] = useState<string | undefined>("");
+  const [currentBadge, setCurrentBadge] = useState<PostBadge | undefined>();
 
   useQuery(["currentUser"], getCurrentUser, {
     onSuccess: ({ data: { user } }) => {
@@ -90,19 +92,49 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
     },
   });
 
-  const clickBadge = (badgeType: PostBadge) => {
+  const deleteBadgeThrottle = useCallback(
+    _.throttle(
+      () => {
+        if (!userId || !postId) return;
+        if (!currentBadge) return;
+        const newBadgeCheck = badgeCheck.filter(
+          (badge) => badge !== currentBadge
+        );
+        setBadgeCheck(newBadgeCheck);
+        deleteBadge({ userId, postId: postId as string, type: currentBadge });
+      },
+      500,
+      { leading: true, trailing: false }
+    ),
+    [currentBadge]
+  );
+
+  const addBadgeThrottle = useCallback(
+    _.throttle(
+      () => {
+        if (!userId || !postId) return;
+        if (currentBadge === undefined) return;
+        setBadgeCheck([...badgeCheck, currentBadge]);
+        addBadge({ userId, postId: postId as string, type: currentBadge });
+      },
+      500,
+      { leading: true, trailing: false }
+    ),
+    [currentBadge]
+  );
+
+  const clickBadge = () => {
     if (!userId || !postId) {
       setShowLoginModal(true);
       return;
     }
 
-    if (badgeCheck.includes(badgeType)) {
-      const newBadgeCheck = badgeCheck.filter((badge) => badge !== badgeType);
-      setBadgeCheck(newBadgeCheck);
-      deleteBadge({ userId, postId: postId as string, type: badgeType });
+    if (!currentBadge) return;
+
+    if (badgeCheck.includes(currentBadge)) {
+      deleteBadgeThrottle();
     } else {
-      setBadgeCheck([...badgeCheck, badgeType]);
-      addBadge({ userId, postId: postId as string, type: badgeType });
+      addBadgeThrottle();
     }
 
     if (closeModal) {
@@ -118,7 +150,8 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
     <>
       <BadgesWrapper>
         <BadgeWrapper
-          onClick={() => clickBadge("idea")}
+          onClick={clickBadge}
+          onMouseEnter={() => setCurrentBadge("idea")}
           badgeCheck={badgeCheck}
           badge="idea"
         >
@@ -138,7 +171,8 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
           <p>{ideaNum}</p>
         </BadgeWrapper>
         <BadgeWrapper
-          onClick={() => clickBadge("complete")}
+          onClick={clickBadge}
+          onMouseEnter={() => setCurrentBadge("complete")}
           badgeCheck={badgeCheck}
           badge="complete"
         >
@@ -158,7 +192,8 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
           <p>{completeNum}</p>
         </BadgeWrapper>
         <BadgeWrapper
-          onClick={() => clickBadge("code")}
+          onClick={clickBadge}
+          onMouseEnter={() => setCurrentBadge("code")}
           badgeCheck={badgeCheck}
           badge="code"
         >
@@ -181,7 +216,8 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
           <p>{codeNum}</p>
         </BadgeWrapper>
         <BadgeWrapper
-          onClick={() => clickBadge("function")}
+          onClick={clickBadge}
+          onMouseEnter={() => setCurrentBadge("function")}
           badgeCheck={badgeCheck}
           badge="function"
         >
