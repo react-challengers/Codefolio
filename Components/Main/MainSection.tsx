@@ -13,7 +13,7 @@ import styled from "styled-components";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
-import { getAllPosts } from "@/utils/APIs/supabase";
+import getInfinitePosts from "@/utils/APIs/supabase/getInfinitePosts";
 import _ from "lodash";
 import { CardItem, DropDown } from "@/Components/Common";
 import getAllPostsCount from "@/utils/APIs/supabase/getAllPostsCount";
@@ -53,7 +53,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     isLoading,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery(["GET_POSTS"], getAllPosts, {
+  } = useInfiniteQuery(["GET_INFINIFEPOSTS"], getInfinitePosts, {
     getNextPageParam: () => {
       // return lastPage.length;
       return page;
