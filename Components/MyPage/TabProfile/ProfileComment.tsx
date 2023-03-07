@@ -43,6 +43,7 @@ const ProfileComment = ({ profileId }: ProfileCommentProps) => {
 
 const ProfileCommentContainer = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 2rem;
 `;
 
