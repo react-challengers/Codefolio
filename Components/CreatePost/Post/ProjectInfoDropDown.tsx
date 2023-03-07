@@ -354,6 +354,9 @@ const DatePickerContainer = styled.div`
     width: 5.875rem;
     height: 2rem;
     ${({ theme }) => theme.fonts.body16};
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .react-datepicker__month-text--keyboard-selected,
