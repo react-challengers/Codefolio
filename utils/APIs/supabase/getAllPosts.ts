@@ -1,15 +1,17 @@
 import supabase from "@/lib/supabase";
 
-// TODO: Add pagination
-// TODO: 필요한 데이터만 가져오도록 수정
-
-const getAllPosts = async () => {
+const getAllPosts = async ({ pageParam = 1 }) => {
+  const perPage = 12;
   const res = await supabase
     .from("post")
-    .select<string, PostType>("*")
-    .order("created_at", { ascending: false });
+    .select<string, PostType>(`*`)
+    .order("created_at", { ascending: false })
+    .range((pageParam - 1) * perPage, pageParam * perPage - 1)
+    .limit(perPage);
+
   if (res.error) {
-    throw new Error(res.error.message);
+    console.log("error", res.error);
+    return [];
   }
   return res.data;
 };
