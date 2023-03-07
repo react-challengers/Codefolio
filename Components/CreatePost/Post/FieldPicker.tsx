@@ -2,10 +2,10 @@ import { postMembers } from "@/lib/recoil";
 import { useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import arrow_down from "@/public/icons/arrow_down.svg";
+import useOutsideClick from "@/hooks/query/useOutsideClick";
 import Image from "next/image";
 import styled from "styled-components";
 import FieldDropDown from "./FieldDropDown";
-import useOutsideClick from "@/hooks/query/useOutsideClick";
 
 interface FieldPickerProps {
   field: string;
