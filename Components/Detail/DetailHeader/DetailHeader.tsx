@@ -203,18 +203,40 @@ const DetailHeader = ({
     },
   });
 
+  const addBookmarkThrottle = useCallback(
+    _.throttle(
+      () => {
+        addBookmarkMutate({ postId: postId as string, currentUserId });
+        incrementBookmark(postId as string);
+        queryClient.invalidateQueries(["GET_POSTS"]);
+      },
+      200,
+      { leading: true, trailing: false }
+    ),
+    []
+  );
+
+  const deleteBookmarkThrottle = useCallback(
+    _.throttle(
+      () => {
+        deleteBookmarkMutate({ postId: postId as string, currentUserId });
+        decrementBookmark(postId as string);
+        queryClient.invalidateQueries(["GET_POSTS"]);
+      },
+      200,
+      { leading: true, trailing: false }
+    ),
+    []
+  );
+
   const clickBookmarkButton = async () => {
     if (!currentUserId) {
       return router.push("/auth/login");
     }
     if (isBookmark) {
-      deleteBookmarkMutate({ postId: postId as string, currentUserId });
-      await decrementBookmark(postId as string);
-    } else {
-      addBookmarkMutate({ postId: postId as string, currentUserId });
-      await incrementBookmark(postId as string);
+      return deleteBookmarkThrottle();
     }
-    return queryClient.invalidateQueries(["GET_POSTS"]);
+    return addBookmarkThrottle();
   };
 
   const deleteLikeThrottle = useCallback(
