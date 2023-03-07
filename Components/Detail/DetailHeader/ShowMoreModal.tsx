@@ -65,6 +65,7 @@ const ShowMoreModal = ({ closeModal }: ShowMoreModalProps) => {
       </ShowMoreModalContainer>
       {showDeleteModal && (
         <ConfirmModal
+          type="warn"
           bodyText="글을 삭제하시겠습니까?"
           leftText="취소"
           rightText="삭제"
