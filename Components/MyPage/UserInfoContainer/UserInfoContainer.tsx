@@ -9,8 +9,14 @@ import {
   myPageCurrentTab,
   myPageIsEditingProfileContainer,
 } from "@/lib/recoil";
+import { useQuery } from "@tanstack/react-query";
+import { getUser } from "@/utils/APIs/supabase";
 import Banner from "./Banner";
 import useUserImage from "./useUserImage";
+
+interface UserInfoContainerType {
+  profileUserId?: string;
+}
 
 /**
  * @TODO SelfProfileWrapper 최대 3줄로 제한
@@ -18,12 +24,13 @@ import useUserImage from "./useUserImage";
  * @TODO 활동분야, 기술 스택 tags추가
  */
 
-const UserInfoContainer = () => {
-  const { profileData } = useUserProfile();
-
+const UserInfoContainer = ({ profileUserId }: UserInfoContainerType) => {
+  const { profileData } = useUserProfile(profileUserId);
   const setCurrentTab = useSetRecoilState(myPageCurrentTab);
   const { handleImage: handleProfileImage } = useUserImage("profile_image");
   const setIsEditing = useSetRecoilState(myPageIsEditingProfileContainer);
+
+  const { data } = useQuery(["CURRENT_USER"], getUser);
 
   if (!profileData.id || !profileData.user_id) {
     return (
@@ -32,6 +39,11 @@ const UserInfoContainer = () => {
       </InfoContainer>
     );
   }
+
+  const checkProfileAuthorization = () => {
+    if (!data || !profileData) return false;
+    return profileData.user_id === data?.id;
+  };
 
   const handleChangeTab = () => {
     setCurrentTab(3);
@@ -42,24 +54,32 @@ const UserInfoContainer = () => {
 
   return (
     <InfoContainer>
-      <Banner src={profileData.background_image} />
+      <Banner
+        src={profileData.background_image}
+        checkProfileAuthorization={checkProfileAuthorization()}
+      />
       <UserInfoWrapper>
         <ProfileImageWrapper>
           <label htmlFor="user_profile">
-            <ProfileFileImageInput
-              type="file"
-              accept="image/*"
-              onChange={handleProfileImage}
-              multiple={false}
-              id="user_profile"
-            />
+            {checkProfileAuthorization() ? (
+              <ProfileFileImageInput
+                type="file"
+                accept="image/*"
+                onChange={handleProfileImage}
+                multiple={false}
+                id="user_profile"
+              />
+            ) : null}
             <ProfileImage
               alt="유저 프로필"
               page="myPage"
               src={profileData.profile_image}
             />
           </label>
-          <IconBox onClick={handleChangeTab}>
+          <IconBox
+            onClick={handleChangeTab}
+            checkProfileAuthorization={checkProfileAuthorization()}
+          >
             <Image
               src="/icons/ico-edit.svg"
               alt="편집 아이콘"
@@ -123,12 +143,14 @@ const ProfileFileImageInput = styled.input`
   display: none;
 `;
 
-const IconBox = styled.div`
+const IconBox = styled.div<{ checkProfileAuthorization: boolean }>`
   cursor: pointer;
   position: absolute;
   right: -0.375rem;
   bottom: -0.375rem;
   z-index: 1;
+  visibility: ${(props) =>
+    props.checkProfileAuthorization ? "visible" : "hidden"};
 `;
 
 const TextWrapper = styled.div`

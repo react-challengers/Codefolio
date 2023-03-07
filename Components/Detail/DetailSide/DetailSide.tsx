@@ -29,7 +29,6 @@ const DetailSide = ({
         skills={skills}
       />
       <DetailSidePeople
-        github=""
         authorInfo={authorInfo}
         subCategory={subCategory}
         members={members}

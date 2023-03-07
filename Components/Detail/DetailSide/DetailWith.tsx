@@ -27,7 +27,7 @@ const DetailWith = ({
         </UserInfo>
       </UserInfoWrapper>
 
-      <Link href={github}>
+      <Link target="_blank" href={github}>
         <GithubImage
           src="/icons/github.svg"
           width={20}

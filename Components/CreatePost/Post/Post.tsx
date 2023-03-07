@@ -35,6 +35,7 @@ import { useRouter } from "next/router";
 import checkUrl from "@/utils/commons/checkUrl";
 import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
 
+import { PrimaryButton } from "@/Components/Common";
 import PostTitle from "./PostTitle";
 import ProjectInfo from "./ProjectInfo";
 import PostErrorMessage from "./PostErrorMessage";
@@ -92,7 +93,9 @@ const Post: NextPage = () => {
   const setContentValidate = useSetRecoilState(postContentValidate);
 
   const newPostRow = {
-    id: isPostId,
+    id: (router.asPath === "/create-post"
+      ? isPostId
+      : router.query.id) as string,
     title,
     sub_title: subTitle,
     title_background_image: titleBackgroundImage,
@@ -116,8 +119,14 @@ const Post: NextPage = () => {
         setUserId(data.session?.user.id);
       }
     };
-    setErrorMessage("");
 
+    if (router.asPath === "/create-post") {
+      setIsPostId(uuidv4());
+    } else {
+      setIsPostId(router.query.id as string);
+    }
+
+    setErrorMessage("");
     LoginState();
   }, []);
 
@@ -227,7 +236,7 @@ const Post: NextPage = () => {
   };
 
   const resetInput = () => {
-    setIsPostId(uuidv4());
+    setIsPostId((router.query?.id as string) ?? uuidv4());
     setTitle("");
     setSubTitle("");
     setTitleBackgroundImage("");
@@ -292,10 +301,13 @@ const Post: NextPage = () => {
   return (
     <section>
       <PostHeader>
-        {/* <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert> */}
-        {/* <DefaultButton text="저장" type="outline" size="s" onClick={onSave} /> */}
         {errorMessage && <PostErrorMessage>{errorMessage}</PostErrorMessage>}
-        <CreateButton onClick={onPost}>게시</CreateButton>
+        <PrimaryButton
+          buttonType="default"
+          size="m"
+          text="게시"
+          onClick={onPost}
+        />
       </PostHeader>
       <PostTitle />
       <ProjectInfo />

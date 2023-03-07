@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import styled from "styled-components";
 import {
   addBookmark,
@@ -16,6 +16,7 @@ import {
 } from "@/utils/APIs/supabase";
 import supabase from "@/lib/supabase";
 import createNotificationContent from "@/utils/notification/createNotificationContent";
+import _ from "lodash";
 import ShowMoreModal from "./ShowMoreModal";
 
 interface DetailHeaderProps {
@@ -202,32 +203,77 @@ const DetailHeader = ({
     },
   });
 
+  const addBookmarkThrottle = useCallback(
+    _.throttle(
+      () => {
+        addBookmarkMutate({ postId: postId as string, currentUserId });
+        incrementBookmark(postId as string);
+        queryClient.invalidateQueries(["GET_POSTS"]);
+      },
+      500,
+      { leading: true, trailing: false }
+    ),
+    []
+  );
+
+  const deleteBookmarkThrottle = useCallback(
+    _.throttle(
+      () => {
+        deleteBookmarkMutate({ postId: postId as string, currentUserId });
+        decrementBookmark(postId as string);
+        queryClient.invalidateQueries(["GET_POSTS"]);
+      },
+      500,
+      { leading: true, trailing: false }
+    ),
+    []
+  );
+
   const clickBookmarkButton = async () => {
     if (!currentUserId) {
       return router.push("/auth/login");
     }
     if (isBookmark) {
-      deleteBookmarkMutate({ postId: postId as string, currentUserId });
-      await decrementBookmark(postId as string);
-    } else {
-      addBookmarkMutate({ postId: postId as string, currentUserId });
-      await incrementBookmark(postId as string);
+      return deleteBookmarkThrottle();
     }
-    return queryClient.invalidateQueries(["GET_POSTS"]);
+    return addBookmarkThrottle();
   };
+
+  const deleteLikeThrottle = useCallback(
+    _.throttle(
+      () => {
+        deleteLikeMutate({ postId: postId as string, currentUserId });
+        decrementLike(postId as string);
+        queryClient.invalidateQueries(["GET_POSTS"]);
+      },
+      500,
+      { leading: true, trailing: false }
+    ),
+    []
+  );
+
+  const addLikeThrottle = useCallback(
+    _.throttle(
+      () => {
+        addLikeMutate({ postId: postId as string, currentUserId });
+        incrementLike(postId as string);
+        queryClient.invalidateQueries(["GET_POSTS"]);
+      },
+      500,
+      { leading: true, trailing: false }
+    ),
+    []
+  );
 
   const clickLikeButton = async () => {
     if (!currentUserId) {
       return router.push("/auth/login");
     }
+
     if (isLike) {
-      deleteLikeMutate({ postId: postId as string, currentUserId });
-      await decrementLike(postId as string);
-    } else {
-      addLikeMutate({ postId: postId as string, currentUserId });
-      await incrementLike(postId as string);
+      return deleteLikeThrottle();
     }
-    return queryClient.invalidateQueries(["GET_POSTS"]);
+    return addLikeThrottle();
   };
 
   return (

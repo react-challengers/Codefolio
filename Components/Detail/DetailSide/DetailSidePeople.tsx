@@ -7,14 +7,12 @@ import DetailSideContainer from "./DetailSideContainer";
 import DetailWith from "./DetailWith";
 
 interface DetailSidePeopleProps {
-  github: string;
   authorInfo: UserProfileType | null | undefined;
   subCategory: string;
   members: string[];
 }
 
 const DetailSidePeople = ({
-  github,
   authorInfo,
   subCategory,
   members,
@@ -29,6 +27,7 @@ const DetailSidePeople = ({
               src={authorInfo?.profile_image}
               alt="프로필 사진"
               page="detailPage"
+              profileId={authorInfo?.user_id}
             />
             <UserInfo>
               <h2>{authorInfo?.user_name}</h2>
@@ -36,7 +35,7 @@ const DetailSidePeople = ({
             </UserInfo>
           </UserInfoWrapper>
 
-          <Link href={github}>
+          <Link target="_blank" href={authorInfo?.github ?? ""}>
             <GithubImage
               src="/icons/github.svg"
               width={20}

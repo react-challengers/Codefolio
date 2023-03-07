@@ -2,8 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePost } from "@/utils/APIs/supabase";
 import ConfirmModal from "@/Components/Common/ConfirmModal";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
+import useOutsideClick from "@/hooks/query/useOutsideClick";
 
 interface ShowMoreModalProps {
   closeModal: () => void;
@@ -14,9 +15,12 @@ const ShowMoreModal = ({ closeModal }: ShowMoreModalProps) => {
   const {
     query: { id: postId },
   } = router;
+  const modalRef = useRef<any>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const queryClient = useQueryClient();
+
+  useOutsideClick(modalRef, () => setShowDeleteModal(false));
 
   const editPost = async () => {
     router.push(`/edit-post/${postId}`);
@@ -55,12 +59,13 @@ const ShowMoreModal = ({ closeModal }: ShowMoreModalProps) => {
 
   return (
     <>
-      <ShowMoreModalContainer>
+      <ShowMoreModalContainer ref={modalRef}>
         <ItemWrapper onClick={editPost}>수정하기</ItemWrapper>
         <ItemWrapper onClick={onClickDeleteButton}>삭제하기</ItemWrapper>
       </ShowMoreModalContainer>
       {showDeleteModal && (
         <ConfirmModal
+          type="warn"
           bodyText="글을 삭제하시겠습니까?"
           leftText="취소"
           rightText="삭제"

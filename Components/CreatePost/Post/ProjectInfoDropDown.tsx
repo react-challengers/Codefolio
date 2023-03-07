@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   postLargeCategory,
@@ -19,6 +19,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import getYYYYMM from "@/utils/commons/getYYYYMM";
 import { HelperTextBox, SkillList } from "@/Components/Common";
+import useOutsideClick from "@/hooks/query/useOutsideClick";
 import arrow_down from "@/public/icons/arrow_down.svg";
 import disable_check from "@/public/icons/disable_check.svg";
 import enable_check from "@/public/icons/enable_check.svg";
@@ -36,6 +37,7 @@ const ProjectInfoDropDown = () => {
   const largeCategory = useRecoilValue(postLargeCategory);
   const [subCategory, setSubCategory] = useRecoilState(postSubCategory);
 
+  const categoryRef = useRef<any>();
   const [categoryVisible, setCategoryVisible] = useState(false);
   const [inProgress, setInProgress] = useState(true);
 
@@ -45,6 +47,8 @@ const ProjectInfoDropDown = () => {
   const tagsValidate = useRecoilValue(postTagsValidate);
   const githubUrlValidate = useRecoilValue(postGithubUrlValidate);
   const deployedUrlValidate = useRecoilValue(postDeployedUrlValidate);
+
+  useOutsideClick(categoryRef, () => setCategoryVisible(false));
 
   const handleShowCategory = () => {
     setCategoryVisible((prev) => !prev);
@@ -80,6 +84,7 @@ const ProjectInfoDropDown = () => {
           <TEXTBOX>카테고리*</TEXTBOX>
           <HelperTextContainer>
             <CategoryPicker
+              ref={categoryRef}
               CategoryValidate={subCategoryValidate}
               onClick={handleShowCategory}
             >
@@ -296,6 +301,71 @@ const DropdownImage = styled(Image)`
 const DatePickerContainer = styled.div`
   display: flex;
   height: 5rem;
+
+  .react-datepicker__triangle {
+    display: none;
+  }
+
+  .react-datepicker-popper {
+    padding-top: 0;
+  }
+
+  .react-datepicker {
+    background-color: ${({ theme }) => theme.colors.gray9};
+    border: none;
+    border-radius: 0.5rem;
+    width: 20.625rem;
+  }
+
+  .react-datepicker__header {
+    background-color: ${({ theme }) => theme.colors.gray9};
+    border: none;
+  }
+
+  .react-datepicker__navigation-icon {
+    top: -0.2rem;
+    scale: calc(2 / 3);
+  }
+
+  .react-datepicker__month-container {
+    box-shadow: 0 0.625rem 0.625rem rgba(0, 0, 0, 0.5);
+  }
+
+  .react-datepicker-year-header {
+    ${({ theme }) => theme.fonts.subtitle16};
+    color: ${({ theme }) => theme.colors.gray2};
+    padding-top: 1rem;
+    width: 20.625rem;
+  }
+
+  .react-datepicker__month {
+    ${({ theme }) => theme.fonts.body16};
+    color: ${({ theme }) => theme.colors.gray2};
+    margin: 1rem;
+  }
+
+  .react-datepicker__month-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .react-datepicker__month-text {
+    width: 5.875rem;
+    height: 2rem;
+    ${({ theme }) => theme.fonts.body16};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .react-datepicker__month-text--keyboard-selected,
+  .react-datepicker__month--in-range,
+  .react-datepicker__month-text:hover {
+    background-color: ${({ theme }) => theme.colors.primary3};
+    color: ${({ theme }) => theme.colors.gray9};
+    ${({ theme }) => theme.fonts.subtitle16};
+  }
 `;
 
 const DateSelectBox = styled.div`
@@ -309,7 +379,7 @@ const DateSelectBox = styled.div`
 const StyledDatePicker = styled(DatePicker)`
   all: unset;
 
-  min-width: 18rem;
+  min-width: 20.625rem;
   padding: 0.625rem 1rem;
   padding-right: 3.75rem;
 
@@ -320,12 +390,12 @@ const StyledDatePicker = styled(DatePicker)`
 `;
 
 const InDateProgress = styled.div`
-  min-width: 18rem;
+  min-width: 20.625rem;
   border-radius: 0.25rem;
   padding: 0.625rem 1rem;
   padding-right: 3.75rem;
 
-  background-color: ${({ theme }) => theme.colors.gray5};
+  background-color: ${({ theme }) => theme.colors.gray7};
   color: ${({ theme }) => theme.colors.gray3};
   ${({ theme }) => theme.fonts.body14};
 `;

@@ -74,7 +74,7 @@ const WithPeople = () => {
           </HelperTextContainer>
 
           <HelperTextContainer>
-            <FieldPicker field={person.field as string} />
+            <FieldPicker field={person.field as string} idx={idx} />
             <HelperTextBox text={membersValidate[idx]?.field} />
           </HelperTextContainer>
           <HelperTextContainer>
@@ -116,7 +116,7 @@ const InputWrapper = styled.div`
     & > :first-child input {
       border-radius: 0.25rem;
       color: ${({ theme }) => theme.colors.gray3};
-      background-color: ${({ theme }) => theme.colors.gray5};
+      background-color: ${({ theme }) => theme.colors.gray7};
     }
     & > img {
       display: none;

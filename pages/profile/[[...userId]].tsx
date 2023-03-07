@@ -15,8 +15,7 @@ import supabase from "@/lib/supabase";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { myPageCurrentTab, userLoginCheck } from "@/lib/recoil";
-
-const tabList = ["프로젝트", "북마크", "좋아요", "프로필"];
+import { useUserProfile } from "@/hooks/query";
 
 const ProfilePage: NextPage = () => {
   const [currentTab, setCurrentTab] = useRecoilState(myPageCurrentTab);
@@ -25,7 +24,20 @@ const ProfilePage: NextPage = () => {
   const [bookmarkIds, setBookmarkIds] = useState<string[]>([]);
   const isLogin = useRecoilValue(userLoginCheck);
 
+  const { profileData } = useUserProfile();
   const router = useRouter();
+
+  // 옵셔널 체이닝으로 존재하지 않는 프로필은 본인으로 리다이렉팅
+  const profileUserId = router?.query?.userId?.[0];
+
+  // profileUserId === "" && profileData.user_id === true
+  let selfProfileTabList = ["프로젝트", "칭찬배지", "프로필"];
+
+  if (!profileUserId) {
+    selfProfileTabList = ["프로젝트", "북마크", "좋아요", "칭찬배지", "프로필"];
+  } else if (profileUserId === profileData.user_id) {
+    selfProfileTabList = ["프로젝트", "북마크", "좋아요", "칭찬배지", "프로필"];
+  }
 
   useQuery(["currentUser"], {
     queryFn: getCurrentUser,
@@ -43,15 +55,28 @@ const ProfilePage: NextPage = () => {
   };
 
   useEffect(() => {
-    if (!isLogin) {
+    if (!profileData.user_id) return;
+    if (isLogin && !profileUserId) {
+      router.push(`/profile/${profileData.user_id}`);
+    }
+    if (!isLogin && !profileUserId) {
       router.push("/auth/login");
     }
   }, []);
 
-  // 내가 작성한 아이템 리스트
+  // 본인이 작성한 아이템 리스트
   const myItemList = useMemo(() => {
     if (!itemList) return [];
-    return itemList.filter((item) => item.user_id === userId);
+
+    // 로그인한 유저의 프로필
+    if (profileData.user_id === profileUserId || !profileUserId)
+      return itemList.filter((item) => item.user_id === userId);
+
+    // 다른 프로필
+    if (profileData.user_id !== profileUserId)
+      return itemList.filter((item) => item.user_id === profileUserId);
+
+    return [];
   }, [itemList, userId]);
 
   // 내가 북마크한 아이템 id 리스트
@@ -123,12 +148,10 @@ const ProfilePage: NextPage = () => {
 
   // 중첩 삼항연산자 해체
   let Component = null;
-  if (currentTab === tabList.length - 1) {
+  if (currentTab === selfProfileTabList.length - 1) {
     Component = <TabProfile />;
-
-    // TODO: 다른 프로필을 볼 수 있을 때 칭찬배지 탭을 해제합니다.
-    // } else if (currentTab === tabList.length - 2) {
-    // Component = <GoodJobBadge />;
+  } else if (currentTab === selfProfileTabList.length - 2) {
+    Component = <GoodJobBadge />;
   } else if (filteredItemList?.length > 0) {
     Component = <CardItemContainer itemList={filteredItemList ?? []} />;
   } else {
@@ -137,9 +160,9 @@ const ProfilePage: NextPage = () => {
 
   return (
     <MyPageContainer>
-      <UserInfoContainer />
+      <UserInfoContainer profileUserId={profileUserId} />
       <MyPageTab
-        tabList={tabList}
+        tabList={selfProfileTabList}
         currentTab={currentTab}
         onClick={handleClick}
       />

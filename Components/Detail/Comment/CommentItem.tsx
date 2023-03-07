@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import viewCreateAt from "@/utils/commons/viewCreateAt";
-import { DefaultButton, ProfileImage } from "@/Components/Common";
+import { PrimaryButton, ProfileImage } from "@/Components/Common";
 import {
   decrementComment,
   deleteComment,
@@ -13,17 +13,22 @@ import {
 } from "@/utils/APIs/supabase";
 import Image from "next/image";
 import supabase from "@/lib/supabase";
+import useOutsideClick from "@/hooks/query/useOutsideClick";
 
 /**
  * @TODO useInput으로 리팩토링 고민
  */
 
 interface CommentItemProps {
-  comment: CommentType;
+  comment: any;
+  dbType: "comment" | "profile_comment";
 }
 
-const CommentItem = ({ comment }: CommentItemProps) => {
+const CommentItem = ({ comment, dbType }: CommentItemProps) => {
   const queryClient = useQueryClient();
+
+  const dropdownRef = useRef<any>();
+  useOutsideClick(dropdownRef, () => setShowMoreModal(false));
 
   const [showMoreModal, setShowMoreModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -73,29 +78,38 @@ const CommentItem = ({ comment }: CommentItemProps) => {
         .match({
           user_id: userId,
           target_id: author,
-          post_id: comment.post_id as string,
+          [dbType === "comment" ? "post_id" : "profile_id"]: (dbType ===
+          "comment"
+            ? comment.post_id
+            : comment.profile_id) as string,
           type,
         });
     }
   );
 
   const { mutate: deleteCommentMutate } = useMutation(
-    () => deleteComment(comment.id),
+    () => deleteComment(comment.id, dbType),
     {
       onSuccess: async () => {
-        deleteNotificationMutate("comment");
+        deleteNotificationMutate(dbType);
         await decrementComment(comment.post_id);
-        queryClient.invalidateQueries(["getComment"]);
-        queryClient.invalidateQueries(["GET_POSTS"]);
+        if (dbType === "comment") {
+          queryClient.invalidateQueries(["getComment"]);
+          queryClient.invalidateQueries(["GET_POSTS"]);
+        } else {
+          queryClient.invalidateQueries(["getProfileComment"]);
+        }
       },
     }
   );
 
   const { mutate: editCommentMutate } = useMutation(
-    () => editComment(comment.id, editContent),
+    () => editComment(comment.id, editContent, dbType),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["getComment"]);
+        queryClient.invalidateQueries([
+          dbType === "comment" ? "getComment" : "getProfileComment",
+        ]);
       },
     }
   );
@@ -121,6 +135,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
         alt="프로필이미지"
         page="detailPage"
         src={userProfileImage}
+        profileId={comment.user_id}
       />
       <TextBox>
         <CommentTitle>
@@ -142,15 +157,15 @@ const CommentItem = ({ comment }: CommentItemProps) => {
         <ButtonWrapper>
           {isEditing ? (
             <>
-              <DefaultButton
+              <PrimaryButton
                 text="완료"
-                type="outline"
+                buttonType="default"
                 size="s"
                 onClick={handleEditClick}
               />
-              <DefaultButton
+              <PrimaryButton
                 text="취소"
-                type="outline"
+                buttonType="line"
                 size="s"
                 onClick={handleCanceled}
               />
@@ -171,7 +186,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
         <ButtonWrapper />
       )}
       {showMoreModal && (
-        <ShowMoreModalContainer>
+        <ShowMoreModalContainer ref={dropdownRef}>
           <ItemWrapper onClick={handleEditClick}>수정하기</ItemWrapper>
           <ItemWrapper onClick={() => deleteCommentMutate()}>
             삭제하기

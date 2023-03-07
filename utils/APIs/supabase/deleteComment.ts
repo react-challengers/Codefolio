@@ -7,8 +7,11 @@ import supabase from "@/lib/supabase";
  * const { mutate: deleteCommentMutate } = useMutation(deleteComment);
  * deleteCommentMutate(id);
  */
-const deleteComment = async (id: string) => {
-  const res = await supabase.from("comment").delete().eq("id", id);
+const deleteComment = async (
+  id: string,
+  dbType: "comment" | "profile_comment"
+) => {
+  const res = await supabase.from(dbType).delete().eq("id", id);
   return res;
 };
 

@@ -1,3 +1,5 @@
+import { useSubscribeRoute } from "@/hooks/common";
+import useOutsideClick from "@/hooks/query/useOutsideClick";
 import {
   isNotificationState,
   subCategoryState,
@@ -12,7 +14,7 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { DropDown, ProfileImage } from "../Common";
@@ -36,6 +38,14 @@ const GNB = () => {
     "default"
   );
 
+  const profileDropdownRef = useRef<HTMLUListElement>(null);
+  useOutsideClick(profileDropdownRef, () => setIsProfileDropdownOpen(false));
+
+  const NotificationDropdownRef = useRef<HTMLDivElement>(null);
+  useOutsideClick(NotificationDropdownRef, () =>
+    setIsNotificationDropdownOpen(false)
+  );
+
   useQuery(["currentUser"], {
     queryFn: getCurrentUser,
     onSuccess({ data: { user } }) {
@@ -48,7 +58,7 @@ const GNB = () => {
     },
   });
 
-  useQuery(["USER_PROFILE"], getUserProfile, {
+  useQuery(["USER_PROFILE"], () => getUserProfile(), {
     onSuccess: (data) => {
       if (data?.profile_image) {
         setCurrentUserProfileImage(data.profile_image);
@@ -85,7 +95,15 @@ const GNB = () => {
 
   const handleNotificationDropdown = () => {
     setIsNotificationDropdownOpen((prev) => !prev);
+    if (isProfileDropdownOpen) setIsProfileDropdownOpen(false);
   };
+
+  const handleResetDropdowns = () => {
+    setIsProfileDropdownOpen(false);
+    setIsNotificationDropdownOpen(false);
+  };
+
+  useSubscribeRoute(handleResetDropdowns);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -113,7 +131,6 @@ const GNB = () => {
     <GNBContainer>
       <GNBLeftSideContainer>
         <ButtonWrapper onClick={handleClickLogo}>
-          {/* <GNBLogo>Codefolio</GNBLogo> */}
           <Image
             src="/logos/mainLogo.svg"
             width={24}
@@ -132,7 +149,11 @@ const GNB = () => {
             >
               <NotificationIcon type={notificationType} />
             </ButtonWrapper>
-            {isNotificationDropdownOpen && <Notification />}
+            {isNotificationDropdownOpen && (
+              <NotificationContainer ref={NotificationDropdownRef}>
+                <Notification />
+              </NotificationContainer>
+            )}
             <ButtonWrapper
               onClick={() =>
                 router.push(userCheck ? "/create-post" : "/auth/login")
@@ -147,7 +168,7 @@ const GNB = () => {
                 src={currentUserProfileImage}
               />
             </ButtonWrapper>
-            <ProfileDropDownList>
+            <ProfileDropDownList ref={profileDropdownRef}>
               {isProfileDropdownOpen &&
                 dropDownItems.map((item) => (
                   <DropDown
@@ -167,6 +188,12 @@ const GNB = () => {
     </GNBContainer>
   );
 };
+
+const NotificationContainer = styled.div`
+  position: absolute;
+  top: 3.75rem;
+  right: 2.5rem;
+`;
 
 const GNBContainer = styled.div`
   width: 100vw;
@@ -223,11 +250,6 @@ const ButtonWrapper = styled.div<ButtonWrapperProps>`
       fill: ${({ theme }) => theme.colors.primary6};
     }
   }
-`;
-
-const GNBLogo = styled.div`
-  ${({ theme }) => theme.fonts.title24};
-  color: ${({ theme }) => theme.colors.primary6};
 `;
 
 const ProfileDropDownList = styled.ul`
