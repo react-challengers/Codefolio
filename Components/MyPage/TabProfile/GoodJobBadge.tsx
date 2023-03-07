@@ -9,13 +9,14 @@ import {
 } from "@/utils/constant";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import getUserBadge from "@/utils/APIs/supabase/getUserBadge";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { getCurrentUser } from "@/utils/APIs/supabase";
 import getProfileBadgeByUid from "@/utils/APIs/supabase/getProfileBadgeByUid";
 import addProfileBadge from "@/utils/APIs/supabase/addProfileBadge";
 import deleteProfileBadge from "@/utils/APIs/supabase/deleteProfileBadge";
 import { useRouter } from "next/router";
 import ConfirmModal from "@/Components/Common/ConfirmModal";
+import _ from "lodash";
 import ProfileComment from "./ProfileComment";
 import ProfileCommentInput from "./ProfileCommentInput";
 
@@ -37,6 +38,7 @@ const GoodJobBadge = () => {
   const [toolNum, setToolNum] = useState(0);
   const [badgeCheck, setBadgeCheck] = useState<string[]>([]);
   const [userId, setUserId] = useState<string | undefined>("");
+  const [currentBadge, setCurrentBadge] = useState<ProfileBadge | undefined>();
 
   useQuery(["currentUser"], getCurrentUser, {
     onSuccess: ({ data: { user } }) => {
@@ -96,19 +98,55 @@ const GoodJobBadge = () => {
     },
   });
 
-  const clickBadge = (badgeType: ProfileBadge) => {
+  const deleteBadgeThrottle = useCallback(
+    _.throttle(
+      () => {
+        if (!currentBadge || !userId) return;
+        const newBadgeCheck = badgeCheck.filter(
+          (badge) => badge !== currentBadge
+        );
+        setBadgeCheck(newBadgeCheck);
+        deleteBadge({
+          userId,
+          profileId: profileId as string,
+          type: currentBadge,
+        });
+      },
+      500,
+      { leading: true, trailing: false }
+    ),
+    [currentBadge]
+  );
+
+  const addBadgeThrottle = useCallback(
+    _.throttle(
+      () => {
+        if (!currentBadge || !userId) return;
+        setBadgeCheck([...badgeCheck, currentBadge]);
+        addBadge({
+          userId,
+          profileId: profileId as string,
+          type: currentBadge,
+        });
+      },
+      500,
+      { leading: true, trailing: false }
+    ),
+    [currentBadge]
+  );
+
+  const clickBadge = () => {
     if (!userId) {
       setShowLoginModal(true);
       return;
     }
 
-    if (badgeCheck.includes(badgeType)) {
-      const newBadgeCheck = badgeCheck.filter((badge) => badge !== badgeType);
-      setBadgeCheck(newBadgeCheck);
-      deleteBadge({ userId, profileId: profileId as string, type: badgeType });
+    if (!currentBadge) return;
+
+    if (badgeCheck.includes(currentBadge)) {
+      deleteBadgeThrottle();
     } else {
-      setBadgeCheck([...badgeCheck, badgeType]);
-      addBadge({ userId, profileId: profileId as string, type: badgeType });
+      addBadgeThrottle();
     }
   };
 
@@ -117,7 +155,8 @@ const GoodJobBadge = () => {
       <GoodJobTabsContainer>
         <BadgeListContainer>
           <BadgeItemContainer
-            onClick={() => clickBadge("puzzle")}
+            onClick={clickBadge}
+            onMouseEnter={() => setCurrentBadge("puzzle")}
             badgeCheck={badgeCheck}
             badge="puzzle"
           >
@@ -127,7 +166,8 @@ const GoodJobBadge = () => {
           </BadgeItemContainer>
 
           <BadgeItemContainer
-            onClick={() => clickBadge("pencil")}
+            onClick={clickBadge}
+            onMouseEnter={() => setCurrentBadge("pencil")}
             badgeCheck={badgeCheck}
             badge="pencil"
           >
@@ -137,7 +177,8 @@ const GoodJobBadge = () => {
           </BadgeItemContainer>
 
           <BadgeItemContainer
-            onClick={() => clickBadge("arrow")}
+            onClick={clickBadge}
+            onMouseEnter={() => setCurrentBadge("arrow")}
             badgeCheck={badgeCheck}
             badge="arrow"
           >
@@ -147,7 +188,8 @@ const GoodJobBadge = () => {
           </BadgeItemContainer>
 
           <BadgeItemContainer
-            onClick={() => clickBadge("chat")}
+            onClick={clickBadge}
+            onMouseEnter={() => setCurrentBadge("chat")}
             badgeCheck={badgeCheck}
             badge="chat"
           >
@@ -157,7 +199,8 @@ const GoodJobBadge = () => {
           </BadgeItemContainer>
 
           <BadgeItemContainer
-            onClick={() => clickBadge("tool")}
+            onClick={clickBadge}
+            onMouseEnter={() => setCurrentBadge("tool")}
             badgeCheck={badgeCheck}
             badge="tool"
           >
