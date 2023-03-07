@@ -265,7 +265,6 @@ const TagContainer = styled.div`
 const HomeCardGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 1rem;
   margin-top: 1rem;
 `;
