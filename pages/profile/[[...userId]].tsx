@@ -154,7 +154,6 @@ const ProfilePage: NextPage = () => {
     Component = <GoodJobBadge />;
   } else if (filteredItemList?.length > 0) {
     Component = <CardItemContainer itemList={filteredItemList ?? []} />;
-    console.log(filteredItemList);
   } else {
     Component = <EmptyPost>게시글이 없습니다.</EmptyPost>;
   }
