@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   postLargeCategory,
@@ -19,6 +19,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import getYYYYMM from "@/utils/commons/getYYYYMM";
 import { HelperTextBox, SkillList } from "@/Components/Common";
+import useOutsideClick from "@/hooks/query/useOutsideClick";
 import arrow_down from "@/public/icons/arrow_down.svg";
 import disable_check from "@/public/icons/disable_check.svg";
 import enable_check from "@/public/icons/enable_check.svg";
@@ -36,6 +37,7 @@ const ProjectInfoDropDown = () => {
   const largeCategory = useRecoilValue(postLargeCategory);
   const [subCategory, setSubCategory] = useRecoilState(postSubCategory);
 
+  const categoryRef = useRef<any>();
   const [categoryVisible, setCategoryVisible] = useState(false);
   const [inProgress, setInProgress] = useState(true);
 
@@ -45,6 +47,8 @@ const ProjectInfoDropDown = () => {
   const tagsValidate = useRecoilValue(postTagsValidate);
   const githubUrlValidate = useRecoilValue(postGithubUrlValidate);
   const deployedUrlValidate = useRecoilValue(postDeployedUrlValidate);
+
+  useOutsideClick(categoryRef, () => setCategoryVisible(false));
 
   const handleShowCategory = () => {
     setCategoryVisible((prev) => !prev);
@@ -80,6 +84,7 @@ const ProjectInfoDropDown = () => {
           <TEXTBOX>카테고리*</TEXTBOX>
           <HelperTextContainer>
             <CategoryPicker
+              ref={categoryRef}
               CategoryValidate={subCategoryValidate}
               onClick={handleShowCategory}
             >

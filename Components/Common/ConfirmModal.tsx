@@ -1,4 +1,5 @@
-import React from "react";
+import useOutsideClick from "@/hooks/query/useOutsideClick";
+import React, { useRef } from "react";
 import styled from "styled-components";
 
 interface ConfirmModalProps {
@@ -16,9 +17,13 @@ const ConfirmModal = ({
   onClickLeft,
   onClickRight,
 }: ConfirmModalProps) => {
+  const modalRef = useRef<any>();
+
+  useOutsideClick(modalRef, () => onClickLeft());
+
   return (
     <ConfirmModalContainer>
-      <ModalContainer>
+      <ModalContainer ref={modalRef}>
         <ModalBody>{bodyText}</ModalBody>
         <ModalFooter>
           <LeftButton onClick={onClickLeft}>{leftText}</LeftButton>

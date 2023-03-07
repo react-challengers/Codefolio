@@ -46,7 +46,7 @@ const DetailArticle = () => {
   const [isLike, setIsLike] = useState(false);
   const [category, setCategory] = useState("");
 
-  const { data: currentPost, isLoading } = useQuery<PostType>(
+  const { isLoading } = useQuery<PostType>(
     ["getOnePost", postId],
     () => getOnePost(postId as string),
     {

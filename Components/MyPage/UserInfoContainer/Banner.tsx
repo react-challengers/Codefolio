@@ -1,5 +1,6 @@
 import Image, { StaticImageData } from "next/image";
 import styled from "styled-components";
+import icophoto from "@/public/icons/ico-photo.svg";
 import useUserImage from "./useUserImage";
 
 interface BannerProps {
@@ -28,17 +29,17 @@ const Banner = ({
     return (
       <BannerColor>
         <ImgLabel
-          htmlFor="background-color-picker"
+          htmlFor="title-background-image"
           checkProfileAuthorization={checkProfileAuthorization}
         >
           <ImgIcon
-            src="/icons/ico-photo.svg"
+            src={icophoto}
             alt="배경 사진 지정 아이콘"
             width={36}
             height={36}
           />
           <UserBackgroundImagePicker
-            id="background-color-picker"
+            id="title-background-image"
             type="file"
             accept="image/*"
             onChange={handleBackgroundImage}
@@ -52,17 +53,17 @@ const Banner = ({
     <BannerContainer>
       <BannerImage src={src} alt={alt} sizes="100vw" width={100} height={180} />
       <ImgLabel
-        htmlFor="background-color-picker"
+        htmlFor="title-background-image"
         checkProfileAuthorization={checkProfileAuthorization}
       >
         <ImgIcon
-          src="/icons/ico-photo.svg"
+          src={icophoto}
           alt="배경 사진 지정 아이콘"
           width={36}
           height={36}
         />
         <UserBackgroundImagePicker
-          id="background-color-picker"
+          id="title-background-image"
           type="file"
           accept="image/*"
           onChange={handleBackgroundImage}
@@ -77,6 +78,9 @@ const BannerContainer = styled.div`
 `;
 
 const BannerColor = styled.div`
+  display: flex;
+  justify-content: center;
+
   width: 100vw;
   height: 11.25rem;
   background-color: ${(props) => props.theme.colors.gray9};
@@ -84,8 +88,8 @@ const BannerColor = styled.div`
 `;
 
 const BannerImage = styled(Image)`
-  width: 100vw;
-  height: 11.25rem;
+  min-width: 100vw;
+  min-height: 11.25rem;
   object-fit: cover;
   opacity: 80%;
 `;

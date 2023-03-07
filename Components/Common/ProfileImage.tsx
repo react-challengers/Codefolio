@@ -51,6 +51,7 @@ const ProfileImage = ({
 
 const ProfileImageItem = styled(Image)`
   border-radius: 50%;
+  cursor: pointer;
 `;
 
 const ProfileLink = styled(Link)`
