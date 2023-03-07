@@ -1,6 +1,6 @@
 import { postMembers } from "@/lib/recoil";
 import { useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import arrow_down from "@/public/icons/arrow_down.svg";
 import Image from "next/image";
 import styled from "styled-components";
@@ -8,21 +8,22 @@ import FieldDropDown from "./FieldDropDown";
 
 interface FieldPickerProps {
   field: string;
+  idx: number;
 }
-const FieldPicker = ({ field }: FieldPickerProps) => {
+const FieldPicker = ({ field, idx }: FieldPickerProps) => {
   const [visibleField, setVisibleField] = useState(false);
-  const setPeople = useSetRecoilState(postMembers);
+  const [people, setPeople] = useRecoilState(postMembers);
 
   const handleClickField = (item: string) => {
-    setPeople((prev) => {
-      const lastPeople = prev[prev.length - 1];
-      return [
-        ...prev.slice(0, prev.length - 1),
-        { ...lastPeople, field: item },
-      ];
+    const newPeople = people.map((person, i) => {
+      if (i === idx) return { ...person, field: item };
+      return person;
     });
+    setPeople(newPeople);
+
     setVisibleField(false);
   };
+
   const handleShowField = () => {
     setVisibleField(!visibleField);
   };

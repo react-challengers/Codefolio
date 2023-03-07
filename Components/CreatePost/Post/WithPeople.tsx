@@ -74,7 +74,7 @@ const WithPeople = () => {
           </HelperTextContainer>
 
           <HelperTextContainer>
-            <FieldPicker field={person.field as string} />
+            <FieldPicker field={person.field as string} idx={idx} />
             <HelperTextBox text={membersValidate[idx]?.field} />
           </HelperTextContainer>
           <HelperTextContainer>
