@@ -34,10 +34,6 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
     },
   });
 
-  useEffect(() => {
-    console.log(currentBadge);
-  }, [currentBadge]);
-
   const { refetch: refetchPostBadge } = useQuery(
     ["getPostBadge", { postId }],
     getPostBadges,
