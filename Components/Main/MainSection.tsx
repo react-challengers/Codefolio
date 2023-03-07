@@ -240,7 +240,6 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
 const Target = styled.div`
   margin-top: 10%;
   height: 1px;
-  background-color: aqua;
 `;
 const HomeMainContainer = styled.main`
   display: flex;
