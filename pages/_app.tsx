@@ -22,7 +22,8 @@ import { init } from "@amplitude/analytics-browser";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: Infinity,
+      // globally default to 60 seconds
+      staleTime: 1000 * 60,
     },
   },
 });
