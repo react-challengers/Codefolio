@@ -19,11 +19,12 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import styled from "styled-components";
-import { DropDown, ProfileImage } from "../Common";
+import { DropDown, Modal, ProfileImage } from "../Common";
 import CreatePostIcon from "./CreatePostIcon";
 import Notification from "./Notification";
 import NotificationIcons from "./NotificationIcons";
 import SearchBar from "./SearchBar";
+import HambergerMenu from "../Mobile/HambergerMenu";
 
 const GNB = () => {
   const router = useRouter();
@@ -34,6 +35,7 @@ const GNB = () => {
   const [currentUserProfileImage, setCurrentUserProfileImage] =
     useState<string>("");
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isHambergerModal, setIsHambergerModal] = useState(false);
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
     useRecoilState(isNotificationState);
   const [currentUserId, setCurrentUserId] = useState<string>("");
@@ -106,6 +108,10 @@ const GNB = () => {
     setIsNotificationDropdownOpen(false);
   };
 
+  const handleClickMobileMenu = () => {
+    setIsHambergerModal((prev) => !prev);
+  };
+
   useSubscribeRoute(handleResetDropdowns);
 
   const handleLogout = async () => {
@@ -128,24 +134,28 @@ const GNB = () => {
     }
   };
 
-  const handleClickMobileMenu = () => {
-    console.log("hi");
-  };
-
   if (router.pathname.includes("auth")) return <> </>;
 
   return (
     <GNBContainer>
       <GNBLeftSideContainer>
         {isMobile ? (
-          <ButtonWrapper onClick={handleClickMobileMenu}>
-            <Image
-              src={hamberger_menu}
-              width={24}
-              height={24}
-              alt="모바일 메뉴 버튼"
-            />
-          </ButtonWrapper>
+          <>
+            <ButtonWrapper
+              onClick={handleClickMobileMenu}
+              isOpen={isHambergerModal}
+            >
+              <Image
+                src={hamberger_menu}
+                width={24}
+                height={24}
+                alt="모바일 메뉴 버튼"
+              />
+            </ButtonWrapper>
+            {isHambergerModal && (
+              <HambergerMenu setIsHambergerModal={setIsHambergerModal} />
+            )}
+          </>
         ) : (
           <ButtonWrapper onClick={handleClickLogo}>
             <Image
