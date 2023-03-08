@@ -57,7 +57,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     isLoading,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery(["GET_INFINIFEPOSTS"], getInfinitePosts, {
+  } = useInfiniteQuery(["GET_INFINITE_POSTS"], getInfinitePosts, {
     getNextPageParam: () => {
       // return lastPage.length;
       return page;
