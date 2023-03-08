@@ -19,7 +19,14 @@ import Head from "next/head";
 import { Analytics } from "@vercel/analytics/react";
 import { init } from "@amplitude/analytics-browser";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // globally default to 60 seconds
+      staleTime: 1000 * 60,
+    },
+  },
+});
 
 const App = ({
   Component,
