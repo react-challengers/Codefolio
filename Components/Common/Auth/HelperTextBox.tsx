@@ -15,6 +15,10 @@ const HelperTextBoxContainer = styled.div`
   margin-bottom: 1.5rem;
 
   color: ${({ theme }) => theme.colors.messageError};
+
+  @media (max-width: 768px) {
+    width: 20rem;
+  }
 `;
 
 export default HelperTextBox;

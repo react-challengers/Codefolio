@@ -13,7 +13,6 @@ const getTypeAuthButton = (buttonType: AuthButtonType, theme: DefaultTheme) => {
       background-color: ${theme.colors.gray8};
     }
     ${theme.fonts.subtitle18}
-   
     `;
   }
   if (buttonType === "socialLogin") {
@@ -62,6 +61,10 @@ const AuthButtonContainer = styled.button<AuthButtonContainerProps>`
   ${({ buttonType, theme }) => getTypeAuthButton(buttonType, theme)};
 
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 20rem;
+  }
 `;
 
 export default AuthButton;

@@ -22,6 +22,7 @@ import ico_close_16 from "@/public/icons/ico_close_16.svg";
 
 import Image from "next/image";
 import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
+import useIsMobile from "@/hooks/common/useIsMobile";
 
 const Login: NextPage = () => {
   const router = useRouter();
@@ -33,6 +34,8 @@ const Login: NextPage = () => {
   const [passwordHelperText, setPasswordHelperText] = useState("");
 
   const [isError, setIsError] = useState(false);
+
+  const isMobile = useIsMobile();
 
   const setIsLogin = useSetRecoilState(userLoginCheck);
 
@@ -125,7 +128,7 @@ const Login: NextPage = () => {
 
   return (
     <LoginPageContainer>
-      <EmptyContainer />
+      {!isMobile && <EmptyContainer />}
       <LoginSpace>
         {isError ? (
           <ErrorMessageBox Error>
@@ -249,6 +252,10 @@ const LoginSpace = styled.div`
 
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 768px) {
+    min-height: 100vh;
+  }
 `;
 
 const HrContainer = styled.div`
@@ -269,6 +276,10 @@ const HrContainer = styled.div`
     background: ${({ theme }) => theme.colors.gray11};
     padding: 0 1.5rem;
     color: ${({ theme }) => theme.colors.gray6};
+
+    @media (max-width: 768px) {
+      width: 20%;
+    }
   }
 `;
 
@@ -284,6 +295,10 @@ const LoginForm = styled.div`
   align-items: center;
 
   margin-bottom: 1.5rem;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const CloseSvg = styled(Image)`
