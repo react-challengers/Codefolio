@@ -29,7 +29,7 @@ const useUserProfile = (profileUserId = "") => {
     contact_email: data?.contact_email ?? "",
     profile_image: data?.profile_image ?? "",
     background_image: data?.background_image ?? "",
-    birth_year: data?.birth_year ?? new Date().getFullYear(),
+    birth_year: data?.birth_year ?? new Date().getFullYear().toString(),
     self_profile: data?.self_profile ?? "",
     gender: data?.gender ?? "선택안함",
     is_public: data?.is_public ?? true,
