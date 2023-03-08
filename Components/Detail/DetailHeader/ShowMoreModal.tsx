@@ -27,28 +27,8 @@ const ShowMoreModal = ({ closeModal }: ShowMoreModalProps) => {
   };
 
   const { mutate: deletePostMutate } = useMutation(deletePost, {
-    onMutate: async () => {
-      await queryClient.cancelQueries(["getPost", postId]);
-
-      const previousPost = queryClient.getQueryData<PostType>([
-        "getPost",
-        postId,
-      ]);
-
-      if (previousPost) {
-        queryClient.setQueryData(["getPost", postId], null);
-      }
-
-      return { previousPost };
-    },
-    onError: (error, variables, context) => {
-      if (context?.previousPost) {
-        queryClient.setQueryData(["getPost", postId], {
-          ...context.previousPost,
-        });
-      }
-    },
     onSuccess: async () => {
+      queryClient.invalidateQueries(["GET_INFINITE_POSTS"]);
       router.push("/");
     },
   });
@@ -58,13 +38,12 @@ const ShowMoreModal = ({ closeModal }: ShowMoreModalProps) => {
   };
 
   return (
-    <>
-      <ShowMoreModalContainer ref={modalRef}>
-        <ItemWrapper onClick={editPost}>수정하기</ItemWrapper>
-        <ItemWrapper onClick={onClickDeleteButton}>삭제하기</ItemWrapper>
-      </ShowMoreModalContainer>
+    <ShowMoreModalContainer>
+      <ItemWrapper onClick={editPost}>수정하기</ItemWrapper>
+      <ItemWrapper onClick={onClickDeleteButton}>삭제하기</ItemWrapper>
       {showDeleteModal && (
         <ConfirmModal
+          type="warn"
           bodyText="글을 삭제하시겠습니까?"
           leftText="취소"
           rightText="삭제"
@@ -72,7 +51,7 @@ const ShowMoreModal = ({ closeModal }: ShowMoreModalProps) => {
           onClickRight={() => deletePostMutate(postId as string)}
         />
       )}
-    </>
+    </ShowMoreModalContainer>
   );
 };
 

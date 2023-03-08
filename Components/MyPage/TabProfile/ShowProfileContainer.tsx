@@ -43,7 +43,7 @@ const ShowProfileContainer = () => {
           </ContentWrapper>
           <ContentWrapper>
             <ContentTitle>출생년도</ContentTitle>
-            {profileData.birth_year === new Date().getFullYear() ? (
+            {profileData.birth_year === new Date().getFullYear().toString() ? (
               <ContentEmpty>선택안함</ContentEmpty>
             ) : (
               <ContentItem>{profileData.birth_year}</ContentItem>

@@ -64,95 +64,353 @@ $ yarn dev
 - Tech Stack 결정 과정
   [라이브러리 선정](https://www.notion.so/134c5edeb0d74724a7c381ca08e10c1f)
 
+# Entity-Relationship Diagram
+
+[직접 보기](https://www.erdcloud.com/d/h6pszoAJmTXDsDgcE)
+
+
+![image](https://user-images.githubusercontent.com/115724947/223598438-d334bea5-751a-45ce-825d-791af5f0fb36.png)
+
+
 # Directory
 
 ```
+.
 ├── Components
-│   ├── Common
-│   │   ├── Auth
-│   │   ├── Card
-│   │   └── Skill
-│   ├── CreatePost
-│   │   └── Post
-│   ├── Detail
-│   │   ├── Comment
-│   │   ├── DetailContent.tsx
-│   │   ├── DetailHeader
-│   │   ├── DetailSide
-│   │   ├── DetailTitle.tsx
-│   │   └── RelatedProject
-│   ├── Layouts
-│   ├── Main
-│   │   ├── DetailModal.tsx
-│   │   ├── MainSection.tsx
-│   │   └── SideBar
-│   └── MyPage
-│       ├── CardItemContainer.tsx
-│       ├── MyPageContainer.tsx
-│       ├── MypageTab.tsx
-│       ├── TabProfile
-│       └── UserInfoContainer
+│   ├── Common
+│   │   ├── Auth
+│   │   │   ├── AuthButton.tsx
+│   │   │   ├── AuthInput.tsx
+│   │   │   ├── ErrorMessageBox.tsx
+│   │   │   ├── HelperTextBox.tsx
+│   │   │   └── index.ts
+│   │   ├── Card
+│   │   │   ├── CardItem.tsx
+│   │   │   └── IconWithCount.tsx
+│   │   ├── ConfirmModal.tsx
+│   │   ├── DefaultButton.tsx
+│   │   ├── DropDown.tsx
+│   │   ├── HelperTextBox.tsx
+│   │   ├── Input.tsx
+│   │   ├── LongButton.tsx
+│   │   ├── Modal.tsx
+│   │   ├── PrimaryButton.tsx
+│   │   ├── ProfileImage.tsx
+│   │   ├── Skill
+│   │   │   ├── Skill.tsx
+│   │   │   └── SkillList.tsx
+│   │   ├── Tags.tsx
+│   │   ├── Toggle.tsx
+│   │   └── index.ts
+│   ├── CreatePost
+│   │   ├── ImageUploadText.tsx
+│   │   ├── Post
+│   │   │   ├── FieldDropDown.tsx
+│   │   │   ├── FieldPicker.tsx
+│   │   │   ├── Post.tsx
+│   │   │   ├── PostErrorMessage.tsx
+│   │   │   ├── PostTitle.tsx
+│   │   │   ├── ProjectInfo.tsx
+│   │   │   ├── ProjectInfoDropDown.tsx
+│   │   │   └── WithPeople.tsx
+│   │   └── PostEditor.tsx
+│   ├── Detail
+│   │   ├── Comment
+│   │   │   ├── Comment.tsx
+│   │   │   ├── CommentInput.tsx
+│   │   │   ├── CommentItem.tsx
+│   │   │   └── CommentList.tsx
+│   │   ├── DetailArticle.tsx
+│   │   ├── DetailBadges.tsx
+│   │   ├── DetailBadgesContainer.tsx
+│   │   ├── DetailContent.tsx
+│   │   ├── DetailHeader
+│   │   │   ├── DeleteModal.tsx
+│   │   │   ├── DetailHeader.tsx
+│   │   │   └── ShowMoreModal.tsx
+│   │   ├── DetailSide
+│   │   │   ├── DetailBadgeModal.tsx
+│   │   │   ├── DetailBox.tsx
+│   │   │   ├── DetailSide.tsx
+│   │   │   ├── DetailSideBadges.tsx
+│   │   │   ├── DetailSideContainer.tsx
+│   │   │   ├── DetailSidePeople.tsx
+│   │   │   ├── DetailSideProject.tsx
+│   │   │   └── DetailWith.tsx
+│   │   ├── DetailTitle.tsx
+│   │   ├── RelatedProject
+│   │   │   ├── RelatedProject.tsx
+│   │   │   ├── SwiperNextButton.tsx
+│   │   │   └── SwiperPrevButton.tsx
+│   │   └── index.ts
+│   ├── Layouts
+│   │   ├── CreatePostIcon.tsx
+│   │   ├── Footer.tsx
+│   │   ├── GNB.tsx
+│   │   ├── Notification.tsx
+│   │   ├── NotificationBookmarkIcon.tsx
+│   │   ├── NotificationCommentIcon.tsx
+│   │   ├── NotificationIcons.tsx
+│   │   ├── NotificationItem.tsx
+│   │   ├── NotificationLikeIcon.tsx
+│   │   ├── SearchBar.tsx
+│   │   └── index.ts
+│   ├── Main
+│   │   ├── CategoryTag.tsx
+│   │   ├── DetailModal.tsx
+│   │   ├── HomeDropDownIcon.tsx
+│   │   ├── MainSection.tsx
+│   │   ├── SideBar
+│   │   │   ├── LargeCategory.tsx
+│   │   │   └── SideBar.tsx
+│   │   └── index.ts
+│   └── MyPage
+│       ├── CardItemContainer.tsx
+│       ├── MyPageContainer.tsx
+│       ├── MypageTab.tsx
+│       ├── TabProfile
+│       │   ├── BadgeIcon.tsx
+│       │   ├── DropDown.tsx
+│       │   ├── EditProfileContainer.tsx
+│       │   ├── GoodJobBadge.tsx
+│       │   ├── PositionTag.tsx
+│       │   ├── PrivateProfileContainer.tsx
+│       │   ├── ProfileComment.tsx
+│       │   ├── ProfileCommentInput.tsx
+│       │   ├── ProfileContainer.tsx
+│       │   ├── ShowProfileContainer.tsx
+│       │   ├── SwitchButton.tsx
+│       │   └── TabProfile.tsx
+│       ├── UserInfoContainer
+│       │   ├── Banner.tsx
+│       │   ├── UserInfoContainer.tsx
+│       │   └── useUserImage.ts
+│       └── index.ts
 ├── README.md
 ├── hooks
-│   ├── common
-│   └── query
+│   ├── common
+│   │   ├── index.ts
+│   │   ├── useInput.ts
+│   │   ├── useScrollTop.ts
+│   │   ├── useStopScroll.ts
+│   │   └── useSubscribeRoute.ts
+│   ├── index.ts
+│   └── query
+│       ├── index.ts
+│       ├── useCheckInteraction.ts
+│       ├── useOutsideClick.ts
+│       └── useUserProfile.ts
 ├── lib
-│   ├── recoil
-│   └── supabase.ts
+│   ├── recoil
+│   │   ├── InfiniteScroll.ts
+│   │   ├── atoms.ts
+│   │   ├── index.ts
+│   │   ├── myPageAtoms.ts
+│   │   ├── notificationAtoms.ts
+│   │   ├── postAtoms.ts
+│   │   ├── postValidateAtoms.ts
+│   │   ├── searchValue.ts
+│   │   └── userLoginCheck.ts
+│   └── supabase.ts
+├── next-env.d.ts
+├── next.config.js
+├── package.json
 ├── pages
-│   ├── 404.tsx
-│   ├── 500.tsx
-│   ├── _app.tsx
-│   ├── _document.tsx
-│   ├── auth
-│   │   ├── login.tsx
-│   │   └── signup.tsx
-│   ├── create-post.tsx
-│   ├── detail
-│   │   └── [id].tsx
-│   ├── edit-post
-│   │   └── [id].tsx
-│   ├── index.tsx
-│   └── profile
-│       └── [[...userId]].tsx
+│   ├── 404.tsx
+│   ├── 500.tsx
+│   ├── _app.tsx
+│   ├── _document.tsx
+│   ├── auth
+│   │   ├── login.tsx
+│   │   └── signup.tsx
+│   ├── create-post.tsx
+│   ├── detail
+│   │   └── [id].tsx
+│   ├── edit-post
+│   │   └── [id].tsx
+│   ├── index.tsx
+│   ├── on-boarding.tsx
+│   ├── profile
+│   │   └── [[...userId]].tsx
+│   └── search.tsx
 ├── public
+│   ├── favicon.ico
+│   ├── icons
+│   │   ├── 36-communication.svg
+│   │   ├── 36-implementation.svg
+│   │   ├── 36-initiative.svg
+│   │   ├── 36-pencil.svg
+│   │   ├── 36-puzzle.svg
+│   │   ├── arrow-up.svg
+│   │   ├── arrow.svg
+│   │   ├── arrow_down.svg
+│   │   ├── badge-check.svg
+│   │   ├── badge-code.svg
+│   │   ├── badge-light.svg
+│   │   ├── badge-setting.svg
+│   │   ├── bookmark.svg
+│   │   ├── bookmarkHover.svg
+│   │   ├── bottom_arrow.svg
+│   │   ├── cancel.svg
+│   │   ├── chat.svg
+│   │   ├── check.svg
+│   │   ├── close.png
+│   │   ├── close.svg
+│   │   ├── color_fill.svg
+│   │   ├── comment.svg
+│   │   ├── commentHover.svg
+│   │   ├── disable_check.svg
+│   │   ├── edit.svg
+│   │   ├── enable_check.svg
+│   │   ├── favicon.ico
+│   │   ├── github.svg
+│   │   ├── ico-edit.svg
+│   │   ├── ico-heart.svg
+│   │   ├── ico-photo.svg
+│   │   ├── ico_ExclamationMark.svg
+│   │   ├── ico_close_16.svg
+│   │   ├── ico_github.svg
+│   │   ├── ico_google.svg
+│   │   ├── image-upload-text.svg
+│   │   ├── image_upload.svg
+│   │   ├── like.svg
+│   │   ├── likeHover.svg
+│   │   ├── logout.svg
+│   │   ├── more-on.svg
+│   │   ├── more.svg
+│   │   ├── next_button.svg
+│   │   ├── notification.svg
+│   │   ├── pencil.svg
+│   │   ├── person.svg
+│   │   ├── post.svg
+│   │   ├── prev_button.svg
+│   │   ├── private.svg
+│   │   ├── puzzle.svg
+│   │   ├── search.svg
+│   │   ├── tool.svg
+│   │   ├── trash_can.svg
+│   │   └── 메인
+│   │       └── mdi_comment-outline.svg
+│   ├── images
+│   │   ├── anonImage.png
+│   │   ├── anonImage.webp
+│   │   ├── anonProfile.jpeg
+│   │   ├── error_boy.png
+│   │   ├── favicon.ico
+│   │   ├── login_background.png
+│   │   ├── ogImage.png
+│   │   └── signup_background.png
+│   ├── logos
+│   │   ├── favicon.ico
+│   │   ├── favicon.png
+│   │   └── mainLogo.svg
+│   ├── next.svg
+│   ├── thirteen.svg
+│   └── vercel.svg
 ├── styles
-│   ├── global.css
-│   ├── reset.css
-│   ├── styled.d.ts
-│   └── theme.ts
+│   ├── global.css
+│   ├── reset.css
+│   ├── styled.d.ts
+│   └── theme.ts
 ├── supabase
+│   ├── config.toml
+│   └── seed.sql
+├── tsconfig.json
 ├── types
-│   ├── enums.ts
-│   └── supabase.ts
+│   ├── enums.ts
+│   └── supabase.ts
 ├── types.d.ts
-└── utils
-    ├── APIs
-    │   ├── socialLogin
-    │   └── supabase
-    ├── card
-    ├── commons
-    └── constant
+├── utils
+│   ├── APIs
+│   │   ├── index.ts
+│   │   ├── socialLogin
+│   │   │   └── index.ts
+│   │   └── supabase
+│   │       ├── addBookmark.ts
+│   │       ├── addLike.ts
+│   │       ├── addPostBadge.ts
+│   │       ├── addProfileBadge.ts
+│   │       ├── decrementBookmark.ts
+│   │       ├── decrementComment.ts
+│   │       ├── decrementLike.ts
+│   │       ├── deleteBookmark.ts
+│   │       ├── deleteComment.ts
+│   │       ├── deleteLike.ts
+│   │       ├── deletePost.ts
+│   │       ├── deletePostBadge.ts
+│   │       ├── deleteProfileBadge.ts
+│   │       ├── editComment.ts
+│   │       ├── getAllPosts.ts
+│   │       ├── getAllPostsCount.ts
+│   │       ├── getBadgeByUid.ts
+│   │       ├── getCurrentUser.ts
+│   │       ├── getInfinitePosts.ts
+│   │       ├── getIsBookmark.ts
+│   │       ├── getIsComment.ts
+│   │       ├── getIsLike.ts
+│   │       ├── getNotification.ts
+│   │       ├── getOnePost.ts
+│   │       ├── getPostBadges.ts
+│   │       ├── getPostsByCategory.ts
+│   │       ├── getProfile.ts
+│   │       ├── getProfileBadgeByUid.ts
+│   │       ├── getSingleUser.ts
+│   │       ├── getUser.ts
+│   │       ├── getUserBadge.ts
+│   │       ├── getUserProfile.ts
+│   │       ├── incrementBookmark.ts
+│   │       ├── incrementComment.ts
+│   │       ├── incrementLike.ts
+│   │       ├── index.ts
+│   │       ├── patchUserProfile.ts
+│   │       ├── postComment.ts
+│   │       ├── postNotificationRead.ts
+│   │       └── postProfileComment.ts
+│   ├── amplitude
+│   │   └── amplitude.ts
+│   ├── card
+│   │   ├── findThumbnailInContent.ts
+│   │   ├── getPostDate.ts
+│   │   └── index.ts
+│   ├── commons
+│   │   ├── authUtils.ts
+│   │   ├── authValidate.ts
+│   │   ├── checkIsPhoneNumber.ts
+│   │   ├── checkUrl.ts
+│   │   ├── compressImg.ts
+│   │   ├── convertBase64ToFile.ts
+│   │   ├── getYYYYMM.ts
+│   │   ├── getYearsArray.ts
+│   │   ├── index.ts
+│   │   ├── uploadImage.ts
+│   │   ├── validationImage.ts
+│   │   └── viewCreateAt.ts
+│   ├── constant
+│   │   └── index.ts
+│   ├── detail
+│   │   └── getTextColorByBackgroundColor.ts
+│   └── notification
+│       └── createNotificationContent.ts
 ```
 
 # Screen Shot
 
 ## Main
 
-<img width="2488" alt="main-page" src="https://user-images.githubusercontent.com/110771206/220218098-a7b4ae92-3848-492a-9522-d3822527bc84.png">
+![스크린샷 2023-03-08 오후 2 19 01](https://user-images.githubusercontent.com/115724947/223626150-ce1e481e-cf49-4ea2-b410-6d8441a70f5f.png)
 
 ## Detail
 
-![Detail Screen Shot](https://user-images.githubusercontent.com/110771206/220218567-07ecf734-5a5a-4160-a0c5-02409c5d9ab3.png)
+![스크린샷 2023-03-08 오후 2 25 54](https://user-images.githubusercontent.com/115724947/223626925-9c9b23f5-d8f1-4e17-9dc0-e9a07dd63a30.png)
 
 ## Post
 
-![Post Screen Shot](https://user-images.githubusercontent.com/110771206/220218836-df920e9f-c4dc-49ce-9893-326869c8c662.png)
+![스크린샷 2023-03-08 오후 2 24 37](https://user-images.githubusercontent.com/115724947/223626787-19ca90d4-db7d-4dbe-a40b-0ebc1d4d6fe4.png)
 
 ## MyPage
 
-![MyPage Screen Shot](https://user-images.githubusercontent.com/110771206/220219231-f573296d-9262-46bc-b7fa-f5679873cc7f.png)
+![스크린샷 2023-03-08 오후 2 26 28](https://user-images.githubusercontent.com/115724947/223627014-df0ea0e2-dea5-4a92-b7bf-78d6d0b5714d.png)
 
 ## Profile
 
-![Profile Screen Shot](https://user-images.githubusercontent.com/110771206/220219528-05a06279-fb0e-4645-9951-1ecbceb64005.png)
+![스크린샷 2023-03-08 오후 2 28 02](https://user-images.githubusercontent.com/115724947/223627219-160579ab-1b40-4fed-a524-7b1a85aee158.png)

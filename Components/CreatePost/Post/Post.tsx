@@ -35,6 +35,7 @@ import { useRouter } from "next/router";
 import checkUrl from "@/utils/commons/checkUrl";
 import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
 
+import { PrimaryButton } from "@/Components/Common";
 import PostTitle from "./PostTitle";
 import ProjectInfo from "./ProjectInfo";
 import PostErrorMessage from "./PostErrorMessage";
@@ -300,10 +301,13 @@ const Post: NextPage = () => {
   return (
     <section>
       <PostHeader>
-        {/* <SaveAlert isSaved={isSaved}>글이 저장 되었습니다.</SaveAlert> */}
-        {/* <DefaultButton text="저장" type="outline" size="s" onClick={onSave} /> */}
         {errorMessage && <PostErrorMessage>{errorMessage}</PostErrorMessage>}
-        <CreateButton onClick={onPost}>게시</CreateButton>
+        <PrimaryButton
+          buttonType="default"
+          size="m"
+          text="게시"
+          onClick={onPost}
+        />
       </PostHeader>
       <PostTitle />
       <ProjectInfo />

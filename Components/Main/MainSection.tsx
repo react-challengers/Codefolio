@@ -250,7 +250,7 @@ const Target = styled.div`
 const HomeMainContainer = styled.main`
   display: flex;
   flex-direction: column;
-  width: 78.75rem;
+  width: 100%;
   max-width: 78.75rem;
   min-height: 65rem;
   margin-left: 1.5rem;
@@ -265,10 +265,9 @@ const TagContainer = styled.div`
 `;
 
 const HomeCardGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 1rem;
-  width: 78.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
   margin-top: 1rem;
 `;
 

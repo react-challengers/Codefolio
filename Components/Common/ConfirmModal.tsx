@@ -2,10 +2,13 @@ import useOutsideClick from "@/hooks/query/useOutsideClick";
 import React, { useRef } from "react";
 import styled from "styled-components";
 
+type MoralType = "normal" | "warn";
+
 interface ConfirmModalProps {
   bodyText: string;
   leftText: string;
   rightText: string;
+  type?: MoralType;
   onClickLeft: () => void;
   onClickRight: () => void;
 }
@@ -16,6 +19,7 @@ const ConfirmModal = ({
   rightText,
   onClickLeft,
   onClickRight,
+  type = "normal",
 }: ConfirmModalProps) => {
   const modalRef = useRef<any>();
 
@@ -27,7 +31,9 @@ const ConfirmModal = ({
         <ModalBody>{bodyText}</ModalBody>
         <ModalFooter>
           <LeftButton onClick={onClickLeft}>{leftText}</LeftButton>
-          <RightButton onClick={onClickRight}>{rightText}</RightButton>
+          <RightButton onClick={onClickRight} type={type}>
+            {rightText}
+          </RightButton>
         </ModalFooter>
       </ModalContainer>
     </ConfirmModalContainer>
@@ -58,6 +64,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 3;
 `;
 
 const ModalBody = styled.div`
@@ -86,9 +93,11 @@ const LeftButton = styled(Button)`
   border-bottom-left-radius: 4px;
 `;
 
-const RightButton = styled(Button)`
-  color: black;
-  background-color: ${({ theme }) => theme.colors.primary4};
+const RightButton = styled(Button)<{ type: MoralType }>`
+  color: ${({ theme, type }) =>
+    theme.colors[type === "normal" ? "black" : "white"]};
+  background-color: ${({ theme, type }) =>
+    theme.colors[type === "normal" ? "primary6" : "messageError"]};
   border-bottom-right-radius: 4px;
 `;
 
