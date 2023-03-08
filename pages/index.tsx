@@ -3,6 +3,7 @@
 // import SideBar from "@/Components/Main/SideBar/SideBar";
 
 import { DetailModal, MainSection, SideBar } from "@/Components/Main";
+import useIsMobile from "@/hooks/common/useIsMobile";
 import Head from "next/head";
 import { useState } from "react";
 import styled from "styled-components";
@@ -10,6 +11,7 @@ import styled from "styled-components";
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   // Amplitude 실행 시 주석을 풀고 사용하세요.
   // useEffect(() => {
@@ -28,7 +30,7 @@ const Home = () => {
             <DetailModal setIsModalOpen={setIsModalOpen} />
           </ModalContainer>
         )}
-        <SideBar />
+        {!isMobile && <SideBar />}
         <MainSection setIsModalOpen={setIsModalOpen} />
       </HomeContainer>
     </>
