@@ -60,11 +60,9 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     isFetching,
   } = useInfiniteQuery(["GET_INFINIFEPOSTS"], getInfinitePosts, {
     getNextPageParam: () => {
-      // return lastPage.length;
       return page;
     },
     onSuccess(data) {
-      // setPage(data.pageParams.length + 1);
       setPage((prev) => prev + 1);
       setTargetState(true);
     },
@@ -86,13 +84,6 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
       }
     }
   });
-
-  // 랜더링시 target 인식으로 인한 버그 방지
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setTargetState(true);
-  //   }, 1000);
-  // }, []);
 
   const filterPosts = useMemo(() => {
     if (allPostsData?.pages.flat() === undefined) return [];
