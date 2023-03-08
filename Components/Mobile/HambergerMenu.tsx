@@ -5,32 +5,80 @@ import Image from "next/image";
 import { useRef } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { useRouter } from "next/router";
+import { useQueryClient } from "@tanstack/react-query";
+import supabase from "@/lib/supabase";
 
 type HambergerMenuProps = {
   setIsHambergerModal: (value: boolean) => void;
 };
 const HambergerMenu = ({ setIsHambergerModal }: HambergerMenuProps) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const [userCheck, setUserCheck] = useRecoilState(userLoginCheck);
+
+  const mobileUserMenuList = ["프로필", "글 작성하기", "로그아웃"];
+  const mobileGuestMenuList = ["로그인"];
 
   const HambergerModalRef = useRef<HTMLDivElement>(null);
   useOutsideClick(HambergerModalRef, () => setIsHambergerModal(false));
 
+  const clickLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      throw new Error(error.message);
+    }
+    queryClient.invalidateQueries(["USER_PROFILE"]);
+    setUserCheck(false);
+  };
+
+  const onClickPush = (list: string) => {
+    setIsHambergerModal(false);
+    switch (list) {
+      case "소개":
+        router.push("/on-boarding");
+        break;
+      case "프로필":
+        router.push("/profile");
+        break;
+      case "글 작성하기":
+        router.push("/m-preparing");
+        break;
+      case "로그아웃":
+        clickLogout();
+        router.push("/");
+        break;
+      case "로그인":
+        router.push("/auth/login");
+        break;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <HambergerModal>
       <HambergerModalContainer ref={HambergerModalRef}>
-        <CloseIconSection>
+        <CloseIconSection onClick={() => setIsHambergerModal(false)}>
           <Image src={close} width={24} height={24} alt="닫기" />
         </CloseIconSection>
+
         <MobilePageList>
-          <li>Codefolio 소개</li>
-          {userCheck ? (
-            <>
-              <li>1</li>
-              <li>1</li>
-            </>
-          ) : (
-            <li>로그인</li>
-          )}
+          <MobilePage onClick={() => onClickPush("소개")}>
+            Codefolio 소개
+          </MobilePage>
+          {userCheck
+            ? mobileUserMenuList.map((list) => (
+                <MobilePage key={list} onClick={() => onClickPush(list)}>
+                  {list}
+                </MobilePage>
+              ))
+            : mobileGuestMenuList.map((list) => (
+                <MobilePage key={list} onClick={() => onClickPush(list)}>
+                  {list}
+                </MobilePage>
+              ))}
         </MobilePageList>
       </HambergerModalContainer>
     </HambergerModal>
@@ -60,17 +108,27 @@ const HambergerModalContainer = styled.div`
 `;
 
 const CloseIconSection = styled.div`
-  width: auto;
-  padding: 1.625rem 0 1.125rem 1rem;
+  display: flex;
+  align-items: center;
+
+  padding: 0 1rem;
+  height: 3.5rem;
 `;
 
 const MobilePageList = styled.ul`
   list-style: none;
-  li {
-    padding: 1rem;
-    ${({ theme }) => theme.fonts.body16}
-    color: ${({ theme }) => theme.colors.white};
-  }
 `;
 
+const MobilePage = styled.li`
+  padding: 1rem;
+  ${({ theme }) => theme.fonts.body16}
+  color: ${({ theme }) => theme.colors.white};
+
+  cursor: pointer;
+  transition: all 0.4s ease-in-out;
+
+  :hover {
+    background-color: ${({ theme }) => theme.colors.gray10};
+  }
+`;
 export default HambergerMenu;

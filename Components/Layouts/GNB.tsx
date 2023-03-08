@@ -19,7 +19,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import styled from "styled-components";
-import { DropDown, Modal, ProfileImage } from "../Common";
+import { DropDown, ProfileImage } from "../Common";
 import CreatePostIcon from "./CreatePostIcon";
 import Notification from "./Notification";
 import NotificationIcons from "./NotificationIcons";
