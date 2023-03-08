@@ -66,10 +66,12 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     onSuccess(data) {
       // setPage(data.pageParams.length + 1);
       setPage((prev) => prev + 1);
+      setTargetState(true);
     },
   });
 
   const ref = useIntersect(async (entry, observer) => {
+    const perPage = 12;
     observer.unobserve(entry.target);
     if (
       hasNextPage &&
@@ -78,19 +80,20 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
       allPostsData &&
       allPostsDataCount
     ) {
-      if (page < (allPostsDataCount + 12) / 12) {
-        fetchNextPage();
+      if (page < (allPostsDataCount + perPage) / perPage) {
+        setTargetState(false);
+        await fetchNextPage();
       }
     }
   });
 
-  useEffect(() => {
-    setTimeout(() => {
-      setTargetState(true);
-    }, 1000);
-  }, []);
+  // 랜더링시 target 인식으로 인한 버그 방지
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setTargetState(true);
+  //   }, 1000);
+  // }, []);
 
-  // 카테고리 선택 시, 해당 카테고리에 맞는 포스트만 보여주기
   const filterPosts = useMemo(() => {
     if (allPostsData?.pages.flat() === undefined) return [];
 
@@ -118,8 +121,6 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         return filterPosts;
     }
   }, [filterPosts, selectedDropDownItem]);
-
-  console.log("sortPosts", sortPosts);
 
   useEffect(() => {
     if (router.query.id) {
@@ -195,9 +196,9 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
           </HomeDropDownList>
         )}
       </HomeDropDownContainer>
-      <HomeCardGrid>
-        {isLoading &&
-          new Array(12).fill(null).map((v, index) => (
+      {isLoading && (
+        <HomeCardGrid>
+          {new Array(12).fill(null).map((v, index) => (
             <SkeletonTheme key={index} baseColor="#333" highlightColor="#555">
               <div>
                 <Skeleton width={300} height={180} />
@@ -213,38 +214,41 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
               </div>
             </SkeletonTheme>
           ))}
-
-        {sortPosts &&
-          sortPosts.map((post: PostType) => (
-            <CardContainer
-              key={post.id}
-              onClick={() => {
-                openModal(post.id);
-              }}
-            >
-              <CardItem
-                postId={post.id}
-                imageSrc={findThumbnailInContent(
-                  post.thumbnail_check
-                    ? post.title_background_image
-                    : post.content
-                )}
-                imageAlt={`${post.title}썸네일`}
-                title={post.title}
-                subTitle={post.sub_title}
-                skills={post.skills}
-                date={getPostDate(post.created_at)}
-                comments={post.comment_count}
-                likes={post.like_count}
-                bookmarks={post.bookmark_count}
-                field={`${post.sub_category}`}
-                userId={post.user_id}
-              />
-            </CardContainer>
-          ))}
-      </HomeCardGrid>
-      {targetState && <Target ref={ref} />}
-      {/* <Target ref={ref} /> */}
+        </HomeCardGrid>
+      )}
+      {!isLoading && (
+        <HomeCardGrid>
+          {sortPosts &&
+            sortPosts.map((post: PostType) => (
+              <CardContainer
+                key={post.id}
+                onClick={() => {
+                  openModal(post.id);
+                }}
+              >
+                <CardItem
+                  postId={post.id}
+                  imageSrc={findThumbnailInContent(
+                    post.thumbnail_check
+                      ? post.title_background_image
+                      : post.content
+                  )}
+                  imageAlt={`${post.title}썸네일`}
+                  title={post.title}
+                  subTitle={post.sub_title}
+                  skills={post.skills}
+                  date={getPostDate(post.created_at)}
+                  comments={post.comment_count}
+                  likes={post.like_count}
+                  bookmarks={post.bookmark_count}
+                  field={`${post.sub_category}`}
+                  userId={post.user_id}
+                />
+              </CardContainer>
+            ))}
+          {targetState && <Target ref={ref} />}
+        </HomeCardGrid>
+      )}
     </HomeMainContainer>
   );
 };
