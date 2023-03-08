@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
 
-// [코드 11] IntersectionObserver custom hook
 type IntersectHandler = (
   entry: IntersectionObserverEntry,
   observer: IntersectionObserver
