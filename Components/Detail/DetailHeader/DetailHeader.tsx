@@ -340,7 +340,7 @@ const ButtonWrapper = styled.div`
 const CloseButton = styled.div`
   cursor: pointer;
   padding: 0.125rem;
-  margin-right: 30px;
+  margin-right: 1.875rem;
 
   path {
     fill: ${({ theme }) => theme.colors.gray3};
