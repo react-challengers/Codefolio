@@ -42,13 +42,20 @@ const useUserProfile = (profileUserId = "") => {
 
   // 최초 데이터 갱신
   useEffect(() => {
-    queryClient.setQueryData([USER_PROFILE], profileData);
+    queryClient.setQueryData([USER_PROFILE, profileUserId], profileData);
+    return () => {
+      queryClient.invalidateQueries({
+        queryKey: [USER_PROFILE, profileUserId],
+      });
+    };
   }, []);
 
   // patch
   const { mutate: updateProfileData } = useMutation(patchUserProfile, {
     onMutate: async (newProfile) => {
-      await queryClient.cancelQueries({ queryKey: [USER_PROFILE] });
+      await queryClient.cancelQueries({
+        queryKey: [USER_PROFILE, profileUserId],
+      });
       const previousProfile = queryClient.getQueriesData([USER_PROFILE]);
       queryClient.setQueriesData<UserProfileType | undefined>(
         [USER_PROFILE],
@@ -61,7 +68,9 @@ const useUserProfile = (profileUserId = "") => {
       queryClient.setQueriesData([USER_PROFILE], context?.previousProfile);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [USER_PROFILE] });
+      queryClient.invalidateQueries({
+        queryKey: [USER_PROFILE, profileUserId],
+      });
     },
   });
 
