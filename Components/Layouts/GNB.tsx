@@ -43,7 +43,7 @@ const GNB = () => {
     "default"
   );
 
-  const profileDropdownRef = useRef<HTMLUListElement>(null);
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
   useOutsideClick(profileDropdownRef, () => setIsProfileDropdownOpen(false));
 
   const NotificationDropdownRef = useRef<HTMLDivElement>(null);
@@ -99,8 +99,8 @@ const GNB = () => {
   };
 
   const handleNotificationDropdown = () => {
-    setIsNotificationDropdownOpen((prev) => !prev);
     if (isProfileDropdownOpen) setIsProfileDropdownOpen(false);
+    setIsNotificationDropdownOpen((prev) => !prev);
   };
 
   const handleResetDropdowns = () => {
@@ -141,10 +141,7 @@ const GNB = () => {
       <GNBLeftSideContainer>
         {isMobile ? (
           <>
-            <ButtonWrapper
-              onClick={handleClickMobileMenu}
-              isOpen={isHambergerModal}
-            >
+            <ButtonWrapper onClick={handleClickMobileMenu}>
               <Image
                 src={hamberger_menu}
                 width={24}
@@ -172,16 +169,17 @@ const GNB = () => {
         {userCheck ? (
           <>
             <ButtonWrapper
+              ref={NotificationDropdownRef}
               onClick={handleNotificationDropdown}
               isOpen={isNotificationDropdownOpen}
             >
               <NotificationIcon type={notificationType} />
+              {isNotificationDropdownOpen && (
+                <NotificationContainer>
+                  <Notification />
+                </NotificationContainer>
+              )}
             </ButtonWrapper>
-            {isNotificationDropdownOpen && (
-              <NotificationContainer ref={NotificationDropdownRef}>
-                <Notification />
-              </NotificationContainer>
-            )}
             {!isMobile && (
               <ButtonWrapper
                 onClick={() =>
@@ -191,23 +189,26 @@ const GNB = () => {
                 <CreatePostIcon />
               </ButtonWrapper>
             )}
-            <ButtonWrapper onClick={handleProfileDropdown}>
+            <ButtonWrapper
+              ref={profileDropdownRef}
+              onClick={handleProfileDropdown}
+            >
               <ProfileImage
                 page="GNB"
                 alt="내 프로필 이미지"
                 src={currentUserProfileImage}
               />
+              <ProfileDropDownList>
+                {isProfileDropdownOpen &&
+                  dropDownItems.map((item) => (
+                    <DropDown
+                      key={item}
+                      item={item}
+                      onClickHandler={handleDropDownItemClick}
+                    />
+                  ))}
+              </ProfileDropDownList>
             </ButtonWrapper>
-            <ProfileDropDownList ref={profileDropdownRef}>
-              {isProfileDropdownOpen &&
-                dropDownItems.map((item) => (
-                  <DropDown
-                    key={item}
-                    item={item}
-                    onClickHandler={handleDropDownItemClick}
-                  />
-                ))}
-            </ProfileDropDownList>
           </>
         ) : (
           !isMobile && (
@@ -296,6 +297,7 @@ const ProfileDropDownList = styled.ul`
   flex-direction: column;
   position: absolute;
   top: 3.75rem;
+  right: 2.5rem;
   width: 11.25rem;
 
   background-color: ${({ theme }) => theme.colors.gray9};
