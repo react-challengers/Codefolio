@@ -10,6 +10,8 @@ interface DetailSideProps {
   skills: string[];
   members: string[];
   authorInfo: UserProfileType | null | undefined;
+  githubUrl: string | undefined;
+  deployUrl: string | undefined;
 }
 
 const DetailSide = ({
@@ -19,6 +21,8 @@ const DetailSide = ({
   skills,
   members,
   authorInfo,
+  githubUrl,
+  deployUrl,
 }: DetailSideProps) => {
   return (
     <SideContainer>
@@ -27,6 +31,8 @@ const DetailSide = ({
         progressDate={progressDate}
         tag={tag}
         skills={skills}
+        githubUrl={githubUrl}
+        deployUrl={deployUrl}
       />
       <DetailSidePeople
         authorInfo={authorInfo}
