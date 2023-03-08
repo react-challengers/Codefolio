@@ -24,8 +24,11 @@ const ProfileCommentInput = ({
   });
 
   const {
-    profileData: { profile_image: profileImage, user_name: username },
+    profileData: { profile_image: profileImage },
   } = useUserProfile();
+  const {
+    profileData: { user_name: username },
+  } = useUserProfile(profileId as string);
 
   const { mutate: createComment } = useMutation(
     () =>
