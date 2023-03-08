@@ -193,6 +193,7 @@ const NotificationContainer = styled.div`
   position: absolute;
   top: 3.75rem;
   right: 2.5rem;
+  z-index: 2;
 `;
 
 const GNBContainer = styled.div`
