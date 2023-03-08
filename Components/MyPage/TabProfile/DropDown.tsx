@@ -28,7 +28,7 @@ const DropDown = ({ type }: DropDownProps) => {
   const [career, setCareer] = useRecoilState(myPageCareer);
 
   useEffect(() => {
-    setBirthYear(profileData.birth_year ?? new Date().getFullYear());
+    setBirthYear(profileData.birth_year ?? new Date().getFullYear().toString());
     setCareer(profileData.career ?? "신입");
   }, [setBirthYear, setCareer, profileData.birth_year, profileData.career]);
 
@@ -40,6 +40,7 @@ const DropDown = ({ type }: DropDownProps) => {
   );
 
   if (type === "birth_year") {
+    options.push("선택안함");
     years.forEach((year) => options.push(year));
   }
 
@@ -53,28 +54,29 @@ const DropDown = ({ type }: DropDownProps) => {
 
   const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
     if (type === "birth_year") {
-      setBirthYear(+e.target.value);
+      setBirthYear(e.target.value);
     }
     if (type === "career") {
       setCareer(e.target.value);
     }
   };
 
-  useEffect(() => {
-    if (type === "birth_year") setBirthYear(years[0]);
-    if (type === "career") setCareer("신입");
-  }, []);
-
   return (
     <Select
       onChange={onChangeHandler}
       defaultValue={type === "birth_year" ? birthYear : career}
     >
-      {options.map((option) => (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      ))}
+      {options.map((option) => {
+        return option === birthYear ? (
+          <option key={option} value={option} selected>
+            {option}
+          </option>
+        ) : (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        );
+      })}
     </Select>
   );
 };
