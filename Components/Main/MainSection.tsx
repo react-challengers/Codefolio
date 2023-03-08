@@ -18,6 +18,7 @@ import _ from "lodash";
 import { CardItem, DropDown } from "@/Components/Common";
 import getAllPostsCount from "@/utils/APIs/supabase/getAllPostsCount";
 import useOutsideClick from "@/hooks/query/useOutsideClick";
+import useIntersect from "@/hooks/common/useIntersect";
 import CategoryTag from "./CategoryTag";
 import HomeDropDownIcon from "./HomeDropDownIcon";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -42,49 +43,52 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     useRecoilState(subCategoryState);
   const router = useRouter();
 
-  const observerTargetEl = useRef<HTMLDivElement>(null);
-
   // 총 post 개수를 갖고 옵니다.
-  const { data: allPostsDataCount, isLoading: isLoadingCount } = useQuery(
+  const { data: allPostsDataCount, isFetching: isFetchingCount } = useQuery(
     ["GET_POSTSCOUNT"],
     getAllPostsCount
   );
 
   const [page, setPage] = useState(1);
+  const [targetState, setTargetState] = useState(false);
 
   const {
     data: allPostsData,
     isLoading,
     fetchNextPage,
     hasNextPage,
+    isFetching,
   } = useInfiniteQuery(["GET_INFINIFEPOSTS"], getInfinitePosts, {
     getNextPageParam: () => {
       // return lastPage.length;
       return page;
     },
     onSuccess(data) {
-      setPage(data.pageParams.length + 1);
+      // setPage(data.pageParams.length + 1);
+      setPage((prev) => prev + 1);
     },
   });
 
-  // observer 셋팅
-  useEffect(() => {
-    if (!observerTargetEl.current || !hasNextPage) return;
-
-    const io = new IntersectionObserver((entries, observer) => {
-      if (entries[0].isIntersecting && allPostsData && allPostsDataCount) {
-        if (allPostsData.pages.flat().length < allPostsDataCount - 1) {
-          fetchNextPage();
-        }
+  const ref = useIntersect(async (entry, observer) => {
+    observer.unobserve(entry.target);
+    if (
+      hasNextPage &&
+      !isFetching &&
+      !isFetchingCount &&
+      allPostsData &&
+      allPostsDataCount
+    ) {
+      if (page < (allPostsDataCount + 12) / 12) {
+        fetchNextPage();
       }
-    });
-    io.observe(observerTargetEl.current);
+    }
+  });
 
-    // eslint-disable-next-line consistent-return
-    return () => {
-      io.disconnect();
-    };
-  }, [fetch, hasNextPage]);
+  useEffect(() => {
+    setTimeout(() => {
+      setTargetState(true);
+    }, 1000);
+  }, []);
 
   // 카테고리 선택 시, 해당 카테고리에 맞는 포스트만 보여주기
   const filterPosts = useMemo(() => {
@@ -114,6 +118,8 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         return filterPosts;
     }
   }, [filterPosts, selectedDropDownItem]);
+
+  console.log("sortPosts", sortPosts);
 
   useEffect(() => {
     if (router.query.id) {
@@ -207,6 +213,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
               </div>
             </SkeletonTheme>
           ))}
+
         {sortPosts &&
           sortPosts.map((post: PostType) => (
             <CardContainer
@@ -236,14 +243,16 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
             </CardContainer>
           ))}
       </HomeCardGrid>
-      <Target ref={observerTargetEl} />
+      {targetState && <Target ref={ref} />}
+      {/* <Target ref={ref} /> */}
     </HomeMainContainer>
   );
 };
 
 const Target = styled.div`
-  margin-top: 10%;
   height: 1px;
+
+  background-color: aqua;
 `;
 const HomeMainContainer = styled.main`
   display: flex;
