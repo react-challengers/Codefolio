@@ -23,6 +23,7 @@ import useIsMobile from "@/hooks/common/useIsMobile";
 import CategoryTag from "./CategoryTag";
 import HomeDropDownIcon from "./HomeDropDownIcon";
 import "react-loading-skeleton/dist/skeleton.css";
+import SelectField from "../Mobile/SelectField";
 import TopButton from "../Common/TopButton";
 import SelectField from "../Mobile/SelectField";
 
@@ -46,7 +47,6 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     useRecoilState(subCategoryState);
   const router = useRouter();
   const isMobile = useIsMobile();
-
   const observerTargetEl = useRef<HTMLDivElement>(null);
 
   // 총 post 개수를 갖고 옵니다.

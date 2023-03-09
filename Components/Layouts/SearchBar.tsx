@@ -79,6 +79,11 @@ const SearchBarContainer = styled.div<{
   &:focus-within {
     background-color: ${({ theme }) => theme.colors.gray6};
   }
+
+  @media (max-width: 768px) {
+    background: none;
+    width: 100%;
+  }
 `;
 
 const SearchIcon = styled(Image)`
