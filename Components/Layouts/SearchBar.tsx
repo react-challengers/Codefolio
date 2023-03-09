@@ -38,6 +38,7 @@ const SearchBar = () => {
 
       <SearchInput
         isEmptySearchValue={isEmptySearchValue}
+        isMobile={isMobile}
         placeholder="검색어 입력후 Enter를 눌러주세요"
         value={searchValue}
         onChange={(event) => setSearchValue(event.target.value)}
@@ -65,12 +66,15 @@ const SearchBarContainer = styled.div<{
   align-items: center;
   width: 25rem;
   height: 2rem;
-  background-color: ${({ theme, isEmptySearchValue }) =>
-    theme.colors[isEmptySearchValue ? "gray7" : "gray10"]};
+  background-color: ${({ theme }) => theme.colors.gray7};
   border-radius: 0.5rem;
 
-  ${({ isMobile, isEmptySearchValue }) =>
-    isMobile && isEmptySearchValue && "width: 18.75rem; padding: 0 0.25rem"};
+  ${({ isMobile }) =>
+    isMobile && "background-color: transparent; width: 18.75rem;"};
+  ${({ isMobile, isEmptySearchValue, theme }) =>
+    isMobile &&
+    isEmptySearchValue &&
+    `background-color: ${theme.colors.gray10} !important; padding: 0.25rem;`}
 
   &:focus-within {
     background-color: ${({ theme }) => theme.colors.gray6};
@@ -87,7 +91,10 @@ const SearchIcon = styled(Image)`
   }
 `;
 
-const SearchInput = styled.input<{ isEmptySearchValue: boolean }>`
+const SearchInput = styled.input<{
+  isMobile: boolean;
+  isEmptySearchValue: boolean;
+}>`
   width: 100%;
   height: 100%;
   background-color: transparent;
@@ -99,9 +106,9 @@ const SearchInput = styled.input<{ isEmptySearchValue: boolean }>`
   ::placeholder {
     color: ${({ theme }) => theme.colors.gray5};
   }
-  display: ${({ isEmptySearchValue }) => [
-    isEmptySearchValue ? "block" : "none",
-  ]};
+  ${({ isMobile }) => isMobile && "display: none;"}
+  ${({ isEmptySearchValue }) =>
+    isEmptySearchValue && "display: block; width: 100%; padding: 0"}
 `;
 
 export default SearchBar;

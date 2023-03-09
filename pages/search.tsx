@@ -83,10 +83,7 @@ const Search: NextPage = () => {
   return (
     <SearchContainer>
       {isEmptySearchValue ? (
-        <SearchBarSection
-          isMobile={isMobile}
-          isEmptySearchValue={isEmptySearchValue}
-        >
+        <SearchBarSection>
           <SearchBar />
         </SearchBarSection>
       ) : (
@@ -160,15 +157,12 @@ const SearchContainer = styled.div`
   }
 `;
 
-const SearchBarSection = styled.div<{
-  isMobile: boolean;
-  isEmptySearchValue: boolean;
-}>`
+const SearchBarSection = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 100%;
   height: 6.25rem;
-  justify-content: ${({ isMobile }) => (isMobile ? "flex-start" : "center")};
 `;
 
 const Loader = styled(SyncLoader)`
@@ -229,6 +223,8 @@ const CardGrid = styled.div<{ isMobile: boolean }>`
   gap: 1rem;
   width: 100%;
   margin-top: 1rem;
+
+  ${({ isMobile }) => isMobile && "justify-content: center;"}
 `;
 
 const EmptySearchResult = styled.div`
