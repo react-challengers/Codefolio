@@ -232,6 +232,9 @@ export const getStaticProps: GetStaticProps = async () => {
 const LoginPageContainer = styled.div`
   display: flex;
   width: 100vw;
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `;
 
 const EmptyContainer = styled.div`
@@ -278,7 +281,9 @@ const HrContainer = styled.div`
     color: ${({ theme }) => theme.colors.gray6};
 
     @media (max-width: 768px) {
-      width: 20%;
+      width: 100%;
+      min-width: 2.5rem;
+      max-width: 5rem;
     }
   }
 `;

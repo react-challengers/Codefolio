@@ -38,8 +38,8 @@ const MobilePreparingContainer = styled.div`
   justify-content: center;
   gap: 2rem;
   width: fit-content;
-  height: fit-content;
-  margin: 3rem auto;
+  min-height: calc(100vh - 3.5rem);
+  margin: 0 auto;
 `;
 
 const Title = styled.h2`

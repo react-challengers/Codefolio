@@ -70,9 +70,7 @@ const FooterContainer = styled.footer`
   margin-top: 5rem;
 
   @media (max-width: 768px) {
-    position: absolute;
-    bottom: 0;
-    padding: 2rem 1.5rem 1rem;
+    display: none;
   }
 `;
 
