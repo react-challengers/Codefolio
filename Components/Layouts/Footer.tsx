@@ -68,6 +68,10 @@ const FooterContainer = styled.footer`
   width: 100%;
   background-color: ${({ theme }) => theme.colors.gray10};
   margin-top: 5rem;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const FooterWrapper = styled.div`
@@ -79,12 +83,21 @@ const FooterLeft = styled.div`
   display: flex;
   align-items: center;
   gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const FooterRight = styled.div`
   display: flex;
   align-items: center;
   gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    justify-content: space-between;
+    width: 100%;
+  }
 `;
 
 const FooterDivider = styled.hr`
@@ -109,6 +122,9 @@ const CopyRightText = styled.p`
 const ContributorContainer = styled.div`
   display: flex;
   gap: 1rem;
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const ContributorDivider = styled.hr`

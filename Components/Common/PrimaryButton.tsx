@@ -43,15 +43,24 @@ const PrimaryButtonContainer = styled.button<{
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
+
   /* default & line */
-  ${({ theme, buttonType }) =>
-    buttonType === "default"
-      ? theme.fonts.subtitle18Bold
-      : theme.fonts.subtitle18}
+  ${({ theme, buttonType, size }) => {
+    if (buttonType === "default" && size === "m")
+      return theme.fonts.subtitle18Bold;
+    if (buttonType === "default" && size === "s")
+      return theme.fonts.body14Medium;
+    if (buttonType === "line" && size === "m") return theme.fonts.subtitle18;
+    if (buttonType === "line" && size === "s") return theme.fonts.body14;
+    return "";
+  }}
+
   color: ${({ buttonType, theme }) =>
     buttonType === "default" ? theme.colors.gray11 : theme.colors.primary6};
+
   background-color: ${({ buttonType, theme }) =>
     buttonType === "default" ? theme.colors.primary4 : `none`};
+
   border: 1px solid
     ${({ theme, buttonType }) =>
       buttonType === "default" ? `none` : theme.colors.primary6};
@@ -62,16 +71,23 @@ const PrimaryButtonContainer = styled.button<{
   }
 
   :disabled {
-    ${(props) => props.theme.fonts.subtitle18}
+    ${({ theme, size }) =>
+      size === "m" ? theme.fonts.subtitle18 : theme.fonts.body14}
+
     color: ${({ buttonType, theme }) =>
       buttonType === "default" ? theme.colors.gray3 : theme.colors.gray4};
+
     background-color: ${({ theme, buttonType }) =>
       buttonType === "default" ? theme.colors.gray7 : theme.colors.primary2};
+
+    border: none;
+
+    cursor: not-allowed;
   }
 
   /* "s" | "m": */
-  width: ${({ size }) => (size === "m" ? `10rem` : `5.5rem`)};
-  height: ${({ size }) => (size === "m" ? "3.5rem" : "3rem")};
+  width: ${({ size }) => (size === "m" ? `7.75rem` : `5rem`)};
+  height: ${({ size }) => (size === "m" ? "3.375rem" : "2.5rem")};
 `;
 
 export default PrimaryButton;
