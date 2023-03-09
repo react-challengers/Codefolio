@@ -26,6 +26,7 @@ import { getCurrentUser } from "@/utils/APIs/supabase";
 import ico_close_16 from "@/public/icons/ico_close_16.svg";
 import ico_ExclamationMark from "@/public/icons/ico_ExclamationMark.svg";
 import { initAmplitude, logEvent } from "@/utils/amplitude/amplitude";
+import useIsMobile from "@/hooks/common/useIsMobile";
 
 /**
  * @TODO custom hooks 을 사용해서 리팩토링
@@ -44,6 +45,7 @@ const SignUpPage: NextPage = () => {
   const [passwordHelperText, setPasswordHelperText] = useState("");
   const [passwordCheckHelperText, setPasswordCheckHelperText] = useState("");
 
+  const isMobile = useIsMobile();
   const [isError, setIsError] = useState(false);
 
   const setIsLogin = useSetRecoilState(userLoginCheck);
@@ -130,7 +132,7 @@ const SignUpPage: NextPage = () => {
 
   return (
     <SignupPageContainer>
-      <EmptyContainer />
+      {!isMobile && <EmptyContainer />}
       <SignupSpace>
         <SignupForm>
           <div>
@@ -265,6 +267,10 @@ const SignupSpace = styled.div`
 
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 768px) {
+    min-height: 100vh;
+  }
 `;
 
 const SignupForm = styled.div`

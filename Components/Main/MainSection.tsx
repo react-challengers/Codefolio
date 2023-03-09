@@ -19,9 +19,11 @@ import { CardItem, DropDown } from "@/Components/Common";
 import getAllPostsCount from "@/utils/APIs/supabase/getAllPostsCount";
 import useOutsideClick from "@/hooks/query/useOutsideClick";
 import useIntersect from "@/hooks/common/useIntersect";
+import useIsMobile from "@/hooks/common/useIsMobile";
 import CategoryTag from "./CategoryTag";
 import HomeDropDownIcon from "./HomeDropDownIcon";
 import "react-loading-skeleton/dist/skeleton.css";
+import SelectField from "../Mobile/SelectField";
 import TopButton from "../Common/TopButton";
 
 // TODO: Tag 데이터 구조화 고민하기
@@ -43,6 +45,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   const [selectedSubCategory, setSelectedSubCategory] =
     useRecoilState(subCategoryState);
   const router = useRouter();
+  const isMobile = useIsMobile();
 
   // 총 post 개수를 갖고 옵니다.
   const { data: allPostsDataCount, isFetching: isFetchingCount } = useQuery(
@@ -157,37 +160,43 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
 
   return (
     <HomeMainContainer>
-      <TagContainer>
-        {selectedSubCategory.length !== 0 &&
-          selectedSubCategory.map((category) => (
-            <CategoryTag
-              category={category}
-              key={category}
-              deleteHandler={onClickDeleteCategory}
-            />
-          ))}
-      </TagContainer>
-      <HomeDropDownContainer>
-        <HomeDropDownButton
-          onClick={() => {
-            onClickDropDown();
-          }}
-        >
-          {selectedDropDownItem}
-          <HomeDropDownIcon />
-        </HomeDropDownButton>
-        {isDropDownOpen && (
-          <HomeDropDownList ref={homeDropDownRef}>
-            {homeDropDownItems.map((item) => (
-              <DropDown
-                item={item}
-                key={item}
-                onClickHandler={onClickDropDownHandler}
-              />
-            ))}
-          </HomeDropDownList>
-        )}
-      </HomeDropDownContainer>
+      {isMobile ? (
+        <SelectField />
+      ) : (
+        <div>
+          <TagContainer>
+            {selectedSubCategory.length !== 0 &&
+              selectedSubCategory.map((category) => (
+                <CategoryTag
+                  category={category}
+                  key={category}
+                  deleteHandler={onClickDeleteCategory}
+                />
+              ))}
+          </TagContainer>
+          <HomeDropDownContainer>
+            <HomeDropDownButton
+              onClick={() => {
+                onClickDropDown();
+              }}
+            >
+              {selectedDropDownItem}
+              <HomeDropDownIcon />
+            </HomeDropDownButton>
+            {isDropDownOpen && (
+              <HomeDropDownList ref={homeDropDownRef}>
+                {homeDropDownItems.map((item) => (
+                  <DropDown
+                    item={item}
+                    key={item}
+                    onClickHandler={onClickDropDownHandler}
+                  />
+                ))}
+              </HomeDropDownList>
+            )}
+          </HomeDropDownContainer>
+        </div>
+      )}
       {isLoading && (
         <HomeCardGrid>
           {new Array(12).fill(null).map((v, index) => (
@@ -257,6 +266,11 @@ const HomeMainContainer = styled.main`
   min-height: 65rem;
   margin-left: 1.5rem;
   margin-top: 3rem;
+
+  @media (max-width: 768px) {
+    margin: 0.75rem 0;
+    gap: 3rem;
+  }
 `;
 
 const TagContainer = styled.div`
@@ -271,6 +285,10 @@ const HomeCardGrid = styled.div`
   flex-wrap: wrap;
   gap: 1rem;
   margin-top: 1rem;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `;
 
 const HomeDropDownContainer = styled.div`

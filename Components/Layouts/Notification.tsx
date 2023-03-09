@@ -65,6 +65,10 @@ const NotificationContainer = styled.div`
   border-radius: 0.5rem;
 
   z-index: 3;
+
+  @media (max-width: 768px) {
+    width: 16rem;
+  }
 `;
 
 const EmptyNotification = styled.div`
