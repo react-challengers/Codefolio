@@ -18,6 +18,13 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Head from "next/head";
 import { Analytics } from "@vercel/analytics/react";
 import { init } from "@amplitude/analytics-browser";
+import { Noto_Sans_KR } from "@next/font/google";
+
+const notoSansKR = Noto_Sans_KR({
+  weight: ["400", "500", "700"],
+  style: "normal",
+  subsets: ["latin"],
+});
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -66,6 +73,13 @@ const App = ({
               <Hydrate state={pageProps.dehydratedState}>
                 <GNB />
                 <div data-color-mode="dark">
+                  <style jsx global>
+                    {`
+                      html {
+                        font-family: ${notoSansKR.style.fontFamily};
+                      }
+                    `}
+                  </style>
                   <Component {...pageProps} />
                 </div>
                 <Footer />
