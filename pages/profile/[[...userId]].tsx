@@ -24,18 +24,15 @@ const ProfilePage: NextPage = () => {
   const [bookmarkIds, setBookmarkIds] = useState<string[]>([]);
   const isLogin = useRecoilValue(userLoginCheck);
 
-  const { profileData } = useUserProfile();
   const router = useRouter();
 
   // 옵셔널 체이닝으로 존재하지 않는 프로필은 본인으로 리다이렉팅
   const profileUserId = router?.query?.userId?.[0];
+  const { profileData } = useUserProfile(profileUserId);
 
-  // profileUserId === "" && profileData.user_id === true
   let selfProfileTabList = ["프로젝트", "칭찬배지", "프로필"];
 
-  if (!profileUserId) {
-    selfProfileTabList = ["프로젝트", "북마크", "좋아요", "칭찬배지", "프로필"];
-  } else if (profileUserId === profileData.user_id) {
+  if (!profileUserId || profileUserId === profileData.user_id) {
     selfProfileTabList = ["프로젝트", "북마크", "좋아요", "칭찬배지", "프로필"];
   }
 
@@ -68,16 +65,18 @@ const ProfilePage: NextPage = () => {
   const myItemList = useMemo(() => {
     if (!itemList) return [];
 
-    // 로그인한 유저의 프로필
-    if (profileData.user_id === profileUserId || !profileUserId)
-      return itemList.filter((item) => item.user_id === userId);
-
     // 다른 프로필
-    if (profileData.user_id !== profileUserId)
+    if (userId !== profileUserId) {
       return itemList.filter((item) => item.user_id === profileUserId);
+    }
+
+    // 로그인한 유저의 프로필
+    if (userId === profileUserId || !profileUserId) {
+      return itemList.filter((item) => item.user_id === userId);
+    }
 
     return [];
-  }, [itemList, userId]);
+  }, [itemList, userId, profileUserId]);
 
   // 내가 북마크한 아이템 id 리스트
   const fetchBookmarkList = async () => {

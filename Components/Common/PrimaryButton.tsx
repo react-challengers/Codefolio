@@ -71,7 +71,7 @@ const PrimaryButtonContainer = styled.button<{
 
   /* "s" | "m": */
   width: ${({ size }) => (size === "m" ? `10rem` : `5.5rem`)};
-  height: ${({ size }) => (size === "m" ? "3.75rem" : "3rem")};
+  height: ${({ size }) => (size === "m" ? "3.5rem" : "3rem")};
 `;
 
 export default PrimaryButton;

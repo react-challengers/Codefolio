@@ -58,7 +58,7 @@ const DetailTitleBackgroundImage = styled(Image)`
 
 const DetailTitleHeader = styled.p`
   ${({ theme }) => theme.fonts.subtitle18En};
-  color: ${(props) => props.theme.colors.gray3};
+  color: ${(props) => props.theme.colors.white};
   z-index: 1;
 `;
 
@@ -72,7 +72,7 @@ const DetailTitleText = styled.div`
   }
   h3 {
     ${({ theme }) => theme.fonts.subtitle18};
-    color: ${(props) => props.theme.colors.gray3};
+    color: ${(props) => props.theme.colors.white};
   }
   z-index: 1;
 `;
