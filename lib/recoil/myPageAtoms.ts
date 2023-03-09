@@ -47,7 +47,7 @@ const myPageSkills = atom<string[]>({
 
 const myPageBirthYear = atom({
   key: "myPageBirthYear",
-  default: new Date().getFullYear(),
+  default: "선택안함",
 });
 
 const myPageCareer = atom({ key: "myPageCareer", default: "신입" });

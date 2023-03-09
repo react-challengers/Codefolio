@@ -17,10 +17,11 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { SyncLoader } from "react-spinners";
 import styled from "styled-components";
+import TopButton from "../Common/TopButton";
 import DetailBadgesContainer from "./DetailBadgesContainer";
 import DetailContent from "./DetailContent";
 
-const DetailArticle = () => {
+const DetailArticle = ({ detailRef }: any) => {
   const {
     query: { id: postId },
   } = useRouter();
@@ -38,6 +39,8 @@ const DetailArticle = () => {
     skills: ["Front-end", "Android"],
     tag: [""],
     members: [""],
+    githubUrl: "",
+    deployUrl: "",
   });
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
@@ -66,6 +69,8 @@ const DetailArticle = () => {
             skills: data.skills,
             tag: data.tag,
             members: data.members,
+            githubUrl: data.github_url,
+            deployUrl: data.deployed_url,
           });
           setContent(data.content);
           setAuthor(data.user_id);
@@ -160,6 +165,11 @@ const DetailArticle = () => {
       <DetailBadgesContainer />
       <RelatedProject category={category} />
       <Comment />
+      <TopButton
+        right="calc(50% - 40rem)"
+        bottom="10rem"
+        elementRef={detailRef}
+      />
     </DetailPageContainer>
   );
 };

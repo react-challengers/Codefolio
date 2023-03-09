@@ -1,5 +1,8 @@
 import { CardItem, DropDown, LongButton } from "@/Components/Common";
+import SearchBar from "@/Components/Layouts/SearchBar";
 import HomeDropDownIcon from "@/Components/Main/HomeDropDownIcon";
+import useIsMobile from "@/hooks/common/useIsMobile";
+import { searchValueState } from "@/lib/recoil";
 import supabase from "@/lib/supabase";
 import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
@@ -9,6 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { SyncLoader } from "react-spinners";
+import { useResetRecoilState } from "recoil";
 import styled from "styled-components";
 
 const queryFn = async (query: string) => {
@@ -27,11 +31,15 @@ const Search: NextPage = () => {
   const [selectedDropDownItem, setSelectedDropDownItem] = useState(
     dropDownItems[0]
   );
+  const resetSearchValueState = useResetRecoilState(searchValueState);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
   const { data, isLoading } = useQuery(["search", query], () =>
     queryFn(query as string)
   );
+
+  const isMobile = useIsMobile();
+  const isEmptySearchValue = router.asPath === ("/search?q=" as string);
 
   const sortPosts = useMemo(() => {
     if (data?.length === 0) return [];
@@ -57,6 +65,7 @@ const Search: NextPage = () => {
   };
 
   const goToHome = () => {
+    resetSearchValueState();
     router.push("/");
   };
 
@@ -73,9 +82,15 @@ const Search: NextPage = () => {
 
   return (
     <SearchContainer>
-      <SearchInfo>
-        &lsquo;{query}&rsquo;에 대해 {data?.length}건의 검색결과가 있습니다.
-      </SearchInfo>
+      {isEmptySearchValue ? (
+        <SearchBarSection>
+          <SearchBar />
+        </SearchBarSection>
+      ) : (
+        <SearchInfo>
+          &lsquo;{query}&rsquo;에 대해 {data?.length}건의 검색결과가 있습니다.
+        </SearchInfo>
+      )}
       <DropDownContainer>
         <DropDownButton
           onClick={() => {
@@ -97,7 +112,7 @@ const Search: NextPage = () => {
           </DropDownList>
         )}
       </DropDownContainer>
-      <CardGrid>
+      <CardGrid isMobile={isMobile}>
         {sortPosts?.map((post) => (
           <CardItemWrapper key={post.id} href={`/detail/${post.id}`}>
             <CardItem
@@ -133,9 +148,21 @@ const CardItemWrapper = styled(Link)`
 const SearchContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 98.75rem;
-  margin: 0 auto;
+  max-width: 98.75rem;
   min-height: 56rem;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    margin: 0 1rem;
+  }
+`;
+
+const SearchBarSection = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 6.25rem;
 `;
 
 const Loader = styled(SyncLoader)`
@@ -190,12 +217,14 @@ const DropDownList = styled.ul`
   z-index: 2;
 `;
 
-const CardGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: 1rem;
+const CardGrid = styled.div<{ isMobile: boolean }>`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
   width: 100%;
   margin-top: 1rem;
+
+  ${({ isMobile }) => isMobile && "justify-content: center;"}
 `;
 
 const EmptySearchResult = styled.div`

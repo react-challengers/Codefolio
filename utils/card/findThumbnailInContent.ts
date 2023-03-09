@@ -8,7 +8,7 @@ const findThumbnailInContent = (thumbnail: string) => {
   if (result) {
     return result[0];
   }
-  return "/images/anonImage.webp";
+  return "/images/thumnail_default.webp";
 };
 
 export default findThumbnailInContent;

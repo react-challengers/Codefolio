@@ -18,9 +18,13 @@ import _ from "lodash";
 import { CardItem, DropDown } from "@/Components/Common";
 import getAllPostsCount from "@/utils/APIs/supabase/getAllPostsCount";
 import useOutsideClick from "@/hooks/query/useOutsideClick";
+import useIntersect from "@/hooks/common/useIntersect";
+import useIsMobile from "@/hooks/common/useIsMobile";
 import CategoryTag from "./CategoryTag";
 import HomeDropDownIcon from "./HomeDropDownIcon";
 import "react-loading-skeleton/dist/skeleton.css";
+import SelectField from "../Mobile/SelectField";
+import TopButton from "../Common/TopButton";
 
 // TODO: Tag 데이터 구조화 고민하기
 
@@ -41,52 +45,50 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   const [selectedSubCategory, setSelectedSubCategory] =
     useRecoilState(subCategoryState);
   const router = useRouter();
-
-  const observerTargetEl = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   // 총 post 개수를 갖고 옵니다.
-  const { data: allPostsDataCount, isLoading: isLoadingCount } = useQuery(
+  const { data: allPostsDataCount, isFetching: isFetchingCount } = useQuery(
     ["GET_POSTSCOUNT"],
     getAllPostsCount
   );
 
   const [page, setPage] = useState(1);
+  const [targetState, setTargetState] = useState(false);
 
   const {
     data: allPostsData,
     isLoading,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery(["GET_INFINITE_POSTS"], getInfinitePosts, {
+    isFetching,
+  } = useInfiniteQuery(["GET_INFINIFEPOSTS"], getInfinitePosts, {
     getNextPageParam: () => {
-      // return lastPage.length;
       return page;
     },
     onSuccess(data) {
-      setPage(data.pageParams.length + 1);
+      setPage((prev) => prev + 1);
+      setTargetState(true);
     },
   });
 
-  // observer 셋팅
-  useEffect(() => {
-    if (!observerTargetEl.current || !hasNextPage) return;
-
-    const io = new IntersectionObserver((entries, observer) => {
-      if (entries[0].isIntersecting && allPostsData && allPostsDataCount) {
-        if (allPostsData.pages.flat().length < allPostsDataCount - 1) {
-          fetchNextPage();
-        }
+  const ref = useIntersect(async (entry, observer) => {
+    const perPage = 12;
+    observer.unobserve(entry.target);
+    if (
+      hasNextPage &&
+      !isFetching &&
+      !isFetchingCount &&
+      allPostsData &&
+      allPostsDataCount
+    ) {
+      if (page < (allPostsDataCount + perPage) / perPage) {
+        setTargetState(false);
+        await fetchNextPage();
       }
-    });
-    io.observe(observerTargetEl.current);
+    }
+  });
 
-    // eslint-disable-next-line consistent-return
-    return () => {
-      io.disconnect();
-    };
-  }, [fetch, hasNextPage]);
-
-  // 카테고리 선택 시, 해당 카테고리에 맞는 포스트만 보여주기
   const filterPosts = useMemo(() => {
     if (allPostsData?.pages.flat() === undefined) return [];
 
@@ -158,40 +160,44 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
 
   return (
     <HomeMainContainer>
-      <TagContainer>
-        {selectedSubCategory.length !== 0 &&
-          selectedSubCategory.map((category) => (
-            <CategoryTag
-              category={category}
-              key={category}
-              deleteHandler={onClickDeleteCategory}
-            />
-          ))}
-      </TagContainer>
-      <HomeDropDownContainer>
-        <HomeDropDownButton
-          onClick={() => {
-            onClickDropDown();
-          }}
-        >
-          {selectedDropDownItem}
-          <HomeDropDownIcon />
-        </HomeDropDownButton>
-        {isDropDownOpen && (
-          <HomeDropDownList ref={homeDropDownRef}>
-            {homeDropDownItems.map((item) => (
-              <DropDown
-                item={item}
-                key={item}
-                onClickHandler={onClickDropDownHandler}
-              />
-            ))}
-          </HomeDropDownList>
+      <div>
+        {!isMobile && (
+          <TagContainer>
+            {selectedSubCategory.length !== 0 &&
+              selectedSubCategory.map((category) => (
+                <CategoryTag
+                  category={category}
+                  key={category}
+                  deleteHandler={onClickDeleteCategory}
+                />
+              ))}
+          </TagContainer>
         )}
-      </HomeDropDownContainer>
-      <HomeCardGrid>
-        {isLoading &&
-          new Array(12).fill(null).map((v, index) => (
+        <HomeDropDownContainer>
+          <HomeDropDownButton
+            onClick={() => {
+              onClickDropDown();
+            }}
+          >
+            {selectedDropDownItem}
+            <HomeDropDownIcon />
+          </HomeDropDownButton>
+          {isDropDownOpen && (
+            <HomeDropDownList ref={homeDropDownRef}>
+              {homeDropDownItems.map((item) => (
+                <DropDown
+                  item={item}
+                  key={item}
+                  onClickHandler={onClickDropDownHandler}
+                />
+              ))}
+            </HomeDropDownList>
+          )}
+        </HomeDropDownContainer>
+      </div>
+      {isLoading && (
+        <HomeCardGrid>
+          {new Array(12).fill(null).map((v, index) => (
             <SkeletonTheme key={index} baseColor="#333" highlightColor="#555">
               <div>
                 <Skeleton width={300} height={180} />
@@ -207,42 +213,47 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
               </div>
             </SkeletonTheme>
           ))}
-        {sortPosts &&
-          sortPosts.map((post: PostType) => (
-            <CardContainer
-              key={post.id}
-              onClick={() => {
-                openModal(post.id);
-              }}
-            >
-              <CardItem
-                postId={post.id}
-                imageSrc={findThumbnailInContent(
-                  post.thumbnail_check
-                    ? post.title_background_image
-                    : post.content
-                )}
-                imageAlt={`${post.title}썸네일`}
-                title={post.title}
-                subTitle={post.sub_title}
-                skills={post.skills}
-                date={getPostDate(post.created_at)}
-                comments={post.comment_count}
-                likes={post.like_count}
-                bookmarks={post.bookmark_count}
-                field={`${post.sub_category}`}
-                userId={post.user_id}
-              />
-            </CardContainer>
-          ))}
-      </HomeCardGrid>
-      <Target ref={observerTargetEl} />
+        </HomeCardGrid>
+      )}
+      {!isLoading && (
+        <HomeCardGrid>
+          {sortPosts &&
+            sortPosts.map((post: PostType) => (
+              <CardContainer
+                key={post.id}
+                onClick={() => {
+                  openModal(post.id);
+                }}
+              >
+                <CardItem
+                  postId={post.id}
+                  imageSrc={findThumbnailInContent(
+                    post.thumbnail_check
+                      ? post.title_background_image
+                      : post.content
+                  )}
+                  imageAlt={`${post.title}썸네일`}
+                  title={post.title}
+                  subTitle={post.sub_title}
+                  skills={post.skills}
+                  date={getPostDate(post.created_at)}
+                  comments={post.comment_count}
+                  likes={post.like_count}
+                  bookmarks={post.bookmark_count}
+                  field={`${post.sub_category}`}
+                  userId={post.user_id}
+                />
+              </CardContainer>
+            ))}
+          {targetState && <Target ref={ref} />}
+        </HomeCardGrid>
+      )}
+      {!isMobile && <TopButton right="calc(50vh - 25rem)" bottom="18%" />}
     </HomeMainContainer>
   );
 };
 
 const Target = styled.div`
-  margin-top: 10%;
   height: 1px;
 `;
 const HomeMainContainer = styled.main`
@@ -253,6 +264,11 @@ const HomeMainContainer = styled.main`
   min-height: 65rem;
   margin-left: 1.5rem;
   margin-top: 3rem;
+
+  @media (max-width: 768px) {
+    margin: 0.75rem 0;
+    gap: 3rem;
+  }
 `;
 
 const TagContainer = styled.div`
@@ -267,6 +283,10 @@ const HomeCardGrid = styled.div`
   flex-wrap: wrap;
   gap: 1rem;
   margin-top: 1rem;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `;
 
 const HomeDropDownContainer = styled.div`

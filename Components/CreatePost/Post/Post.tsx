@@ -163,7 +163,7 @@ const Post: NextPage = () => {
       if (members[index].field === "") {
         newMembersValidate[index].field = "필수 입력 항목입니다.";
       }
-      if (!checkUrl(members[index].github)) {
+      if (!checkUrl(members[index].github, true)) {
         newMembersValidate[index].github = "깃허브 주소 형식에 맞지 않습니다.";
       }
     }
@@ -209,7 +209,7 @@ const Post: NextPage = () => {
       setErrorMessage("프로젝트 제목 또는 소제목을 입력해주세요");
     }
 
-    if (githubUrl && !checkUrl(githubUrl)) {
+    if (githubUrl && !checkUrl(githubUrl, true)) {
       setGithubUrlValidate("깃허브 주소 형식에 맞지 않습니다.");
     }
 

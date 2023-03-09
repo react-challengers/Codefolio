@@ -1,4 +1,5 @@
 import { useSubscribeRoute } from "@/hooks/common";
+import useIsMobile from "@/hooks/common/useIsMobile";
 import useOutsideClick from "@/hooks/query/useOutsideClick";
 import {
   isNotificationState,
@@ -11,6 +12,7 @@ import {
   getNotification,
   getUserProfile,
 } from "@/utils/APIs/supabase";
+import hamberger_menu from "@/public/icons/Mobile/hamberger_menu.svg";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -22,23 +24,27 @@ import CreatePostIcon from "./CreatePostIcon";
 import Notification from "./Notification";
 import NotificationIcons from "./NotificationIcons";
 import SearchBar from "./SearchBar";
+import HambergerMenu from "../Mobile/HambergerMenu";
 
 const GNB = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const isMobile = useIsMobile();
   const [userCheck, setUserCheck] = useRecoilState(recoilUserLoginCheck);
   const resetSubCategoryState = useResetRecoilState(subCategoryState);
   const [currentUserProfileImage, setCurrentUserProfileImage] =
     useState<string>("");
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isHambergerModal, setIsHambergerModal] = useState(false);
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
     useRecoilState(isNotificationState);
   const [currentUserId, setCurrentUserId] = useState<string>("");
   const [notificationType, setNotificationType] = useState<"new" | "default">(
     "default"
   );
+  const isEmptySearchValue = router.asPath === ("/search?q=" as string);
 
-  const profileDropdownRef = useRef<HTMLUListElement>(null);
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
   useOutsideClick(profileDropdownRef, () => setIsProfileDropdownOpen(false));
 
   const NotificationDropdownRef = useRef<HTMLDivElement>(null);
@@ -103,6 +109,10 @@ const GNB = () => {
     setIsNotificationDropdownOpen(false);
   };
 
+  const handleClickMobileMenu = () => {
+    setIsHambergerModal((prev) => !prev);
+  };
+
   useSubscribeRoute(handleResetDropdowns);
 
   const handleLogout = async () => {
@@ -117,7 +127,7 @@ const GNB = () => {
 
   const handleDropDownItemClick = (item: string) => {
     if (item === "프로필") {
-      router.push("/profile");
+      router.push(`/profile/${currentUserId}`);
       setIsProfileDropdownOpen(false);
     } else if (item === "로그아웃") {
       handleLogout();
@@ -130,59 +140,86 @@ const GNB = () => {
   return (
     <GNBContainer>
       <GNBLeftSideContainer>
-        <ButtonWrapper onClick={handleClickLogo}>
-          <Image
-            src="/logos/mainLogo.svg"
-            width={24}
-            height={24}
-            alt="코드폴리오 로고"
-          />
-        </ButtonWrapper>
-        <SearchBar />
+        {isMobile ? (
+          <>
+            <ButtonWrapper
+              onClick={handleClickMobileMenu}
+              isOpen={isHambergerModal}
+            >
+              <Image
+                src={hamberger_menu}
+                width={24}
+                height={24}
+                alt="모바일 메뉴 버튼"
+              />
+            </ButtonWrapper>
+            {isHambergerModal && (
+              <HambergerMenu setIsHambergerModal={setIsHambergerModal} />
+            )}
+          </>
+        ) : (
+          <ButtonWrapper onClick={handleClickLogo}>
+            <Image
+              src="/logos/mainLogo.svg"
+              width={24}
+              height={24}
+              alt="코드폴리오 로고"
+            />
+          </ButtonWrapper>
+        )}
+        {!isEmptySearchValue && <SearchBar />}
       </GNBLeftSideContainer>
       <ButtonsContainer>
         {userCheck ? (
           <>
             <ButtonWrapper
+              ref={NotificationDropdownRef}
               onClick={handleNotificationDropdown}
               isOpen={isNotificationDropdownOpen}
             >
               <NotificationIcon type={notificationType} />
+              {isNotificationDropdownOpen && (
+                <NotificationContainer>
+                  <Notification />
+                </NotificationContainer>
+              )}
             </ButtonWrapper>
-            {isNotificationDropdownOpen && (
-              <NotificationContainer ref={NotificationDropdownRef}>
-                <Notification />
-              </NotificationContainer>
+            {!isMobile && (
+              <ButtonWrapper
+                onClick={() =>
+                  router.push(userCheck ? "/create-post" : "/auth/login")
+                }
+              >
+                <CreatePostIcon />
+              </ButtonWrapper>
             )}
             <ButtonWrapper
-              onClick={() =>
-                router.push(userCheck ? "/create-post" : "/auth/login")
-              }
+              ref={profileDropdownRef}
+              onClick={handleProfileDropdown}
             >
-              <CreatePostIcon />
-            </ButtonWrapper>
-            <ButtonWrapper onClick={handleProfileDropdown}>
               <ProfileImage
                 page="GNB"
                 alt="내 프로필 이미지"
                 src={currentUserProfileImage}
               />
+              <ProfileDropDownList>
+                {isProfileDropdownOpen &&
+                  dropDownItems.map((item) => (
+                    <DropDown
+                      key={item}
+                      item={item}
+                      onClickHandler={handleDropDownItemClick}
+                    />
+                  ))}
+              </ProfileDropDownList>
             </ButtonWrapper>
-            <ProfileDropDownList ref={profileDropdownRef}>
-              {isProfileDropdownOpen &&
-                dropDownItems.map((item) => (
-                  <DropDown
-                    key={item}
-                    item={item}
-                    onClickHandler={handleDropDownItemClick}
-                  />
-                ))}
-            </ProfileDropDownList>
           </>
         ) : (
-          <ButtonWrapper onClick={() => router.push("/auth/login")}>
-            <LoginButton>로그인</LoginButton>
-          </ButtonWrapper>
+          !isMobile && (
+            <ButtonWrapper onClick={() => router.push("/auth/login")}>
+              <LoginButton>로그인</LoginButton>
+            </ButtonWrapper>
+          )
         )}
       </ButtonsContainer>
     </GNBContainer>
@@ -193,10 +230,11 @@ const NotificationContainer = styled.div`
   position: absolute;
   top: 3.75rem;
   right: 2.5rem;
+  z-index: 2;
 `;
 
 const GNBContainer = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 3.5rem;
   background-color: ${({ theme }) => theme.colors.gray10};
   display: flex;
@@ -204,6 +242,10 @@ const GNBContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 2.5rem;
+
+  @media (max-width: 768px) {
+    padding: 0.375rem 1rem;
+  }
 `;
 
 const GNBLeftSideContainer = styled.div`
@@ -227,6 +269,9 @@ interface ButtonWrapperProps {
 const ButtonWrapper = styled.div<ButtonWrapperProps>`
   cursor: pointer;
   padding: 0.5rem;
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 
   path,
   circle {
@@ -257,6 +302,7 @@ const ProfileDropDownList = styled.ul`
   flex-direction: column;
   position: absolute;
   top: 3.75rem;
+  right: 2.5rem;
   width: 11.25rem;
 
   background-color: ${({ theme }) => theme.colors.gray9};

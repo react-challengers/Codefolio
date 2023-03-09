@@ -20,6 +20,10 @@ const ErrorMessageBox = styled.div<ErrorMessageBoxProps>`
 
   margin-bottom: 1.75rem;
   border-radius: 0.5rem;
+
+  @media (max-width: 768px) {
+    width: 20rem;
+  }
 `;
 
 export default ErrorMessageBox;

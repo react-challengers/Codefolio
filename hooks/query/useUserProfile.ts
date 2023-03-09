@@ -29,7 +29,7 @@ const useUserProfile = (profileUserId = "") => {
     contact_email: data?.contact_email ?? "",
     profile_image: data?.profile_image ?? "",
     background_image: data?.background_image ?? "",
-    birth_year: data?.birth_year ?? new Date().getFullYear(),
+    birth_year: data?.birth_year ?? new Date().getFullYear().toString(),
     self_profile: data?.self_profile ?? "",
     gender: data?.gender ?? "선택안함",
     is_public: data?.is_public ?? true,
@@ -42,13 +42,20 @@ const useUserProfile = (profileUserId = "") => {
 
   // 최초 데이터 갱신
   useEffect(() => {
-    queryClient.setQueryData([USER_PROFILE], profileData);
+    queryClient.setQueryData([USER_PROFILE, profileUserId], profileData);
+    return () => {
+      queryClient.invalidateQueries({
+        queryKey: [USER_PROFILE, profileUserId],
+      });
+    };
   }, []);
 
   // patch
   const { mutate: updateProfileData } = useMutation(patchUserProfile, {
     onMutate: async (newProfile) => {
-      await queryClient.cancelQueries({ queryKey: [USER_PROFILE] });
+      await queryClient.cancelQueries({
+        queryKey: [USER_PROFILE, profileUserId],
+      });
       const previousProfile = queryClient.getQueriesData([USER_PROFILE]);
       queryClient.setQueriesData<UserProfileType | undefined>(
         [USER_PROFILE],
@@ -61,7 +68,9 @@ const useUserProfile = (profileUserId = "") => {
       queryClient.setQueriesData([USER_PROFILE], context?.previousProfile);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [USER_PROFILE] });
+      queryClient.invalidateQueries({
+        queryKey: [USER_PROFILE, profileUserId],
+      });
     },
   });
 

@@ -26,6 +26,10 @@ const AuthInput = styled.input<AuthInputProps>`
   padding: 0.625rem 1rem 0.625rem 1rem;
 
   background-color: ${({ theme }) => theme.colors.gray11};
+
+  @media (max-width: 768px) {
+    width: 20rem;
+  }
 `;
 
 export default AuthInput;
