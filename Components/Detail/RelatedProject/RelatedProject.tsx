@@ -98,7 +98,7 @@ const RelatedProjectContainer = styled.section`
 `;
 
 const RelatedProjectTitle = styled.h2`
-  font-size: 1.5rem;
+  ${({ theme }) => theme.fonts.title24};
   color: ${({ theme }) => theme.colors.gray2};
   margin: 2rem 0 3.125rem 7.5rem;
 `;

@@ -1,6 +1,6 @@
 import { useStopScroll } from "@/hooks/common";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import styled from "styled-components";
 import DetailArticle from "../Detail/DetailArticle";
 
