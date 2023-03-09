@@ -3,15 +3,13 @@
 // import SideBar from "@/Components/Main/SideBar/SideBar";
 
 import { Banner, DetailModal, MainSection, SideBar } from "@/Components/Main";
-import TopButton from "@/Components/Common/TopButton";
 import useIsMobile from "@/hooks/common/useIsMobile";
 import Head from "next/head";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 // import * as amplitude from "@amplitude/analytics-browser";
 
 const Home = () => {
-  const detailRef = useRef<any>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isMobile = useIsMobile();
 
@@ -32,11 +30,6 @@ const Home = () => {
           {isModalOpen && (
             <ModalContainer>
               <DetailModal setIsModalOpen={setIsModalOpen} />
-              <TopButton
-                right="calc(50% - 40rem)"
-                bottom="10rem"
-                elementRef={detailRef}
-              />
             </ModalContainer>
           )}
           {!isMobile && <SideBar />}

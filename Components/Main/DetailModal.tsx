@@ -1,6 +1,6 @@
 import { useStopScroll } from "@/hooks/common";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import styled from "styled-components";
 import DetailArticle from "../Detail/DetailArticle";
 
@@ -10,6 +10,7 @@ interface DetailModalProps {
 
 const DetailModal = ({ setIsModalOpen }: DetailModalProps) => {
   const router = useRouter();
+  const detailRef = useRef<any>(null);
 
   useStopScroll();
 
@@ -20,9 +21,9 @@ const DetailModal = ({ setIsModalOpen }: DetailModalProps) => {
 
   return (
     <ModalContainer key={router.asPath}>
-      <ModalBackDrop onClick={handleOnClose}>
+      <ModalBackDrop ref={detailRef} onClick={handleOnClose}>
         <DetailModalContainer onClick={(e) => e.stopPropagation()}>
-          <DetailArticle />
+          <DetailArticle detailRef={detailRef} />
         </DetailModalContainer>
       </ModalBackDrop>
     </ModalContainer>
