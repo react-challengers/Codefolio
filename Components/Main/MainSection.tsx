@@ -160,10 +160,8 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
 
   return (
     <HomeMainContainer>
-      {isMobile ? (
-        <SelectField />
-      ) : (
-        <div>
+      <div>
+        {!isMobile && (
           <TagContainer>
             {selectedSubCategory.length !== 0 &&
               selectedSubCategory.map((category) => (
@@ -174,29 +172,29 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
                 />
               ))}
           </TagContainer>
-          <HomeDropDownContainer>
-            <HomeDropDownButton
-              onClick={() => {
-                onClickDropDown();
-              }}
-            >
-              {selectedDropDownItem}
-              <HomeDropDownIcon />
-            </HomeDropDownButton>
-            {isDropDownOpen && (
-              <HomeDropDownList ref={homeDropDownRef}>
-                {homeDropDownItems.map((item) => (
-                  <DropDown
-                    item={item}
-                    key={item}
-                    onClickHandler={onClickDropDownHandler}
-                  />
-                ))}
-              </HomeDropDownList>
-            )}
-          </HomeDropDownContainer>
-        </div>
-      )}
+        )}
+        <HomeDropDownContainer>
+          <HomeDropDownButton
+            onClick={() => {
+              onClickDropDown();
+            }}
+          >
+            {selectedDropDownItem}
+            <HomeDropDownIcon />
+          </HomeDropDownButton>
+          {isDropDownOpen && (
+            <HomeDropDownList ref={homeDropDownRef}>
+              {homeDropDownItems.map((item) => (
+                <DropDown
+                  item={item}
+                  key={item}
+                  onClickHandler={onClickDropDownHandler}
+                />
+              ))}
+            </HomeDropDownList>
+          )}
+        </HomeDropDownContainer>
+      </div>
       {isLoading && (
         <HomeCardGrid>
           {new Array(12).fill(null).map((v, index) => (
@@ -250,7 +248,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
           {targetState && <Target ref={ref} />}
         </HomeCardGrid>
       )}
-      <TopButton right="calc(50vh - 25rem)" bottom="18%" />
+      {!isMobile && <TopButton right="calc(50vh - 25rem)" bottom="18%" />}
     </HomeMainContainer>
   );
 };
