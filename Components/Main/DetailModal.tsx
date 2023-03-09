@@ -1,6 +1,6 @@
 import { useStopScroll } from "@/hooks/common";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useRef } from "react";
+import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import DetailArticle from "../Detail/DetailArticle";
 
@@ -36,13 +36,14 @@ const ModalContainer = styled.div`
 
 const ModalBackDrop = styled.div`
   padding: 1.24rem 0;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1;
+  overflow-y: scroll;
 `;
 
 const DetailModalContainer = styled.div`
