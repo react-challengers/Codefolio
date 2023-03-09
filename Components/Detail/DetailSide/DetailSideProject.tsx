@@ -17,8 +17,8 @@ const DetailSideProject = ({
   progressDate,
   skills,
   tag,
-  githubUrl = "",
-  deployUrl = "",
+  githubUrl,
+  deployUrl,
 }: DetailSideProjectProps) => {
   const router = useRouter();
   return (

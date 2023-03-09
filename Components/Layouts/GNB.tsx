@@ -126,7 +126,7 @@ const GNB = () => {
 
   const handleDropDownItemClick = (item: string) => {
     if (item === "프로필") {
-      router.push("/profile");
+      router.push(`/profile/${currentUserId}`);
       setIsProfileDropdownOpen(false);
     } else if (item === "로그아웃") {
       handleLogout();
@@ -225,6 +225,7 @@ const NotificationContainer = styled.div`
   position: absolute;
   top: 3.75rem;
   right: 2.5rem;
+  z-index: 2;
 `;
 
 const GNBContainer = styled.div`

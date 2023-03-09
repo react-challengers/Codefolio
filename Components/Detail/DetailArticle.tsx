@@ -38,6 +38,8 @@ const DetailArticle = () => {
     skills: ["Front-end", "Android"],
     tag: [""],
     members: [""],
+    githubUrl: "",
+    deployUrl: "",
   });
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
@@ -66,6 +68,8 @@ const DetailArticle = () => {
             skills: data.skills,
             tag: data.tag,
             members: data.members,
+            githubUrl: data.github_url,
+            deployUrl: data.deployed_url,
           });
           setContent(data.content);
           setAuthor(data.user_id);

@@ -397,20 +397,20 @@ $ yarn dev
 
 ## Main
 
-<img width="2488" alt="main-page" src="https://user-images.githubusercontent.com/110771206/220218098-a7b4ae92-3848-492a-9522-d3822527bc84.png">
+![스크린샷 2023-03-08 오후 2 19 01](https://user-images.githubusercontent.com/115724947/223626150-ce1e481e-cf49-4ea2-b410-6d8441a70f5f.png)
 
 ## Detail
 
-![Detail Screen Shot](https://user-images.githubusercontent.com/110771206/220218567-07ecf734-5a5a-4160-a0c5-02409c5d9ab3.png)
+![스크린샷 2023-03-08 오후 2 25 54](https://user-images.githubusercontent.com/115724947/223626925-9c9b23f5-d8f1-4e17-9dc0-e9a07dd63a30.png)
 
 ## Post
 
-![Post Screen Shot](https://user-images.githubusercontent.com/110771206/220218836-df920e9f-c4dc-49ce-9893-326869c8c662.png)
+![스크린샷 2023-03-08 오후 2 24 37](https://user-images.githubusercontent.com/115724947/223626787-19ca90d4-db7d-4dbe-a40b-0ebc1d4d6fe4.png)
 
 ## MyPage
 
-![MyPage Screen Shot](https://user-images.githubusercontent.com/110771206/220219231-f573296d-9262-46bc-b7fa-f5679873cc7f.png)
+![스크린샷 2023-03-08 오후 2 26 28](https://user-images.githubusercontent.com/115724947/223627014-df0ea0e2-dea5-4a92-b7bf-78d6d0b5714d.png)
 
 ## Profile
 
-![Profile Screen Shot](https://user-images.githubusercontent.com/110771206/220219528-05a06279-fb0e-4645-9951-1ecbceb64005.png)
+![스크린샷 2023-03-08 오후 2 28 02](https://user-images.githubusercontent.com/115724947/223627219-160579ab-1b40-4fed-a524-7b1a85aee158.png)

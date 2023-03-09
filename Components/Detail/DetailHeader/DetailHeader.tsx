@@ -279,6 +279,14 @@ const DetailHeader = ({
   return (
     <DetailHeaderContainer>
       <ButtonWrapper>
+        <CloseButton onClick={() => router.back()}>
+          <svg width="24" height="20" viewBox="0 0 103 82" fill="none">
+            <path
+              d="M2.11091 37.1109C-0.0369708 39.2588 -0.036971 42.7412 2.11091 44.8891L37.1127 79.8909C39.2606 82.0388 42.743 82.0388 44.8909 79.8909C47.0388 77.743 47.0388 74.2606 44.8909 72.1127L13.7782 41L44.8909 9.8873C47.0388 7.73941 47.0388 4.25701 44.8909 2.10912C42.743 -0.0387603 39.2606 -0.0387605 37.1127 2.10912L2.11091 37.1109ZM103 35.5L6 35.5L6 46.5L103 46.5L103 35.5Z"
+              fill="black"
+            />
+          </svg>
+        </CloseButton>
         <Image
           src={`/icons/like${isLike ? "Hover" : ""}.svg`}
           width={24}
@@ -311,7 +319,7 @@ const DetailHeader = ({
 };
 
 const DetailHeaderContainer = styled.div`
-  padding: 1rem 2rem 1rem 3.5rem;
+  padding: 1rem 2rem;
   width: 100%;
   position: relative;
   align-items: center;
@@ -327,6 +335,22 @@ const ButtonWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   gap: 1.2rem;
+`;
+
+const CloseButton = styled.div`
+  cursor: pointer;
+  padding: 0.125rem;
+  margin-right: 1.875rem;
+
+  path {
+    fill: ${({ theme }) => theme.colors.gray3};
+  }
+
+  &:hover {
+    path {
+      fill: ${({ theme }) => theme.colors.primary6};
+    }
+  }
 `;
 
 export default DetailHeader;
