@@ -14,10 +14,9 @@ import {
 } from "@/utils/APIs/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { SyncLoader } from "react-spinners";
 import styled from "styled-components";
-import TopButton from "../Common/TopButton";
 import DetailBadgesContainer from "./DetailBadgesContainer";
 import DetailContent from "./DetailContent";
 

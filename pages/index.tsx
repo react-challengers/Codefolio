@@ -30,7 +30,7 @@ const Home = () => {
             <DetailModal setIsModalOpen={setIsModalOpen} />
             <TopButton
               right="calc(50% - 40rem)"
-              bottom="0"
+              bottom="10rem"
               elementRef={detailRef}
             />
           </ModalContainer>

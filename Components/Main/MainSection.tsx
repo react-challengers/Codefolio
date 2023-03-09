@@ -241,7 +241,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
           {targetState && <Target ref={ref} />}
         </HomeCardGrid>
       )}
-      <TopButton right="calc(50% - 55rem)" bottom="18%" />
+      <TopButton right="calc(50vh - 25rem)" bottom="18%" />
     </HomeMainContainer>
   );
 };
