@@ -27,7 +27,7 @@ const Home = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <IndexContainer>
-        <Banner />
+        {!isMobile && <Banner />}
         <HomeContainer>
           {isModalOpen && (
             <ModalContainer>

@@ -25,7 +25,6 @@ import HomeDropDownIcon from "./HomeDropDownIcon";
 import "react-loading-skeleton/dist/skeleton.css";
 import SelectField from "../Mobile/SelectField";
 import TopButton from "../Common/TopButton";
-import SelectField from "../Mobile/SelectField";
 
 // TODO: Tag 데이터 구조화 고민하기
 
@@ -47,7 +46,6 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     useRecoilState(subCategoryState);
   const router = useRouter();
   const isMobile = useIsMobile();
-  const observerTargetEl = useRef<HTMLDivElement>(null);
 
   // 총 post 개수를 갖고 옵니다.
   const { data: allPostsDataCount, isFetching: isFetchingCount } = useQuery(
@@ -162,10 +160,8 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
 
   return (
     <HomeMainContainer>
-      {isMobile ? (
-        <SelectField />
-      ) : (
-        <div>
+      <div>
+        {!isMobile && (
           <TagContainer>
             {selectedSubCategory.length !== 0 &&
               selectedSubCategory.map((category) => (
@@ -176,29 +172,29 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
                 />
               ))}
           </TagContainer>
-          <HomeDropDownContainer>
-            <HomeDropDownButton
-              onClick={() => {
-                onClickDropDown();
-              }}
-            >
-              {selectedDropDownItem}
-              <HomeDropDownIcon />
-            </HomeDropDownButton>
-            {isDropDownOpen && (
-              <HomeDropDownList ref={homeDropDownRef}>
-                {homeDropDownItems.map((item) => (
-                  <DropDown
-                    item={item}
-                    key={item}
-                    onClickHandler={onClickDropDownHandler}
-                  />
-                ))}
-              </HomeDropDownList>
-            )}
-          </HomeDropDownContainer>
-        </div>
-      )}
+        )}
+        <HomeDropDownContainer>
+          <HomeDropDownButton
+            onClick={() => {
+              onClickDropDown();
+            }}
+          >
+            {selectedDropDownItem}
+            <HomeDropDownIcon />
+          </HomeDropDownButton>
+          {isDropDownOpen && (
+            <HomeDropDownList ref={homeDropDownRef}>
+              {homeDropDownItems.map((item) => (
+                <DropDown
+                  item={item}
+                  key={item}
+                  onClickHandler={onClickDropDownHandler}
+                />
+              ))}
+            </HomeDropDownList>
+          )}
+        </HomeDropDownContainer>
+      </div>
       {isLoading && (
         <HomeCardGrid>
           {new Array(12).fill(null).map((v, index) => (
@@ -252,7 +248,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
           {targetState && <Target ref={ref} />}
         </HomeCardGrid>
       )}
-      <TopButton right="calc(50vh - 25rem)" bottom="18%" />
+      {!isMobile && <TopButton right="calc(50vh - 25rem)" bottom="18%" />}
     </HomeMainContainer>
   );
 };
