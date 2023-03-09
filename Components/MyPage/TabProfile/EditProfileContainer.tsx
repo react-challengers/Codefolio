@@ -85,7 +85,7 @@ const EditProfileContainer = () => {
       setActiveField([]);
       setEditSkills([]);
       setCareer("신입");
-      setBirthYear(new Date().getFullYear());
+      setBirthYear("2000");
       setGender("선택안함");
     }
     updateProfileLocalState();

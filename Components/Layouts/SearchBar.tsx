@@ -38,7 +38,7 @@ const SearchBar = () => {
 
       <SearchInput
         isEmptySearchValue={isEmptySearchValue}
-        placeholder="검색"
+        placeholder="검색어 입력후 Enter를 눌러주세요"
         value={searchValue}
         onChange={(event) => setSearchValue(event.target.value)}
         onKeyDown={handleSearchKeyDown}
