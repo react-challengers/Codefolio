@@ -42,6 +42,7 @@ const GNB = () => {
   const [notificationType, setNotificationType] = useState<"new" | "default">(
     "default"
   );
+  const isEmptySearchValue = router.asPath === ("/search?q=" as string);
 
   const profileDropdownRef = useRef<HTMLUListElement>(null);
   useOutsideClick(profileDropdownRef, () => setIsProfileDropdownOpen(false));
@@ -166,7 +167,7 @@ const GNB = () => {
             />
           </ButtonWrapper>
         )}
-        <SearchBar />
+        {!isEmptySearchValue && <SearchBar />}
       </GNBLeftSideContainer>
       <ButtonsContainer>
         {userCheck ? (
