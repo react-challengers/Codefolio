@@ -21,7 +21,7 @@ const BadgesContainer = styled.div`
 `;
 
 export const Title = styled.div`
-  font-size: 1.375rem;
+  ${({ theme }) => theme.fonts.title24};
   color: ${({ theme }) => theme.colors.white};
   margin-bottom: 3rem;
 `;
