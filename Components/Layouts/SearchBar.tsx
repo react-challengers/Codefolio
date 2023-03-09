@@ -34,6 +34,8 @@ const SearchBar = () => {
           onChange={(event) => setSearchValue(event.target.value)}
           onKeyDown={handleSearchKeyDown}
         />
+      )}
+      ;
     </SearchBarContainer>
   );
 };
