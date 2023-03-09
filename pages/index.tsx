@@ -30,11 +30,11 @@ const Home = () => {
           {isModalOpen && (
             <ModalContainer>
               <DetailModal setIsModalOpen={setIsModalOpen} />
-            <TopButton
-              right="calc(50% - 40rem)"
-              bottom="10rem"
-              elementRef={detailRef}
-            />
+              <TopButton
+                right="calc(50% - 40rem)"
+                bottom="10rem"
+                elementRef={detailRef}
+              />
             </ModalContainer>
           )}
           <SideBar />
