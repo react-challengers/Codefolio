@@ -108,7 +108,7 @@ const RelatedProjectTitle = styled.h2`
   color: ${({ theme }) => theme.colors.gray2};
   margin: 2rem 0 3.125rem 7.5rem;
   @media (max-width: 768px) {
-    margin: 40px auto 40px 16px;
+    margin: 2.5rem auto 2.5rem 1rem;
   }
 `;
 
@@ -118,7 +118,7 @@ const SwiperContainer = styled.div`
   align-items: center;
   padding: 0 7.5rem;
   @media (max-width: 768px) {
-    padding: 16px;
+    padding: 1rem;
   }
 `;
 
