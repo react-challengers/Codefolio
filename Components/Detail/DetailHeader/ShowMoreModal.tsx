@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import useOutsideClick from "@/hooks/query/useOutsideClick";
+import useIsMobile from "@/hooks/common/useIsMobile";
 
 interface ShowMoreModalProps {
   closeModal: () => void;
@@ -33,13 +34,15 @@ const ShowMoreModal = ({ closeModal }: ShowMoreModalProps) => {
     },
   });
 
+  const isMobile = useIsMobile();
+
   const onClickDeleteButton = () => {
     setShowDeleteModal(true);
   };
 
   return (
     <ShowMoreModalContainer>
-      <ItemWrapper onClick={editPost}>수정하기</ItemWrapper>
+      {!isMobile && <ItemWrapper onClick={editPost}>수정하기</ItemWrapper>}
       <ItemWrapper onClick={onClickDeleteButton}>삭제하기</ItemWrapper>
       {showDeleteModal && (
         <ConfirmModal

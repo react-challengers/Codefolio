@@ -44,6 +44,12 @@ const DetailTitleContainer = styled.div`
 
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 14rem;
+    padding-left: 2rem;
+  }
 `;
 
 const DetailTitleBackgroundImage = styled(Image)`
@@ -75,6 +81,17 @@ const DetailTitleText = styled.div`
     color: ${(props) => props.theme.colors.white};
   }
   z-index: 1;
+
+  @media (max-width: 768px) {
+    width: auto;
+
+    h1 {
+      ${({ theme }) => theme.fonts.title24};
+    }
+    h3 {
+      ${({ theme }) => theme.fonts.body14};
+    }
+  }
 `;
 
 export default DetailTitle;

@@ -7,6 +7,7 @@ import { findThumbnailInContent, getPostDate } from "@/utils/card";
 import { useRouter } from "next/router";
 import { getPostsByCategory } from "@/utils/APIs/supabase";
 import { CardItem } from "@/Components/Common";
+import useIsMobile from "@/hooks/common/useIsMobile";
 import SwiperPrevButton from "./SwiperPrevButton";
 import SwiperNextButton from "./SwiperNextButton";
 
@@ -24,6 +25,7 @@ const RelatedProject = ({ category }: RelatedProjectProps) => {
   SwiperCore.use([Navigation, Scrollbar]);
 
   const router = useRouter();
+  const isMobile = useIsMobile();
 
   const { data: relatedProjectsData } = useQuery(
     ["GET_RELATED_PROJECTS", category],
@@ -45,7 +47,7 @@ const RelatedProject = ({ category }: RelatedProjectProps) => {
           <Swiper
             modules={[Navigation, Scrollbar]}
             spaceBetween={20}
-            slidesPerView={4}
+            slidesPerView={isMobile ? 1 : 4}
             navigation={{
               prevEl: ".swiper-button-prev",
               nextEl: ".swiper-button-next",
@@ -95,12 +97,19 @@ const RelatedProjectContainer = styled.section`
   width: 87.5rem;
   height: 30rem;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray7};
+
+  @media (max-width: 768px) {
+    width: 100vw;
+  }
 `;
 
 const RelatedProjectTitle = styled.h2`
   ${({ theme }) => theme.fonts.title24};
   color: ${({ theme }) => theme.colors.gray2};
   margin: 2rem 0 3.125rem 7.5rem;
+  @media (max-width: 768px) {
+    margin: 40px auto 40px 16px;
+  }
 `;
 
 const SwiperContainer = styled.div`
@@ -108,11 +117,18 @@ const SwiperContainer = styled.div`
   display: flex;
   align-items: center;
   padding: 0 7.5rem;
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
 `;
 
 const SwiperWrapper = styled.div`
   width: 78.75rem;
   height: 100%;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const CardItemContainer = styled.div`
