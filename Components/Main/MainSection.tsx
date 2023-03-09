@@ -22,6 +22,7 @@ import useIntersect from "@/hooks/common/useIntersect";
 import CategoryTag from "./CategoryTag";
 import HomeDropDownIcon from "./HomeDropDownIcon";
 import "react-loading-skeleton/dist/skeleton.css";
+import TopButton from "../Common/TopButton";
 
 // TODO: Tag 데이터 구조화 고민하기
 
@@ -240,6 +241,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
           {targetState && <Target ref={ref} />}
         </HomeCardGrid>
       )}
+      <TopButton right="calc(50% - 55rem)" bottom="18%" />
     </HomeMainContainer>
   );
 };
