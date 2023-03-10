@@ -31,18 +31,8 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html lang="ko">
         <Head>
-          <link
-            href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
-            rel="stylesheet"
-          />
-          <link
-            rel="icon"
-            type="image/png"
-            sizes="32x32"
-            href="/logos/favicon.png"
-          />
           <meta property="og:type" content="website" />
           <meta property="og:url" content="https://code-folio.vercel.app/" />
           <meta property="og:title" content="Codefolio" />
@@ -51,10 +41,18 @@ export default class MyDocument extends Document {
             property="og:description"
             content="당신의 프로젝트를 정리해보세요!"
           />
+
           <meta property="og:site_name" content="Codefolio" />
           <meta property="og:locale" content="ko_KR" />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
+
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/logos/favicon.png"
+          />
         </Head>
         <body>
           <Main />

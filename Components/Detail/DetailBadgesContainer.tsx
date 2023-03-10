@@ -18,12 +18,21 @@ const BadgesContainer = styled.div`
 
   border-top: 1px solid ${({ theme }) => theme.colors.gray7};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray7};
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 2.5rem 1rem 2.5rem 1rem;
+  }
 `;
 
 export const Title = styled.div`
   ${({ theme }) => theme.fonts.title24};
   color: ${({ theme }) => theme.colors.white};
   margin-bottom: 3rem;
+
+  @media (max-width: 768px) {
+    ${({ theme }) => theme.fonts.subtitle16};
+  }
 `;
 
 export default DetailBadgesContainer;

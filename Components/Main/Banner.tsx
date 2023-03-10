@@ -22,7 +22,7 @@ const BannerContainer = styled.div`
   width: 100%;
   height: 18.5rem;
 
-  background-image: url("/images/main-banner.png");
+  background-image: url("/images/main-banner.webp");
   background-size: cover;
 `;
 

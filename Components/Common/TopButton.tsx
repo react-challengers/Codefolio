@@ -82,7 +82,7 @@ const TopButton = ({ right, bottom, elementRef }: TopButtonProps) => {
 const TopButtonContainer = styled.div<TopButtonProps>`
   position: fixed;
   right: ${({ right }) => right};
-  bottom: ${({ bottom }) => bottom};
+  bottom: 2.75rem;
   z-index: 10;
 
   cursor: pointer;

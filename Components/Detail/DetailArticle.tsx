@@ -5,6 +5,7 @@ import {
   DetailTitle,
   RelatedProject,
 } from "@/Components/Detail";
+import useIsMobile from "@/hooks/common/useIsMobile";
 import {
   getSingleUser,
   getCurrentUser,
@@ -167,7 +168,7 @@ const DetailArticle = ({ detailRef }: any) => {
       <Comment />
       <TopButton
         right="calc(50% - 40rem)"
-        bottom="10rem"
+        bottom="0.75rem"
         elementRef={detailRef}
       />
     </DetailPageContainer>
@@ -185,6 +186,11 @@ const DetailPageContainer = styled.div`
   padding-bottom: 5.5rem;
 
   z-index: 1;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 0 0 5rem 0;
+  }
 `;
 
 const DetailContentsContainer = styled.div`
@@ -192,6 +198,10 @@ const DetailContentsContainer = styled.div`
   padding: 0 7.5rem;
   margin-top: 2.5rem;
   display: flex;
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 0;
+  }
 `;
 
 const DetailContentsMain = styled.main`
@@ -200,7 +210,11 @@ const DetailContentsMain = styled.main`
   margin-left: 1.25rem;
 `;
 
-const DetailContentsSide = styled.aside``;
+const DetailContentsSide = styled.aside`
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
 
 const Loader = styled(SyncLoader)`
   position: fixed !important;

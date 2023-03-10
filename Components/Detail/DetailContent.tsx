@@ -24,6 +24,11 @@ const PreviewContent = styled(MarkdownPreview)`
   li {
     list-style-type: disc;
   }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 0 2rem 0 0;
+  }
 `;
 
 export default DetailContent;
