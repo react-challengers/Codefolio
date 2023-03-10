@@ -60,6 +60,10 @@ const DetailTitleBackgroundImage = styled(Image)`
   width: 100%;
   height: auto;
   opacity: 0.8;
+
+  @media (max-width: 768px) {
+    height: 13.5rem;
+  }
 `;
 
 const DetailTitleHeader = styled.p`
