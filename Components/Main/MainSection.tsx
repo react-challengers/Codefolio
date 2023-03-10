@@ -158,6 +158,13 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
     setSelectedSubCategory([]);
   }, [setSelectedSubCategory]);
 
+  const onClickPostHandler = (postId: string) => {
+    if (!isMobile) {
+      return openModal(postId);
+    }
+    return router.push(`/detail/${postId}`);
+  };
+
   return (
     <HomeMainContainer>
       <div>
@@ -222,7 +229,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
               <CardContainer
                 key={post.id}
                 onClick={() => {
-                  openModal(post.id);
+                  onClickPostHandler(post.id);
                 }}
               >
                 <CardItem

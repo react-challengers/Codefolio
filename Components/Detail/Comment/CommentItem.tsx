@@ -201,6 +201,11 @@ const CommentContainer = styled.div`
   position: relative;
   display: flex;
   margin-top: 2.5rem;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding-left: 1rem;
+  }
 `;
 
 const ButtonWrapper = styled.div`

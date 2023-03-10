@@ -298,6 +298,12 @@ const BadgeWrapper = styled.div<BadgeWrapperProps>`
       fill: ${({ theme }) => theme.colors.primary6};
     }
   }
+
+  @media (max-width: 768px) {
+    p {
+      ${({ theme }) => theme.fonts.body12}
+    }
+  }
 `;
 
 export default DetailBadges;

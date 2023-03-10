@@ -124,11 +124,20 @@ const CommentInputContainer = styled.div`
 
   display: flex;
   justify-content: space-between;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem 0 1rem;
+  }
 `;
 
 const PostCommentButton = styled.div`
   display: flex;
   justify-content: end;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding-right: 2rem;
+  }
 `;
 
 const CommentTextarea = styled.textarea`
@@ -143,6 +152,12 @@ const CommentTextarea = styled.textarea`
 
   background-color: ${({ theme }) => theme.colors.gray11};
   color: ${({ theme }) => theme.colors.white};
+
+  @media (max-width: 768px) {
+    ${({ theme }) => theme.fonts.body14};
+    margin-right: 1rem;
+    width: 70%;
+  }
 `;
 
 interface HelperTextProps {
