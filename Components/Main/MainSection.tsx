@@ -250,7 +250,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
         </HomeCardGrid>
       )}
       {filterPosts.length === 0 && <EmptyCategory />}
-      {!isMobile && <TopButton right="calc(50vh - 25rem)" bottom="18%" />}
+      {!isMobile && <TopButton right="1rem" bottom="1rem" />}
     </HomeMainContainer>
   );
 };
@@ -261,13 +261,15 @@ const Target = styled.div`
 const HomeMainContainer = styled.main<{ isMobile: boolean }>`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 78.75rem;
+  width: 65vw;
   min-height: 65rem;
   margin-left: 1.5rem;
   margin-top: 3rem;
 
   ${({ isMobile }) => isMobile && "margin: 0.75rem 0; gap: 3rem;"}
+  @media (max-width: 1260px) {
+    width: 50vw;
+  }
 `;
 
 const TagContainer = styled.div`
