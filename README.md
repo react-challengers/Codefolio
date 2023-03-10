@@ -3,7 +3,8 @@
 <span align="center">
 
 ## [LiveDemo](https://code-folio.vercel.app/)
-
+## [프로젝트 노션](https://www.notion.so/jeremy-kr/CodeFolio-Overview-6c02f39f8bdc47c7a7eb821329b5c90a?pvs=4)
+  
 </span>
 
 ## 실행방법
@@ -27,7 +28,7 @@ $ yarn dev
 1. [Contributer](#contributor)
 2. [프로젝트 소개](#프로젝트-소개)
 3. [Screen Shot](#screen-shot)
-4. [Tach Stack](#tach-stack)
+4. [Tech Stack](#tech-stack)
 5. [ERD](#entity-relationship-diagram)
 6. [Directory](#directory)
 
