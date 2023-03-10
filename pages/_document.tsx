@@ -31,7 +31,7 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html lang="ko">
         <Head>
           <meta property="og:type" content="website" />
           <meta property="og:url" content="https://code-folio.vercel.app/" />

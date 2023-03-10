@@ -56,6 +56,12 @@ const App = ({
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!, "user@amplitude.com");
+
+    if (process.env.NODE_ENV === "production") {
+      console.log = () => {};
+      console.error = () => {};
+      console.warn = () => {};
+    }
   }, []);
 
   return (
