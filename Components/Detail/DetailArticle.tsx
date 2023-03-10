@@ -168,7 +168,7 @@ const DetailArticle = ({ detailRef }: any) => {
       <Comment />
       <TopButton
         right="calc(50% - 40rem)"
-        bottom="10rem"
+        bottom="0.75rem"
         elementRef={detailRef}
       />
     </DetailPageContainer>

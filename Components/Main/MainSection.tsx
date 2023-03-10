@@ -25,6 +25,7 @@ import HomeDropDownIcon from "./HomeDropDownIcon";
 import "react-loading-skeleton/dist/skeleton.css";
 import SelectField from "../Mobile/SelectField";
 import TopButton from "../Common/TopButton";
+import EmptyCategory from "../Layouts/EmptyContent";
 
 // TODO: Tag 데이터 구조화 고민하기
 
@@ -166,7 +167,7 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
   };
 
   return (
-    <HomeMainContainer>
+    <HomeMainContainer isMobile={isMobile}>
       <div>
         {!isMobile && (
           <TagContainer>
@@ -255,7 +256,8 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
           {targetState && <Target ref={ref} />}
         </HomeCardGrid>
       )}
-      {!isMobile && <TopButton right="calc(50vh - 25rem)" bottom="18%" />}
+      {filterPosts.length === 0 && <EmptyCategory />}
+      {!isMobile && <TopButton right="1rem" bottom="1rem" />}
     </HomeMainContainer>
   );
 };
@@ -263,18 +265,17 @@ const MainSection = ({ setIsModalOpen }: MainSectionProps) => {
 const Target = styled.div`
   height: 1px;
 `;
-const HomeMainContainer = styled.main`
+const HomeMainContainer = styled.main<{ isMobile: boolean }>`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 78.75rem;
+  width: 65vw;
   min-height: 65rem;
   margin-left: 1.5rem;
   margin-top: 3rem;
 
-  @media (max-width: 768px) {
-    margin: 0.75rem 0;
-    gap: 3rem;
+  ${({ isMobile }) => isMobile && "margin: 0.75rem 0; gap: 3rem;"}
+  @media (max-width: 1260px) {
+    width: 50vw;
   }
 `;
 
