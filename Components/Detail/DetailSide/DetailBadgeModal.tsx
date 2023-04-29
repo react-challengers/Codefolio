@@ -8,7 +8,7 @@ interface DetailBadgeModalProps {
 }
 
 const DetailBadgeModal = ({ closeModal }: DetailBadgeModalProps) => {
-  const badgeModalRef = useRef<any>();
+  const badgeModalRef = useRef<HTMLDivElement>(null);
 
   useOutsideClick(badgeModalRef, () => closeModal());
 

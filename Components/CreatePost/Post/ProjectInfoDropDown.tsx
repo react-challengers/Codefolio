@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
-  postLargeCategory,
   postProjectDuration,
   postSkills,
   postSubCategory,
@@ -34,10 +33,9 @@ const ProjectInfoDropDown = () => {
   const [tag, setTag] = useRecoilState(postTags);
   const [githubUrl, setGithubUrl] = useRecoilState(postGithubUrl);
   const [deployedUrl, setDeployedUrl] = useRecoilState(postDeployedUrl);
-  const largeCategory = useRecoilValue(postLargeCategory);
   const [subCategory, setSubCategory] = useRecoilState(postSubCategory);
 
-  const categoryRef = useRef<any>();
+  const categoryRef = useRef<HTMLDivElement>(null);
   const [categoryVisible, setCategoryVisible] = useState(false);
   const [inProgress, setInProgress] = useState(true);
 

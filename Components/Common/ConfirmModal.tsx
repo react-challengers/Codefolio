@@ -21,7 +21,7 @@ const ConfirmModal = ({
   onClickRight,
   type = "normal",
 }: ConfirmModalProps) => {
-  const modalRef = useRef<any>();
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useOutsideClick(modalRef, () => onClickLeft());
 

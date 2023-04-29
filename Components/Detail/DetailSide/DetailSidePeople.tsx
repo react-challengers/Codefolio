@@ -6,10 +6,15 @@ import { Title } from "./DetailSideBadges";
 import DetailSideContainer from "./DetailSideContainer";
 import DetailWith from "./DetailWith";
 
+interface MembersType {
+  name: string;
+  field: string;
+  github: string;
+}
 interface DetailSidePeopleProps {
   authorInfo: UserProfileType | null | undefined;
   subCategory: string;
-  members: string[];
+  members: MembersType[];
 }
 
 const DetailSidePeople = ({
@@ -48,16 +53,14 @@ const DetailSidePeople = ({
 
       <DetailSideWrapper>
         {members.length !== 0 && <Title>함께한 사람들</Title>}
-        {members.map(
-          ({ name, field, github: memberGithub }: any, idx: number) => (
-            <DetailWith
-              key={idx}
-              name={name}
-              field={field}
-              github={memberGithub}
-            />
-          )
-        )}
+        {members.map(({ name, field, github: memberGithub }, idx: number) => (
+          <DetailWith
+            key={idx}
+            name={name}
+            field={field}
+            github={memberGithub}
+          />
+        ))}
       </DetailSideWrapper>
     </DetailSideContainer>
   );

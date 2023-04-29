@@ -5,7 +5,6 @@ import {
   DetailTitle,
   RelatedProject,
 } from "@/Components/Detail";
-import useIsMobile from "@/hooks/common/useIsMobile";
 import {
   getSingleUser,
   getCurrentUser,
@@ -22,7 +21,10 @@ import TopButton from "../Common/TopButton";
 import DetailBadgesContainer from "./DetailBadgesContainer";
 import DetailContent from "./DetailContent";
 
-const DetailArticle = ({ detailRef }: any) => {
+type DetailArticleProps = {
+  detailRef: React.RefObject<HTMLElement>;
+};
+const DetailArticle = ({ detailRef }: DetailArticleProps) => {
   const {
     query: { id: postId },
   } = useRouter();
