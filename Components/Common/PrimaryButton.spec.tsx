@@ -4,7 +4,7 @@ import { ThemeProvider } from "styled-components";
 import theme from "@/styles/theme";
 
 describe("PrimaryButton", () => {
-  test("should render text exactly as it is", () => {
+  it("should render text exactly as it received by text prop", () => {
     const text = "Hello World!";
     render(
       <ThemeProvider theme={theme}>
