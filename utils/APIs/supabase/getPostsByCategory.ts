@@ -1,5 +1,4 @@
 import supabase from "@/lib/supabase";
-import type { PostgrestSingleResponse } from "@supabase/supabase-js";
 
 /**
  *
@@ -7,9 +6,9 @@ import type { PostgrestSingleResponse } from "@supabase/supabase-js";
  * @returns posts by category
  */
 const getPostsByCategory = async (category: string) => {
-  const res: PostgrestSingleResponse<PostType[]> = await supabase
+  const res = await supabase
     .from("post")
-    .select("*")
+    .select<string, PostType>("*")
     .eq("sub_category", category)
     .order("created_at", { ascending: false });
 

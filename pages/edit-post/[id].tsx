@@ -55,7 +55,7 @@ const EditPostPage: NextPage = () => {
     const fetchPost = async () => {
       const { data: postData, error } = await supabase
         .from("post")
-        .select()
+        .select<string, PostType>()
         .eq("id", id)
         .single();
 
