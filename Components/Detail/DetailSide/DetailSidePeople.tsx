@@ -6,11 +6,6 @@ import { Title } from "./DetailSideBadges";
 import DetailSideContainer from "./DetailSideContainer";
 import DetailWith from "./DetailWith";
 
-interface MembersType {
-  name: string;
-  field: string;
-  github: string;
-}
 interface DetailSidePeopleProps {
   authorInfo: UserProfileType | null | undefined;
   subCategory: string;

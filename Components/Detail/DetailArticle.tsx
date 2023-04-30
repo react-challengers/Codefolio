@@ -22,7 +22,7 @@ import DetailBadgesContainer from "./DetailBadgesContainer";
 import DetailContent from "./DetailContent";
 
 type DetailArticleProps = {
-  detailRef: React.RefObject<HTMLElement>;
+  detailRef?: React.RefObject<HTMLElement>;
 };
 const DetailArticle = ({ detailRef }: DetailArticleProps) => {
   const {
@@ -41,7 +41,7 @@ const DetailArticle = ({ detailRef }: DetailArticleProps) => {
     subCategory: "",
     skills: ["Front-end", "Android"],
     tag: [""],
-    members: [""],
+    members: [{ name: "", field: "", github: "" }],
     githubUrl: "",
     deployUrl: "",
   });

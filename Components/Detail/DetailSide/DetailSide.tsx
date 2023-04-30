@@ -8,7 +8,7 @@ interface DetailSideProps {
   subCategory: string;
   tag: string[];
   skills: string[];
-  members: string[];
+  members: MembersType[];
   authorInfo: UserProfileType | null | undefined;
   githubUrl: string | undefined;
   deployUrl: string | undefined;

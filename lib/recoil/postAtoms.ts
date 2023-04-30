@@ -42,12 +42,6 @@ const postProjectDuration = atom<[string, string]>({
   default: [getYYYYMM(), getYYYYMM()],
 });
 
-interface MembersType {
-  name: string;
-  field: string[] | string;
-  github: string;
-}
-
 const postMembers = atom<MembersType[]>({
   key: "postMembers",
   default: [],
