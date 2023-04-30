@@ -28,8 +28,8 @@ const SideBar = () => {
     setSelectedSubCategory([]);
   };
 
-  const onClickSubCategory = (e: React.MouseEvent<HTMLElement>) => {
-    const target = e.target as HTMLElement;
+  const onClickSubCategory = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
     const subCategory = target.innerText;
 
     if (selectedSubCategory.includes(subCategory)) {
