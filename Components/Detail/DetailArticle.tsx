@@ -24,6 +24,7 @@ import DetailContent from "./DetailContent";
 type DetailArticleProps = {
   detailRef?: React.RefObject<HTMLElement>;
 };
+
 const DetailArticle = ({ detailRef }: DetailArticleProps) => {
   const {
     query: { id: postId },

@@ -1,6 +1,15 @@
 import supabase from "@/lib/supabase";
 
-const getBadgeByUid = async ({ queryKey }: any) => {
+interface QueryKey {
+  postId: string | string[] | undefined;
+  userId: string | undefined;
+}
+
+const getBadgeByUid = async ({
+  queryKey,
+}: {
+  queryKey: [string, QueryKey];
+}) => {
   const { postId, userId } = queryKey[1];
   const res = await supabase
     .from("post_badge")
