@@ -30,7 +30,7 @@ const PostEditor: NextPage = () => {
   const [postContent, setPostContent] = useRecoilState(recoilPostContent);
   const [showModal, setShowModal] = useState(false);
 
-  const handleOnPaste = (e: ClipboardEvent<HTMLDivElement>) => {
+  const handleOnPaste = (e: ClipboardEvent<HTMLElement>) => {
     if (e.clipboardData.files.length) {
       e.preventDefault();
       onImagePasted(e.clipboardData);
