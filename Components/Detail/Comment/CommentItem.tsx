@@ -20,14 +20,14 @@ import useOutsideClick from "@/hooks/query/useOutsideClick";
  */
 
 interface CommentItemProps {
-  comment: any;
+  comment: CommentType;
   dbType: "comment" | "profile_comment";
 }
 
 const CommentItem = ({ comment, dbType }: CommentItemProps) => {
   const queryClient = useQueryClient();
 
-  const dropdownRef = useRef<any>();
+  const dropdownRef = useRef<HTMLDivElement>(null);
   useOutsideClick(dropdownRef, () => setShowMoreModal(false));
 
   const [showMoreModal, setShowMoreModal] = useState(false);
@@ -81,7 +81,7 @@ const CommentItem = ({ comment, dbType }: CommentItemProps) => {
           [dbType === "comment" ? "post_id" : "profile_id"]: (dbType ===
           "comment"
             ? comment.post_id
-            : comment.profile_id) as string,
+            : comment.user_id) as string,
           type,
         });
     }

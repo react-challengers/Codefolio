@@ -29,7 +29,7 @@ const SideBar = () => {
   };
 
   const onClickSubCategory = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLElement;
+    const target = e.currentTarget;
     const subCategory = target.innerText;
 
     if (selectedSubCategory.includes(subCategory)) {

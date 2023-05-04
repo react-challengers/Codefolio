@@ -3,13 +3,13 @@ import styled from "styled-components";
 interface TopButtonProps {
   right: string;
   bottom: string;
-  elementRef?: any;
+  elementRef?: React.RefObject<HTMLElement>;
 }
 
 const TopButton = ({ right, bottom, elementRef }: TopButtonProps) => {
   const scrollTop = () => {
     if (elementRef) {
-      elementRef.current.scrollTo({ top: 0, behavior: "smooth" });
+      elementRef.current?.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }

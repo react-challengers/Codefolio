@@ -2,13 +2,13 @@ import useOutsideClick from "@/hooks/query/useOutsideClick";
 import React, { useRef } from "react";
 import styled from "styled-components";
 
-type MoralType = "normal" | "warn";
+type ModalType = "normal" | "warn";
 
 interface ConfirmModalProps {
   bodyText: string;
   leftText: string;
   rightText: string;
-  type?: MoralType;
+  type?: ModalType;
   onClickLeft: () => void;
   onClickRight: () => void;
 }
@@ -21,7 +21,7 @@ const ConfirmModal = ({
   onClickRight,
   type = "normal",
 }: ConfirmModalProps) => {
-  const modalRef = useRef<any>();
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useOutsideClick(modalRef, () => onClickLeft());
 
@@ -93,7 +93,7 @@ const LeftButton = styled(Button)`
   border-bottom-left-radius: 4px;
 `;
 
-const RightButton = styled(Button)<{ type: MoralType }>`
+const RightButton = styled(Button)<{ type: ModalType }>`
   color: ${({ theme, type }) =>
     theme.colors[type === "normal" ? "black" : "white"]};
   background-color: ${({ theme, type }) =>

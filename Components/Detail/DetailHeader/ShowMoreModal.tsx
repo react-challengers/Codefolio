@@ -16,7 +16,7 @@ const ShowMoreModal = ({ closeModal }: ShowMoreModalProps) => {
   const {
     query: { id: postId },
   } = router;
-  const modalRef = useRef<any>();
+  const modalRef = useRef<HTMLElement>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const queryClient = useQueryClient();

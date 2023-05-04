@@ -45,7 +45,7 @@ const DetailBadges = ({ closeModal }: DetailBadgesProps) => {
         let complete = 0;
         let code = 0;
         let func = 0;
-        data.forEach(({ type }: any) => {
+        data.forEach(({ type }) => {
           if (type === "idea") idea += 1;
           if (type === "complete") complete += 1;
           if (type === "code") code += 1;

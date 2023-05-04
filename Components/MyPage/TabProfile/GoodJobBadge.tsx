@@ -58,7 +58,7 @@ const GoodJobBadge = () => {
         let arrow = 0;
         let chat = 0;
         let tool = 0;
-        data.forEach(({ type }: any) => {
+        data.forEach(({ type }) => {
           if (type === "puzzle") puzzle += 1;
           if (type === "pencil") pencil += 1;
           if (type === "arrow") arrow += 1;

@@ -10,7 +10,7 @@ interface DetailModalProps {
 
 const DetailModal = ({ setIsModalOpen }: DetailModalProps) => {
   const router = useRouter();
-  const detailRef = useRef<any>(null);
+  const detailRef = useRef<HTMLDivElement>(null);
 
   useStopScroll();
 

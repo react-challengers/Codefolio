@@ -1,6 +1,15 @@
 import supabase from "@/lib/supabase";
+import { NextRouter } from "next/router";
 
-const getPostBadges = async ({ queryKey }: any) => {
+interface QueryKey {
+  postId: NextRouter["query"]["id"];
+}
+
+const getPostBadges = async ({
+  queryKey,
+}: {
+  queryKey: [string, QueryKey];
+}) => {
   const { postId } = queryKey[1];
   if (!postId) return null;
 

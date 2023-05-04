@@ -12,7 +12,7 @@ interface FieldPickerProps {
   idx: number;
 }
 const FieldPicker = ({ field, idx }: FieldPickerProps) => {
-  const fieldRef = useRef<any>();
+  const fieldRef = useRef<HTMLDivElement>(null);
   const [visibleField, setVisibleField] = useState(false);
   const [people, setPeople] = useRecoilState(postMembers);
 

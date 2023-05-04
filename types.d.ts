@@ -116,6 +116,12 @@ interface PostType {
   thumbnail_check: boolean;
 }
 
+interface MembersType {
+  name: string;
+  field: string;
+  github: string;
+}
+
 interface FollowType {
   id: string;
   follower_id: string;
